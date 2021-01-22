@@ -1,3 +1,4 @@
+from datetime import date
 import requests, json, datetime, pprint
 
 class EduDate:
@@ -9,7 +10,20 @@ class EduDate:
 	@staticmethod
 	def from_formatted_date(formatted_date):
 		s = formatted_date.split("-")
-		return EduDate(s[0], s[1], s[2])
+		return EduDate(s[0], s[2], s[1])
+	
+	@staticmethod
+	def today():
+		now = datetime.datetime.now()
+		
+		return EduDate.from_formatted_date(now.strftime("%Y-%m-%d"))
+	
+	@staticmethod
+	def tommorrow():
+		tommorrow = datetime.datetime.now() + datetime.timedelta(days = 1)
+
+		return EduDate.from_formatted_date(tommorrow.strftime("%Y-%m-%d"))
+
 
 	def __str__(self):
 		return "%s-%s-%s" % (self.year, self.month, self.day)
@@ -30,6 +44,48 @@ class Ids:
 	def IdToSubject(self, id):
 		return self.dbi.get("subjects").get(id).get("short")
 
+class EduDateTime:
+	def __init__(self, date: EduDate, hour, minute, second):
+		self.date = date
+		self.hour = hour
+		self.minute = minute
+		self.second = second
+
+	@staticmethod
+	def from_formatted_datetime(formatted_datetime):
+		split_date = formatted_datetime.split(" ")
+
+		date = EduDate.from_formatted_date(split_date[0])
+		time = split_date[1].split(":")
+
+		return EduDateTime(date, time[0], time[1], time[2])
+	
+	def __str__(self):
+		return f'{str(self.date)} {self.hour}:{self.minute}:{self.second}'
+
+class EduNews:
+	def __init__(self, text, date_added, author, recipient):
+		self.text = text
+		self.date_added = EduDateTime.from_formatted_datetime(date_added)
+		self.author = author
+		self.recipient = recipient
+	
+	def __str__(self):
+		return f'{self.text}'
+
+class EduGrade:
+	def __init__(self, teacher, text, subject, grade, action, grade_id, datetime_added):
+		self.teacher = teacher
+		self.text = text
+		self.subject = subject
+		self.grade = grade
+		self.action = action
+		self.id = grade_id
+		self.datetime_added = EduDateTime.from_formatted_datetime(datetime_added)
+	
+	def __str__(self):
+		return f'{self.text}'
+
 class EduStudent:
 	def __init__(self, gender, firstname, lastname, student_id, number, is_out):
 		self.gender = gender
@@ -39,6 +95,9 @@ class EduStudent:
 		self.id = int(student_id)
 		self.number_in_class = int(number) 
 		self.is_out = is_out
+	
+	def __sort__(self):
+		return self.number_in_class
 	
 	def __str__(self):
 		return "{gender: %s, name: %s, id: %d, number: %s, is_out: %s" % (self.gender, self.fullname, self.id, self.number_in_class, self.is_out)
@@ -51,7 +110,7 @@ class EduLength:
 	def __str__(self):
 		return self.start + " - " + self.end
 
-class Lesson:
+class EduLesson:
 	def __init__(self, name, teacher, classroom, length):
 		self.name = name
 		self.teacher = teacher
@@ -79,6 +138,17 @@ class Edupage:
 		self.is_logged_in = True
 		self.ids = Ids(self.data)
 		return True
+	
+	def get_available_timetable_dates(self):
+		if not self.is_logged_in:
+			return None
+		
+		dp = self.data.get("dp")
+		if dp == None:
+			return None
+		
+		dates = dp.get("dates")
+		return list(dates.keys())
 
 	def get_timetable(self, date):
 		if not self.is_logged_in:
@@ -91,7 +161,6 @@ class Edupage:
 		date_plans = dates.get(str(date))
 		if date_plans == None:
 			return None
-			
 		
 		plan = date_plans.get("plan")
 		subjects = []
@@ -113,16 +182,77 @@ class Edupage:
 			end = subj.get("endtime")
 			length = EduLength(start, end)
 			
-			lesson = Lesson(subject_name, teacher_full_name, classroom_number, length) 
+			lesson = EduLesson(subject_name, teacher_full_name, classroom_number, length) 
 			subjects.append(lesson)
 
 			
 		return subjects
 	
+	def get_news(self):
+		if not self.is_logged_in:
+			return None
+		
+		items = self.data.get("items")
+		if items == None:
+			return None
+		
+		news = []
+		for item in items:
+			if not item.get("typ") == "news":
+				continue
+
+			text = item.get("text")
+			timestamp = item.get("timestamp")
+			author = item.get("vlastnik_meno")
+			recipient = item.get("user_meno")
+
+			news_message = EduNews(text, timestamp, author, recipient)
+			news.append(news_message)
+		
+		return news
+	
+	def get_grade_messages(self):
+		if not self.is_logged_in:
+			return None
+		
+		items = self.data.get("items")
+		if items == None:
+			return None
+
+		ids = Ids(self.data)
+
+		messages = []
+		for item in items:
+			if not item.get("typ") == "znamka":
+				continue
+
+			timestamp = item.get("timestamp")
+			teacher = item.get("vlastnik_meno")
+			text = item.get("text")
+
+			data = json.loads(item.get("data"))
+			subject_id = list(data.keys())[0]
+
+			subject = ids.IdToSubject(subject_id)
+
+			grade_data = data.get(subject_id)[0]
+			
+			grade_id = grade_data.get("znamkaid")
+			grade = grade_data.get("data")
+			action = grade_data.get("akcia")
+
+			edugrade = EduGrade(teacher, text, subject, grade, action, grade_id, timestamp)
+			messages.append(edugrade)
+		
+		return messages
+
+
+	
 	def get_students(self):
 		try:
 			students = self.data.get("dbi").get("students")
-		except Exception:
+		except Exception as e:
+			print(e)
 			return None
 		if students == None:
 			return []
@@ -146,27 +276,22 @@ def main():
 	datet = datetime.datetime.now()
 	date = EduDate.from_formatted_date(str(datet).split(" ")[0])
 
-	edu = Edupage(input("Username? "),  input("Password? "))
+	edu = Edupage(input("Username? "), input("Password? "))
 	was_successfull = edu.login()
 	if was_successfull:
 		print("Login successfull!")
 	else:
 		print("Failed to login: bad username or password")
 		return
-	timetable = edu.get_timetable(date)
-	if timetable == None:
-		print("No timetable for this date.")
-	else:
-		for lesson in timetable:
-			print(lesson.name)
-			print(lesson.teacher)
-			print(lesson.classroom)
-			print(str(lesson.length))
-			print("\n")
-	students = edu.get_students()
-	print(students)
-	for student in students:
-		print(student)
+	
 
 if __name__ == "__main__":
 	main()
+
+"""
+TODO:
+	- Online lessons
+	- Grade averages -> where are they even stored?
+	- All message types
+	- New message listeners
+"""

@@ -32,17 +32,33 @@ class Ids:
 	def __init__(self, data):
 		self.data = data
 		self.dbi = data.get("dbi")
+	
+	def IdToClass(self, c_id):
+		return self.dbi.get("classes").get(c_id).get("name")
 
-	def IdToTeacher(self, id):
-		teacher_data = self.dbi.get("teachers").get(id)
+	def IdToTeacher(self, t_id):
+		teacher_data = self.dbi.get("teachers").get(t_id)
 		teacher_full_name = teacher_data.get("firstname") + " " + teacher_data.get("lastname")
 		return teacher_full_name
 
-	def IdToClassroom(self, id):
-		return self.dbi.get("classrooms").get(id).get("short")
+	def IdToClassroom(self, c_id):
+		return self.dbi.get("classrooms").get(c_id).get("short")
 
-	def IdToSubject(self, id):
-		return self.dbi.get("subjects").get(id).get("short")
+	def IdToSubject(self, s_id):
+		return self.dbi.get("subjects").get(s_id).get("short")
+
+class EduHomework:
+	def __init__(self, due_date, subject, groups, title, description, event_id, class_name, datetime_added):
+		self.due_date = EduDate.from_formatted_date(due_date)
+		self.subject = subject
+		self.groups = groups
+		self.title = title
+		self.description = description
+		self.event_id = event_id
+		self.datetime_added = EduDateTime.from_formatted_datetime(datetime_added)
+	
+	def __str__(self):
+		return f'{self.title}: {self.description}'
 
 class EduDateTime:
 	def __init__(self, date: EduDate, hour, minute, second):
@@ -188,6 +204,48 @@ class Edupage:
 			
 		return subjects
 	
+	def get_homework(self):
+		if not self.is_logged_in:
+			return None
+		
+		items = self.data.get("items")
+		if items == None:
+			return None
+		
+		ids = Ids(self.data)
+
+		homework = []
+		for item in items:
+			if not item.get("typ") == "homework":
+				continue
+
+			title = item.get("user_meno")
+
+			data = json.loads(item.get("data"))
+
+			if data == None:
+				print(item)
+
+			due_date = data.get("date")
+
+			groups = data.get("skupiny")
+			description = data.get("nazov")
+
+			event_id = data.get("superid")
+
+			class_name = ids.IdToClass(data.get("triedaid"))
+
+			subject = ids.IdToSubject(data.get("predmetid"))
+
+			timestamp = item.get("timestamp")
+
+			current_homework = EduHomework(due_date, subject, groups, title, description, event_id, class_name, timestamp)
+			homework.append(current_homework)
+		
+		return homework
+
+			
+
 	def get_news(self):
 		if not self.is_logged_in:
 			return None
@@ -283,6 +341,8 @@ def main():
 	else:
 		print("Failed to login: bad username or password")
 		return
+	
+	print(edu.get_homework())
 	
 
 if __name__ == "__main__":

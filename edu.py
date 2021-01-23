@@ -19,6 +19,12 @@ class EduDate:
 		return EduDate.from_formatted_date(now.strftime("%Y-%m-%d"))
 	
 	@staticmethod
+	def yesterday():
+		yesterday = datetime.datetime.now() + datetime.timedelta(days = -1)
+
+		return EduDate.from_formatted_date(yesterday.strftime("%Y-%m-%d"))
+
+	@staticmethod
 	def tommorrow():
 		tommorrow = datetime.datetime.now() + datetime.timedelta(days = 1)
 
@@ -127,21 +133,23 @@ class EduLength:
 		return self.start + " - " + self.end
 
 class EduLesson:
-	def __init__(self, name, teacher, classroom, length):
+	def __init__(self, name, teacher, classroom, length, online_lesson_link):
 		self.name = name
 		self.teacher = teacher
 		self.classroom = classroom
 		self.length = length
+		self.online_lesson_link = online_lesson_link
 
 class Edupage:
 	def __init__(self, username, password):
 		self.username = username
 		self.password = password
 		self.is_logged_in = False
+		self.session = requests.session()
 	
 	def login(self):
 		parameters = {"meno": self.username, "password": self.password, "akcia": "login"}
-		response = requests.post("https://portal.edupage.org/index.php?jwid=jw2&module=Login", parameters)
+		response = self.session.post("https://portal.edupage.org/index.php?jwid=jw2&module=Login", parameters)
 		if "wrongPassword" in response.url:
 			return False
 		try:
@@ -150,6 +158,8 @@ class Edupage:
 			return False
 		except IndexError:
 			return False
+		self.cookies = response.cookies.get_dict()
+		self.headers = response.headers
 		self.data = json.loads(js_json)
 		self.is_logged_in = True
 		self.ids = Ids(self.data)
@@ -197,8 +207,10 @@ class Edupage:
 			start = subj.get("starttime")
 			end = subj.get("endtime")
 			length = EduLength(start, end)
+
+			online_lesson_link = subj.get("ol_url")
 			
-			lesson = EduLesson(subject_name, teacher_full_name, classroom_number, length) 
+			lesson = EduLesson(subject_name, teacher_full_name, classroom_number, length, online_lesson_link) 
 			subjects.append(lesson)
 
 			
@@ -243,8 +255,6 @@ class Edupage:
 			homework.append(current_homework)
 		
 		return homework
-
-			
 
 	def get_news(self):
 		if not self.is_logged_in:
@@ -303,6 +313,29 @@ class Edupage:
 			messages.append(edugrade)
 		
 		return messages
+	
+	def get_grade_data(self):
+		response = self.session.get("https://gymlsba.edupage.org/znamky") # TODO: add dynamic domain? -> backend is same for every school, domain changes
+		
+		return json.loads(response.content.decode().split(".znamkyStudentViewer(")[1].split(");\r\n\t\t});\r\n\t\t</script>")[0])
+
+	# def get_grades(self):
+	# 	grade_data = self.get_grade_data()
+
+	# 	providers = grade_data.get("vsetkyUdalosti")
+	# 	events = providers.get("edupage")
+	# 	for event_id in events:
+	# 		event = events.get(event_id)
+
+	# 		if event.get("stav") == None: # wtf fake grades?
+	# 			continue
+	# 		elif event.get("priemer") == None: # ??? is this correct?
+	# 			continue
+
+	# 		name = event.get("p_meno")
+	# 		average = event.get("priemer")
+	# 		timestamp = event.get("timestamp")
+
 
 
 	
@@ -331,8 +364,8 @@ class Edupage:
 
 
 def main():
-	datet = datetime.datetime.now()
-	date = EduDate.from_formatted_date(str(datet).split(" ")[0])
+	# datet = datetime.datetime.now()
+	# date = EduDate.from_formatted_date(str(datet).split(" ")[0])
 
 	edu = Edupage(input("Username? "), input("Password? "))
 	was_successfull = edu.login()
@@ -341,8 +374,11 @@ def main():
 	else:
 		print("Failed to login: bad username or password")
 		return
+	edu.get_grade_data()
+
+	# print(edu.get_homework())
+
 	
-	print(edu.get_homework())
 	
 
 if __name__ == "__main__":
@@ -350,8 +386,7 @@ if __name__ == "__main__":
 
 """
 TODO:
-	- Online lessons
-	- Grade averages -> where are they even stored?
+	- Grade averages -> where are they even stored? ---> almost done
 	- All message types
-	- New message listeners
+	- a way to wait for new messages/news/grades... listeners?
 """

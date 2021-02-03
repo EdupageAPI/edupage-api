@@ -126,5 +126,6 @@ Homework, other than its title and description, provides some more information:
 - [ ] Grades
 - [ ] All message types
 - [ ] Writing messages to other students/teachers
+- [ ] Make this library avaiable through PyPi
 
 Feel free to suggest any other features! Just open an issue with the *Feature Request* tag.

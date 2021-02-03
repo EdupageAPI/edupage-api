@@ -51,7 +51,7 @@ print(end_time)
 # Get tommorow date
 tommorrow = EduDate.yesterday() # '2021-02-04'
 
-# This will return None, because the timetable from tommorrow is not avaiable
+# This will return None, because the timetable from yesterday is not avaiable
 timetable_for_tommorrow = edupage.get_timetable(tommorrow)
 ```
 The EduLesson class provides some information about the lesson:

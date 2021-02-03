@@ -48,10 +48,10 @@ print(end_time)
 ```
 The EduLesson class provides some information about the lesson:
 
-EduLesson:
-	- name: The subject of this lesson
-	- teacher: The teacher that will teach this lesson
-	- classroom: The classroom number where the lesson will be
-	- length: EduLength -> The length (start and end times) of the lesson
-	- online_lesson_link: A string with link to the online lesson. If this lesson is not online, online_lesson_link is None.
+#### EduLesson: 
+- name: The subject of this lesson
+- teacher: The teacher that will teach this lesson
+- classroom: The classroom number where the lesson will be
+- length: EduLength -> The length (start and end times) of the lesson
+- online_lesson_link: A string with link to the online lesson. If this lesson is not online, online_lesson_link is None.
 

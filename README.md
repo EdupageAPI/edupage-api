@@ -1,6 +1,8 @@
 # edupage-api
 This python library allows easy access to Edupage. This is not a sellenium web scraper. 
-It makes requests directly to Edupage's endpoinds and parses the html data.
+It makes requests directly to Edupage's endpoinds and parses the html document.
+
+If you find any issue with this code, it doesn't work or you have a suggestion please let me know and open a Issue! If you, even better have fixed the issue, added a new feature or made something work better please open a pull request!
 
 ## Login
 You can login easily, works with any school:

@@ -143,7 +143,8 @@ class EduLesson:
 		self.online_lesson_link = online_lesson_link
 
 class Edupage:
-	def __init__(self, username, password):
+	def __init__(self, school, username, password):
+		self.school = school
 		self.username = username
 		self.password = password
 		self.is_logged_in = False
@@ -317,7 +318,7 @@ class Edupage:
 		return messages
 	
 	def get_grade_data(self):
-		response = self.session.get("https://gymlsba.edupage.org/znamky") # TODO: add dynamic domain? -> backend is same for every school, domain changes
+		response = self.session.get(f"https://{self.school}.edupage.org/znamky") # TODO: add dynamic domain? -> backend is same for every school, domain changes
 		
 		return json.loads(response.content.decode().split(".znamkyStudentViewer(")[1].split(");\r\n\t\t});\r\n\t\t</script>")[0])
 
@@ -369,12 +370,12 @@ def main():
 	# datet = datetime.datetime.now()
 	# date = EduDate.from_formatted_date(str(datet).split(" ")[0])
 
-	edu = Edupage(input("Username? "), input("Password? "))
+	edu = Edupage(input("School?") ,input("Username? "), input("Password? "))
 	was_successfull = edu.login()
 	if was_successfull:
 		print("Login successfull!")
 	else:
-		print("Failed to login: bad username or password")
+		print("Failed to login: bad school, username or password")
 		return
 	edu.get_grade_data()
 

@@ -143,8 +143,8 @@ class EduLesson:
 		self.online_lesson_link = online_lesson_link
 
 class Edupage:
-	def __init__(self, school, username, password):
-		self.school = school
+	def __init__(self, username, password):
+		self.school = None
 		self.username = username
 		self.password = password
 		self.is_logged_in = False
@@ -156,11 +156,19 @@ class Edupage:
 		if "wrongPassword" in response.url:
 			return False
 		try:
-			js_json = response.content.decode().split("$j(document).ready(function() {")[1].split(");")[0].replace("\t", "").split("userhome(")[1].replace("\n", "").replace("\r", "")
+			js_json = response.content.decode() \
+									.split("$j(document).ready(function() {")[1] \
+									.split(");")[0] \
+									.replace("\t", "") \
+									.split("userhome(")[1] \
+									.replace("\n", "") \
+									.replace("\r", "")
 		except TypeError:
 			return False
 		except IndexError:
 			return False
+		self.school = response.url.split(".edupage.org")[0] \
+								.split("https://")[1]
 		self.cookies = response.cookies.get_dict()
 		self.headers = response.headers
 		self.data = json.loads(js_json)
@@ -318,9 +326,11 @@ class Edupage:
 		return messages
 	
 	def get_grade_data(self):
-		response = self.session.get(f"https://{self.school}.edupage.org/znamky") # TODO: add dynamic domain? -> backend is same for every school, domain changes
+		response = self.session.get(f"https://{self.school}.edupage.org/znamky")
 		
-		return json.loads(response.content.decode().split(".znamkyStudentViewer(")[1].split(");\r\n\t\t});\r\n\t\t</script>")[0])
+		return json.loads(response.content.decode() \
+									.split(".znamkyStudentViewer(")[1] \
+									.split(");\r\n\t\t});\r\n\t\t</script>")[0])
 
 	# def get_grades(self):
 	# 	grade_data = self.get_grade_data()
@@ -367,22 +377,14 @@ class Edupage:
 
 
 def main():
-	# datet = datetime.datetime.now()
-	# date = EduDate.from_formatted_date(str(datet).split(" ")[0])
-
-	edu = Edupage(input("School?") ,input("Username? "), input("Password? "))
+	edu = Edupage(input("Username?"), input("Password?"))
 	was_successfull = edu.login()
 	if was_successfull:
 		print("Login successfull!")
 	else:
-		print("Failed to login: bad school, username or password")
+		print("Failed to login: username or password")
 		return
 	edu.get_grade_data()
-
-	# print(edu.get_homework())
-
-	
-	
 
 if __name__ == "__main__":
 	main()

@@ -9,7 +9,7 @@ You can login easily, works with any school:
 ```python
 from edu import Edupage
 
-edupage = Edupage("Username", "Password")
+edupage = Edupage("School", "Username", "Password")
 edupage.login()
 ```
 
@@ -19,7 +19,7 @@ Check all avaiable timetables:
 ```python
 from edu import Edupage
 
-edupage = Edupage("Username", "Password")
+edupage = Edupage("School", "Username", "Password")
 edupage.login()
 
 # Get dates for all avaiable timetables
@@ -32,7 +32,7 @@ print(dates) # ['2021-02-03', '2021-02-04']
 ```python
 from edu import Edupage, EduDate
 
-edupage = Edupage("Username", "Password")
+edupage = Edupage("School", "Username", "Password")
 edupage.login()
 
 # Get today's date
@@ -69,7 +69,7 @@ Thanks to how Edupage's message system works, you can get recent news from the w
 ```python
 from edu import Edupage
 
-edupage = Edupage("Username", "Password")
+edupage = Edupage("School", "Username", "Password")
 edupage.login()
 
 # Note: if you are not logged in or there was an error, get_news returns None
@@ -84,7 +84,7 @@ This is an edupage-curated list of students. When students enter the school, the
 ```python
 from edu import Edupage, EduStudent
 
-edupage = Edupage("Username", "Password")
+edupage = Edupage("School", "Username", "Password")
 edupage.login()
 
 # Note: This list doesn't have to be sorted!
@@ -102,7 +102,7 @@ for student in students:
 ```python
 from edu import Edupage
 
-edupage = Edupage("Username", "Password")
+edupage = Edupage("School", "Username", "Password")
 edupage.login()
 
 homework = edupage.get_homework()

@@ -29,7 +29,9 @@ class EduDate:
 		tommorrow = datetime.datetime.now() + datetime.timedelta(days = 1)
 
 		return EduDate.from_formatted_date(tommorrow.strftime("%Y-%m-%d"))
-
+	
+	def is_after_or_equals(self, date):
+		return datetime.datetime.strptime(date, "%Y-%m-%d") >= datetime.datetime.strptime(self.__str__(), "%Y-%m-%d")
 
 	def __str__(self):
 		return "%s-%s-%s" % (self.year, self.month, self.day)

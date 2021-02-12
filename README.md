@@ -121,7 +121,7 @@ Homework, other than its title and description, provides some more information:
 - datetime_added: EduDateTime -> A date and time when this homework was assigned.
 
 # Upcoming features
-- [ ] Correct test answers
+- [ ] Correct test answers (see [EduPageTestHack](https://github.com/markotomcik/EduPageTestHack))
 - [ ] Lunches
 - [ ] Grades
 - [ ] All message types

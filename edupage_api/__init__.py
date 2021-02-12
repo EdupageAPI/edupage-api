@@ -2,11 +2,11 @@ from datetime import date
 import requests, json, datetime, pprint
 
 from edupage_api.utils import *
-from edupage_api.date import EduLength
+from edupage_api.date import *
 from edupage_api.timetables import *
-from edupage_api.messages import EduHomework, EduNews
-from edupage_api.grades import EduGradeEvent
-from edupage_api.people import EduStudent
+from edupage_api.messages import *
+from edupage_api.grades import *
+from edupage_api.people import *
 
 class Edupage:
 	def __init__(self, username, password):

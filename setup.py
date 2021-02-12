@@ -1,4 +1,11 @@
 from distutils.core import setup
+from os import path
+
+# https://packaging.python.org/guides/making-a-pypi-friendly-readme/
+this_directory = path.abspath(path.dirname(__file__))
+
+with open(path.join(this_directory, "README.md"), encoding="utf8") as f:
+    long_description = f.read()
 
 setup(
     name = "edupage_api",
@@ -6,6 +13,7 @@ setup(
     version = "0.2",
     license = "GNU GPLv3",
     description = "A python library for accessing your Edupage account",
+    long_description= long_description,
     author = "ivanhrabcak",
     author_email = "ivan@hrabcak.eu",
     url = "https://github.com/ivanhrabcak/edupage-api",

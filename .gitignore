@@ -1,0 +1,9 @@
+.vscode
+.vscode/*
+
+MANIFEST
+dist
+dist/*
+
+__pycache__
+edupage_api/__pycache__

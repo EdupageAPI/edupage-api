@@ -4,6 +4,12 @@ It makes requests directly to Edupage's endpoinds and parses the html document.
 
 If you find any issue with this code, it doesn't work or you have a suggestion please let me know and open a Issue! If you, even better have fixed the issue, added a new feature or made something work better please open a pull request!
 
+# Installing
+You can install this library with pip:
+```
+pip install edupage-api
+```
+# Usage
 ## Login
 You can login easily, works with any school:
 ```python
@@ -126,6 +132,6 @@ Homework, other than its title and description, provides some more information:
 - [ ] Grades
 - [ ] All message types
 - [ ] Writing messages to other students/teachers
-- [ ] Make this library avaiable through PyPi
+- [x] Make this library avaiable through PyPi
 
 Feel free to suggest any other features! Just open an issue with the *Feature Request* tag.

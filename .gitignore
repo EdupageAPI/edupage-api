@@ -9,3 +9,8 @@ README.rst
 
 __pycache__
 edupage_api/__pycache__
+
+build
+build/*
+edupage_api.egg-info
+edupage_api.egg-info/*

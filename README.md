@@ -7,7 +7,7 @@ If you find any issue with this code, it doesn't work or you have a suggestion p
 ## Login
 You can login easily, works with any school:
 ```python
-from edu import Edupage
+from edupage_api import Edupage
 
 edupage = Edupage("Username", "Password")
 edupage.login()
@@ -17,7 +17,7 @@ edupage.login()
 ## Get timetable for a given date
 Check all avaiable timetables:
 ```python
-from edu import Edupage
+from edupage_api import Edupage
 
 edupage = Edupage("Username", "Password")
 edupage.login()
@@ -30,7 +30,7 @@ print(dates) # ['2021-02-03', '2021-02-04']
 
 ## Get the timetable for a date
 ```python
-from edu import Edupage, EduDate
+from edupage_api import Edupage, EduDate
 
 edupage = Edupage("Username", "Password")
 edupage.login()
@@ -67,7 +67,7 @@ The EduLesson class provides some information about the lesson:
 ## Get news from the webpage
 Thanks to how Edupage's message system works, you can get recent news from the webpage like this:
 ```python
-from edu import Edupage
+from edupage_api import Edupage
 
 edupage = Edupage("Username", "Password")
 edupage.login()
@@ -82,7 +82,7 @@ for message in news:
 ## Get the list of students
 This is an edupage-curated list of students. When students enter the school, they get assigned a number. If anybody changes school, leaves or anything happens with any student, the numbers don't change. It just skips the number.
 ```python
-from edu import Edupage, EduStudent
+from edupage_api import Edupage, EduStudent
 
 edupage = Edupage("Username", "Password")
 edupage.login()
@@ -100,7 +100,7 @@ for student in students:
 
 ## Get homework
 ```python
-from edu import Edupage
+from edupage_api import Edupage
 
 edupage = Edupage("Username", "Password")
 edupage.login()

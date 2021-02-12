@@ -9,7 +9,7 @@ You can install this library with pip:
 ```
 pip install edupage-api
 ```
-
+# Usage
 ## Login
 You can login easily, works with any school:
 ```python

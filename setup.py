@@ -9,7 +9,7 @@ setup(
     author = "ivanhrabcak",
     author_email = "ivan@hrabcak.eu",
     url = "https://github.com/ivanhrabcak/edupage-api",
-    #download_url = "",
+    download_url = "https://github.com/ivanhrabcak/edupage-api/archive/0.1.tar.gz",
     keywords = ["edupage", "edupage api", "library"],
     install_requires = ["requests", "datetime", "json", "pprint"],
     classifiers = [

@@ -1,163 +1,12 @@
 from datetime import date
 import requests, json, datetime, pprint
 
-class EduDate:
-	def __init__(self, year, day, month):
-		self.year = year
-		self.day = day
-		self.month = month
-
-	@staticmethod
-	def from_formatted_date(formatted_date):
-		s = formatted_date.split("-")
-		return EduDate(s[0], s[2], s[1])
-	
-	@staticmethod
-	def today():
-		now = datetime.datetime.now()
-		
-		return EduDate.from_formatted_date(now.strftime("%Y-%m-%d"))
-	
-	@staticmethod
-	def yesterday():
-		yesterday = datetime.datetime.now() + datetime.timedelta(days = -1)
-
-		return EduDate.from_formatted_date(yesterday.strftime("%Y-%m-%d"))
-
-	@staticmethod
-	def tommorrow():
-		tommorrow = datetime.datetime.now() + datetime.timedelta(days = 1)
-
-		return EduDate.from_formatted_date(tommorrow.strftime("%Y-%m-%d"))
-	
-	def is_after_or_equals(self, date):
-		return datetime.datetime.strptime(date, "%Y-%m-%d") >= datetime.datetime.strptime(self.__str__(), "%Y-%m-%d")
-
-	def __str__(self):
-		return "%s-%s-%s" % (self.year, self.month, self.day)
-
-class GradeUtil:
-	def __init__(self, grade_data):
-		self.data = grade_data
-	
-	def id_to_teacher(self, teacher_id):
-		teachers = self.data.get("ucitelia")
-
-		# this dict contains data about the 
-		# date when this teacher was employed
-		# or when will he/she retire / is planned quit this job
-		# (datefrom, dateto) 
-		teacher = teachers.get(teacher_id) 
-
-		teacher_name = teacher.get("firstname") + " " + teacher.get("lastname")
-		
-		return teacher_name 
-
-class IdUtil:
-	def __init__(self, data):
-		self.data = data
-		self.dbi = data.get("dbi")
-	
-	def id_to_class(self, c_id):
-		return self.dbi.get("classes").get(c_id).get("name")
-
-	def id_to_teacher(self, t_id):
-		teacher_data = self.dbi.get("teachers").get(t_id)
-		teacher_full_name = teacher_data.get("firstname") + " " + teacher_data.get("lastname")
-		return teacher_full_name
-
-	def id_to_classroom(self, c_id):
-		return self.dbi.get("classrooms").get(c_id).get("short")
-
-	def id_to_subject(self, s_id):
-		return self.dbi.get("subjects").get(s_id).get("short")
-
-class EduHomework:
-	def __init__(self, due_date, subject, groups, title, description, event_id, class_name, datetime_added):
-		self.due_date = EduDate.from_formatted_date(due_date)
-		self.subject = subject
-		self.groups = groups
-		self.title = title
-		self.description = description
-		self.event_id = event_id
-		self.datetime_added = EduDateTime.from_formatted_datetime(datetime_added)
-	
-	def __str__(self):
-		return f'{self.title}: {self.description}'
-
-class EduDateTime:
-	def __init__(self, date: EduDate, hour, minute, second):
-		self.date = date
-		self.hour = hour
-		self.minute = minute
-		self.second = second
-
-	@staticmethod
-	def from_formatted_datetime(formatted_datetime):
-		split_date = formatted_datetime.split(" ")
-
-		date = EduDate.from_formatted_date(split_date[0])
-		time = split_date[1].split(":")
-
-		return EduDateTime(date, time[0], time[1], time[2])
-	
-	def __str__(self):
-		return f'{str(self.date)} {self.hour}:{self.minute}:{self.second}'
-
-class EduNews:
-	def __init__(self, text, date_added, author, recipient):
-		self.text = text
-		self.date_added = EduDateTime.from_formatted_datetime(date_added)
-		self.author = author
-		self.recipient = recipient
-	
-	def __str__(self):
-		return f'{self.text}'
-
-# This is just a message that a grade has been received
-# and it contains no information about what the grade is.
-class EduGradeEvent:
-	def __init__(self, teacher, title, subject, average, weight, datetime_added):
-		self.teacher = teacher
-		self.title = title
-		self.subject = subject
-		self.average = average
-		self.datetime_added = EduDateTime.from_formatted_datetime(datetime_added)
-	
-	def __str__(self):
-		return f'{self.title}'
-
-class EduStudent:
-	def __init__(self, gender, firstname, lastname, student_id, number, is_out):
-		self.gender = gender
-		self.firstname = firstname
-		self.lastname = lastname
-		self.fullname = firstname + " " + lastname
-		self.id = int(student_id)
-		self.number_in_class = int(number) 
-		self.is_out = is_out
-	
-	def __sort__(self):
-		return self.number_in_class
-	
-	def __str__(self):
-		return "{gender: %s, name: %s, id: %d, number: %s, is_out: %s" % (self.gender, self.fullname, self.id, self.number_in_class, self.is_out)
-
-class EduLength:
-	def __init__(self, start, end):
-		self.start = start
-		self.end = end
-	
-	def __str__(self):
-		return self.start + " - " + self.end
-
-class EduLesson:
-	def __init__(self, name, teacher, classroom, length, online_lesson_link):
-		self.name = name
-		self.teacher = teacher
-		self.classroom = classroom
-		self.length = length
-		self.online_lesson_link = online_lesson_link
+from edupage_api.utils import *
+from edupage_api.date import EduLength
+from edupage_api.timetables import *
+from edupage_api.messages import EduHomework, EduNews
+from edupage_api.grades import EduGradeEvent
+from edupage_api.people import EduStudent
 
 class Edupage:
 	def __init__(self, username, password):
@@ -409,20 +258,6 @@ class Edupage:
 			student = EduStudent(gender, firstname, lastname, student_id, number_in_class, is_out)
 			result.append(student)
 		return result
-
-
-def main():
-	edu = Edupage(input("Username?"), input("Password?"))
-	was_successfull = edu.login()
-	if was_successfull:
-		print("Login successfull!")
-	else:
-		print("Failed to login: username or password")
-		return
-	edu.get_grade_data()
-
-if __name__ == "__main__":
-	main()
 
 """
 TODO:

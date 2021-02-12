@@ -5,5 +5,7 @@ MANIFEST
 dist
 dist/*
 
+README.rst
+
 __pycache__
 edupage_api/__pycache__

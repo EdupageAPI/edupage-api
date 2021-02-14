@@ -228,7 +228,7 @@ class Edupage:
 			teacher_id = event.get("UcitelID")
 			teacher = util.id_to_teacher(teacher_id)
 
-			subject_id = event.get()
+			subject_id = event.get("PredmetID")
 			subject = id_util.id_to_subject(subject_id)
 
 			event = EduGradeEvent(teacher, name, subject, average, weight, timestamp)

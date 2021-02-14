@@ -11,4 +11,4 @@ class EduGradeEvent:
 		self.datetime_added = EduDateTime.from_formatted_datetime(datetime_added)
 	
 	def __str__(self):
-		return f'{self.title}'
+		return f'{self.title}: {self.average}'

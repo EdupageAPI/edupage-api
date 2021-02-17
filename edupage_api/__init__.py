@@ -38,6 +38,7 @@ class Edupage:
 		self.cookies = response.cookies.get_dict()
 		self.headers = response.headers
 		self.data = json.loads(js_json)
+		pprint.pprint(self.data)
 		self.is_logged_in = True
 		self.ids = IdUtil(self.data)
 		return True
@@ -157,7 +158,7 @@ class Edupage:
 		return news
 
 	# this method will soon be removed
-	# because all messages will be
+	# because all messages will betry:
 	# handled in some other way
 	"""
 	def get_grade_messages(self):
@@ -196,7 +197,7 @@ class Edupage:
 		return messages
 	"""
 	
-	def get_grade_data(self):
+	def __get_grade_data(self):
 		response = self.session.get(f"https://{self.school}.edupage.org/znamky")
 		
 		return json.loads(response.content.decode() \
@@ -204,7 +205,10 @@ class Edupage:
 									.split(");\r\n\t\t});\r\n\t\t</script>")[0])
 
 	def get_received_grade_events(self):
-		grade_data = self.get_grade_data()
+		if not self.is_logged_in:
+			return None
+
+		grade_data = self.__get_grade_data()
 
 		util = GradeUtil(grade_data)
 		id_util = IdUtil(self.data)
@@ -237,6 +241,9 @@ class Edupage:
 		return received_grade_events
 	
 	def get_students(self):
+		if not self.is_logged_in:
+			return None
+
 		try:
 			students = self.data.get("dbi").get("students")
 		except Exception as e:
@@ -257,7 +264,41 @@ class Edupage:
 
 			student = EduStudent(gender, firstname, lastname, student_id, number_in_class, is_out)
 			result.append(student)
+
 		return result
+	
+	def get_teachers(self):
+		if not self.is_logged_in:
+			return None
+
+		dbi = self.data.get("dbi")
+		if dbi == None:
+			return None
+		
+		id_util = IdUtil(dbi)
+
+		teachers = dbi.get("teachers")
+
+		result = []
+		for teacher_id in teachers:
+			teacher_data = teachers.get(teacher_id)
+
+			gender = teacher_data.get("gender")
+			firstname = teacher_data.get("firstname")
+			lastname = teacher_data.get("lastname")
+
+			classroom_id = teacher_data.get("classroomid")
+			classroom = id_util.id_to_classroom(classroom_id)
+
+			is_out = teacher_data.get("isOut")
+
+			teacher = EduTeacher(gender, firstname, lastname, teacher_id, classroom, is_out)
+			result.append(teacher)
+		
+		return result
+	
+	def get_user_id(self):
+		return self.data.get("userid")
 
 """
 TODO:

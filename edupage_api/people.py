@@ -12,7 +12,7 @@ class EduStudent:
 		return self.number_in_class
 	
 	def __str__(self):
-		return "{gender: %s, name: %s, id: %d, number: %s, is_out: %s" % (self.gender, self.fullname, self.id, self.number_in_class, self.is_out)
+		return "{gender: %s, name: %s, id: %d, number: %s, is_out: %s}" % (self.gender, self.fullname, self.id, self.number_in_class, self.is_out)
 
 class EduTeacher:
 	def __init__(self, gender, firstname, lastname, teacher_id, classroom, is_out):
@@ -26,4 +26,3 @@ class EduTeacher:
 	
 	def __str__(self):
 		return "{gender: %s, name: %s, id: %d, classroom: %s, is_out: %s}" % (self.gender, self.fullname, self.id, self.classroom, self.is_out)
-		

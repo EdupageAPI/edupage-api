@@ -38,7 +38,6 @@ class Edupage:
 		self.cookies = response.cookies.get_dict()
 		self.headers = response.headers
 		self.data = json.loads(js_json)
-		pprint.pprint(self.data)
 		self.is_logged_in = True
 		self.ids = IdUtil(self.data)
 		return True

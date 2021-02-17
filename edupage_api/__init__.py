@@ -1,5 +1,5 @@
 from datetime import date
-import requests, json, datetime, pprint
+import requests, json, datetime
 
 from edupage_api.utils import *
 from edupage_api.date import *

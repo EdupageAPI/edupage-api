@@ -1,5 +1,6 @@
 from datetime import date
 import requests, json, datetime
+import pprint
 
 from edupage_api.utils import *
 from edupage_api.date import *
@@ -107,13 +108,17 @@ class Edupage:
 		for item in items:
 			if not item.get("typ") == "homework":
 				continue
+			
 
 			title = item.get("user_meno")
 
 			data = json.loads(item.get("data"))
 
 			if data == None:
-				print(item)
+				continue
+
+			if data.get("triedaid") == None:
+				continue
 
 			due_date = data.get("date")
 
@@ -121,6 +126,9 @@ class Edupage:
 			description = data.get("nazov")
 
 			event_id = data.get("superid")
+
+			print("________________________________")
+			print(data.get("triedaid"))
 
 			class_name = ids.id_to_class(data.get("triedaid"))
 

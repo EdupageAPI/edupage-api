@@ -19,7 +19,6 @@ edupage = Edupage("Username", "Password")
 edupage.login()
 ```
 
-
 ## Get timetable for a given date
 Check all avaiable timetables:
 ```python
@@ -44,12 +43,13 @@ edupage.login()
 # Get today's date
 today = EduDate.today() # '2021-02-03'
 
-timetable = edupage.get_timetable(today) # returns a list of EduLesson
+timetable = edupage.get_timetable(today) # returns EduTimetable
 
 # The starting time of the first lesson
-# Note: the start and end times from EduLesson.length are a string.
-start_time = timetable[0].length.start
-end_time = timetable[0].length.end
+first_lesson = timetable.get_first_lesson()
+
+start_time = first_lesson.start
+end_time = first_lesson.end
 
 print(start_time)
 print(end_time)
@@ -60,6 +60,44 @@ tommorrow = EduDate.yesterday() # '2021-02-04'
 # This will return None, because the timetable from yesterday is not avaiable
 timetable_for_tommorrow = edupage.get_timetable(tommorrow)
 ```
+
+## Get lesson for a given time
+```python
+from edupage_api import Edupage, EduDate, EduTime
+
+edupage = Edupage("Username", "Password")
+edupage.login()
+
+# Timetable for today
+timetable = edupage.get_timetable(EduDate.today())
+
+# Get current time
+current_time = EduTime.now()
+
+current_lesson = timetable.get_lesson_at_time(current_time)
+
+print(current_lesson)
+
+```
+
+## Get next lesson for a given time
+```python
+from edupage_api import Edupage, EduDate, EduTime
+
+edupage = Edupage("Username", "Password")
+edupage.login()
+
+# Timetable for today
+timetable = edupage.get_timetable(EduDate.today())
+
+# Get current time
+current_time = EduTime.now()
+
+next_lesson = timetable.get_next_lesson_at_time(current_time)
+
+print(next_lesson)
+```
+
 The EduLesson class provides some information about the lesson:
 
 #### EduLesson: 

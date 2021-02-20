@@ -3,6 +3,9 @@ class GradeUtil:
 		self.data = grade_data
 	
 	def id_to_teacher(self, teacher_id):
+		if teacher_id == None:
+			return None
+		
 		teachers = self.data.get("ucitelia")
 
 		# this dict contains data about the 
@@ -21,15 +24,26 @@ class IdUtil:
 		self.dbi = data.get("dbi")
 	
 	def id_to_class(self, c_id):
+		if c_id == None:
+			return None
+
 		return self.dbi.get("classes").get(c_id).get("name")
 
 	def id_to_teacher(self, t_id):
+		if t_id == None:
+			return None
+		
 		teacher_data = self.dbi.get("teachers").get(t_id)
 		teacher_full_name = teacher_data.get("firstname") + " " + teacher_data.get("lastname")
 		return teacher_full_name
 
 	def id_to_classroom(self, c_id):
+		if c_id == None:
+			return None
+		
 		return self.dbi.get("classrooms").get(c_id).get("short")
 
 	def id_to_subject(self, s_id):
+		if s_id == None:
+			return s_id
 		return self.dbi.get("subjects").get(s_id).get("short")

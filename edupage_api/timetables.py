@@ -30,3 +30,9 @@ class EduTimetable:
 			previous = lesson
 		
 		return None
+	
+	def get_first_lesson(self):
+		return self.lessons[0]
+	
+	def get_last_lesson(self):
+		return self.lessons[-1]

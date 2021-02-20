@@ -8,23 +8,26 @@ class EduDate:
 
 	@staticmethod
 	def from_formatted_date(formatted_date):
-		s = formatted_date.split("-")
-		return EduDate(s[0], s[2], s[1])
+		if formatted_date == None:
+			return None
+
+		[year, day, month] = formatted_date.split("-")
+		return EduDate(year, day, month)
 	
 	@staticmethod
-	def today():
+	def now():
 		now = datetime.datetime.now()
 		
 		return EduDate.from_formatted_date(now.strftime("%Y-%m-%d"))
 	
 	@staticmethod
-	def yesterday():
+	def yesterday_this_time():
 		yesterday = datetime.datetime.now() + datetime.timedelta(days = -1)
 
 		return EduDate.from_formatted_date(yesterday.strftime("%Y-%m-%d"))
 
 	@staticmethod
-	def tommorrow():
+	def tommorrow_this_time():
 		tommorrow = datetime.datetime.now() + datetime.timedelta(days = 1)
 
 		return EduDate.from_formatted_date(tommorrow.strftime("%Y-%m-%d"))
@@ -67,13 +70,13 @@ class EduExactTime:
 		return EduExactTime(datetime_now.hour, datetime_now.minute, datetime_now.second)
 	
 	@staticmethod
-	def yesterday():
+	def yesterday_this_time():
 		datetime_yesterday = datetime.datetime.now() - datetime.timedelta(days = 1)
 
 		return EduExactTime(datetime_yesterday.hour, datetime_yesterday.minute, datetime_yesterday.second) 
 
 	@staticmethod
-	def tommorrow():
+	def tommorrow_this_time():
 		datetime_tommorrow = datetime.datetime.now() + datetime.timedelta(days = -1)
 
 		return EduExactTime(datetime_tommorrow.hour, datetime_tommorrow.minute, datetime_tommorrow.second)
@@ -84,10 +87,15 @@ class EduExactTime:
 	
 	@staticmethod
 	def from_formatted_string(s):
+		if s == None:
+			return None
+		
 		[hour, minute, second] = s.split(":")
 
 		return EduExactTime(hour, minute, second)
-
+	
+	def __str__(self):
+		return f"{self.hour}:{self.minute}:{self.second}"
 
 
 class EduTime:
@@ -134,19 +142,26 @@ class EduTime:
 	
 	@staticmethod
 	def from_formatted_string(s):
+		if s == None:
+			return None
+		
 		[hour, minute] = s.split(":")
 
 		return EduTime(hour, minute)
+	
+	def __str__(self):
+		return f"{self.hour}:{self.minute}"
 
 class EduDateTime:
 	def __init__(self, date: EduDate, hour, minute, second):
 		self.date = date
-		self.hour = hour
-		self.minute = minute
-		self.second = second
+		self.time = EduExactTime(int(hour), int(minute), int(second))
 
 	@staticmethod
 	def from_formatted_datetime(formatted_datetime):
+		if formatted_datetime == None:
+			return None
+		
 		split_date = formatted_datetime.split(" ")
 
 		date = EduDate.from_formatted_date(split_date[0])
@@ -155,7 +170,7 @@ class EduDateTime:
 		return EduDateTime(date, time[0], time[1], time[2])
 	
 	def __str__(self):
-		return f'{str(self.date)} {self.hour}:{self.minute}:{self.second}'
+		return f'{str(self.date)} {str(self.time)}'
 
 class EduLength:
 	def __init__(self, start, end):

@@ -66,11 +66,11 @@ class Edupage:
 			return None
 		
 		plan = date_plans.get("plan")
-		subjects = []
+		lessons = []
 		for subj in plan:
 			header = subj.get("header")
 			if len(header) == 0:
-				return subjects
+				return lessons
 			
 			subject_id = subj.get("subjectid")
 			subject_name = self.ids.id_to_subject(subject_id)
@@ -88,10 +88,10 @@ class Edupage:
 			online_lesson_link = subj.get("ol_url")
 			
 			lesson = EduLesson(subject_name, teacher_full_name, classroom_number, length, online_lesson_link) 
-			subjects.append(lesson)
+			lessons.append(lesson)
 
 			
-		return subjects
+		return EduTimetable(lessons)
 	
 	def get_homework(self):
 		if not self.is_logged_in:

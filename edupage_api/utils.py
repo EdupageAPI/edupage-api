@@ -1,3 +1,5 @@
+import gzip, base64
+
 class GradeUtil:
 	def __init__(self, grade_data):
 		self.data = grade_data
@@ -47,3 +49,31 @@ class IdUtil:
 		if s_id == None:
 			return s_id
 		return self.dbi.get("subjects").get(s_id).get("short")
+
+class RequestUtil:
+	# Almost all of Edupage's API calls go through an 'encryption'
+	# They are compressed and encoded with a weird for-loop.
+	
+	# This is their original code:
+	"""
+	var encoder = new TextEncoder()
+	var gz = new Zlib.RawDeflate(encoder.encode(cs));
+	var compressed = gz.compress();
+	var cs1 = '';
+
+	for (var i=0;i<compressed.length;i += 10000) {
+		cs1 += String.fromCharCode.apply(null, compressed.subarray(i, i+10000));
+	}
+	cs0 = 'dz:'+btoa(cs1); 
+
+	"""
+	@staticmethod
+	def encrypt_request_data(data):
+		compressed = gzip.compress(data.encode('utf-8'))
+		
+		output = RequestUtil.from_char_code(*list(compressed))
+		return base64.b64encode(output.encode()).decode()
+
+	@staticmethod
+	def from_char_code(*args):
+		return ''.join(map(chr, args))

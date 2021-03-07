@@ -15,7 +15,7 @@ class EduDate:
 		return EduDate(year, day, month)
 	
 	@staticmethod
-	def now():
+	def today():
 		now = datetime.datetime.now()
 		
 		return EduDate.from_formatted_date(now.strftime("%Y-%m-%d"))

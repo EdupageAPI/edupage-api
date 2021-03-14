@@ -8,41 +8,55 @@ from edupage_api.timetables import *
 from edupage_api.messages import *
 from edupage_api.grades import *
 from edupage_api.people import *
+from edupage_api.exceptions import *
 
 class Edupage:
-	def __init__(self, username, password):
-		self.school = None
+	def __init__(self, school, username, password):
+		self.school = school
 		self.username = username
 		self.password = password
 		self.is_logged_in = False
 		self.session = requests.session()
 	
+	# present only in some schools, contains some neat new features
+	# and security measures such as english code or csrf tokens
 	def login(self):
-		parameters = {"meno": self.username, "password": self.password, "akcia": "login"}
-		response = self.session.post("https://portal.edupage.org/index.php?jwid=jw2&module=Login", parameters)
-		if "wrongPassword" in response.url:
-			return False
+		# we first have to make a request to index.php to get the csrf token
+		request_url = "https://" + self.school + ".edupage.org/login/index.php"
+
+		csrf_response = self.session.get(request_url).content.decode()
+		
+		# we parse the token from the html
+		csrf_token = csrf_response.split("name=\"csrfauth\" value=\"")[1].split("\"")[0]
+		
+		# now everything is the same as in the first approach, we just add the csrf token
+		parameters = {"username": self.username, "password": self.password, "csrfauth": csrf_token}
+		request_url = "https://" + self.school + ".edupage.org/login/edubarLogin.php"
+
+		response = self.session.post(request_url, parameters)
+		
+		if "bad=1" in response.url:
+			raise BadCredentialsException()
+
 		try:
-			js_json = response.content.decode() \
-									.split("$j(document).ready(function() {")[1] \
-									.split(");")[0] \
-									.replace("\t", "") \
-									.split("userhome(")[1] \
-									.replace("\n", "") \
-									.replace("\r", "")
-		except TypeError:
-			return False
-		except IndexError:
-			return False
-		self.school = response.url.split(".edupage.org")[0] \
-								.split("https://")[1]
-		self.cookies = response.cookies.get_dict()
-		self.headers = response.headers
+			self.parse_login_data(response.content.decode())
+		except (IndexError, TypeError) :
+			raise LoginDataParsingException()
+		
+		return True
+	
+	def parse_login_data(self, data):
+		js_json = data.split("$j(document).ready(function() {")[1] \
+								.split(");")[0] \
+								.replace("\t", "") \
+								.split("userhome(")[1] \
+								.replace("\n", "") \
+								.replace("\r", "")
 		self.data = json.loads(js_json)
 		self.is_logged_in = True
 		self.ids = IdUtil(self.data)
-		return True
-	
+
+
 	def get_available_timetable_dates(self):
 		if not self.is_logged_in:
 			return None
@@ -306,6 +320,18 @@ class Edupage:
 	
 	def get_user_id(self):
 		return self.data.get("userid")
+	
+	def send_message(self, recipient, body):
+		data = {
+			"receipt": "0",
+			"selectedUser": recipient,
+			"text": body,
+			"typ": "sprava"
+		}
+
+		request_url = self.school + ".edupage.org/timeline&akcia=createItem"
+
+
 
 """
 TODO:

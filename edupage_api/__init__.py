@@ -329,8 +329,7 @@ class Edupage:
 
     def get_user_id(self):
         return self.data.get("userid")
-
-	"""
+        """
     def send_message(self, recipient, body):
         data = {
             "receipt": "0",

@@ -19,7 +19,7 @@ class Edupage:
         self.is_logged_in = False
         self.session = requests.session()
 
-    # present only in some schools, contains some neat new features
+    # a new way of logging in, contains some neat new features
     # and security measures such as english code or csrf tokens
     def login(self):
         # we first have to make a request to index.php to get the csrf token

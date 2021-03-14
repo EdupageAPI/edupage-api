@@ -13,18 +13,29 @@ pip install edupage-api
 ## Login
 You can login easily, works with any school:
 ```python
-from edupage_api import Edupage
+from edupage_api import Edupage, BadCredentialsException, LoginDataParsingException
 
-edupage = Edupage("Username or E-Mail", "Password")
+try:
+    edupage = Edupage("Subdomain (Name) of your school", "Username or E-Mail", "Password")
+except BadCredentialsException:
+    print("Wrong username or password!")
+except LoginDataParsingException:
+    print("Try again or open an issue!")
+
 edupage.login()
 ```
 
 ## Get timetable for a given date
 Check all avaiable timetables:
 ```python
-from edupage_api import Edupage
+from edupage_api import Edupage, BadCredentialsException, LoginDataParsingException
 
-edupage = Edupage("Username or E-Mail", "Password")
+try:
+    edupage = Edupage("Subdomain (Name) of your school", "Username or E-Mail", "Password")
+except BadCredentialsException:
+    print("Wrong username or password!")
+except LoginDataParsingException:
+    print("Try again or open an issue!")
 edupage.login()
 
 # Get dates for all avaiable timetables
@@ -35,9 +46,15 @@ print(dates) # ['2021-02-03', '2021-02-04']
 
 ## Get the timetable for a date
 ```python
-from edupage_api import Edupage, EduDate
+from edupage_api import Edupage, EduDate, BadCredentialsException, LoginDataParsingException
 
-edupage = Edupage("Username or E-Mail", "Password")
+try:
+    edupage = Edupage("Subdomain (Name) of your school", "Username or E-Mail", "Password")
+except BadCredentialsException:
+    print("Wrong username or password!")
+except LoginDataParsingException:
+    print("Try again or open an issue!")
+
 edupage.login()
 
 # Get today's date
@@ -63,9 +80,15 @@ timetable_for_tommorrow = edupage.get_timetable(tommorrow)
 
 ## Get lesson for a given time
 ```python
-from edupage_api import Edupage, EduDate, EduTime
+from edupage_api import Edupage, EduDate, EduTime, BadCredentialsException, LoginDataParsingException
 
-edupage = Edupage("Username or E-Mail", "Password")
+try:
+    edupage = Edupage("Subdomain (Name) of your school", "Username or E-Mail", "Password")
+except BadCredentialsException:
+    print("Wrong username or password!")
+except LoginDataParsingException:
+    print("Try again or open an issue!")
+
 edupage.login()
 
 # Timetable for today
@@ -82,9 +105,15 @@ print(current_lesson)
 
 ## Get next lesson for a given time
 ```python
-from edupage_api import Edupage, EduDate, EduTime
+from edupage_api import Edupage, EduDate, EduTime, BadCredentialsException, LoginDataParsingException
 
-edupage = Edupage("Username or E-Mail", "Password")
+try:
+    edupage = Edupage("Subdomain (Name) of your school", "Username or E-Mail", "Password")
+except BadCredentialsException:
+    print("Wrong username or password!")
+except LoginDataParsingException:
+    print("Try again or open an issue!")
+
 edupage.login()
 
 # Timetable for today
@@ -111,9 +140,15 @@ The EduLesson class provides some information about the lesson:
 ## Get news from the webpage
 Thanks to how Edupage's message system works, you can get recent news from the webpage like this:
 ```python
-from edupage_api import Edupage
+from edupage_api import Edupage, BadCredentialsException, LoginDataParsingException
 
-edupage = Edupage("Username or E-Mail", "Password")
+try:
+    edupage = Edupage("Subdomain (Name) of your school", "Username or E-Mail", "Password")
+except BadCredentialsException:
+    print("Wrong username or password!")
+except LoginDataParsingException:
+    print("Try again or open an issue!")
+
 edupage.login()
 
 # Note: if you are not logged in or there was an error, get_news returns None
@@ -126,9 +161,15 @@ for message in news:
 ## Get the list of students
 This is an edupage-curated list of students. When students enter the school, they get assigned a number. If anybody changes school, leaves or anything happens with any student, the numbers don't change. It just skips the number.
 ```python
-from edupage_api import Edupage, EduStudent
+from edupage_api import Edupage, EduStudent, BadCredentialsException, LoginDataParsingException
 
-edupage = Edupage("Username or E-Mail", "Password")
+try:
+    edupage = Edupage("Subdomain (Name) of your school", "Username or E-Mail", "Password")
+except BadCredentialsException:
+    print("Wrong username or password!")
+except LoginDataParsingException:
+    print("Try again or open an issue!")
+
 edupage.login()
 
 # Note: This list doesn't have to be sorted!
@@ -144,9 +185,15 @@ for student in students:
 
 ## Get homework
 ```python
-from edupage_api import Edupage
+from edupage_api import Edupage, BadCredentialsException, LoginDataParsingException
 
-edupage = Edupage("Username or E-Mail", "Password")
+try:
+    edupage = Edupage("Subdomain (Name) of your school", "Username or E-Mail", "Password")
+except BadCredentialsException:
+    print("Wrong username or password!")
+except LoginDataParsingException:
+    print("Try again or open an issue!")
+    
 edupage.login()
 
 homework = edupage.get_homework()

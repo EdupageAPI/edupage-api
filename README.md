@@ -15,14 +15,15 @@ You can login easily, works with any school:
 ```python
 from edupage_api import Edupage, BadCredentialsException, LoginDataParsingException
 
+
+edupage = Edupage("Subdomain (Name) of your school", "Username or E-Mail", "Password")
+
 try:
-    edupage = Edupage("Subdomain (Name) of your school", "Username or E-Mail", "Password")
+    edupage.login()
 except BadCredentialsException:
     print("Wrong username or password!")
 except LoginDataParsingException:
     print("Try again or open an issue!")
-
-edupage.login()
 ```
 
 ## Get timetable for a given date

@@ -1,6 +1,6 @@
 from datetime import date
 import requests, json, datetime
-import pprint
+import pprint, base64, hashlib, urllib.parse
 
 from edupage_api.utils import *
 from edupage_api.date import *
@@ -329,17 +329,45 @@ class Edupage:
 
     def get_user_id(self):
         return self.data.get("userid")
-        """
-    def send_message(self, recipient, body):
+
+    @staticmethod
+    def __urlencode(string):
+        return urllib.parse.quote(string)
+
+    def __encode_form_data(self, data):
+        output = ""
+        for i, key in enumerate(data.keys(), start = 0):
+            value = data[key]
+            key_value = f"{self.__urlencode(key)}={self.__urlencode(value)}"
+            if i != 0:
+                output += f"&{key_value}"
+            else:
+                output += key_value
+        
+        return output
+
+
+    def send_message(self, recipient: EduStudent, body):
         data = {
             "receipt": "0",
-            "selectedUser": recipient,
+            "selectedUser": recipient.get_id(),
             "text": body,
-            "typ": "sprava"
+            "typ": "sprava",
+            "attachements": "{}"
         }
 
-        request_url = self.school + ".edupage.org/timeline&akcia=createItem"
-	"""
+        headers = {
+            'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
+        }
+
+        params = (
+            ('akcia', 'createItem'),
+            ('eqav', '7'),
+            ('maxEqav', '7'),
+        )
+
+        response = self.session.post('https://42624333.edupage.org/timeline/', headers=headers, params=params, data=self.__encode_form_data(data))
+        print(response)
 
 
 """

@@ -11,7 +11,7 @@ class EduStudent:
         except ValueError:
             self.number_in_class = None
         self.is_out = is_out
-    
+
     def get_id(self):
         return f"Student{str(self.id)}"
 
@@ -34,7 +34,7 @@ class EduTeacher:
         self.id = int(teacher_id)
         self.classroom = classroom
         self.is_out = is_out
-    
+
     def __str__(self):
         return "{gender: %s, name: %s, id: %d, classroom: %s, is_out: %s}" % (
             self.gender, self.fullname, self.id, self.classroom, self.is_out)

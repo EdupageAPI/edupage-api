@@ -336,16 +336,15 @@ class Edupage:
 
     def __encode_form_data(self, data):
         output = ""
-        for i, key in enumerate(data.keys(), start = 0):
+        for i, key in enumerate(data.keys(), start=0):
             value = data[key]
             key_value = f"{self.__urlencode(key)}={self.__urlencode(value)}"
             if i != 0:
                 output += f"&{key_value}"
             else:
                 output += key_value
-        
-        return output
 
+        return output
 
     def send_message(self, recipient: EduStudent, body):
         data = {
@@ -366,7 +365,10 @@ class Edupage:
             ('maxEqav', '7'),
         )
 
-        response = self.session.post('https://42624333.edupage.org/timeline/', headers=headers, params=params, data=self.__encode_form_data(data))
+        response = self.session.post('https://42624333.edupage.org/timeline/',
+                                     headers=headers,
+                                     params=params,
+                                     data=self.__encode_form_data(data))
         print(response)
 
 

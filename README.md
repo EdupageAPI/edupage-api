@@ -29,7 +29,7 @@ except LoginDataParsingException:
 ## Get timetable for a given date
 Check all avaiable timetables:
 ```python
-from edupage_api import Edupage, BadCredentialsException, LoginDataParsingException
+from edupage_api import Edupage
 
 edupage = Edupage("Subdomain (Name) of your school", "Username or E-Mail", "Password")
 edupage.login()
@@ -42,7 +42,7 @@ print(dates) # ['2021-02-03', '2021-02-04']
 
 ## Get the timetable for a date
 ```python
-from edupage_api import Edupage, EduDate, BadCredentialsException, LoginDataParsingException
+from edupage_api import Edupage, EduDate
 
 edupage = Edupage("Subdomain (Name) of your school", "Username or E-Mail", "Password")
 edupage.login()
@@ -70,7 +70,7 @@ timetable_for_tommorrow = edupage.get_timetable(tommorrow)
 
 ## Get lesson for a given time
 ```python
-from edupage_api import Edupage, EduDate, EduTime, BadCredentialsException, LoginDataParsingException
+from edupage_api import Edupage, EduDate, EduTime
 
 edupage = Edupage("Subdomain (Name) of your school", "Username or E-Mail", "Password")
 edupage.login()
@@ -89,7 +89,7 @@ print(current_lesson)
 
 ## Get next lesson for a given time
 ```python
-from edupage_api import Edupage, EduDate, EduTime, BadCredentialsException, LoginDataParsingException
+from edupage_api import Edupage, EduDate, EduTime
 
 edupage = Edupage("Subdomain (Name) of your school", "Username or E-Mail", "Password")
 edupage.login()
@@ -118,7 +118,7 @@ The EduLesson class provides some information about the lesson:
 ## Get news from the webpage
 Thanks to how Edupage's message system works, you can get recent news from the webpage like this:
 ```python
-from edupage_api import Edupage, BadCredentialsException, LoginDataParsingException
+from edupage_api import Edupage
 
 edupage = Edupage("Subdomain (Name) of your school", "Username or E-Mail", "Password")
 edupage.login()
@@ -133,7 +133,7 @@ for message in news:
 ## Get the list of students
 This is an edupage-curated list of students. When students enter the school, they get assigned a number. If anybody changes school, leaves or anything happens with any student, the numbers don't change. It just skips the number.
 ```python
-from edupage_api import Edupage, EduStudent, BadCredentialsException, LoginDataParsingException
+from edupage_api import Edupage, EduStudent
 
 edupage = Edupage("Subdomain (Name) of your school", "Username or E-Mail", "Password")
 edupage.login()
@@ -151,7 +151,7 @@ for student in students:
 
 ## Get homework
 ```python
-from edupage_api import Edupage, BadCredentialsException, LoginDataParsingException
+from edupage_api import Edupage
 
 edupage = Edupage("Subdomain (Name) of your school", "Username or E-Mail", "Password")  
 edupage.login()
@@ -161,6 +161,7 @@ homework = edupage.get_homework()
 for hw in homework:
     print(hw.due_date)
 ```
+
 Homework, other than its title and description, provides some more information:
 #### EduHomework
 - due_date: EduDate -> When the homework is due
@@ -171,12 +172,30 @@ Homework, other than its title and description, provides some more information:
 - event_id: A internal Edupage id, which can be used to find the event coresponding to this homework. Useless for now.
 - datetime_added: EduDateTime -> A date and time when this homework was assigned.
 
+
+## Sending messages
+You can send a message to one or multiple people when you have a object that extends EduPerson
+```python
+from edupage_api import Edupage, EduStudent
+
+edupage = Edupage("Subdomain (Name) of your school", "Username or E-Mail", "Password")
+edupage.login()
+
+for student in students:
+    if student.fullname == "John Smith":
+        # Ignore the attachments parameter, for some reason attachments do not work
+        edupage.send_message(student, "Hello John!")
+```
+
+
 # Upcoming features
-- [ ] Correct test answers (see [EduPageTestHack](https://github.com/markotomcik/EduPageTestHack))
 - [ ] Lunches
 - [ ] Grades
 - [ ] All message types
 - [ ] Writing messages to other students/teachers
 - [x] Make this library avaiable through PyPi
+
+# Features that I won't implement
+- [ ] Correct test answers (see [EduPageTestHack](https://github.com/markotomcik/EduPageTestHack))
 
 Feel free to suggest any other features! Just open an issue with the *Feature Request* tag.

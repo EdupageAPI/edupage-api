@@ -9,6 +9,9 @@ class EduCloudFile:
         self.name = name
         self.type = ftype
         self.cloudid = cloudid
+    
+    def get_url(self, edupage):
+        return f"https://{edupage.school}.edupage.org{self.uri}"
 
 
 class EduCloud:
@@ -16,20 +19,18 @@ class EduCloud:
     def upload_file(edupage, fd):
         request_url = "https://" + edupage.school + ".edupage.org/timeline/?akcia=uploadAtt"
 
-        files = {
-            "att": fd
-        }
+        files = {"att": fd}
 
-        
         response = edupage.session.post(request_url,
-                                        files=files).response.content.decode()
-        
+                                        files=files).content.decode()
+
         try:
             response_json = json.loads(response)
             if response_json.get("status") != "ok":
                 raise FailedToUploadFileException()
-            
+
             metadata = response_json.get("data")
-            return EduCloudFile(metadata.get("file"), metadata.get("name"), metadata.get("type"), metadata.get("cloudid"))
+            return EduCloudFile(metadata.get("file"), metadata.get("name"),
+                                metadata.get("type"), metadata.get("cloudid"))
         except:
             raise FailedToUploadFileException()

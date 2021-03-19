@@ -187,13 +187,30 @@ for student in students:
         edupage.send_message(student, "Hello John!")
 ```
 
+## Upload a file to Edupage's cloud
+The file will be hosted forever (and for free) on Edupage's servers. The file is tied to your user account, but anybody can view it.
+```python
+from edupage_api import Edupage, EduStudent
+from edupage_api.cloud import EduCloud
+
+edupage = Edupage("Subdomain (Name) of your school", "Username or E-Mail", "Password")
+edupage.login()
+
+f = open("image.png", "rb")
+
+uploaded_file = EduCloud.upload_file(edupage, f)
+link = uploaded_file.get_url()
+
+print(link)
+
+```
 
 # Upcoming features
 - [ ] Lunches
 - [ ] Grades
 - [ ] Reading your own notifications
 - [ ] Connecting to the online lessons (with your presence being acknowledged by Edupage)
-- [ ] Uploading (and hosting) files on the Edupage cloud (if possible)
+- [x] Uploading (and hosting) files on the Edupage cloud (if possible)
 - [x] Writing messages to other students/teachers
 - [x] Make this library avaiable through PyPi
 

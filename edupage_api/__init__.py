@@ -345,9 +345,8 @@ class Edupage:
 
     def get_user_id(self):
         return self.data.get("userid")
-    
 
-    def send_message(self, recipient: EduStudent, body, attachments = []):
+    def send_message(self, recipient: EduStudent, body, attachments=[]):
         data = {
             "receipt": "0",
             "selectedUser": recipient.get_id(),
@@ -367,9 +366,9 @@ class Edupage:
         )
 
         self.session.post('https://42624333.edupage.org/timeline/',
-                                     headers=headers,
-                                     params=params,
-                                     data=RequestUtils.encode_form_data(data))
+                          headers=headers,
+                          params=params,
+                          data=RequestUtils.encode_form_data(data))
 
 
 """

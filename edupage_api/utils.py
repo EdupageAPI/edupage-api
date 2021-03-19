@@ -55,6 +55,7 @@ class IdUtil:
             return s_id
         return self.dbi.get("subjects").get(s_id).get("short")
 
+
 class RequestUtils:
     @staticmethod
     def urlencode(string):
@@ -66,19 +67,19 @@ class RequestUtils:
         for i, key in enumerate(data.keys(), start=0):
             value = data[key]
             entry = f"{RequestUtils.urlencode(key)}={RequestUtils.urlencode(value)}"
-            
+
             if i != 0:
                 output += f"&{entry}"
             else:
                 output += entry
 
         return output
-    
+
     @staticmethod
     def encode_attachments(attachments):
         output = {}
-        
+
         for attachment in attachments:
             output[attachment.url] = attachment.filename
-        
+
         return json.dumps(output)

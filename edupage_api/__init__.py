@@ -10,6 +10,7 @@ from edupage_api.grades import *
 from edupage_api.people import *
 from edupage_api.exceptions import *
 
+
 class Edupage:
     def __init__(self, school, username, password):
         self.school = school
@@ -352,12 +353,12 @@ class Edupage:
         recipients_post_data = ""
 
         if type(recipients) == list:
-            for i, recipient in enumerate(recipients, start = 0):
+            for i, recipient in enumerate(recipients, start=0):
                 if i != 0:
                     recipients_post_data += f";{recipient.get_id()}"
                 else:
                     recipients_post_data += recipient.get_id()
-        
+
         data = {
             "receipt": "0",
             "selectedUser": recipients_post_data,

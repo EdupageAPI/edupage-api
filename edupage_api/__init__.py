@@ -10,23 +10,6 @@ from edupage_api.grades import *
 from edupage_api.people import *
 from edupage_api.exceptions import *
 
-import logging
-
-# These two lines enable debugging at httplib level (requests->urllib3->http.client)
-# You will see the REQUEST, including HEADERS and DATA, and RESPONSE with HEADERS but without DATA.
-# The only thing missing will be the response.body which is not logged.
-
-import http.client as http_client
-
-http_client.HTTPConnection.debuglevel = 1
-
-logging.basicConfig()
-logging.getLogger().setLevel(logging.DEBUG)
-requests_log = logging.getLogger("requests.packages.urllib3")
-requests_log.setLevel(logging.DEBUG)
-requests_log.propagate = True
-
-
 class Edupage:
     def __init__(self, school, username, password):
         self.school = school
@@ -346,10 +329,38 @@ class Edupage:
     def get_user_id(self):
         return self.data.get("userid")
 
-    def send_message(self, recipient: EduStudent, body, attachments=[]):
+    # if (votingParams.answers && votingParams.answers.length > 0) {
+    #     postData["votingParams"] = JSON.stringify(votingParams);
+    # }
+
+    # if (opts.edupageLink) {
+    #     postData["edupageLink"] = JSON.stringify(opts.edupageLink);
+    # }
+
+    # if (opts.asKonzultacie) {
+    #     postData["sendAsKonzultacie"] = '1';
+    # }
+
+    # if (d.repliesDisabled) {
+    #     postData["repliesDisabled"] = '1';
+    # }
+
+    # if (d.repliesToAllDisabled) {
+    #     postData["repliesToAllDisabled"] = '1';
+    # }
+    def send_message(self, recipients: EduPerson, body, attachments=[]):
+        recipients_post_data = ""
+
+        if type(recipients) == list:
+            for i, recipient in enumerate(recipients, start = 0):
+                if i != 0:
+                    recipients_post_data += f";{recipient.get_id()}"
+                else:
+                    recipients_post_data += recipient.get_id()
+        
         data = {
             "receipt": "0",
-            "selectedUser": recipient.get_id(),
+            "selectedUser": recipients_post_data,
             "text": body,
             "typ": "sprava",
             "attachements": RequestUtils.encode_attachments(attachments)

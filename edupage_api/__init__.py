@@ -365,7 +365,7 @@ class Edupage:
             ('maxEqav', '7'),
         )
 
-        self.session.post('https://42624333.edupage.org/timeline/',
+        self.session.post('https://' + self.school + '.edupage.org/timeline/',
                           headers=headers,
                           params=params,
                           data=RequestUtils.encode_form_data(data))

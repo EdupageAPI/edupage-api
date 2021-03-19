@@ -199,7 +199,7 @@ edupage.login()
 f = open("image.png", "rb")
 
 uploaded_file = EduCloud.upload_file(edupage, f)
-link = uploaded_file.get_url()
+link = uploaded_file.get_url(edupage)
 
 print(link)
 

@@ -26,9 +26,6 @@ class EduCloud:
             "Connection": "keep-alive",
             "Content-Type": mfile.content_type,
             "Accept": "application/json, text/javascript, */*; q=0.01",
-            "Origin": "https://42624333.edupage.org",
-            "Referer": 'https://42624333.edupage.org/timeline/',
-            "authority": "42624333.edupage.org"
         }
 
 

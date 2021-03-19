@@ -192,6 +192,7 @@ for student in students:
 - [ ] Lunches
 - [ ] Grades
 - [ ] Reading your own notifications
+- [ ] Uploading (and hosting) files on the Edupage cloud (if possible)
 - [x] Writing messages to other students/teachers
 - [x] Make this library avaiable through PyPi
 

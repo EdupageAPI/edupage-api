@@ -10,7 +10,6 @@ from edupage_api.grades import *
 from edupage_api.people import *
 from edupage_api.exceptions import *
 
-
 import logging
 
 # These two lines enable debugging at httplib level (requests->urllib3->http.client)
@@ -26,6 +25,7 @@ logging.getLogger().setLevel(logging.DEBUG)
 requests_log = logging.getLogger("requests.packages.urllib3")
 requests_log.setLevel(logging.DEBUG)
 requests_log.propagate = True
+
 
 class Edupage:
     def __init__(self, school, username, password):

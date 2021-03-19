@@ -191,8 +191,8 @@ for student in students:
 # Upcoming features
 - [ ] Lunches
 - [ ] Grades
-- [ ] All message types
-- [ ] Writing messages to other students/teachers
+- [ ] Reading your own notifications
+- [x] Writing messages to other students/teachers
 - [x] Make this library avaiable through PyPi
 
 # Features that I won't implement

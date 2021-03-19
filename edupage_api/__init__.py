@@ -1,6 +1,6 @@
 from datetime import date
 import requests, json, datetime
-import pprint, base64, hashlib, urllib.parse
+import pprint, base64, hashlib
 
 from edupage_api.utils import *
 from edupage_api.date import *
@@ -9,6 +9,22 @@ from edupage_api.messages import *
 from edupage_api.grades import *
 from edupage_api.people import *
 from edupage_api.exceptions import *
+
+import logging
+
+# These two lines enable debugging at httplib level (requests->urllib3->http.client)
+# You will see the REQUEST, including HEADERS and DATA, and RESPONSE with HEADERS but without DATA.
+# The only thing missing will be the response.body which is not logged.
+
+import http.client as http_client
+
+http_client.HTTPConnection.debuglevel = 1
+
+logging.basicConfig()
+logging.getLogger().setLevel(logging.DEBUG)
+requests_log = logging.getLogger("requests.packages.urllib3")
+requests_log.setLevel(logging.DEBUG)
+requests_log.propagate = True
 
 
 class Edupage:
@@ -329,30 +345,15 @@ class Edupage:
 
     def get_user_id(self):
         return self.data.get("userid")
+    
 
-    @staticmethod
-    def __urlencode(string):
-        return urllib.parse.quote(string)
-
-    def __encode_form_data(self, data):
-        output = ""
-        for i, key in enumerate(data.keys(), start=0):
-            value = data[key]
-            key_value = f"{self.__urlencode(key)}={self.__urlencode(value)}"
-            if i != 0:
-                output += f"&{key_value}"
-            else:
-                output += key_value
-
-        return output
-
-    def send_message(self, recipient: EduStudent, body):
+    def send_message(self, recipient: EduStudent, body, attachments = []):
         data = {
             "receipt": "0",
             "selectedUser": recipient.get_id(),
             "text": body,
             "typ": "sprava",
-            "attachements": "{}"
+            "attachements": RequestUtils.encode_attachments(attachments)
         }
 
         headers = {
@@ -365,11 +366,10 @@ class Edupage:
             ('maxEqav', '7'),
         )
 
-        response = self.session.post('https://42624333.edupage.org/timeline/',
+        self.session.post('https://42624333.edupage.org/timeline/',
                                      headers=headers,
                                      params=params,
-                                     data=self.__encode_form_data(data))
-        print(response)
+                                     data=RequestUtils.encode_form_data(data))
 
 
 """

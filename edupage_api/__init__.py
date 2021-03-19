@@ -369,10 +369,3 @@ class Edupage:
                           headers=headers,
                           params=params,
                           data=RequestUtils.encode_form_data(data))
-
-
-"""
-TODO:
-	- All message types
-	- a way to wait for new messages/news/grades... listeners?
-"""

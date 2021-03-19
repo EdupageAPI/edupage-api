@@ -6,12 +6,13 @@ class EduPerson:
         self.fullname = firstname + " " + lastname
         self.id = int(p_id)
         self.is_out = is_out
-    
+
     def get_id(self):
         raise NotImplementedError()
 
     def __str__(self):
         return str(self.__dict__)
+
 
 class EduStudent(EduPerson):
     def __init__(self, gender, firstname, lastname, student_id, number,
@@ -44,7 +45,7 @@ class EduTeacher(EduPerson):
         self.id = int(teacher_id)
         self.classroom = classroom
         self.is_out = is_out
-    
+
     def get_id(self):
         return f"Ucitel{str(self.id)}"
 

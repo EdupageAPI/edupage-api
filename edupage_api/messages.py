@@ -27,6 +27,7 @@ class EduNews:
     def __str__(self):
         return f'{self.text}'
 
+
 class EduAttachment:
     def __init__(self, url, filename):
         self.url = url

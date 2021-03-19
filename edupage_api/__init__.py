@@ -10,6 +10,7 @@ from edupage_api.grades import *
 from edupage_api.people import *
 from edupage_api.exceptions import *
 
+
 class Edupage:
     def __init__(self, school, username, password):
         self.school = school

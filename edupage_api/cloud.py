@@ -9,7 +9,7 @@ class EduCloudFile:
         self.name = name
         self.type = ftype
         self.cloudid = cloudid
-    
+
     def get_url(self, edupage):
         return f"https://{edupage.school}.edupage.org{self.uri}"
 

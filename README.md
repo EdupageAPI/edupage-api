@@ -188,7 +188,7 @@ for student in students:
 ```
 
 ## Upload a file to Edupage's cloud
-The file will be hosted forever (and for free) on Edupage's servers. The file is tied to your user account, but anybody can view it.
+The file will be hosted forever (and for free) on Edupage's servers. The file is tied to your user account, but anybody with a link can view it.
 ```python
 from edupage_api import Edupage, EduStudent
 from edupage_api.cloud import EduCloud

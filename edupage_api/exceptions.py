@@ -4,3 +4,7 @@ class BadCredentialsException(Exception):
 
 class LoginDataParsingException(Exception):
     pass
+
+
+class FailedToUploadFileException(Exception):
+    pass

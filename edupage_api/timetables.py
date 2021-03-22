@@ -17,7 +17,7 @@ class EduOnlineLesson(EduLesson):
         self.online_lesson_link = online_lesson_link
     
     # Tell edupage that you are on this online lesson
-    def sign_into_class(self, edupage):
+    def sign_into_lesson(self, edupage):
         request_url = "https://" + edupage.school + ".edupage.org/dashboard/eb.php"
 
         response = edupage.session.get(request_url)

@@ -376,7 +376,7 @@ class Edupage:
             "selectedUser": recipients_post_data,
             "text": body,
             "typ": "sprava",
-            "attachements": RequestUtils.encode_attachments(attachments)
+            "attachements": RequestUtil.encode_attachments(attachments)
         }
 
         headers = {
@@ -392,4 +392,4 @@ class Edupage:
         self.session.post('https://' + self.school + '.edupage.org/timeline/',
                           headers=headers,
                           params=params,
-                          data=RequestUtils.encode_form_data(data))
+                          data=RequestUtil.encode_form_data(data))

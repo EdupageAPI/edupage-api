@@ -156,7 +156,7 @@ from edupage_api import Edupage
 
 edupage = Edupage("Subdomain (Name) of your school", "Username or E-Mail", "Password")
 
-# Note: This list is not sorted and you cannot sort it!
+# Note: This list is not sorted and you cannot sort it with EduStudent.__sort__!
 teachers = edupage.get_teachers()
 
 for teacher in teachers:

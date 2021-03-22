@@ -130,7 +130,7 @@ for message in news:
     print(str(news))
 ```
 
-## Get the list of students
+## Get a list of students
 This is an edupage-curated list of students. When students enter the school, they get assigned a number. If anybody changes school, leaves or anything happens with any student, the numbers don't change. It just skips the number.
 ```python
 from edupage_api import Edupage, EduStudent
@@ -146,6 +146,21 @@ students.sort(key = EduStudent.__sort__)
 
 for student in students:
     print(f"{student.number_in_class}: {student.fullname}")
+
+```
+
+## Get a list of teachers
+This list is not (and cannot be) sorted in any way.
+```python
+from edupage_api import Edupage
+
+edupage = Edupage("Subdomain (Name) of your school", "Username or E-Mail", "Password")
+
+# Note: This list is not sorted and you cannot sort it!
+teachers = edupage.get_teachers()
+
+for teacher in teachers:
+    print(str(teacher))
 
 ```
 

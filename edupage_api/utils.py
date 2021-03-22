@@ -1,5 +1,6 @@
 import gzip, base64
 import urllib.parse, json
+from edupage_api.timetables import EduOnlineLesson
 from pprint import pprint
 
 
@@ -22,6 +23,11 @@ class GradeUtil:
         teacher_name = teacher.get("firstname") + " " + teacher.get("lastname")
 
         return teacher_name
+
+class LessonUtil:
+    @staticmethod
+    def is_online_lesson(lesson):
+        return type(lesson) == EduOnlineLesson
 
 
 class IdUtil:
@@ -56,7 +62,7 @@ class IdUtil:
         return self.dbi.get("subjects").get(s_id).get("short")
 
 
-class RequestUtils:
+class RequestUtil:
     @staticmethod
     def urlencode(string):
         return urllib.parse.quote(string)
@@ -66,7 +72,7 @@ class RequestUtils:
         output = ""
         for i, key in enumerate(data.keys(), start=0):
             value = data[key]
-            entry = f"{RequestUtils.urlencode(key)}={RequestUtils.urlencode(value)}"
+            entry = f"{RequestUtil.urlencode(key)}={RequestUtil.urlencode(value)}"
 
             if i != 0:
                 output += f"&{entry}"

@@ -39,7 +39,7 @@ class EduDate:
                 self.__str__(), "%Y-%m-%d")
 
     def __str__(self):
-        return "%s-%s-%s" % (self.year, self.month, self.day)
+        return "%s-%s-%s" % (self.year, self.day, self.month)
 
 
 class EduExactTime:

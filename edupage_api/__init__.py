@@ -90,16 +90,23 @@ class Edupage:
         for subj in plan:
             header = subj.get("header")
             if len(header) == 0:
-                return lessons
+                continue
 
             subject_id = subj.get("subjectid")
+            print(f"Subject ID when fetching data: {subject_id}")
             subject_name = self.ids.id_to_subject(subject_id)
 
-            teacher_id = subj.get("teacherids")[0]
-            teacher_full_name = self.ids.id_to_teacher(teacher_id)
+            teacher_id = subj.get("teacherids")
+            if teacher_id != None and len(teacher_id) != 0:
+                teacher_full_name = self.ids.id_to_teacher(teacher_id[0])
+            else:
+                teacher_full_name = None
 
-            classroom_id = subj.get("classroomids")[0]
-            classroom_number = self.ids.id_to_classroom(classroom_id)
+            classroom_id = subj.get("classroomids")
+            if classroom_id != None and len(classroom_id) != 0:
+                classroom_number = self.ids.id_to_classroom(classroom_id[0])
+            else:
+                classroom_number = None
 
             start = subj.get("starttime")
             end = subj.get("endtime")
@@ -107,9 +114,13 @@ class Edupage:
 
             online_lesson_link = subj.get("ol_url")
 
-            lesson = EduLesson(subject_name, teacher_full_name,
-                               classroom_number, length, online_lesson_link)
+            if online_lesson_link != None:
+                lesson = EduOnlineLesson(subject_name, subject_id, teacher_full_name, classroom_number, length, online_lesson_link)
+            else:
+                lesson = EduLesson(subject_name, subject_id, teacher_full_name,
+                               classroom_number, length)
             lessons.append(lesson)
+
 
         return EduTimetable(lessons)
 
@@ -349,7 +360,7 @@ class Edupage:
     # if (d.repliesToAllDisabled) {
     #     postData["repliesToAllDisabled"] = '1';
     # }
-    def send_message(self, recipients: EduPerson, body, attachments=[]):
+    def send_message(self, recipients: EduUser, body, attachments=[]):
         recipients_post_data = ""
 
         if type(recipients) == list:

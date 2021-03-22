@@ -115,12 +115,13 @@ class Edupage:
             online_lesson_link = subj.get("ol_url")
 
             if online_lesson_link != None:
-                lesson = EduOnlineLesson(subject_name, subject_id, teacher_full_name, classroom_number, length, online_lesson_link)
+                lesson = EduOnlineLesson(subject_name, subject_id,
+                                         teacher_full_name, classroom_number,
+                                         length, online_lesson_link)
             else:
                 lesson = EduLesson(subject_name, subject_id, teacher_full_name,
-                               classroom_number, length)
+                                   classroom_number, length)
             lessons.append(lesson)
-
 
         return EduTimetable(lessons)
 

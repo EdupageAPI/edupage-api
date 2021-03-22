@@ -24,6 +24,7 @@ class GradeUtil:
 
         return teacher_name
 
+
 class LessonUtil:
     @staticmethod
     def is_online_lesson(lesson):

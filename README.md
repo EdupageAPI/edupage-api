@@ -115,6 +115,25 @@ The EduLesson class provides some information about the lesson:
 - online_lesson_link: A string with link to the online lesson. If this lesson is not online, online_lesson_link is None.
 
 
+## Tell edupage that you are on a online lesson
+Useful for automating your presence, because you don't actually have to be on the lesson.
+You can tell edupage that you are on the current lesson like this:
+```python
+from edupage_api import Edupage, LessonUtil
+
+edupage = Edupage("Subdomain (Name) of your school", "Username or E-Mail", "Password")
+edupage.login()
+
+timetable = edupage.get_timetable()
+next_lesson = timetable.get_next_lesson_at_time(EduTime.now())
+
+if LessonUtil.is_online_lesson(next_lesson):
+    next_lesson.sign_into_lesson(edupage)
+    print("You are now 'present' on the next lesson!")
+else:
+    print("The next lesson is not an online lesson!")
+```
+
 ## Get news from the webpage
 Thanks to how Edupage's message system works, you can get recent news from the webpage like this:
 ```python
@@ -224,7 +243,7 @@ print(link)
 - [ ] Lunches
 - [ ] Grades
 - [ ] Reading your own notifications
-- [ ] Connecting to the online lessons (with your presence being acknowledged by Edupage)
+- [x] Connecting to the online lessons (with your presence being acknowledged by Edupage)
 - [x] Uploading (and hosting) files on the Edupage cloud (if possible)
 - [x] Writing messages to other students/teachers
 - [x] Make this library avaiable through PyPi

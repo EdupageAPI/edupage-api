@@ -26,8 +26,9 @@ class EduOnlineLesson(EduLesson):
         response = edupage.session.get(request_url)
 
         # we will need this for the next request
-        gse_hash = response.content.decode().split("gsechash=")[1].split('"')[
-            1]  # I have no idea what this is, but it can be easily parsed
+        gse_hash = response.content.decode() \
+                                        .split("gsechash=")[1] \
+                                        .split('"')[1]  # I have no idea what this is, but it can be easily parsed
 
         request_url = "https://" + edupage.school + ".edupage.org/dashboard/server/onlinelesson.js?__func=getOnlineLessonOpenUrl"
 

@@ -150,7 +150,7 @@ for student in students:
 ```
 
 ## Get a list of teachers
-This list is not (and cannot be) sorted in any way.
+This list is not sorted in any way and this library doesn't provide a way to sort it.
 ```python
 from edupage_api import Edupage
 

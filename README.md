@@ -223,6 +223,8 @@ for student in students:
 
 ## Upload a file to Edupage's cloud
 The file will be hosted forever (and for free) on Edupage's servers. The file is tied to your user account, but anybody with a link can view it.
+
+Anyway, Edupage limits file size to 50 MB and the file can have only some extensions. All supported file extensions could be found on this [Edupage help site](https://help.edupage.org/?p=u1/u113/u132/u362/u467).
 ```python
 from edupage_api import Edupage, EduStudent
 from edupage_api.cloud import EduCloud

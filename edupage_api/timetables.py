@@ -1,4 +1,5 @@
 import datetime, json
+from edupage_api.utils import LessonUtil
 
 
 class EduLesson:
@@ -58,26 +59,24 @@ class EduTimetable:
 
     def get_lesson_at_time(self, edutime):
         for lesson in self.lessons:
-            if lesson.length.start.is_after_or_equals(
-                    edutime) and lesson.length.end.is_before_or_equals(
-                        edutime):
+            if edutime.is_after_or_equals(lesson.length.start) and edutime.is_before_or_equals(lesson.length.end):
                 return lesson
 
         return None
 
     def get_next_lesson_at_time(self, edutime):
-        previous = None
         for lesson in self.lessons:
-            if previous == None:
-                if lesson.start.is_before(edutime):
-                    return lesson
-            else:
-                if lesson.start.is_before(edutime) and previous.end.is_after(
-                        edutime):
-                    return lesson
+            if edutime.is_before(lesson.length.start):
+                return lesson
 
-            previous = lesson
-
+        return None
+    
+    def get_next_online_lesson_at_time(self, edutime):
+        for lesson in self.lessons:
+            if edutime.is_before(lesson.length.start):
+                if LessonUtil.is_online_lesson(lesson):
+                    return lesson
+        
         return None
 
     def get_first_lesson(self):

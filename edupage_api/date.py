@@ -19,27 +19,27 @@ class EduDate:
     def today():
         now = datetime.datetime.now()
 
-        return EduDate.from_formatted_date(now.strftime("%Y-%m-%d"))
+        return EduDate.from_formatted_date(now.strftime("%Y-%d-%m"))
 
     @staticmethod
     def yesterday_this_time():
         yesterday = datetime.datetime.now() + datetime.timedelta(days=-1)
 
-        return EduDate.from_formatted_date(yesterday.strftime("%Y-%m-%d"))
+        return EduDate.from_formatted_date(yesterday.strftime("%Y-%d-%m"))
 
     @staticmethod
     def tommorrow_this_time():
         tommorrow = datetime.datetime.now() + datetime.timedelta(days=1)
 
-        return EduDate.from_formatted_date(tommorrow.strftime("%Y-%m-%d"))
+        return EduDate.from_formatted_date(tommorrow.strftime("%Y-%d-%m"))
 
     def is_after_or_equals(self, date):
         return datetime.datetime.strptime(
-            date, "%Y-%m-%d") >= datetime.datetime.strptime(
-                self.__str__(), "%Y-%m-%d")
+            date, "%Y-%d-%m") >= datetime.datetime.strptime(
+                self.__str__(), "%Y-%d-%m")
 
     def __str__(self):
-        return "%s-%s-%s" % (self.year, self.day, self.month)
+        return "%s-%s-%s" % (self.year, self.month, self.day)
 
 
 class EduExactTime:
@@ -109,16 +109,24 @@ class EduExactTime:
 
 class EduTime:
     def __init__(self, hour: int, minute: int):
-        self.hour = hour
-        self.minute = minute
+        if type(hour) != int:
+            self.hour = int(hour)
+        else:
+            self.hour = hour
+        
+        if type(minute) != int:
+            self.minute = int(minute)
+        else:
+            self.minute = minute
+       
 
     def is_before(self, other):
         return (other.hour == self.hour
-                and other.minute < self.minute) or other.hour < self.hour
+                and other.minute > self.minute) or other.hour > self.hour
 
     def is_before_or_equals(self, other):
         return (other.hour == self.hour
-                and other.minute <= self.minute) or other.hour < self.hour
+                and other.minute >= self.minute) or other.hour > self.hour
 
     def is_after(self, other):
         return not self.is_before(other)

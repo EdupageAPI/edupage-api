@@ -1,6 +1,5 @@
 import gzip, base64
 import urllib.parse, json
-from edupage_api.timetables import EduOnlineLesson
 from pprint import pprint
 
 
@@ -28,7 +27,8 @@ class GradeUtil:
 class LessonUtil:
     @staticmethod
     def is_online_lesson(lesson):
-        return type(lesson) == EduOnlineLesson
+        # We cannot import from timetables.py because of circular import
+        return "EduOnlineLesson" in str(type(lesson)) 
 
 
 class IdUtil:

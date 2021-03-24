@@ -1,4 +1,6 @@
 # edupage-api
+[![CodeFactor](https://www.codefactor.io/repository/github/ivanhrabcak/edupage-api/badge)](https://www.codefactor.io/repository/github/ivanhrabcak/edupage-api) 
+
 This python library allows easy access to Edupage. This is not a sellenium web scraper. 
 It makes requests directly to Edupage's endpoinds and parses the html document.
 

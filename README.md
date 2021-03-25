@@ -126,7 +126,7 @@ from edupage_api import Edupage, LessonUtil
 edupage = Edupage("Subdomain (Name) of your school", "Username or E-Mail", "Password")
 edupage.login()
 
-timetable = edupage.get_timetable()
+timetable = edupage.get_timetable(EduDate.today())
 next_lesson = timetable.get_next_lesson_at_time(EduTime.now())
 
 if LessonUtil.is_online_lesson(next_lesson):

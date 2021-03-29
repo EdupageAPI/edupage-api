@@ -252,7 +252,4 @@ print(link)
 - [x] Writing messages to other students/teachers
 - [x] Make this library avaiable through PyPi
 
-# Features that I won't implement
-- Correct test answers (see [EduPageTestHack](https://github.com/markotomcik/EduPageTestHack))
-
 Feel free to suggest any other features! Just open an issue with the *Feature Request* tag.

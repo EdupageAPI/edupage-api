@@ -36,7 +36,7 @@ from edupage_api import Edupage
 edupage = Edupage("Subdomain (Name) of your school", "Username or E-Mail", "Password")
 edupage.login()
 
-# Get dates for all avaiable timetables
+# Get dates for all available timetables
 dates = edupage.get_avaiable_timetable_dates()
 
 print(dates) # ['2021-02-03', '2021-02-04']

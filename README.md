@@ -64,10 +64,10 @@ print(start_time)
 print(end_time)
 
 # Get tommorow date
-tommorrow = EduDate.yesterday() # '2021-02-04'
+tomorrow = EduDate.yesterday() # '2021-02-04'
 
 # This will return None, because the timetable from yesterday is not avaiable
-timetable_for_tommorrow = edupage.get_timetable(tommorrow)
+timetable_for_tomorrow = edupage.get_timetable(tomorrow)
 ```
 
 ## Get lesson for a given time

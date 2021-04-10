@@ -10,11 +10,12 @@ class EduHomework:
         self.title = title
         self.description = description
         self.event_id = event_id
+        self.class_name = class_name
         self.datetime_added = EduDateTime.from_formatted_datetime(
             datetime_added)
 
     def __str__(self):
-        return f'{self.title}: {self.description}'
+        return f'{self.subject}: {self.title}'
 
 
 class EduNews:

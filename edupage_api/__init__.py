@@ -93,7 +93,6 @@ class Edupage:
                 continue
 
             subject_id = subj.get("subjectid")
-            print(f"Subject ID when fetching data: {subject_id}")
             subject_name = self.ids.id_to_subject(subject_id)
 
             teacher_id = subj.get("teacherids")
@@ -140,8 +139,6 @@ class Edupage:
             if not item.get("typ") == "homework":
                 continue
 
-            title = item.get("user_meno")
-
             data = json.loads(item.get("data"))
 
             if data == None:
@@ -150,10 +147,12 @@ class Edupage:
             if data.get("triedaid") == None:
                 continue
 
+            title = data.get("nazov")
+
             due_date = data.get("date")
 
             groups = data.get("skupiny")
-            description = data.get("nazov")
+            description = data.get("popis")
 
             event_id = data.get("superid")
 

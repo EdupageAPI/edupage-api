@@ -202,7 +202,7 @@ Homework, other than its title and description, provides some more information:
 #### EduHomework
 - due_date: EduDate -> When the homework is due
 - subject: The subject which this homework is from
-- groups: If this subject is devided into groups, the target should be here. __Needs testing__
+- groups: If this subject is divided into groups, the target should be here. __Needs testing__
 - title: The title of the homework message. This is usually what you in a notification in the Edupage app.
 - description: A detailed description of the homework.
 - event_id: A internal Edupage ID, which can be used to find the event corresponding to this homework. Useless for now.

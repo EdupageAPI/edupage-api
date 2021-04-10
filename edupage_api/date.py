@@ -2,30 +2,30 @@ import datetime
 
 
 class EduDate:
-    def __init__(self, year, day, month):
+    def __init__(self, year, month, day):
         self.year = year
-        self.day = day
         self.month = month
+        self.day = day
 
     @staticmethod
     def from_formatted_date(formatted_date):
         if formatted_date == None:
             return None
 
-        [year, day, month] = formatted_date.split("-")
-        return EduDate(year, day, month)
+        [year, month, day] = formatted_date.split("-")
+        return EduDate(year, month, day)
 
     @staticmethod
     def today():
         now = datetime.datetime.now()
 
-        return EduDate.from_formatted_date(now.strftime("%Y-%d-%m"))
+        return EduDate.from_formatted_date(now.strftime("%Y-%m-%d"))
 
     @staticmethod
     def yesterday_this_time():
         yesterday = datetime.datetime.now() + datetime.timedelta(days=-1)
 
-        return EduDate.from_formatted_date(yesterday.strftime("%Y-%d-%m"))
+        return EduDate.from_formatted_date(yesterday.strftime("%Y-%m-%d"))
 
     @staticmethod
     def tomorrow_this_time():
@@ -35,8 +35,8 @@ class EduDate:
 
     def is_after_or_equals(self, date):
         return datetime.datetime.strptime(
-            date, "%Y-%d-%m") >= datetime.datetime.strptime(
-                self.__str__(), "%Y-%d-%m")
+            date, "%Y-%m-%d") >= datetime.datetime.strptime(
+                self.__str__(), "%Y-%m-%d")
 
     def __str__(self):
         return "%s-%s-%s" % (self.year, self.month, self.day)

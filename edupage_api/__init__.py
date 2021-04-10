@@ -157,9 +157,6 @@ class Edupage:
 
             event_id = data.get("superid")
 
-            print("________________________________")
-            print(data.get("triedaid"))
-
             class_name = ids.id_to_class(data.get("triedaid"))
 
             subject = ids.id_to_subject(data.get("predmetid"))

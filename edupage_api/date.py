@@ -28,10 +28,10 @@ class EduDate:
         return EduDate.from_formatted_date(yesterday.strftime("%Y-%m-%d"))
 
     @staticmethod
-    def tommorrow_this_time():
-        tommorrow = datetime.datetime.now() + datetime.timedelta(days=1)
+    def tomorrow_this_time():
+        tomorrow = datetime.datetime.now() + datetime.timedelta(days=1)
 
-        return EduDate.from_formatted_date(tommorrow.strftime("%Y-%m-%d"))
+        return EduDate.from_formatted_date(tomorrow.strftime("%Y-%d-%m"))
 
     def is_after_or_equals(self, date):
         return datetime.datetime.strptime(
@@ -83,12 +83,12 @@ class EduExactTime:
                             datetime_yesterday.second)
 
     @staticmethod
-    def tommorrow_this_time():
-        datetime_tommorrow = datetime.datetime.now() + datetime.timedelta(
+    def tomorrow_this_time():
+        datetime_tomorrow = datetime.datetime.now() + datetime.timedelta(
             days=-1)
 
-        return EduExactTime(datetime_tommorrow.hour, datetime_tommorrow.minute,
-                            datetime_tommorrow.second)
+        return EduExactTime(datetime_tomorrow.hour, datetime_tomorrow.minute,
+                            datetime_tomorrow.second)
 
     @staticmethod
     def from_datetime(dtime):
@@ -151,11 +151,11 @@ class EduTime:
         return EduTime(datetime_yesterday.hour, datetime_yesterday.minute)
 
     @staticmethod
-    def tommorrow():
-        datetime_tommorrow = datetime.datetime.now() + datetime.timedelta(
+    def tomorrow():
+        datetime_tomorrow = datetime.datetime.now() + datetime.timedelta(
             days=-1)
 
-        return EduTime(datetime_tommorrow.hour, datetime_tommorrow.minute)
+        return EduTime(datetime_tomorrow.hour, datetime_tomorrow.minute)
 
     @staticmethod
     def from_datetime(dtime):

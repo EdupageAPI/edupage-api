@@ -1,10 +1,10 @@
 # edupage-api
 [![CodeFactor](https://www.codefactor.io/repository/github/ivanhrabcak/edupage-api/badge)](https://www.codefactor.io/repository/github/ivanhrabcak/edupage-api) 
 
-This python library allows easy access to Edupage. This is not a sellenium web scraper. 
-It makes requests directly to Edupage's endpoinds and parses the html document.
+This python library allows easy access to Edupage. This is not a Selenium web scraper. 
+It makes requests directly to Edupage's endpoints and parses the HTML document.
 
-If you find any issue with this code, it doesn't work or you have a suggestion please let me know and open a Issue! If you, even better have fixed the issue, added a new feature or made something work better please open a pull request!
+If you find any issue with this code, it doesn't work, or you have a suggestion please let me know by opening an [issue](https://github.com/ivanhrabcak/edupage-api/issues/new)! If you, even better have fixed the issue, added a new feature or made something work better please open a [pull request](https://github.com/ivanhrabcak/edupage-api/compare)!
 
 # Installing
 You can install this library with pip:
@@ -13,7 +13,7 @@ pip install edupage-api
 ```
 # Usage
 ## Login
-You can login easily, works with any school:
+You can log in easily, works with any school:
 ```python
 from edupage_api import Edupage, BadCredentialsException, LoginDataParsingException
 
@@ -29,7 +29,7 @@ except LoginDataParsingException:
 ```
 
 ## Get timetable for a given date
-Check all avaiable timetables:
+Check all available timetables:
 ```python
 from edupage_api import Edupage
 
@@ -37,7 +37,7 @@ edupage = Edupage("Subdomain (Name) of your school", "Username or E-Mail", "Pass
 edupage.login()
 
 # Get dates for all available timetables
-dates = edupage.get_avaiable_timetable_dates()
+dates = edupage.get_available_timetable_dates()
 
 print(dates) # ['2021-02-03', '2021-02-04']
 ```
@@ -64,10 +64,10 @@ print(start_time)
 print(end_time)
 
 # Get tommorow date
-tommorrow = EduDate.yesterday() # '2021-02-04'
+tomorrow = EduDate.yesterday() # '2021-02-04'
 
-# This will return None, because the timetable from yesterday is not avaiable
-timetable_for_tommorrow = edupage.get_timetable(tommorrow)
+# This will return None, because the timetable from yesterday is not available
+timetable_for_tomorrow = edupage.get_timetable(tomorrow)
 ```
 
 ## Get lesson for a given time
@@ -117,7 +117,7 @@ The EduLesson class provides some information about the lesson:
 - online_lesson_link: A string with link to the online lesson. If this lesson is not online, online_lesson_link is None.
 
 
-## Tell edupage that you are on a online lesson
+## Tell edupage that you are on an online lesson
 Useful for automating your presence, because you don't actually have to be on the lesson.
 You can tell edupage that you are on the current lesson like this:
 ```python
@@ -202,15 +202,15 @@ Homework, other than its title and description, provides some more information:
 #### EduHomework
 - due_date: EduDate -> When the homework is due
 - subject: The subject which this homework is from
-- groups: If this subject is devided into groups, the target should be here. __Needs testing__
+- groups: If this subject is divided into groups, the target should be here. __Needs testing__
 - title: The title of the homework message. This is usually what you in a notification in the Edupage app.
 - description: A detailed description of the homework.
-- event_id: A internal Edupage id, which can be used to find the event coresponding to this homework. Useless for now.
+- event_id: A internal Edupage ID, which can be used to find the event corresponding to this homework. Useless for now.
 - datetime_added: EduDateTime -> A date and time when this homework was assigned.
 
 
 ## Sending messages
-You can send a message to one or multiple people when you have a object that extends EduPerson
+You can send a message to one or multiple people when you have an object that extends EduPerson
 ```python
 from edupage_api import Edupage, EduStudent
 
@@ -250,6 +250,6 @@ print(link)
 - [x] Connecting to the online lessons (with your presence being acknowledged by Edupage)
 - [x] Uploading (and hosting) files on the Edupage cloud (if possible)
 - [x] Writing messages to other students/teachers
-- [x] Make this library avaiable through PyPi
+- [x] Make this library available through PyPi
 
 Feel free to suggest any other features! Just open an issue with the *Feature Request* tag.

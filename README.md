@@ -54,20 +54,23 @@ today = EduDate.today() # '2021-02-03'
 
 timetable = edupage.get_timetable(today) # returns EduTimetable
 
-# The starting time of the first lesson
+# Get first lesson
 first_lesson = timetable.get_first_lesson()
 
-start_time = first_lesson.start
-end_time = first_lesson.end
+# The starting and ending time of the first lesson
+start_time = first_lesson.length.start
+end_time = first_lesson.length.end
 
 print(start_time)
 print(end_time)
 
-# Get tommorow date
-tomorrow = EduDate.yesterday() # '2021-02-04'
+# Get yesterday date
+yesterday = EduDate.yesterday_this_time() # '2021-02-04'
+print(yesterday)
 
 # This will return None, because the timetable from yesterday is not available
-timetable_for_tomorrow = edupage.get_timetable(tomorrow)
+timetable_for_yesterday = edupage.get_timetable(yesterday)
+print(timetable_for_yesterday)
 ```
 
 ## Get lesson for a given time
@@ -86,7 +89,6 @@ current_time = EduTime.now()
 current_lesson = timetable.get_lesson_at_time(current_time)
 
 print(current_lesson)
-
 ```
 
 ## Get next lesson for a given time

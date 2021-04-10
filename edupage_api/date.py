@@ -39,7 +39,7 @@ class EduDate:
                 self.__str__(), "%Y-%m-%d")
 
     def __str__(self):
-        return "%s-%s-%s" % (self.year, self.month, self.day)
+        return "%04d-%02d-%02d" % (int(self.year), int(self.month), int(self.day))
 
 
 class EduExactTime:
@@ -104,7 +104,7 @@ class EduExactTime:
         return EduExactTime(hour, minute, second)
 
     def __str__(self):
-        return f"{self.hour}:{self.minute}:{self.second}"
+        return "%02d:%02d:%02d" % (int(self.hour), int(self.minute), int(self.second))
 
 
 class EduTime:
@@ -171,7 +171,7 @@ class EduTime:
         return EduTime(hour, minute)
 
     def __str__(self):
-        return f"{self.hour}:{self.minute}"
+        return "%02d:%02d" % (int(self.hour), int(self.minute))
 
 
 class EduDateTime:
@@ -201,4 +201,4 @@ class EduLength:
         self.end = EduTime.from_formatted_string(end)
 
     def __str__(self):
-        return self.start + " - " + self.end
+        return str(self.start) + " – " + str(self.end)

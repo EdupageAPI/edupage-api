@@ -125,14 +125,13 @@ class EduTime:
                 and other.minute > self.minute) or other.hour > self.hour
 
     def is_before_or_equals(self, other):
-        return (other.hour == self.hour
-                and other.minute >= self.minute) or other.hour > self.hour
+        return self.is_before(other) or self.equals(other)
 
     def is_after(self, other):
         return not self.is_before(other)
 
     def is_after_or_equals(self, other):
-        return not self.is_before_or_equals(other)
+        return self.is_after(other) or self.equals(other)
 
     def equals(self, other):
         return other.hour == self.hour and other.minute == self.minute

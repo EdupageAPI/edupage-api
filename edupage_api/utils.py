@@ -55,7 +55,7 @@ class IdUtil:
         if c_id == None:
             return None
 
-        return self.dbi.get("classrooms").get(c_id).get("short")
+        return self.data.get("classrooms").get(c_id).get("short")
 
     def id_to_subject(self, s_id):
         if s_id == None:

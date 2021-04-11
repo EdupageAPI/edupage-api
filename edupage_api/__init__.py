@@ -325,7 +325,10 @@ class Edupage:
             lastname = teacher_data.get("lastname")
 
             classroom_id = teacher_data.get("classroomid")
-            classroom = id_util.id_to_classroom(classroom_id)
+            if classroom_id != "":
+                classroom = id_util.id_to_classroom(classroom_id)
+            else:
+                classroom = ""
 
             is_out = teacher_data.get("isOut")
 

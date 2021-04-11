@@ -31,7 +31,7 @@ class EduDate:
     def tomorrow_this_time():
         tomorrow = datetime.datetime.now() + datetime.timedelta(days=1)
 
-        return EduDate.from_formatted_date(tomorrow.strftime("%Y-%d-%m"))
+        return EduDate.from_formatted_date(tomorrow.strftime("%Y-%m-%d"))
 
     def is_after_or_equals(self, date):
         return datetime.datetime.strptime(

@@ -92,6 +92,8 @@ class Edupage:
             if len(header) == 0:
                 continue
 
+            period = subj.get("uniperiod")
+
             subject_id = subj.get("subjectid")
             if subject_id != None and len(subject_id) != 0:
                 subject_name = self.ids.id_to_subject(subject_id)
@@ -117,12 +119,12 @@ class Edupage:
             online_lesson_link = subj.get("ol_url")
 
             if online_lesson_link != None:
-                lesson = EduOnlineLesson(subject_name, subject_id,
+                lesson = EduOnlineLesson(period, subject_name, subject_id,
                                          teacher_full_name, classroom_number,
                                          length, online_lesson_link)
             else:
-                lesson = EduLesson(subject_name, subject_id, teacher_full_name,
-                                   classroom_number, length)
+                lesson = EduLesson(period, subject_name, subject_id,
+                                   teacher_full_name, classroom_number, length)
 
             # Remove lessons, that have subject_id blank
             if len(lesson.subject_id) != 0:

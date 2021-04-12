@@ -3,7 +3,8 @@ from edupage_api.utils import LessonUtil
 
 
 class EduLesson:
-    def __init__(self, name, subject_id, teacher, classroom, length):
+    def __init__(self, period, name, subject_id, teacher, classroom, length):
+        self.period = period
         self.name = name
         self.teacher = teacher
         self.classroom = classroom
@@ -15,9 +16,9 @@ class EduLesson:
 
 
 class EduOnlineLesson(EduLesson):
-    def __init__(self, name, subject_id, teacher, classroom, length,
+    def __init__(self, period, name, subject_id, teacher, classroom, length,
                  online_lesson_link):
-        super().__init__(name, subject_id, teacher, classroom, length)
+        super().__init__(period, name, subject_id, teacher, classroom, length)
         self.online_lesson_link = online_lesson_link
 
     # Tell edupage that you are on this online lesson

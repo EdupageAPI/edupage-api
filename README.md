@@ -109,14 +109,15 @@ next_lesson = timetable.get_next_lesson_at_time(current_time)
 print(next_lesson)
 ```
 
-The EduLesson class provides some information about the lesson:
+The `EduLesson` class provides some information about the lesson:
 
-#### EduLesson: 
-- name: The subject of this lesson
-- teacher: The teacher that will teach this lesson
-- classroom: The classroom number where the lesson will be
-- length: EduLength -> The length (start and end times) of the lesson
-- online_lesson_link: A string with link to the online lesson. If this lesson is not online, online_lesson_link is None.
+#### `EduLesson`: 
+- `period`: The order of period in timetable (e.g. 1).
+- `name`: The subject of this lesson.
+- `teacher`: The teacher that will teach this lesson
+- `classroom`: The classroom number where the lesson will be.
+- `length`: `EduLength` –> The length (start and end times) of the lesson.
+- `online_lesson_link`: A string with link to the online lesson. If this lesson is not online, `online_lesson_link` is `None`.
 
 
 ## Tell edupage that you are on an online lesson
@@ -201,18 +202,18 @@ for hw in homework:
 ```
 
 Homework, other than its title and description, provides some more information:
-#### EduHomework
-- due_date: EduDate -> When the homework is due
-- subject: The subject which this homework is from
-- groups: If this subject is divided into groups, the target should be here. __Needs testing__
-- title: The title of the homework message. This is usually what you in a notification in the Edupage app.
-- description: A detailed description of the homework. (Usually is blank)
-- event_id: A internal Edupage ID, which can be used to find the event corresponding to this homework. Useless for now.
-- datetime_added: EduDateTime -> A date and time when this homework was assigned.
+#### `EduHomework`
+- `due_date`: `EduDate` –> When the homework is due
+- `subject`: The subject which this homework is from
+- `groups`: If this subject is divided into groups, the target should be here. __Needs testing__
+- `title`: The title of the homework message. This is usually what you in a notification in the Edupage app.
+- `description`: A detailed description of the homework. (Usually is blank)
+- `event_id`: A internal Edupage ID, which can be used to find the event corresponding to this homework. Useless for now.
+- `datetime_added`: `EduDateTime` –> A date and time when this homework was assigned.
 
 
 ## Sending messages
-You can send a message to one or multiple people when you have an object that extends EduPerson
+You can send a message to one or multiple people when you have an object that extends `EduPerson`
 ```python
 from edupage_api import Edupage, EduStudent
 

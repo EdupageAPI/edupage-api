@@ -4,7 +4,7 @@
 This python library allows easy access to Edupage. This is not a Selenium web scraper. 
 It makes requests directly to Edupage's endpoints and parses the HTML document.
 
-If you find any issue with this code, it doesn't work, or you have a suggestion please let me know by opening an [issue](https://github.com/ivanhrabcak/edupage-api/issues/new)! If you, even better have fixed the issue, added a new feature or made something work better please open a [pull request](https://github.com/ivanhrabcak/edupage-api/compare)!
+If you find any issue with this code, it doesn't work, or you have a suggestion please let me know by opening an [issue](https://github.com/ivanhrabcak/edupage-api/issues/new/choose)! If you, even better have fixed the issue, added a new feature or made something work better please open a [pull request](https://github.com/ivanhrabcak/edupage-api/compare)!
 
 # Installing
 You can install this library with pip:
@@ -254,4 +254,4 @@ print(link)
 - [x] Writing messages to other students/teachers
 - [x] Make this library available through PyPi
 
-Feel free to suggest any other features! Just open an issue with the *Feature Request* tag.
+Feel free to suggest any other features! Just open an [issue with the *Feature Request* tag](https://github.com/ivanhrabcak/edupage-api/issues/new?labels=feature+request&template=feature_request.md&title=%5BFeature+request%5D+).

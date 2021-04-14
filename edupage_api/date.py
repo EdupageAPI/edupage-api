@@ -49,20 +49,20 @@ class EduExactTime:
         self.second = second
 
     def is_before(self, other):
-        return (other.hour == self.hour and other.minute <= self.minute) or \
-         (other.hour < self.hour) or \
-         (other.hour == self.hour and other.minute == self.minute and other.second < self.second)
+        return other.hour > self.hour or \
+              (other.hour == self.hour and other.minute > self.minute) or \
+              (other.hour == self.hour and other.minute == self.minute and other.second > self.second)
 
     def is_before_or_equals(self, other):
-        return (other.hour == self.hour and other.minute <= self.minute) or \
-         (other.hour < self.hour) or \
-         (other.hour == self.hour and other.minute == self.minute and other.second <= self.second)
+        return self.is_before(other) or self.equals(other)
 
     def is_after(self, other):
-        return not self.is_before(other)
+        return other.hour < self.hour or \
+              (other.hour == self.hour and other.minute < self.minute) or \
+              (other.hour == self.hour and other.minute == self.minute and other.second < self.second)
 
     def is_after_or_equals(self, other):
-        return not self.is_before_or_equals(other)
+        return self.is_after(other) or self.equals(other)
 
     def equals(self, other):
         return other.hour == self.hour and other.minute == self.minute and other.second == self.second
@@ -121,14 +121,13 @@ class EduTime:
        
 
     def is_before(self, other):
-        return (other.hour == self.hour
-                and other.minute > self.minute) or other.hour > self.hour
+        return other.hour > self.hour or (other.hour == self.hour and other.minute > self.minute)
 
     def is_before_or_equals(self, other):
         return self.is_before(other) or self.equals(other)
 
     def is_after(self, other):
-        return not self.is_before(other)
+        return other.hour < self.hour or (other.hour == self.hour and other.minute < self.minute)
 
     def is_after_or_equals(self, other):
         return self.is_after(other) or self.equals(other)

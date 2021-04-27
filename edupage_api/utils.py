@@ -7,7 +7,7 @@ class GradeUtil:
     def __init__(self, grade_data):
         self.data = grade_data
 
-    def id_to_teacher(self, teacher_id):
+    def idToTeacher(self, teacher_id):
         if teacher_id == None:
             return None
 
@@ -26,7 +26,7 @@ class GradeUtil:
 
 class LessonUtil:
     @staticmethod
-    def is_online_lesson(lesson):
+    def isOnlineLesson(lesson):
         # We cannot import from timetables.py because of circular import
         return "EduOnlineLesson" in str(type(lesson)) 
 
@@ -36,13 +36,13 @@ class IdUtil:
         self.data = data
         self.dbi = data.get("dbi")
 
-    def id_to_class(self, c_id):
+    def idToClass(self, c_id):
         if c_id == None:
             return None
 
         return self.dbi.get("classes").get(c_id).get("name")
 
-    def id_to_teacher(self, t_id):
+    def idToTeacher(self, t_id):
         if t_id == None:
             return None
 
@@ -51,12 +51,12 @@ class IdUtil:
             "firstname") + " " + teacher_data.get("lastname")
         return teacher_full_name
 
-    def id_to_classroom(self, c_id):
+    def idToClassroom(self, c_id):
         if c_id == None:
             return None
         return self.dbi.get("classrooms").get(c_id).get("short")
 
-    def id_to_subject(self, s_id):
+    def idToSubject(self, s_id):
         if s_id == None:
             return s_id
         return self.dbi.get("subjects").get(s_id).get("short")
@@ -68,7 +68,7 @@ class RequestUtil:
         return urllib.parse.quote(string)
 
     @staticmethod
-    def encode_form_data(data):
+    def encodeFormData(data):
         output = ""
         for i, key in enumerate(data.keys(), start=0):
             value = data[key]
@@ -82,7 +82,7 @@ class RequestUtil:
         return output
 
     @staticmethod
-    def encode_attachments(attachments):
+    def encodeAttachments(attachments):
         output = {}
 
         for attachment in attachments:

@@ -7,7 +7,7 @@ class EduUser:
         self.id = int(p_id)
         self.is_out = is_out
 
-    def get_id(self):
+    def getId(self):
         raise NotImplementedError()
 
     def __str__(self):
@@ -23,7 +23,7 @@ class EduStudent(EduUser):
         except ValueError:
             self.number_in_class = None
 
-    def get_id(self):
+    def getId(self):
         return f"Student{str(self.id)}"
 
     def __sort__(self):
@@ -35,5 +35,5 @@ class EduTeacher(EduUser):
                  is_out):
         super().__init__(gender, firstname, lastname, teacher_id, is_out)
 
-    def get_id(self):
+    def getId(self):
         return f"Ucitel{str(self.id)}"

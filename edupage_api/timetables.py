@@ -22,7 +22,7 @@ class EduOnlineLesson(EduLesson):
         self.online_lesson_link = online_lesson_link
 
     # Tell edupage that you are on this online lesson
-    def sign_into_lesson(self, edupage):
+    def signIntoLesson(self, edupage):
         request_url = "https://" + edupage.school + ".edupage.org/dashboard/eb.php"
 
         response = edupage.session.get(request_url)
@@ -57,31 +57,33 @@ class EduOnlineLesson(EduLesson):
 class EduTimetable:
     def __init__(self, lessons):
         self.lessons = lessons
-
-    def get_lesson_at_time(self, edutime):
-        for lesson in self.lessons:
-            if edutime.is_after_or_equals(lesson.length.start) and edutime.is_before_or_equals(lesson.length.end):
-                return lesson
-
-        return None
-
-    def get_next_lesson_at_time(self, edutime):
-        for lesson in self.lessons:
-            if edutime.is_before(lesson.length.start):
-                return lesson
-
-        return None
-    
-    def get_next_online_lesson_at_time(self, edutime):
-        for lesson in self.lessons:
-            if edutime.is_before(lesson.length.start):
-                if LessonUtil.is_online_lesson(lesson):
-                    return lesson
         
-        return None
+    class Lesson:
+        def getAtTime(self, edutime):
+            for lesson in self.lessons:
+                if edutime.afterOrEquals(lesson.length.start) and edutime.beforeOrEquals(lesson.length.end):
+                    return lesson
 
-    def get_first_lesson(self):
+            return None
+
+    class NextLesson:
+        def getAtTime(self, edutime):
+            for lesson in self.lessons:
+                if edutime.before(lesson.length.start):
+                    return lesson
+
+            return None
+
+        def getOnlineAtTime(self, edutime):
+            for lesson in self.lessons:
+                if edutime.before(lesson.length.start):
+                    if LessonUtil.is_online_lesson(lesson):
+                        return lesson
+
+            return None
+
+    def getFirstLesson(self):
         return self.lessons[0]
 
-    def get_last_lesson(self):
+    def getLastLesson(self):
         return self.lessons[-1]

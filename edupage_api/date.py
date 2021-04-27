@@ -8,7 +8,7 @@ class EduDate:
         self.day = day
 
     @staticmethod
-    def from_formatted_date(formatted_date):
+    def fromFormattedDate(formatted_date):
         if formatted_date == None:
             return None
 
@@ -19,21 +19,22 @@ class EduDate:
     def today():
         now = datetime.datetime.now()
 
-        return EduDate.from_formatted_date(now.strftime("%Y-%m-%d"))
+        return EduDate.fromFormattedDate(now.strftime("%Y-%m-%d"))
 
-    @staticmethod
-    def yesterday_this_time():
-        yesterday = datetime.datetime.now() + datetime.timedelta(days=-1)
+    class ThisTime:
+        @staticmethod
+        def yesterday():
+            yesterday = datetime.datetime.now() + datetime.timedelta(days=-1)
 
-        return EduDate.from_formatted_date(yesterday.strftime("%Y-%m-%d"))
+            return EduDate.fromFormattedDate(yesterday.strftime("%Y-%m-%d"))
 
-    @staticmethod
-    def tomorrow_this_time():
-        tomorrow = datetime.datetime.now() + datetime.timedelta(days=1)
+        @staticmethod
+        def tomorrow():
+            tomorrow = datetime.datetime.now() + datetime.timedelta(days=1)
 
-        return EduDate.from_formatted_date(tomorrow.strftime("%Y-%m-%d"))
+            return EduDate.fromFormattedDate(tomorrow.strftime("%Y-%m-%d"))
 
-    def is_after_or_equals(self, date):
+    def afterOrEquals(self, date):
         return datetime.datetime.strptime(
             date, "%Y-%m-%d") >= datetime.datetime.strptime(
                 self.__str__(), "%Y-%m-%d")
@@ -48,21 +49,21 @@ class EduExactTime:
         self.minute = minute
         self.second = second
 
-    def is_before(self, other):
+    def before(self, other):
         return other.hour > self.hour or \
               (other.hour == self.hour and other.minute > self.minute) or \
               (other.hour == self.hour and other.minute == self.minute and other.second > self.second)
 
-    def is_before_or_equals(self, other):
-        return self.is_before(other) or self.equals(other)
+    def beforeOrEquals(self, other):
+        return self.before(other) or self.equals(other)
 
-    def is_after(self, other):
+    def after(self, other):
         return other.hour < self.hour or \
               (other.hour == self.hour and other.minute < self.minute) or \
               (other.hour == self.hour and other.minute == self.minute and other.second < self.second)
 
-    def is_after_or_equals(self, other):
-        return self.is_after(other) or self.equals(other)
+    def afterOrEquals(self, other):
+        return self.after(other) or self.equals(other)
 
     def equals(self, other):
         return other.hour == self.hour and other.minute == self.minute and other.second == self.second
@@ -74,28 +75,29 @@ class EduExactTime:
         return EduExactTime(datetime_now.hour, datetime_now.minute,
                             datetime_now.second)
 
+    class ThisTime:
+        @staticmethod
+        def yesterday():
+            datetime_yesterday = datetime.datetime.now() - datetime.timedelta(
+                days=1)
+
+            return EduExactTime(datetime_yesterday.hour, datetime_yesterday.minute,
+                                datetime_yesterday.second)
+
+        @staticmethod
+        def tomorrow():
+            datetime_tomorrow = datetime.datetime.now() + datetime.timedelta(
+                days=-1)
+
+            return EduExactTime(datetime_tomorrow.hour, datetime_tomorrow.minute,
+                                datetime_tomorrow.second)
+
     @staticmethod
-    def yesterday_this_time():
-        datetime_yesterday = datetime.datetime.now() - datetime.timedelta(
-            days=1)
-
-        return EduExactTime(datetime_yesterday.hour, datetime_yesterday.minute,
-                            datetime_yesterday.second)
-
-    @staticmethod
-    def tomorrow_this_time():
-        datetime_tomorrow = datetime.datetime.now() + datetime.timedelta(
-            days=-1)
-
-        return EduExactTime(datetime_tomorrow.hour, datetime_tomorrow.minute,
-                            datetime_tomorrow.second)
-
-    @staticmethod
-    def from_datetime(dtime):
+    def fromDatetime(dtime):
         return EduExactTime(dtime.hour, dtime.minute, dtime.second)
 
     @staticmethod
-    def from_formatted_string(s):
+    def fromFormattedString(s):
         if s == None:
             return None
 
@@ -160,7 +162,7 @@ class EduTime:
         return EduTime(dtime.hour, dtime.minute)
 
     @staticmethod
-    def from_formatted_string(s):
+    def fromFormattedString(s):
         if s == None:
             return None
 
@@ -178,13 +180,13 @@ class EduDateTime:
         self.time = EduExactTime(int(hour), int(minute), int(second))
 
     @staticmethod
-    def from_formatted_datetime(formatted_datetime):
+    def fromformattedDatetime(formatted_datetime):
         if formatted_datetime == None:
             return None
 
         split_date = formatted_datetime.split(" ")
 
-        date = EduDate.from_formatted_date(split_date[0])
+        date = EduDate.fromFormattedDate(split_date[0])
         time = split_date[1].split(":")
 
         return EduDateTime(date, time[0], time[1], time[2])
@@ -195,8 +197,8 @@ class EduDateTime:
 
 class EduLength:
     def __init__(self, start, end):
-        self.start = EduTime.from_formatted_string(start)
-        self.end = EduTime.from_formatted_string(end)
+        self.start = EduTime.fromFormattedString(start)
+        self.end = EduTime.fromFormattedString(end)
 
     def __str__(self):
         return str(self.start) + " – " + str(self.end)

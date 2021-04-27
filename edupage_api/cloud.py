@@ -10,13 +10,13 @@ class EduCloudFile:
         self.type = ftype
         self.cloudid = cloudid
 
-    def get_url(self, edupage):
+    def getUrl(self, edupage):
         return f"https://{edupage.school}.edupage.org{self.uri}"
 
 
 class EduCloud:
     @staticmethod
-    def upload_file(edupage, fd):
+    def uploadFile(edupage, fd):
         request_url = "https://" + edupage.school + ".edupage.org/timeline/?akcia=uploadAtt"
 
         files = {"att": fd}

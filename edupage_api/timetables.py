@@ -77,7 +77,7 @@ class EduTimetable:
         def getOnlineAtTime(self, edutime):
             for lesson in self.lessons:
                 if edutime.before(lesson.length.start):
-                    if LessonUtil.is_online_lesson(lesson):
+                    if LessonUtil.isOnlineLesson(lesson):
                         return lesson
 
             return None

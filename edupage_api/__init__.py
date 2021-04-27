@@ -45,13 +45,13 @@ class Edupage:
             raise BadCredentialsException()
 
         try:
-            self.parse_login_data(response.content.decode())
+            self.parseLoginData(response.content.decode())
         except (IndexError, TypeError):
             raise LoginDataParsingException()
 
         return True
 
-    def parse_login_data(self, data):
+    def parseLoginData(self, data):
         js_json = data.split("$j(document).ready(function() {")[1] \
               .split(");")[0] \
               .replace("\t", "") \
@@ -62,143 +62,146 @@ class Edupage:
         self.is_logged_in = True
         self.ids = IdUtil(self.data)
 
-    def get_available_timetable_dates(self):
-        if not self.is_logged_in:
-            return None
+	class Timetable:
+		def getAvailableDates(self):
+			if not self.is_logged_in:
+				return None
 
-        dp = self.data.get("dp")
-        if dp == None:
-            return None
+			dp = self.data.get("dp")
+			if dp == None:
+				return None
 
-        dates = dp.get("dates")
-        return list(dates.keys())
+			dates = dp.get("dates")
+			return list(dates.keys())
 
-    def get_timetable(self, date):
-        if not self.is_logged_in:
-            return None
-        dp = self.data.get("dp")
-        if dp == None:
-            return None
+		def get(self, date):
+			if not self.is_logged_in:
+				return None
+			dp = self.data.get("dp")
+			if dp == None:
+				return None
 
-        dates = dp.get("dates")
-        date_plans = dates.get(str(date))
-        if date_plans == None:
-            return None
+			dates = dp.get("dates")
+			date_plans = dates.get(str(date))
+			if date_plans == None:
+				return None
 
-        plan = date_plans.get("plan")
-        lessons = []
-        for subj in plan:
-            header = subj.get("header")
-            if len(header) == 0:
-                continue
+			plan = date_plans.get("plan")
+			lessons = []
+			for subj in plan:
+				header = subj.get("header")
+				if len(header) == 0:
+					continue
 
-            period = subj.get("uniperiod")
+				period = subj.get("uniperiod")
 
-            subject_id = subj.get("subjectid")
-            if subject_id != None and len(subject_id) != 0:
-                subject_name = self.ids.id_to_subject(subject_id)
-            else:
-                subject_name = None
+				subject_id = subj.get("subjectid")
+				if subject_id != None and len(subject_id) != 0:
+					subject_name = self.ids.idToSubject(subject_id)
+				else:
+					subject_name = None
 
-            teacher_id = subj.get("teacherids")
-            if teacher_id != None and len(teacher_id) != 0:
-                teacher_full_name = self.ids.id_to_teacher(teacher_id[0])
-            else:
-                teacher_full_name = None
+				teacher_id = subj.get("teacherids")
+				if teacher_id != None and len(teacher_id) != 0:
+					teacher_full_name = self.ids.idToTeacher(teacher_id[0])
+				else:
+					teacher_full_name = None
 
-            classroom_id = subj.get("classroomids")
-            if classroom_id != None and len(classroom_id) != 0:
-                classroom_number = self.ids.id_to_classroom(classroom_id[0])
-            else:
-                classroom_number = None
+				classroom_id = subj.get("classroomids")
+				if classroom_id != None and len(classroom_id) != 0:
+					classroom_number = self.ids.idToClassroom(classroom_id[0])
+				else:
+					classroom_number = None
 
-            start = subj.get("starttime")
-            end = subj.get("endtime")
-            length = EduLength(start, end)
+				start = subj.get("starttime")
+				end = subj.get("endtime")
+				length = EduLength(start, end)
 
-            online_lesson_link = subj.get("ol_url")
+				online_lesson_link = subj.get("ol_url")
 
-            if online_lesson_link != None:
-                lesson = EduOnlineLesson(period, subject_name, subject_id,
-                                         teacher_full_name, classroom_number,
-                                         length, online_lesson_link)
-            else:
-                lesson = EduLesson(period, subject_name, subject_id,
-                                   teacher_full_name, classroom_number, length)
+				if online_lesson_link != None:
+					lesson = EduOnlineLesson(period, subject_name, subject_id,
+											 teacher_full_name, classroom_number,
+											 length, online_lesson_link)
+				else:
+					lesson = EduLesson(period, subject_name, subject_id,
+									   teacher_full_name, classroom_number, length)
 
-            # Remove lessons, that have subject_id blank
-            if len(lesson.subject_id) != 0:
-                lessons.append(lesson)
+				# Remove lessons, that have subject_id blank
+				if len(lesson.subject_id) != 0:
+					lessons.append(lesson)
 
-        return EduTimetable(lessons)
+			return EduTimetable(lessons)
 
-    def get_homework(self):
-        if not self.is_logged_in:
-            return None
+	class Homework:
+		def get(self):
+			if not self.is_logged_in:
+				return None
 
-        items = self.data.get("items")
-        if items == None:
-            return None
+			items = self.data.get("items")
+			if items == None:
+				return None
 
-        ids = IdUtil(self.data)
+			ids = IdUtil(self.data)
 
-        homework = []
-        for item in items:
-            if not item.get("typ") == "homework":
-                continue
+			homework = []
+			for item in items:
+				if not item.get("typ") == "homework":
+					continue
 
-            data = json.loads(item.get("data"))
+				data = json.loads(item.get("data"))
 
-            if data == None:
-                continue
+				if data == None:
+					continue
 
-            if data.get("triedaid") == None:
-                continue
+				if data.get("triedaid") == None:
+					continue
 
-            title = data.get("nazov")
+				title = data.get("nazov")
 
-            due_date = data.get("date")
+				due_date = data.get("date")
 
-            groups = data.get("skupiny")
-            description = data.get("popis")
+				groups = data.get("skupiny")
+				description = data.get("popis")
 
-            event_id = data.get("superid")
+				event_id = data.get("superid")
 
-            class_name = ids.id_to_class(data.get("triedaid"))
+				class_name = ids.id_to_class(data.get("triedaid"))
 
-            subject = ids.id_to_subject(data.get("predmetid"))
+				subject = ids.id_to_subject(data.get("predmetid"))
 
-            timestamp = item.get("timestamp")
+				timestamp = item.get("timestamp")
 
-            current_homework = EduHomework(due_date, subject, groups, title,
-                                           description, event_id, class_name,
-                                           timestamp)
-            homework.append(current_homework)
+				current_homework = EduHomework(due_date, subject, groups, title,
+											   description, event_id, class_name,
+											   timestamp)
+				homework.append(current_homework)
 
-        return homework
+			return homework
 
-    def get_news(self):
-        if not self.is_logged_in:
-            return None
+	class News:
+		def get(self):
+			if not self.is_logged_in:
+				return None
 
-        items = self.data.get("items")
-        if items == None:
-            return None
+			items = self.data.get("items")
+			if items == None:
+				return None
 
-        news = []
-        for item in items:
-            if not item.get("typ") == "news":
-                continue
+			news = []
+			for item in items:
+				if not item.get("typ") == "news":
+					continue
 
-            text = item.get("text")
-            timestamp = item.get("timestamp")
-            author = item.get("vlastnik_meno")
-            recipient = item.get("user_meno")
+				text = item.get("text")
+				timestamp = item.get("timestamp")
+				author = item.get("vlastnik_meno")
+				recipient = item.get("user_meno")
 
-            news_message = EduNews(text, timestamp, author, recipient)
-            news.append(news_message)
+				news_message = EduNews(text, timestamp, author, recipient)
+				news.append(news_message)
 
-        return news
+			return news
 
     # this method will soon be removed
     # because all messages will betry:
@@ -239,112 +242,113 @@ class Edupage:
 		
 		return messages
 	"""
+	class Grades:
+		def __getData(self):
+			response = self.session.get(
+				f"https://{self.school}.edupage.org/znamky")
 
-    def __get_grade_data(self):
-        response = self.session.get(
-            f"https://{self.school}.edupage.org/znamky")
+			return json.loads(response.content.decode() \
+				   .split(".znamkyStudentViewer(")[1] \
+				   .split(");\r\n\t\t});\r\n\t\t</script>")[0])
 
-        return json.loads(response.content.decode() \
-               .split(".znamkyStudentViewer(")[1] \
-               .split(");\r\n\t\t});\r\n\t\t</script>")[0])
+		def getReceivedEvents(self):
+			if not self.is_logged_in:
+				return None
 
-    def get_received_grade_events(self):
-        if not self.is_logged_in:
-            return None
+			grade_data = self.__getData()
 
-        grade_data = self.__get_grade_data()
+			util = GradeUtil(grade_data)
+			id_util = IdUtil(self.data)
 
-        util = GradeUtil(grade_data)
-        id_util = IdUtil(self.data)
+			received_grade_events = []
 
-        received_grade_events = []
+			providers = grade_data.get("vsetkyUdalosti")
+			events = providers.get("edupage")
+			for event_id in events:
+				event = events.get(event_id)
 
-        providers = grade_data.get("vsetkyUdalosti")
-        events = providers.get("edupage")
-        for event_id in events:
-            event = events.get(event_id)
+				if event.get("stav") == None:
+					continue
 
-            if event.get("stav") == None:
-                continue
+				name = event.get("p_meno")
+				average = event.get("priemer")
+				timestamp = event.get("timestamp")
 
-            name = event.get("p_meno")
-            average = event.get("priemer")
-            timestamp = event.get("timestamp")
+				weight = event.get("p_vaha")
 
-            weight = event.get("p_vaha")
+				teacher_id = event.get("UcitelID")
+				teacher = util.id_to_teacher(teacher_id)
 
-            teacher_id = event.get("UcitelID")
-            teacher = util.id_to_teacher(teacher_id)
+				subject_id = event.get("PredmetID")
+				subject = id_util.id_to_subject(subject_id)
 
-            subject_id = event.get("PredmetID")
-            subject = id_util.id_to_subject(subject_id)
+				event = EduGradeEvent(teacher, name, subject, average, weight,
+									  timestamp)
+				received_grade_events.append(event)
 
-            event = EduGradeEvent(teacher, name, subject, average, weight,
-                                  timestamp)
-            received_grade_events.append(event)
+			return received_grade_events
 
-        return received_grade_events
+	class Students:
+		def get(self):
+			if not self.is_logged_in:
+				return None
 
-    def get_students(self):
-        if not self.is_logged_in:
-            return None
+			try:
+				students = self.data.get("dbi").get("students")
+			except Exception as e:
+				print(e)
+				return None
+			if students == None:
+				return []
 
-        try:
-            students = self.data.get("dbi").get("students")
-        except Exception as e:
-            print(e)
-            return None
-        if students == None:
-            return []
+			result = []
+			for student_id in students:
+				student_data = students.get(student_id)
+				gender = student_data.get("gender")
+				firstname = student_data.get("firstname")
+				lastname = student_data.get("lastname")
+				is_out = student_data.get("isOut")
+				number_in_class = student_data.get("numberinclass")
 
-        result = []
-        for student_id in students:
-            student_data = students.get(student_id)
-            gender = student_data.get("gender")
-            firstname = student_data.get("firstname")
-            lastname = student_data.get("lastname")
-            is_out = student_data.get("isOut")
-            number_in_class = student_data.get("numberinclass")
+				student = EduStudent(gender, firstname, lastname, student_id,
+									 number_in_class, is_out)
+				result.append(student)
 
-            student = EduStudent(gender, firstname, lastname, student_id,
-                                 number_in_class, is_out)
-            result.append(student)
+			return result
+	class Teachers:
+		def get(self):
+			if not self.is_logged_in:
+				return None
 
-        return result
+			dbi = self.data.get("dbi")
+			if dbi == None:
+				return None
 
-    def get_teachers(self):
-        if not self.is_logged_in:
-            return None
+			id_util = IdUtil(dbi)
 
-        dbi = self.data.get("dbi")
-        if dbi == None:
-            return None
+			teachers = dbi.get("teachers")
 
-        id_util = IdUtil(dbi)
+			result = []
+			for teacher_id in teachers:
+				teacher_data = teachers.get(teacher_id)
 
-        teachers = dbi.get("teachers")
+				gender = teacher_data.get("gender")
+				firstname = teacher_data.get("firstname")
+				lastname = teacher_data.get("lastname")
 
-        result = []
-        for teacher_id in teachers:
-            teacher_data = teachers.get(teacher_id)
+				classroom_id = teacher_data.get("classroomid")
+				if classroom_id != "":
+					classroom = id_util.id_to_classroom(classroom_id)
+				else:
+					classroom = ""
 
-            gender = teacher_data.get("gender")
-            firstname = teacher_data.get("firstname")
-            lastname = teacher_data.get("lastname")
+				is_out = teacher_data.get("isOut")
 
-            classroom_id = teacher_data.get("classroomid")
-            if classroom_id != "":
-                classroom = id_util.id_to_classroom(classroom_id)
-            else:
-                classroom = ""
+				teacher = EduTeacher(gender, firstname, lastname, teacher_id,
+									 classroom, is_out)
+				result.append(teacher)
 
-            is_out = teacher_data.get("isOut")
-
-            teacher = EduTeacher(gender, firstname, lastname, teacher_id,
-                                 classroom, is_out)
-            result.append(teacher)
-
-        return result
+			return result
 
     def get_user_id(self):
         return self.data.get("userid")

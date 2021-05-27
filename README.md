@@ -1,5 +1,10 @@
+
+# Disclaimer
+I do not have the energy to update this project. I can make bug-fixes or some small feature updates from time to time, but I am fed up with python's weak typing. 
+
 # edupage-api
 [![CodeFactor](https://www.codefactor.io/repository/github/ivanhrabcak/edupage-api/badge)](https://www.codefactor.io/repository/github/ivanhrabcak/edupage-api) 
+
 
 This python library allows easy access to Edupage. This is not a Selenium web scraper. 
 It makes requests directly to Edupage's endpoints and parses the HTML document.

@@ -1,4 +1,5 @@
 from edupage_api.date import EduDate, EduDateTime
+from enum import Enum
 
 
 class EduHomework:
@@ -36,7 +37,29 @@ class EduAttachment:
     def __init__(self, url, filename):
         self.url = url
         self.filename = filename
-        
+    
+class NotificationType(Enum):
+    MESSAGE = 0,
+    HOMEWORK = 1
+    GRADE = 2
+    SUBSTITUTION = 3
+    TIMETABLE = 4
+    EVENT = 5
+
+    def parse(s):
+        if "sprava" in s:
+            return NotificationType.MESSAGE
+        elif "homework" in s:
+            return NotificationType.HOMEWORK
+        elif "znamka" in s:
+            return NotificationType.GRADE
+        elif "substitution" in s:
+            return NotificationType.SUBSTITUTION
+        elif "timetable" in s:
+            return NotificationType.TIMETABLE
+        elif "event" in s:
+            return NotificationType.EVENT
+
 class EduNotification:
 	def __init__(self, id, thing, author, recipient, text, date_added, attachments, subject, name, due_date, grade, start, end, duration, event_kind):
 		self.id = id

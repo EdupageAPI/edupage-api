@@ -10,6 +10,7 @@ from edupage_api.grades import *
 from edupage_api.people import *
 from edupage_api.exceptions import *
 
+globals().update(NotificationType.__members__) # statically import the NotificationType enum
 
 class Edupage:
     def __init__(self, school, username, password):
@@ -355,7 +356,8 @@ class Edupage:
     def get_notifications(self):
         if not self.is_logged_in:
             return None
-        final = []
+        
+        output = []
         
         subjects = self.data.get("subjects")
         event_types = self.data.get("dbi").get("event_types")
@@ -371,27 +373,16 @@ class Edupage:
             start = None
             end = None
             duration = None
-            event_kind = None
+            event_type_name = None
             
             data = json.loads(notification.get("data"))
             
             
             id = notification.get("timelineid")
             
-            word = notification.get("typ")
-            if "sprava" in word:
-                thing = "message"
-            elif "homework" in word:
-                thing = "homework"
-            elif "znamka" in word:
-                thing = "grade"
-            elif "substitution" in word:
-                thing = "substitution"
-            elif "timetable" in word:
-                thing = "timetable"
-            elif "event" in word:
-                thing = "event"
-            else:
+            notification_type = notification.get("typ")
+            notification_type = NotificationType.parse(notification_type)
+            if notification_type == None:
                 continue
             
             author = notification.get("vlastnik_meno")
@@ -404,12 +395,10 @@ class Edupage:
             
             attachments = []
             try:
-                a = data.get("attachements")
-                final_a = []
-                for at in a:
-                    final_a.append(EduAttachment(at, a[at]))
+                atts = data.get("attachements")
+                for attachment in atts:
+                    attachments.append(EduAttachment(attachment, atts[attachment]))
             except:
-                #print("Failed while getting attachments.")
                 pass
             
             try:
@@ -417,38 +406,31 @@ class Edupage:
                     subject = data.get("subjectid")
                     subject = subjects[subject]
             except:
-                #print("Failed while getting subject.")
                 pass
             
-            if (thing == "homework" or thing == "test") and data:
+            if notification_type == HOMEWORK and data:
                 name = data.get("nazov")
-            elif thing == "event" and data:
-                name = data.get("name")
-            
-            if thing == "homework" and data:
                 due_date = data.get("date")
-                
-            if thing == "grade":
+            elif notification_type == EVENT and data:
+                name = data.get("name")
+            elif notification_type == GRADE:
                 for g in self.get_grades():
                     if int(g.id) == int(id):
                         grade = g
                         break
             
-            if thing == "test" and data:
-                start = data.get("parametre").get("zaciatok")
-                end = data.get("parametre").get("koniec")
-                duration = data.get("parametre").get("trvanie")
-            elif thing == "event" and data:
+            if notification_type == EVENT and data:
                 start = data.get("cas_udalosti")
-                print(start)
                 end = data.get("repeat_to")
-                event_kind_src = str(data.get("typ"))
-                event_kind = event_types[event_kind_src].get("name")
+                event_type = str(data.get("typ"))
+                event_type_name = event_types[event_type].get("name")
             
             
-            notif = EduNotification(id, thing, author, recipient, text, date_added, attachments, subject, name, due_date, grade, start, end, duration, event_kind)
-            final.append(notif)
-        return final
+            notification = EduNotification(id, notification_type, author, recipient, text,
+                                           date_added, attachments, subject, name, due_date, 
+                                           grade, start, end, duration, event_type_name)
+            output.append(notification)
+        return output
         
         
         

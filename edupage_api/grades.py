@@ -15,3 +15,19 @@ class EduGradeEvent:
 
     def __str__(self):
         return f'{self.title}: {self.average}'
+
+class EduGrade:
+    def __init__(self, id, title, grade, importance, datetime_added, subject, teacher, percent, verbal, max_points):
+        self.id = id
+        self.title = title
+        self.grade = grade
+        self.importance = importance
+        self.datetime_added = EduDateTime.from_formatted_datetime(datetime_added)
+        self.subject = subject
+        self.teacher = teacher
+        self.percent = percent
+        self.verbal = verbal
+        self.max_points = max_points
+
+    def __str__(self):
+        return f'{self.title}: {self.grade}'

@@ -301,19 +301,18 @@ class Edupage:
             return None
             
         grade_data = self.__get_grade_data()
-        grades_list = grade_data.get("vsetkyZnamky")
-        grades_details = grade_data.get("vsetkyUdalosti").get("edupage")
+        grades = grade_data.get("vsetkyZnamky")
+        grade_details = grade_data.get("vsetkyUdalosti").get("edupage")
         
-        grades_final = []
+        output = []
         
         subjects = grade_data.get("predmety")
         
         teachers = grade_data.get("ucitelia")
         
-        for grade in grades_list:
-            
-            id = grade.get("udalostid")
-            grade_details = grades_details.get(str(id))
+        for grade in grades:
+            id = str(grade.get("udalostid"))
+            grade_details = grade_details.get(id)
             
             title = grade_details.get("p_meno").strip()
             
@@ -331,18 +330,13 @@ class Edupage:
             teacher = teachers[str(teacher_id)]
             teacher = teacher.get("firstname") + " " + teacher.get("lastname")
             
-            if grade_details.get("p_vaha_body"):
-                max_points = int(grade_details.get("p_vaha_body"))
-            else:
-                max_points = None
+            max_points = grade_details.get("p_vaha_body")
+            max_points = int(max_points) if max_points != None else None
             
-            if int(grade_details.get("p_vaha")) == 0:
-                importance = 0
-            else:
-                importance = 20 / int(grade_details.get("p_vaha"))
+            importance = grade_details.get("p_vaha")
+            importance = 0 if int(importance) == 0 else 20 / int(importance)
             
             try:
-                test = float(grade_n)
                 verbal = False
                 if max_points:
                     percent = round(float(grade_n) / float(max_points) * 100, 2)
@@ -350,11 +344,11 @@ class Edupage:
                     percent = None
             except:
                 verbal = True
-                percent = None    
+                percent = None   
             
-            to_add = EduGrade(id, title, grade_n, importance, datetime_added, subject, teacher, percent, verbal, max_points)
-            grades_final.append(to_add)
-        return grades_final
+            grade = EduGrade(id, title, grade_n, importance, datetime_added, subject, teacher, percent, verbal, max_points)
+            output.append(grade)
+        return output
         
         
         

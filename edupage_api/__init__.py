@@ -123,8 +123,8 @@ class Edupage:
                                          teacher_full_name, classroom_number,
                                          length, online_lesson_link)
             else:
-                lesson = EduLesson(period, subject_name, subject_id,
-                                   teacher_full_name, classroom_number, length)
+                lesson = EduLesson(period, subject_name, subject_id, 
+				   teacher_full_name, classroom_number, length)
 
             # Remove lessons, that have subject_id blank
             if len(lesson.subject_id) != 0:
@@ -156,6 +156,17 @@ class Edupage:
                 continue
 
             title = data.get("nazov")
+            
+            id = item.get("timelineid")
+            
+            if str(id) in self.data["userProps"]:
+                if self.data["userProps"][str(id)]["doneMaxCas"]:
+                    done = True
+                    done_date = self.data["userProps"][str(id)]["doneMaxCas"]
+            else:
+                done = False
+                done_date = None
+                
 
             due_date = data.get("date")
 
@@ -170,7 +181,7 @@ class Edupage:
 
             timestamp = item.get("timestamp")
 
-            current_homework = EduHomework(due_date, subject, groups, title,
+            current_homework = EduHomework(id, done, done_date, due_date, subject, groups, title,
                                            description, event_id, class_name,
                                            timestamp)
             homework.append(current_homework)
@@ -284,6 +295,169 @@ class Edupage:
             received_grade_events.append(event)
 
         return received_grade_events
+        
+    def get_grades(self):
+        if not self.is_logged_in:
+            return None
+            
+        grade_data = self.__get_grade_data()
+        grades_list = grade_data.get("vsetkyZnamky")
+        grades_details = grade_data.get("vsetkyUdalosti").get("edupage")
+        
+        grades_final = []
+        
+        subjects = grade_data.get("predmety")
+        
+        teachers = grade_data.get("ucitelia")
+        
+        for grade in grades_list:
+            
+            id = grade.get("udalostid")
+            grade_details = grades_details.get(str(id))
+            
+            title = grade_details.get("p_meno").strip()
+            
+            grade_n = grade.get("data")
+            
+            datetime_added = grade.get("datum")
+            
+            subject_id = grade_details.get("PredmetID")
+            if subject_id == "vsetky":
+            	continue
+            else:
+            	subject = subjects[str(subject_id)].get("p_meno")
+            
+            teacher_id = int(grade_details.get("UcitelID"))
+            teacher = teachers[str(teacher_id)]
+            teacher = teacher.get("firstname") + " " + teacher.get("lastname")
+            
+            if grade_details.get("p_vaha_body"):
+                max_points = int(grade_details.get("p_vaha_body"))
+            else:
+                max_points = None
+            
+            if int(grade_details.get("p_vaha")) == 0:
+                importance = 0
+            else:
+                importance = 20 / int(grade_details.get("p_vaha"))
+            
+            try:
+                test = float(grade_n)
+                verbal = False
+                if max_points:
+                    percent = round(float(grade_n) / float(max_points) * 100, 2)
+                else:
+                    percent = None
+            except:
+                verbal = True
+                percent = None    
+            
+            to_add = EduGrade(id, title, grade_n, importance, datetime_added, subject, teacher, percent, verbal, max_points)
+            grades_final.append(to_add)
+        return grades_final
+        
+        
+        
+    def get_notifications(self):
+        if not self.is_logged_in:
+            return None
+        final = []
+        
+        subjects = self.data.get("subjects")
+        event_types = self.data.get("dbi").get("event_types")
+        
+        for notification in self.data.get("items"):
+            text = None
+            date_added = None
+            attachments = None
+            subject = None
+            name = None
+            due_date = None
+            grade = None
+            start = None
+            end = None
+            duration = None
+            event_kind = None
+            
+            data = json.loads(notification.get("data"))
+            
+            
+            id = notification.get("timelineid")
+            
+            word = notification.get("typ")
+            if "sprava" in word:
+                thing = "message"
+            elif "homework" in word:
+                thing = "homework"
+            elif "znamka" in word:
+                thing = "grade"
+            elif "substitution" in word:
+                thing = "substitution"
+            elif "timetable" in word:
+                thing = "timetable"
+            elif "event" in word:
+                thing = "event"
+            else:
+                continue
+            
+            author = notification.get("vlastnik_meno")
+            
+            recipient = notification.get("user_meno")
+            
+            text = notification.get("text")
+            
+            date_added = notification.get("timestamp")
+            
+            attachments = []
+            try:
+                a = data.get("attachements")
+                final_a = []
+                for at in a:
+                    final_a.append(EduAttachment(at, a[at]))
+            except:
+                #print("Failed while getting attachments.")
+                pass
+            
+            try:
+                if data:
+                    subject = data.get("subjectid")
+                    subject = subjects[subject]
+            except:
+                #print("Failed while getting subject.")
+                pass
+            
+            if (thing == "homework" or thing == "test") and data:
+                name = data.get("nazov")
+            elif thing == "event" and data:
+                name = data.get("name")
+            
+            if thing == "homework" and data:
+                due_date = data.get("date")
+                
+            if thing == "grade":
+                for g in self.get_grades():
+                    if int(g.id) == int(id):
+                        grade = g
+                        break
+            
+            if thing == "test" and data:
+                start = data.get("parametre").get("zaciatok")
+                end = data.get("parametre").get("koniec")
+                duration = data.get("parametre").get("trvanie")
+            elif thing == "event" and data:
+                start = data.get("cas_udalosti")
+                print(start)
+                end = data.get("repeat_to")
+                event_kind_src = str(data.get("typ"))
+                event_kind = event_types[event_kind_src].get("name")
+            
+            
+            notif = EduNotification(id, thing, author, recipient, text, date_added, attachments, subject, name, due_date, grade, start, end, duration, event_kind)
+            final.append(notif)
+        return final
+        
+        
+        
 
     def get_students(self):
         if not self.is_logged_in:

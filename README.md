@@ -156,7 +156,7 @@ edupage.login()
 news = edupage.get_news() # returns a list of EduNews
 
 for message in news:
-    print(str(news))
+    print(str(message))
 ```
 
 ## Get a list of students

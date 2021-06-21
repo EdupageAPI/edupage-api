@@ -469,7 +469,7 @@ class Edupage:
         if dbi == None:
             return None
 
-        id_util = IdUtil(dbi)
+        id_util = IdUtil(self.data)
 
         teachers = dbi.get("teachers")
 

@@ -253,8 +253,8 @@ print(link)
 
 # Upcoming features
 - [ ] Lunches
-- [ ] Grades
-- [ ] Reading your own notifications
+- [x] Grades
+- [x] Reading your own notifications
 - [x] Connecting to the online lessons (with your presence being acknowledged by Edupage)
 - [x] Uploading (and hosting) files on the Edupage cloud (if possible)
 - [x] Writing messages to other students/teachers

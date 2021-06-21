@@ -304,7 +304,6 @@ class Edupage:
         grade_data = self.__get_grade_data()
         grades = grade_data.get("vsetkyZnamky")
         grade_details = grade_data.get("vsetkyUdalosti").get("edupage")
-        
         output = []
         
         subjects = grade_data.get("predmety")
@@ -312,30 +311,30 @@ class Edupage:
         teachers = grade_data.get("ucitelia")
         
         for grade in grades:
-            id = str(grade.get("udalostid"))
-            grade_details = grade_details.get(id)
+            event_id = str(grade.get("udalostid"))
+            details = grade_details.get(event_id)
             
-            title = grade_details.get("p_meno").strip()
+            title = details.get("p_meno").strip()
             
             grade_n = grade.get("data")
             
             datetime_added = grade.get("datum")
             
-            subject_id = grade_details.get("PredmetID")
+            subject_id = details.get("PredmetID")
             if subject_id == "vsetky":
             	continue
             else:
             	subject = subjects[str(subject_id)].get("p_meno")
             
-            teacher_id = int(grade_details.get("UcitelID"))
+            teacher_id = int(details.get("UcitelID"))
             teacher = teachers[str(teacher_id)]
             teacher = teacher.get("firstname") + " " + teacher.get("lastname")
             
-            max_points = grade_details.get("p_vaha_body")
+            max_points = details.get("p_vaha_body")
             max_points = int(max_points) if max_points != None else None
             
-            importance = grade_details.get("p_vaha")
-            importance = 0 if int(importance) == 0 else 20 / int(importance)
+            importance = details.get("p_vaha")
+            importance = 0 if float(importance) == 0 else 20 / float(importance)
             
             try:
                 verbal = False
@@ -347,7 +346,7 @@ class Edupage:
                 verbal = True
                 percent = None   
             
-            grade = EduGrade(id, title, grade_n, importance, datetime_added, subject, teacher, percent, verbal, max_points)
+            grade = EduGrade(event_id, title, grade_n, importance, datetime_added, subject, teacher, percent, verbal, max_points)
             output.append(grade)
         return output
         

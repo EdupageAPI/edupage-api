@@ -46,6 +46,7 @@ class NotificationType(Enum):
     TIMETABLE = 4
     EVENT = 5
 
+    @staticmethod
     def parse(s):
         if "sprava" in s:
             return NotificationType.MESSAGE
@@ -61,9 +62,9 @@ class NotificationType(Enum):
             return NotificationType.EVENT
 
 class EduNotification:
-	def __init__(self, id, thing, author, recipient, text, date_added, attachments, subject, name, due_date, grade, start, end, duration, event_kind):
+	def __init__(self, id, event_type, author, recipient, text, date_added, attachments, subject, name, due_date, grade, start, end, duration, event_type_name):
 		self.id = id
-		self.thing = thing
+		self.event_type = event_type
 		self.author = author
 		self.recipient = recipient
 		self.text = text
@@ -76,8 +77,8 @@ class EduNotification:
 		self.start = EduDate.from_formatted_date(start)
 		self.end = EduDate.from_formatted_date(end)
 		self.duration = duration
-		self.event_kind = event_kind
+		self.event_type_name = event_type_name
 		
-		def __str__(self):
-			return f'{self.thing}, {self.text}'
+	def __str__(self):
+			return f'{self.event_type}, {self.text}'
   

@@ -37,9 +37,10 @@ class EduAttachment:
     def __init__(self, url, filename):
         self.url = url
         self.filename = filename
-    
+
+
 class NotificationType(Enum):
-    MESSAGE = 0,
+    MESSAGE = 0
     HOMEWORK = 1
     GRADE = 2
     SUBSTITUTION = 3
@@ -61,8 +62,10 @@ class NotificationType(Enum):
         elif "event" in s:
             return NotificationType.EVENT
 
+
 class EduNotification:
-    def __init__(self, id, event_type, author, recipient, text, date_added, attachments, subject, name, due_date, grade, start, end, duration, event_type_name):
+    def __init__(self, id, event_type, author, recipient, text, date_added, attachments, subject,
+                 name, due_date, grade, start, end, duration, event_type_name):
         self.id = id
         self.event_type = event_type
         self.author = author
@@ -78,7 +81,6 @@ class EduNotification:
         self.end = EduDate.from_formatted_date(end)
         self.duration = duration
         self.event_type_name = event_type_name
-        
+
     def __str__(self):
-            return f'{self.event_type}, {self.text}'
-  
+        return f'{self.event_type}, {self.text}'

@@ -18,7 +18,8 @@ class EduGradeEvent:
 
 
 class EduGrade:
-    def __init__(self, id, title, grade, importance, datetime_added, subject, teacher, percent, verbal, max_points):
+    def __init__(self, id, title, grade, importance, datetime_added, subject, teacher, percent,
+                 verbal, max_points):
         self.id = id
         self.title = title
         self.grade = grade

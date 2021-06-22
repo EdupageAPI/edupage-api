@@ -11,7 +11,7 @@ class EduUser:
         raise NotImplementedError()
 
     def __str__(self):
-        return str(self.__dict__)
+        return f"{self.id} | {self.fullname}"
 
 
 class EduStudent(EduUser):
@@ -37,3 +37,6 @@ class EduTeacher(EduUser):
 
     def get_id(self):
         return f"Ucitel{str(self.id)}"
+
+    def __str__(self):
+        return f"{self.id} | {self.fullname}"

@@ -253,7 +253,7 @@ print(link)
 ```
 
 # Upcoming features
-- [ ] Lunches
+- [x] Lunches
 - [x] Grades
 - [x] Reading your own notifications
 - [x] Connecting to the online lessons (with your presence being acknowledged by Edupage)

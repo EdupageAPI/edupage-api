@@ -1,5 +1,4 @@
-import random, string, json
-from requests_toolbelt import MultipartEncoder
+import json
 from edupage_api.exceptions import FailedToUploadFileException
 
 

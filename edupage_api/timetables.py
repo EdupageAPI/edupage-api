@@ -1,4 +1,5 @@
-import datetime, json
+import datetime
+import json
 from edupage_api.utils import LessonUtil
 
 
@@ -29,10 +30,11 @@ class EduOnlineLesson(EduLesson):
 
         # we will need this for the next request
         gse_hash = response.content.decode() \
-                                        .split("gsechash=")[1] \
-                                        .split('"')[1]  # I have no idea what this is, but it can be easily parsed
+            .split("gsechash=")[1] \
+            .split('"')[1]  # I have no idea what this is, but it can be easily parsed
 
-        request_url = "https://" + edupage.school + ".edupage.org/dashboard/server/onlinelesson.js?__func=getOnlineLessonOpenUrl"
+        request_url = "https://" + edupage.school + \
+            ".edupage.org/dashboard/server/onlinelesson.js?__func=getOnlineLessonOpenUrl"
 
         today = datetime.datetime.now()
         post_data = {
@@ -71,13 +73,13 @@ class EduTimetable:
                 return lesson
 
         return None
-    
+
     def get_next_online_lesson_at_time(self, edutime):
         for lesson in self.lessons:
             if edutime.is_before(lesson.length.start):
                 if LessonUtil.is_online_lesson(lesson):
                     return lesson
-        
+
         return None
 
     def get_first_lesson(self):

@@ -16,6 +16,7 @@ class EduGradeEvent:
     def __str__(self):
         return f'{self.title}: {self.average}'
 
+
 class EduGrade:
     def __init__(self, id, title, grade, importance, datetime_added, subject, teacher, percent, verbal, max_points):
         self.id = id

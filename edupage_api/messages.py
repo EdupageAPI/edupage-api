@@ -62,23 +62,23 @@ class NotificationType(Enum):
             return NotificationType.EVENT
 
 class EduNotification:
-	def __init__(self, id, event_type, author, recipient, text, date_added, attachments, subject, name, due_date, grade, start, end, duration, event_type_name):
-		self.id = id
-		self.event_type = event_type
-		self.author = author
-		self.recipient = recipient
-		self.text = text
-		self.date_added = EduDateTime.from_formatted_datetime(date_added)
-		self.attachments = attachments
-		self.subject = subject
-		self.name = name
-		self.due_date = EduDate.from_formatted_date(due_date)
-		self.grade = grade
-		self.start = EduDate.from_formatted_date(start)
-		self.end = EduDate.from_formatted_date(end)
-		self.duration = duration
-		self.event_type_name = event_type_name
-		
-	def __str__(self):
-			return f'{self.event_type}, {self.text}'
+    def __init__(self, id, event_type, author, recipient, text, date_added, attachments, subject, name, due_date, grade, start, end, duration, event_type_name):
+        self.id = id
+        self.event_type = event_type
+        self.author = author
+        self.recipient = recipient
+        self.text = text
+        self.date_added = EduDateTime.from_formatted_datetime(date_added)
+        self.attachments = attachments
+        self.subject = subject
+        self.name = name
+        self.due_date = EduDate.from_formatted_date(due_date)
+        self.grade = grade
+        self.start = EduDate.from_formatted_date(start)
+        self.end = EduDate.from_formatted_date(end)
+        self.duration = duration
+        self.event_type_name = event_type_name
+        
+    def __str__(self):
+            return f'{self.event_type}, {self.text}'
   

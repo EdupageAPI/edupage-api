@@ -1,6 +1,5 @@
-import gzip, base64
-import urllib.parse, json
-from pprint import pprint
+import urllib.parse
+import json
 
 
 class GradeUtil:
@@ -13,7 +12,7 @@ class GradeUtil:
 
         teachers = self.data.get("ucitelia")
 
-        # this dict contains data about the
+        # This dict contains data about the
         # date when this teacher was employed
         # or when will he/she retire / is planned quit this job
         # (datefrom, dateto)
@@ -28,7 +27,7 @@ class LessonUtil:
     @staticmethod
     def is_online_lesson(lesson):
         # We cannot import from timetables.py because of circular import
-        return "EduOnlineLesson" in str(type(lesson)) 
+        return "EduOnlineLesson" in str(type(lesson))
 
 
 class IdUtil:

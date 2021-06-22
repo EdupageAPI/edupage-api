@@ -1,6 +1,5 @@
-from datetime import date
-import requests, json, datetime
-import pprint, base64, hashlib
+import requests
+import json
 
 from edupage_api.utils import *
 from edupage_api.date import *
@@ -10,7 +9,8 @@ from edupage_api.grades import *
 from edupage_api.people import *
 from edupage_api.exceptions import *
 
-globals().update(NotificationType.__members__) # statically import the NotificationType enum
+globals().update(NotificationType.__members__)  # Statically import the NotificationType enum
+
 
 class Edupage:
     def __init__(self, school, username, password):
@@ -20,19 +20,19 @@ class Edupage:
         self.is_logged_in = False
         self.session = requests.session()
 
-    # a new way of logging in, contains some neat new features
+    # A new way of logging in, contains some neat new features
     # and security measures such as english code or csrf tokens
     def login(self):
-        # we first have to make a request to index.php to get the csrf token
+        # We first have to make a request to index.php to get the csrf token
         request_url = "https://" + self.school + ".edupage.org/login/index.php"
 
         csrf_response = self.session.get(request_url).content.decode()
 
-        # we parse the token from the html
+        # Parse the token from the html
         csrf_token = csrf_response.split(
             "name=\"csrfauth\" value=\"")[1].split("\"")[0]
 
-        # now everything is the same as in the first approach, we just add the csrf token
+        # Now is everything the same as in the first approach, we just add the csrf token
         parameters = {
             "username": self.username,
             "password": self.password,
@@ -54,11 +54,11 @@ class Edupage:
 
     def parse_login_data(self, data):
         js_json = data.split("$j(document).ready(function() {")[1] \
-              .split(");")[0] \
-              .replace("\t", "") \
-              .split("userhome(")[1] \
-              .replace("\n", "") \
-              .replace("\r", "")
+            .split(");")[0] \
+            .replace("\t", "") \
+            .split("userhome(")[1] \
+            .replace("\n", "") \
+            .replace("\r", "")
         self.data = json.loads(js_json)
         self.is_logged_in = True
         self.ids = IdUtil(self.data)
@@ -124,8 +124,8 @@ class Edupage:
                                          teacher_full_name, classroom_number,
                                          length, online_lesson_link)
             else:
-                lesson = EduLesson(period, subject_name, subject_id, 
-				   teacher_full_name, classroom_number, length)
+                lesson = EduLesson(period, subject_name, subject_id,
+                                   teacher_full_name, classroom_number, length)
 
             lessons.append(lesson)
 
@@ -155,9 +155,9 @@ class Edupage:
                 continue
 
             title = data.get("nazov")
-            
+
             id = item.get("timelineid")
-            
+
             if str(id) in self.data["userProps"]:
                 if self.data["userProps"][str(id)]["doneMaxCas"]:
                     done = True
@@ -165,7 +165,6 @@ class Edupage:
             else:
                 done = False
                 done_date = None
-                
 
             due_date = data.get("date")
 
@@ -181,8 +180,7 @@ class Edupage:
             timestamp = item.get("timestamp")
 
             current_homework = EduHomework(id, done, done_date, due_date, subject, groups, title,
-                                           description, event_id, class_name,
-                                           timestamp)
+                                           description, event_id, class_name, timestamp)
             homework.append(current_homework)
 
         return homework
@@ -210,53 +208,53 @@ class Edupage:
 
         return news
 
-    # this method will soon be removed
-    # because all messages will betry:
+    # This method will soon be removed
+    # because all messages will be try:
     # handled in some other way
     """
-	def get_grade_messages(self):
-		if not self.is_logged_in:
-			return None
-		
-		items = self.data.get("items")
-		if items == None:
-			return None
+    def get_grade_messages(self):
+        if not self.is_logged_in:
+            return None
+        
+        items = self.data.get("items")
+        if items == None:
+            return None
 
-		ids = IdUtil(self.data)
+        ids = IdUtil(self.data)
 
-		messages = []
-		for item in items:
-			if not item.get("typ") == "znamka":
-				continue
+        messages = []
+        for item in items:
+            if not item.get("typ") == "znamka":
+                continue
 
-			timestamp = item.get("timestamp")
-			teacher = item.get("vlastnik_meno")
-			text = item.get("text")
+            timestamp = item.get("timestamp")
+            teacher = item.get("vlastnik_meno")
+            text = item.get("text")
 
-			data = json.loads(item.get("data"))
-			subject_id = list(data.keys())[0]
+            data = json.loads(item.get("data"))
+            subject_id = list(data.keys())[0]
 
-			subject = ids.id_to_subject(subject_id)
+            subject = ids.id_to_subject(subject_id)
 
-			grade_data = data.get(subject_id)[0]
-			
-			grade_id = grade_data.get("znamkaid")
-			grade = grade_data.get("data")
-			action = grade_data.get("akcia")
+            grade_data = data.get(subject_id)[0]
+            
+            grade_id = grade_data.get("znamkaid")
+            grade = grade_data.get("data")
+            action = grade_data.get("akcia")
 
-			edugrade = EduGradeMessage(teacher, text, subject, grade, action, grade_id, timestamp)
-			messages.append(edugrade)
-		
-		return messages
-	"""
+            edugrade = EduGradeMessage(teacher, text, subject, grade, action, grade_id, timestamp)
+            messages.append(edugrade)
+        
+        return messages
+    """
 
     def __get_grade_data(self):
         response = self.session.get(
             f"https://{self.school}.edupage.org/znamky")
 
-        return json.loads(response.content.decode() \
-               .split(".znamkyStudentViewer(")[1] \
-               .split(");\r\n\t\t});\r\n\t\t</script>")[0])
+        return json.loads(response.content.decode()
+                          .split(".znamkyStudentViewer(")[1]
+                          .split(");\r\n\t\t});\r\n\t\t</script>")[0])
 
     def get_received_grade_events(self):
         if not self.is_logged_in:
@@ -294,46 +292,46 @@ class Edupage:
             received_grade_events.append(event)
 
         return received_grade_events
-        
+
     def get_grades(self):
         if not self.is_logged_in:
             return None
-            
+
         grade_data = self.__get_grade_data()
         grades = grade_data.get("vsetkyZnamky")
         grade_details = grade_data.get("vsetkyUdalosti").get("edupage")
         output = []
-        
+
         subjects = grade_data.get("predmety")
-        
+
         teachers = grade_data.get("ucitelia")
-        
+
         for grade in grades:
             event_id = str(grade.get("udalostid"))
             details = grade_details.get(event_id)
-            
+
             title = details.get("p_meno").strip()
-            
+
             grade_n = grade.get("data")
-            
+
             datetime_added = grade.get("datum")
-            
+
             subject_id = details.get("PredmetID")
             if subject_id == "vsetky":
-            	continue
+                continue
             else:
-            	subject = subjects[str(subject_id)].get("p_meno")
-            
+                subject = subjects[str(subject_id)].get("p_meno")
+
             teacher_id = int(details.get("UcitelID"))
             teacher = teachers[str(teacher_id)]
             teacher = teacher.get("firstname") + " " + teacher.get("lastname")
-            
+
             max_points = details.get("p_vaha_body")
             max_points = int(max_points) if max_points != None else None
-            
+
             importance = details.get("p_vaha")
             importance = 0 if float(importance) == 0 else 20 / float(importance)
-            
+
             try:
                 verbal = False
                 if max_points:
@@ -342,23 +340,22 @@ class Edupage:
                     percent = None
             except:
                 verbal = True
-                percent = None   
-            
-            grade = EduGrade(event_id, title, grade_n, importance, datetime_added, subject, teacher, percent, verbal, max_points)
+                percent = None
+
+            grade = EduGrade(event_id, title, grade_n, importance,
+                             datetime_added, subject, teacher, percent, verbal, max_points)
             output.append(grade)
         return output
-        
-        
-        
+
     def get_notifications(self):
         if not self.is_logged_in:
             return None
-        
+
         output = []
-        
+
         subjects = self.data.get("subjects")
         event_types = self.data.get("dbi").get("event_types")
-        
+
         for notification in self.data.get("items"):
             text = None
             date_added = None
@@ -371,25 +368,24 @@ class Edupage:
             end = None
             duration = None
             event_type_name = None
-            
+
             data = json.loads(notification.get("data"))
-            
-            
+
             id = notification.get("timelineid")
-            
+
             notification_type = notification.get("typ")
             notification_type = NotificationType.parse(notification_type)
             if notification_type == None:
                 continue
-            
+
             author = notification.get("vlastnik_meno")
-            
+
             recipient = notification.get("user_meno")
-            
+
             text = notification.get("text")
-            
+
             date_added = notification.get("timestamp")
-            
+
             attachments = []
             try:
                 atts = data.get("attachements")
@@ -397,14 +393,14 @@ class Edupage:
                     attachments.append(EduAttachment(attachment, atts[attachment]))
             except:
                 pass
-            
+
             try:
                 if data:
                     subject = data.get("subjectid")
                     subject = subjects[subject]
             except:
                 pass
-            
+
             if notification_type == HOMEWORK and data:
                 name = data.get("nazov")
                 due_date = data.get("date")
@@ -415,22 +411,18 @@ class Edupage:
                     if int(g.id) == int(id):
                         grade = g
                         break
-            
+
             if notification_type == EVENT and data:
                 start = data.get("cas_udalosti")
                 end = data.get("repeat_to")
                 event_type = str(data.get("typ"))
                 event_type_name = event_types[event_type].get("name")
-            
-            
+
             notification = EduNotification(id, notification_type, author, recipient, text,
-                                           date_added, attachments, subject, name, due_date, 
+                                           date_added, attachments, subject, name, due_date,
                                            grade, start, end, duration, event_type_name)
             output.append(notification)
         return output
-        
-        
-        
 
     def get_students(self):
         if not self.is_logged_in:
@@ -453,8 +445,7 @@ class Edupage:
             is_out = student_data.get("isOut")
             number_in_class = student_data.get("numberinclass")
 
-            student = EduStudent(gender, firstname, lastname, student_id,
-                                 number_in_class, is_out)
+            student = EduStudent(gender, firstname, lastname, student_id, number_in_class, is_out)
             result.append(student)
 
         return result
@@ -487,8 +478,7 @@ class Edupage:
 
             is_out = teacher_data.get("isOut")
 
-            teacher = EduTeacher(gender, firstname, lastname, teacher_id,
-                                 classroom, is_out)
+            teacher = EduTeacher(gender, firstname, lastname, teacher_id, classroom, is_out)
             result.append(teacher)
 
         return result

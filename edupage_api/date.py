@@ -50,16 +50,16 @@ class EduExactTime:
 
     def is_before(self, other):
         return other.hour > self.hour or \
-              (other.hour == self.hour and other.minute > self.minute) or \
-              (other.hour == self.hour and other.minute == self.minute and other.second > self.second)
+            (other.hour == self.hour and other.minute > self.minute) or \
+            (other.hour == self.hour and other.minute == self.minute and other.second > self.second)
 
     def is_before_or_equals(self, other):
         return self.is_before(other) or self.equals(other)
 
     def is_after(self, other):
         return other.hour < self.hour or \
-              (other.hour == self.hour and other.minute < self.minute) or \
-              (other.hour == self.hour and other.minute == self.minute and other.second < self.second)
+            (other.hour == self.hour and other.minute < self.minute) or \
+            (other.hour == self.hour and other.minute == self.minute and other.second < self.second)
 
     def is_after_or_equals(self, other):
         return self.is_after(other) or self.equals(other)
@@ -113,12 +113,11 @@ class EduTime:
             self.hour = int(hour)
         else:
             self.hour = hour
-        
+
         if type(minute) != int:
             self.minute = int(minute)
         else:
             self.minute = minute
-       
 
     def is_before(self, other):
         return other.hour > self.hour or (other.hour == self.hour and other.minute > self.minute)

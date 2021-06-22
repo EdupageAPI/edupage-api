@@ -1,4 +1,5 @@
 import requests
+import json
 
 from edupage_api.utils import *
 from edupage_api.date import *

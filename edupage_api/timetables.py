@@ -24,17 +24,17 @@ class EduOnlineLesson(EduLesson):
 
     # Tell edupage that you are on this online lesson
     def sign_into_lesson(self, edupage):
-        request_url = "https://" + edupage.school + ".edupage.org/dashboard/eb.php"
+        request_url = f"https://{edupage.school}.edupage.org/dashboard/eb.php"
 
         response = edupage.session.get(request_url)
 
         # we will need this for the next request
         gse_hash = response.content.decode() \
-            .split("gsechash=")[1] \
-            .split('"')[1]  # I have no idea what this is, but it can be easily parsed
+                                   .split("gsechash=")[1] \
+                                   .split('"')[1]  # I have no idea what this is, but it can be easily parsed
 
-        request_url = "https://" + edupage.school + \
-            ".edupage.org/dashboard/server/onlinelesson.js?__func=getOnlineLessonOpenUrl"
+        request_url = f"https://{edupage.school}.edupage.org/dashboard/server/onlinelesson.js?__func" \
+                      f"=getOnlineLessonOpenUrl "
 
         today = datetime.datetime.now()
         post_data = {
@@ -53,7 +53,7 @@ class EduOnlineLesson(EduLesson):
 
         response = edupage.session.post(request_url, json=post_data)
         # if reload is True, request failed: the gsh hash was wrong:(
-        return json.loads(response.content.decode()).get("reload") == None
+        return json.loads(response.content.decode()).get("reload") is None
 
 
 class EduTimetable:

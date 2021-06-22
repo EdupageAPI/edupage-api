@@ -9,7 +9,7 @@ class EduDate:
 
     @staticmethod
     def from_formatted_date(formatted_date):
-        if formatted_date == None:
+        if formatted_date is None:
             return None
 
         [year, month, day] = formatted_date.split("-")
@@ -35,8 +35,8 @@ class EduDate:
 
     def is_after_or_equals(self, date):
         return datetime.datetime.strptime(
-            date, "%Y-%m-%d") >= datetime.datetime.strptime(
-                self.__str__(), "%Y-%m-%d")
+               date, "%Y-%m-%d") >= datetime.datetime.strptime(
+               self.__str__(), "%Y-%m-%d")
 
     def __str__(self):
         return "%04d-%02d-%02d" % (int(self.year), int(self.month), int(self.day))
@@ -50,16 +50,16 @@ class EduExactTime:
 
     def is_before(self, other):
         return other.hour > self.hour or \
-            (other.hour == self.hour and other.minute > self.minute) or \
-            (other.hour == self.hour and other.minute == self.minute and other.second > self.second)
+               (other.hour == self.hour and other.minute > self.minute) or \
+               (other.hour == self.hour and other.minute == self.minute and other.second > self.second)
 
     def is_before_or_equals(self, other):
         return self.is_before(other) or self.equals(other)
 
     def is_after(self, other):
         return other.hour < self.hour or \
-            (other.hour == self.hour and other.minute < self.minute) or \
-            (other.hour == self.hour and other.minute == self.minute and other.second < self.second)
+               (other.hour == self.hour and other.minute < self.minute) or \
+               (other.hour == self.hour and other.minute == self.minute and other.second < self.second)
 
     def is_after_or_equals(self, other):
         return self.is_after(other) or self.equals(other)
@@ -96,7 +96,7 @@ class EduExactTime:
 
     @staticmethod
     def from_formatted_string(s):
-        if s == None:
+        if s is None:
             return None
 
         [hour, minute, second] = s.split(":")
@@ -160,7 +160,7 @@ class EduTime:
 
     @staticmethod
     def from_formatted_string(s):
-        if s == None:
+        if s is None:
             return None
 
         [hour, minute] = s.split(":")
@@ -178,7 +178,7 @@ class EduDateTime:
 
     @staticmethod
     def from_formatted_datetime(formatted_datetime):
-        if formatted_datetime == None:
+        if formatted_datetime is None:
             return None
 
         split_date = formatted_datetime.split(" ")

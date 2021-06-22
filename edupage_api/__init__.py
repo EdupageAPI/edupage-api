@@ -1,6 +1,10 @@
 from datetime import date
+from edupage_api.lunches import EduLunch, EduMenu, EduRating
 import requests, json, datetime
 import pprint, base64, hashlib
+import functools
+
+from requests.sessions import session
 
 from edupage_api.utils import *
 from edupage_api.date import *
@@ -19,6 +23,9 @@ class Edupage:
         self.password = password
         self.is_logged_in = False
         self.session = requests.session()
+
+        # Set a timeout for all requests made with this session 
+        self.session.request = functools.partial(self.session.request, timeout = 2) 
 
     # a new way of logging in, contains some neat new features
     # and security measures such as english code or csrf tokens
@@ -432,8 +439,64 @@ class Edupage:
             output.append(notification)
         return output
         
+    def get_lunch(self, date):
+        if not self.is_logged_in:
+            return None
+
+        request_url = f"https://{self.school}.edupage.org/menu/"
+        response = self.session.get(request_url)
+        response = response.content.decode()
+
+        boarder_id = None
+        lunch_data = None
+
+        try:
+            boarder_id = response.split('var stravnikid = "')[1].split('"')[0]
+            lunch_data = json.loads(response.split('var novyListok = ')[1].split(";")[0])
+        except:
+            return None
+
+        lunch = lunch_data.get(str(date)) 
+        if lunch == None:
+            return None
         
+        lunch = lunch.get("2")
+
+        served_from = lunch.get("vydaj_od")
+        served_to = lunch.get("vyday_do")
+
+        title = lunch.get("nazov")
+
+        amount_of_foods = lunch.get("druhov_jedal")
+        chooseable_menus = list(lunch.get("choosableMenus").keys())
+
+        can_be_changed_until = lunch.get("zmen_do")
+
+        menus = []
+        for food in lunch.get("rows"):
+            if food == []:
+                continue
+            name = food.get("nazov")
+            allergens = food.get("alergenyStr")
+            weight = food.get("hmotnostiStr")
+            number = food.get("menuStr")
+            rating = None
+
+            if number != None:
+                rating = lunch.get("hodnotenia")
+                if rating != None:
+                    rating = rating.get(number)
+                    
+                    average = rating.get(priemer)
+                    amount_of_ratings = rating.get("pocet")
+
+                    rating = EduRating(date, boarder_id, amount_of_ratings, average)
+            
+            menus.append(EduMenu(name, allergens, weight, number, rating))
         
+        return EduLunch(served_from, served_to, amount_of_foods, 
+                        chooseable_menus, can_be_changed_until, 
+                        title, menus, date, boarder_id)
 
     def get_students(self):
         if not self.is_logged_in:

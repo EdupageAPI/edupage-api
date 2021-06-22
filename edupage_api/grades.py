@@ -1,4 +1,4 @@
-from edupage_api.date import EduDateTime
+from edupage_api.date import EduExactDateTime
 
 
 # This is just a message that a grade has been received
@@ -10,7 +10,7 @@ class EduGradeEvent:
         self.title = title
         self.subject = subject
         self.average = average
-        self.datetime_added = EduDateTime.from_formatted_datetime(
+        self.datetime_added = EduExactDateTime.from_formatted_string(
             datetime_added)
 
     def __str__(self):
@@ -22,7 +22,7 @@ class EduGrade:
         self.title = title
         self.grade = grade
         self.importance = importance
-        self.datetime_added = EduDateTime.from_formatted_datetime(datetime_added)
+        self.datetime_added = EduExactDateTime.from_formatted_string(datetime_added)
         self.subject = subject
         self.teacher = teacher
         self.percent = percent

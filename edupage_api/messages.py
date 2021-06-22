@@ -1,4 +1,4 @@
-from edupage_api.date import EduDate, EduDateTime
+from edupage_api.date import EduDate, EduExactDateTime
 from enum import Enum
 
 
@@ -7,15 +7,15 @@ class EduHomework:
                  class_name, datetime_added):
         self.id = id
         self.done = done
-        self.done_date = EduDateTime.from_formatted_datetime(done_date)
-        self.due_date = EduDate.from_formatted_date(due_date)
+        self.done_date = EduExactDateTime.from_formatted_string(done_date)
+        self.due_date = EduDate.from_formatted_string(due_date)
         self.subject = subject
         self.groups = groups
         self.title = title
         self.description = description
         self.event_id = event_id
         self.class_name = class_name
-        self.datetime_added = EduDateTime.from_formatted_datetime(
+        self.datetime_added = EduExactDateTime.from_formatted_string(
             datetime_added)
 
     def __str__(self):
@@ -25,7 +25,7 @@ class EduHomework:
 class EduNews:
     def __init__(self, text, date_added, author, recipient):
         self.text = text
-        self.date_added = EduDateTime.from_formatted_datetime(date_added)
+        self.date_added = EduExactDateTime.from_formatted_string(date_added)
         self.author = author
         self.recipient = recipient
 
@@ -67,14 +67,14 @@ class EduNotification:
 		self.author = author
 		self.recipient = recipient
 		self.text = text
-		self.date_added = EduDateTime.from_formatted_datetime(date_added)
+		self.date_added = EduExactDateTime.from_formatted_string(date_added)
 		self.attachments = attachments
 		self.subject = subject
 		self.name = name
-		self.due_date = EduDate.from_formatted_date(due_date)
+		self.due_date = EduDate.from_formatted_string(due_date)
 		self.grade = grade
-		self.start = EduDate.from_formatted_date(start)
-		self.end = EduDate.from_formatted_date(end)
+		self.start = EduDate.from_formatted_string(start)
+		self.end = EduDate.from_formatted_string(end)
 		self.duration = duration
 		self.event_kind = event_kind
 		

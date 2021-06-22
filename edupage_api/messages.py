@@ -3,9 +3,9 @@ from enum import Enum
 
 
 class EduHomework:
-    def __init__(self, id, done, done_date, due_date, subject, groups, title, description, event_id,
+    def __init__(self, homework_id, done, done_date, due_date, subject, groups, title, description, event_id,
                  class_name, datetime_added):
-        self.id = id
+        self.id = homework_id
         self.done = done
         self.done_date = EduDateTime.from_formatted_datetime(done_date)
         self.due_date = EduDate.from_formatted_date(due_date)
@@ -64,9 +64,9 @@ class NotificationType(Enum):
 
 
 class EduNotification:
-    def __init__(self, id, event_type, author, recipient, text, date_added, attachments, subject,
-                 name, due_date, grade, start, end, duration, event_type_name):
-        self.id = id
+    def __init__(self, notification_id, event_type, author, recipient, text, date_added, attachments, subject, name,
+                 due_date, grade, start, end, duration, event_type_name):
+        self.id = notification_id
         self.event_type = event_type
         self.author = author
         self.recipient = recipient

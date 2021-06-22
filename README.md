@@ -156,7 +156,7 @@ edupage.login()
 news = edupage.get_news() # returns a list of EduNews
 
 for message in news:
-    print(str(news))
+    print(str(message))
 ```
 
 ## Get a list of students
@@ -184,6 +184,7 @@ This list is not sorted in any way and this library doesn't provide a way to sor
 from edupage_api import Edupage
 
 edupage = Edupage("Subdomain (Name) of your school", "Username or E-Mail", "Password")
+edupage.login()
 
 # Note: This list is not sorted and you cannot sort it with EduStudent.__sort__!
 teachers = edupage.get_teachers()
@@ -253,8 +254,8 @@ print(link)
 
 # Upcoming features
 - [ ] Lunches
-- [ ] Grades
-- [ ] Reading your own notifications
+- [x] Grades
+- [x] Reading your own notifications
 - [x] Connecting to the online lessons (with your presence being acknowledged by Edupage)
 - [x] Uploading (and hosting) files on the Edupage cloud (if possible)
 - [x] Writing messages to other students/teachers

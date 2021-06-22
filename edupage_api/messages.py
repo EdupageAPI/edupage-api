@@ -3,9 +3,9 @@ from enum import Enum
 
 
 class EduHomework:
-    def __init__(self, id, done, done_date, due_date, subject, groups, title, description, event_id,
+    def __init__(self, homework_id, done, done_date, due_date, subject, groups, title, description, event_id,
                  class_name, datetime_added):
-        self.id = id
+        self.id = homework_id
         self.done = done
         self.done_date = EduExactDateTime.from_formatted_string(done_date)
         self.due_date = EduDate.from_formatted_string(due_date)
@@ -37,15 +37,17 @@ class EduAttachment:
     def __init__(self, url, filename):
         self.url = url
         self.filename = filename
-    
+
+
 class NotificationType(Enum):
-    MESSAGE = 0,
+    MESSAGE = 0
     HOMEWORK = 1
     GRADE = 2
     SUBSTITUTION = 3
     TIMETABLE = 4
     EVENT = 5
 
+    @staticmethod
     def parse(s):
         if "sprava" in s:
             return NotificationType.MESSAGE
@@ -60,10 +62,12 @@ class NotificationType(Enum):
         elif "event" in s:
             return NotificationType.EVENT
 
+
 class EduNotification:
-	def __init__(self, id, thing, author, recipient, text, date_added, attachments, subject, name, due_date, grade, start, end, duration, event_kind):
+	def __init__(self, notification_id, event_type, author, recipient, text, date_added, attachments, subject, name,
+                 due_date, grade, start, end, duration, event_type_name):
 		self.id = id
-		self.thing = thing
+		self.event_type = event_type
 		self.author = author
 		self.recipient = recipient
 		self.text = text
@@ -76,8 +80,8 @@ class EduNotification:
 		self.start = EduDate.from_formatted_string(start)
 		self.end = EduDate.from_formatted_string(end)
 		self.duration = duration
-		self.event_kind = event_kind
+		self.event_type_name = event_type_name
 		
 		def __str__(self):
-			return f'{self.thing}, {self.text}'
+			return f'{self.event_type}, {self.text}'
   

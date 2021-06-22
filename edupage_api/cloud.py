@@ -1,5 +1,4 @@
-import random, string, json
-from requests_toolbelt import MultipartEncoder
+import json
 from edupage_api.exceptions import FailedToUploadFileException
 
 
@@ -17,7 +16,7 @@ class EduCloudFile:
 class EduCloud:
     @staticmethod
     def upload_file(edupage, fd):
-        request_url = "https://" + edupage.school + ".edupage.org/timeline/?akcia=uploadAtt"
+        request_url = f"https://{edupage.school}.edupage.org/timeline/?akcia=uploadAtt"
 
         files = {"att": fd}
 

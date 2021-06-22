@@ -4,7 +4,6 @@ import requests, json, datetime
 import pprint, base64, hashlib
 import functools
 
-from requests.sessions import session
 
 from edupage_api.utils import *
 from edupage_api.date import *
@@ -14,7 +13,8 @@ from edupage_api.grades import *
 from edupage_api.people import *
 from edupage_api.exceptions import *
 
-globals().update(NotificationType.__members__) # statically import the NotificationType enum
+globals().update(NotificationType.__members__)  # Statically import the NotificationType enum
+
 
 class Edupage:
     def __init__(self, school, username, password):
@@ -28,24 +28,25 @@ class Edupage:
         self.session.request = functools.partial(self.session.request, timeout = 2) 
 
     # a new way of logging in, contains some neat new features
+    # A new way of logging in, contains some neat new features
     # and security measures such as english code or csrf tokens
     def login(self):
-        # we first have to make a request to index.php to get the csrf token
-        request_url = "https://" + self.school + ".edupage.org/login/index.php"
+        # We first have to make a request to index.php to get the csrf token
+        request_url = f"https://{self.school}.edupage.org/login/index.php"
 
         csrf_response = self.session.get(request_url).content.decode()
 
-        # we parse the token from the html
+        # Parse the token from the html
         csrf_token = csrf_response.split(
             "name=\"csrfauth\" value=\"")[1].split("\"")[0]
 
-        # now everything is the same as in the first approach, we just add the csrf token
+        # Now is everything the same as in the first approach, we just add the csrf token
         parameters = {
             "username": self.username,
             "password": self.password,
             "csrfauth": csrf_token
         }
-        request_url = "https://" + self.school + ".edupage.org/login/edubarLogin.php"
+        request_url = f"https://{self.school}.edupage.org/login/edubarLogin.php"
 
         response = self.session.post(request_url, parameters)
 
@@ -75,7 +76,7 @@ class Edupage:
             return None
 
         dp = self.data.get("dp")
-        if dp == None:
+        if dp is None:
             return None
 
         dates = dp.get("dates")
@@ -85,12 +86,12 @@ class Edupage:
         if not self.is_logged_in:
             return None
         dp = self.data.get("dp")
-        if dp == None:
+        if dp is None:
             return None
 
         dates = dp.get("dates")
         date_plans = dates.get(str(date))
-        if date_plans == None:
+        if date_plans is None:
             return None
 
         plan = date_plans.get("plan")
@@ -103,19 +104,19 @@ class Edupage:
             period = subj.get("uniperiod")
 
             subject_id = subj.get("subjectid")
-            if subject_id != None and len(subject_id) != 0:
+            if subject_id is not None and len(subject_id) != 0:
                 subject_name = self.ids.id_to_subject(subject_id)
             else:
-                subject_name = None
+                subject_name = header[0].get("text")
 
             teacher_id = subj.get("teacherids")
-            if teacher_id != None and len(teacher_id) != 0:
+            if teacher_id is not None and len(teacher_id) != 0:
                 teacher_full_name = self.ids.id_to_teacher(teacher_id[0])
             else:
                 teacher_full_name = None
 
             classroom_id = subj.get("classroomids")
-            if classroom_id != None and len(classroom_id) != 0:
+            if classroom_id is not None and len(classroom_id) != 0:
                 classroom_number = self.ids.id_to_classroom(classroom_id[0])
             else:
                 classroom_number = None
@@ -126,17 +127,15 @@ class Edupage:
 
             online_lesson_link = subj.get("ol_url")
 
-            if online_lesson_link != None:
+            if online_lesson_link is not None:
                 lesson = EduOnlineLesson(period, subject_name, subject_id,
                                          teacher_full_name, classroom_number,
                                          length, online_lesson_link)
             else:
-                lesson = EduLesson(period, subject_name, subject_id, 
-				   teacher_full_name, classroom_number, length)
+                lesson = EduLesson(period, subject_name, subject_id,
+                                   teacher_full_name, classroom_number, length)
 
-            # Remove lessons, that have subject_id blank
-            if len(lesson.subject_id) != 0:
-                lessons.append(lesson)
+            lessons.append(lesson)
 
         return EduTimetable(lessons)
 
@@ -145,7 +144,7 @@ class Edupage:
             return None
 
         items = self.data.get("items")
-        if items == None:
+        if items is None:
             return None
 
         ids = IdUtil(self.data)
@@ -157,24 +156,23 @@ class Edupage:
 
             data = json.loads(item.get("data"))
 
-            if data == None:
+            if data is None:
                 continue
 
-            if data.get("triedaid") == None:
+            if data.get("triedaid") is None:
                 continue
 
             title = data.get("nazov")
-            
-            id = item.get("timelineid")
-            
-            if str(id) in self.data["userProps"]:
-                if self.data["userProps"][str(id)]["doneMaxCas"]:
+
+            homework_id = item.get("timelineid")
+
+            if str(homework_id) in self.data["userProps"]:
+                if self.data["userProps"][str(homework_id)]["doneMaxCas"]:
                     done = True
-                    done_date = self.data["userProps"][str(id)]["doneMaxCas"]
+                    done_date = self.data["userProps"][str(homework_id)]["doneMaxCas"]
             else:
                 done = False
                 done_date = None
-                
 
             due_date = data.get("date")
 
@@ -189,7 +187,7 @@ class Edupage:
 
             timestamp = item.get("timestamp")
 
-            current_homework = EduHomework(id, done, done_date, due_date, subject, groups, title,
+            current_homework = EduHomework(homework_id, done, done_date, due_date, subject, groups, title,
                                            description, event_id, class_name,
                                            timestamp)
             homework.append(current_homework)
@@ -201,7 +199,7 @@ class Edupage:
             return None
 
         items = self.data.get("items")
-        if items == None:
+        if items is None:
             return None
 
         news = []
@@ -219,53 +217,45 @@ class Edupage:
 
         return news
 
-    # this method will soon be removed
-    # because all messages will betry:
-    # handled in some other way
+    # This method will soon be removed
+    # because all messages will be try:
     """
-	def get_grade_messages(self):
-		if not self.is_logged_in:
-			return None
-		
-		items = self.data.get("items")
-		if items == None:
-			return None
+    def get_grade_messages(self):
+        if not self.is_logged_in:
+            return None
 
-		ids = IdUtil(self.data)
+        items = self.data.get("items")
+        if items == None:
+            return None
+        ids = IdUtil(self.data)
+        messages = []
+        for item in items:
+            if not item.get("typ") == "znamka":
+                continue
+            timestamp = item.get("timestamp")
+            teacher = item.get("vlastnik_meno")
+            text = item.get("text")
+            data = json.loads(item.get("data"))
+            subject_id = list(data.keys())[0]
+            subject = ids.id_to_subject(subject_id)
+            grade_data = data.get(subject_id)[0]
 
-		messages = []
-		for item in items:
-			if not item.get("typ") == "znamka":
-				continue
+            grade_id = grade_data.get("znamkaid")
+            grade = grade_data.get("data")
+            action = grade_data.get("akcia")
+            edugrade = EduGradeMessage(teacher, text, subject, grade, action, grade_id, timestamp)
+            messages.append(edugrade)
 
-			timestamp = item.get("timestamp")
-			teacher = item.get("vlastnik_meno")
-			text = item.get("text")
-
-			data = json.loads(item.get("data"))
-			subject_id = list(data.keys())[0]
-
-			subject = ids.id_to_subject(subject_id)
-
-			grade_data = data.get(subject_id)[0]
-			
-			grade_id = grade_data.get("znamkaid")
-			grade = grade_data.get("data")
-			action = grade_data.get("akcia")
-
-			edugrade = EduGradeMessage(teacher, text, subject, grade, action, grade_id, timestamp)
-			messages.append(edugrade)
-		
-		return messages
-	"""
+        return messages
+    """
 
     def __get_grade_data(self):
         response = self.session.get(
             f"https://{self.school}.edupage.org/znamky")
 
-        return json.loads(response.content.decode() \
-               .split(".znamkyStudentViewer(")[1] \
-               .split(");\r\n\t\t});\r\n\t\t</script>")[0])
+        return json.loads(response.content.decode()
+                          .split(".znamkyStudentViewer(")[1]
+                          .split(");\r\n\t\t});\r\n\t\t</script>")[0])
 
     def get_received_grade_events(self):
         if not self.is_logged_in:
@@ -283,7 +273,7 @@ class Edupage:
         for event_id in events:
             event = events.get(event_id)
 
-            if event.get("stav") == None:
+            if event.get("stav") is None:
                 continue
 
             name = event.get("p_meno")
@@ -303,47 +293,46 @@ class Edupage:
             received_grade_events.append(event)
 
         return received_grade_events
-        
+
     def get_grades(self):
         if not self.is_logged_in:
             return None
-            
+
         grade_data = self.__get_grade_data()
         grades = grade_data.get("vsetkyZnamky")
         grade_details = grade_data.get("vsetkyUdalosti").get("edupage")
-        
         output = []
-        
+
         subjects = grade_data.get("predmety")
-        
+
         teachers = grade_data.get("ucitelia")
-        
+
         for grade in grades:
-            id = str(grade.get("udalostid"))
-            grade_details = grade_details.get(id)
-            
-            title = grade_details.get("p_meno").strip()
-            
+            event_id = str(grade.get("udalostid"))
+            details = grade_details.get(event_id)
+
+            title = details.get("p_meno").strip()
+
             grade_n = grade.get("data")
-            
+
             datetime_added = grade.get("datum")
-            
-            subject_id = grade_details.get("PredmetID")
+
+            subject_id = details.get("PredmetID")
             if subject_id == "vsetky":
-            	continue
+                continue
             else:
-            	subject = subjects[str(subject_id)].get("p_meno")
-            
-            teacher_id = int(grade_details.get("UcitelID"))
+                subject = subjects[str(subject_id)].get("p_meno")
+
+            teacher_id = int(details.get("UcitelID"))
             teacher = teachers[str(teacher_id)]
             teacher = teacher.get("firstname") + " " + teacher.get("lastname")
-            
-            max_points = grade_details.get("p_vaha_body")
-            max_points = int(max_points) if max_points != None else None
-            
-            importance = grade_details.get("p_vaha")
-            importance = 0 if int(importance) == 0 else 20 / int(importance)
-            
+
+            max_points = details.get("p_vaha_body")
+            max_points = int(max_points) if max_points is not None else None
+
+            importance = details.get("p_vaha")
+            importance = 0 if float(importance) == 0 else 20 / float(importance)
+
             try:
                 verbal = False
                 if max_points:
@@ -352,23 +341,22 @@ class Edupage:
                     percent = None
             except:
                 verbal = True
-                percent = None   
-            
-            grade = EduGrade(id, title, grade_n, importance, datetime_added, subject, teacher, percent, verbal, max_points)
+                percent = None
+
+            grade = EduGrade(event_id, title, grade_n, importance,
+                             datetime_added, subject, teacher, percent, verbal, max_points)
             output.append(grade)
         return output
-        
-        
-        
+
     def get_notifications(self):
         if not self.is_logged_in:
             return None
-        
+
         output = []
-        
+
         subjects = self.data.get("subjects")
         event_types = self.data.get("dbi").get("event_types")
-        
+
         for notification in self.data.get("items"):
             text = None
             date_added = None
@@ -381,25 +369,24 @@ class Edupage:
             end = None
             duration = None
             event_type_name = None
-            
+
             data = json.loads(notification.get("data"))
-            
-            
-            id = notification.get("timelineid")
-            
+
+            notification_id = notification.get("timelineid")
+
             notification_type = notification.get("typ")
             notification_type = NotificationType.parse(notification_type)
-            if notification_type == None:
+            if notification_type is None:
                 continue
-            
+
             author = notification.get("vlastnik_meno")
-            
+
             recipient = notification.get("user_meno")
-            
+
             text = notification.get("text")
-            
+
             date_added = notification.get("timestamp")
-            
+
             attachments = []
             try:
                 atts = data.get("attachements")
@@ -407,14 +394,14 @@ class Edupage:
                     attachments.append(EduAttachment(attachment, atts[attachment]))
             except:
                 pass
-            
+
             try:
                 if data:
                     subject = data.get("subjectid")
                     subject = subjects[subject]
             except:
                 pass
-            
+
             if notification_type == HOMEWORK and data:
                 name = data.get("nazov")
                 due_date = data.get("date")
@@ -422,19 +409,18 @@ class Edupage:
                 name = data.get("name")
             elif notification_type == GRADE:
                 for g in self.get_grades():
-                    if int(g.id) == int(id):
+                    if int(g.id) == int(notification_id):
                         grade = g
                         break
-            
+
             if notification_type == EVENT and data:
                 start = data.get("cas_udalosti")
                 end = data.get("repeat_to")
                 event_type = str(data.get("typ"))
                 event_type_name = event_types[event_type].get("name")
-            
-            
-            notification = EduNotification(id, notification_type, author, recipient, text,
-                                           date_added, attachments, subject, name, due_date, 
+
+            notification = EduNotification(notification_id, notification_type, author, recipient, text,
+                                           date_added, attachments, subject, name, due_date,
                                            grade, start, end, duration, event_type_name)
             output.append(notification)
         return output
@@ -507,20 +493,24 @@ class Edupage:
         except Exception as e:
             print(e)
             return None
-        if students == None:
+        if students is None:
             return []
 
         result = []
         for student_id in students:
             student_data = students.get(student_id)
-            gender = student_data.get("gender")
+            class_id = student_data.get("classid")
             firstname = student_data.get("firstname")
             lastname = student_data.get("lastname")
-            is_out = student_data.get("isOut")
+            gender = student_data.get("gender")
+            date_from = student_data.get("datefrom")
+            date_to = student_data.get("dateto")
             number_in_class = student_data.get("numberinclass")
+            odbor_id = student_data.get("odborid")
+            is_out = student_data.get("isOut")
 
-            student = EduStudent(gender, firstname, lastname, student_id,
-                                 number_in_class, is_out)
+            student = EduStudent(student_id, class_id, firstname, lastname, gender, date_from, date_to, number_in_class,
+                                 odbor_id, is_out)
             result.append(student)
 
         return result
@@ -530,10 +520,10 @@ class Edupage:
             return None
 
         dbi = self.data.get("dbi")
-        if dbi == None:
+        if dbi is None:
             return None
 
-        id_util = IdUtil(dbi)
+        id_util = IdUtil(self.data)
 
         teachers = dbi.get("teachers")
 
@@ -544,17 +534,21 @@ class Edupage:
             gender = teacher_data.get("gender")
             firstname = teacher_data.get("firstname")
             lastname = teacher_data.get("lastname")
+            short = teacher_data.get("short")
 
             classroom_id = teacher_data.get("classroomid")
             if classroom_id != "":
-                classroom = id_util.id_to_classroom(classroom_id)
+                classroom_name = id_util.id_to_classroom(classroom_id)
             else:
-                classroom = ""
+                classroom_name = ""
+
+            date_from = teacher_data.get("datefrom")
+            date_to = teacher_data.get("dateto")
 
             is_out = teacher_data.get("isOut")
 
-            teacher = EduTeacher(gender, firstname, lastname, teacher_id,
-                                 classroom, is_out)
+            teacher = EduTeacher(teacher_id, firstname, lastname, short, gender, classroom_id, classroom_name,
+                                 date_from, date_to, is_out)
             result.append(teacher)
 
         return result
@@ -581,7 +575,9 @@ class Edupage:
     # if (d.repliesToAllDisabled) {
     #     postData["repliesToAllDisabled"] = '1';
     # }
-    def send_message(self, recipients: EduUser, body, attachments=[]):
+    def send_message(self, recipients, body, attachments=None):
+        if attachments is None:
+            attachments = []
         recipients_post_data = ""
 
         if type(recipients) == list:
@@ -590,6 +586,8 @@ class Edupage:
                     recipients_post_data += f";{recipient.get_id()}"
                 else:
                     recipients_post_data += recipient.get_id()
+        else:
+            recipients_post_data = recipients.get_id()
 
         data = {
             "receipt": "0",
@@ -609,7 +607,7 @@ class Edupage:
             ('maxEqav', '7'),
         )
 
-        self.session.post('https://' + self.school + '.edupage.org/timeline/',
+        self.session.post(f'https://{self.school}.edupage.org/timeline/',
                           headers=headers,
                           params=params,
                           data=RequestUtil.encode_form_data(data))

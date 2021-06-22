@@ -99,7 +99,7 @@ class Edupage:
             if subject_id != None and len(subject_id) != 0:
                 subject_name = self.ids.id_to_subject(subject_id)
             else:
-                subject_name = None
+                subject_name = header[0].get("text")
 
             teacher_id = subj.get("teacherids")
             if teacher_id != None and len(teacher_id) != 0:
@@ -127,9 +127,7 @@ class Edupage:
                 lesson = EduLesson(period, subject_name, subject_id, 
 				   teacher_full_name, classroom_number, length)
 
-            # Remove lessons, that have subject_id blank
-            if len(lesson.subject_id) != 0:
-                lessons.append(lesson)
+            lessons.append(lesson)
 
         return EduTimetable(lessons)
 

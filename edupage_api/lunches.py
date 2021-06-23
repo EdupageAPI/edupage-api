@@ -90,7 +90,6 @@ class EduLunch:
     
     def sign_off(self, edupage):
         letters = "ABCDEFGH"
-        letter = letters[number - 1]
 
         request_url = f"https://{edupage.school}.edupage.org/menu/"
 

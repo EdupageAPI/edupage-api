@@ -12,9 +12,12 @@ class EduMenu:
 
 class EduRating:
     def __init__(self, mysql_date, boarder_id, 
-                 amount_of_ratings, average_rating): # rating out of 5 points
-        self.amount_of_ratings = amount_of_ratings
-        self.average_rating = average_rating
+                quality_average, quantity_average, 
+                quality_ratings, quantity_ratings): # rating out of 5 points
+        self.quantity_average = quantity_average
+        self.quality_average = quality_average
+        self.quality_ratings = quality_ratings
+        self.quantity_ratings = quantity_ratings
         self.__date = mysql_date
         self.__boarder_id = boarder_id
     
@@ -69,6 +72,33 @@ class EduLunch:
             "mysqlDate": str(self.date),
             "jids": {
                 "2": letter
+            },
+            "view": "pc_listok",
+            "pravo": "Student"
+        }
+
+        data = {
+            "akcia": "ulozJedlaStravnika",
+            "jedlaStravnika": json.dumps(boarder_menu)
+        }
+
+        response = edupage.session.post(request_url, data = data)
+        if json.loads(response.content.decode()).get("error") == "":
+            return True
+        else:
+            return False
+    
+    def sign_off(self, edupage):
+        letters = "ABCDEFGH"
+        letter = letters[number - 1]
+
+        request_url = f"https://{edupage.school}.edupage.org/menu/"
+
+        boarder_menu = {
+            "stravnikid": self.__boarder_id,
+            "mysqlDate": str(self.date),
+            "jids": {
+                "2": "AX"
             },
             "view": "pc_listok",
             "pravo": "Student"

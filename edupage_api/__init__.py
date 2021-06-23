@@ -465,18 +465,28 @@ class Edupage:
             name = food.get("nazov")
             allergens = food.get("alergenyStr")
             weight = food.get("hmotnostiStr")
-            number = food.get("menuStr")
+            number = food.get("menusStr")
             rating = None
 
             if number != None:
+                number = number.replace(": ", "")
                 rating = lunch.get("hodnotenia")
-                if rating != None:
+                if rating != None and rating != []:
                     rating = rating.get(number)
-                    
-                    average = rating.get(priemer)
-                    amount_of_ratings = rating.get("pocet")
 
-                    rating = EduRating(date, boarder_id, amount_of_ratings, average)
+                    [quality, quantity] = rating
+
+                    quality_average = quality.get("priemer")
+                    quality_ratings = quality.get("pocet")
+
+                    quantity_average = quantity.get("priemer")
+                    quantity_ratings = quantity.get("pocet")
+
+                    rating = EduRating(date, boarder_id, quality_average, 
+                                       quantity_average, quality_ratings,
+                                       quantity_ratings)
+                else:
+                    rating = None
             
             menus.append(EduMenu(name, allergens, weight, number, rating))
         

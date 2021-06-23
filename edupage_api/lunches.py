@@ -89,8 +89,6 @@ class EduLunch:
             return False
     
     def sign_off(self, edupage):
-        letters = "ABCDEFGH"
-
         request_url = f"https://{edupage.school}.edupage.org/menu/"
 
         boarder_menu = {

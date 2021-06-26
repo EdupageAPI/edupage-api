@@ -323,9 +323,13 @@ class Edupage:
             else:
                 subject = subjects[str(subject_id)].get("p_meno")
 
-            teacher_id = int(details.get("UcitelID"))
-            teacher = teachers[str(teacher_id)]
-            teacher = teacher.get("firstname") + " " + teacher.get("lastname")
+            teacher_id = details.get("UcitelID")
+            if teacher_id != None:
+                teacher_id = int(teacher_id)
+                teacher = teachers[str(teacher_id)]
+                teacher = teacher.get("firstname") + " " + teacher.get("lastname")
+            else:
+                teacher = None
 
             max_points = details.get("p_vaha_body")
             max_points = int(max_points) if max_points is not None else None
@@ -356,6 +360,7 @@ class Edupage:
 
         subjects = self.data.get("subjects")
         event_types = self.data.get("dbi").get("event_types")
+        grades = self.get_grades()
 
         for notification in self.data.get("items"):
             text = None
@@ -408,7 +413,7 @@ class Edupage:
             elif notification_type == EVENT and data:
                 name = data.get("name")
             elif notification_type == GRADE:
-                for g in self.get_grades():
+                for g in grades:
                     if int(g.id) == int(notification_id):
                         grade = g
                         break

@@ -389,6 +389,8 @@ class Edupage:
             recipient = notification.get("user_meno")
 
             text = notification.get("text")
+            if text.startswith("Dôležitá správa"):
+                text = data.get("messageContent")
 
             date_added = notification.get("timestamp")
 

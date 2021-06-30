@@ -9,7 +9,7 @@ class EduDate:
 
     @staticmethod
     def from_formatted_string(formatted_string):
-        if formatted_string is None:
+        if formatted_string == None:
             return None
 
         [year, month, day] = formatted_string.split("-")
@@ -96,7 +96,7 @@ class EduExactTime:
 
     @staticmethod
     def from_formatted_string(formatted_string):
-        if formatted_string is None:
+        if formatted_string == None:
             return None
 
         [hour, minute, second] = formatted_string.split(":")
@@ -159,7 +159,7 @@ class EduTime:
 
     @staticmethod
     def from_formatted_string(formatted_string):
-        if formatted_string is None:
+        if formatted_string == None:
             return None
 
         [hour, minute] = formatted_string.split(":")
@@ -177,7 +177,7 @@ class EduExactDateTime:
 
     @staticmethod
     def from_formatted_string(formatted_string):
-        if formatted_string is None:
+        if formatted_string == None:
             return None
 
         [date, time] = formatted_string.split(" ")

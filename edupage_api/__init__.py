@@ -1,7 +1,6 @@
-from datetime import date
 from edupage_api.lunches import EduLunch, EduMenu, EduRating
-import requests, json, datetime
-import pprint, base64, hashlib
+import requests
+import json
 import functools
 
 
@@ -24,10 +23,9 @@ class Edupage:
         self.is_logged_in = False
         self.session = requests.session()
 
-        # Set a timeout for all requests made with this session 
-        self.session.request = functools.partial(self.session.request, timeout = 2) 
+        # Set a timeout for all requests made with this session
+        self.session.request = functools.partial(self.session.request, timeout = 2)
 
-    # a new way of logging in, contains some neat new features
     # A new way of logging in, contains some neat new features
     # and security measures such as english code or csrf tokens
     def login(self):
@@ -36,7 +34,7 @@ class Edupage:
 
         csrf_response = self.session.get(request_url).content.decode()
 
-        # Parse the token from the html
+        # Parse the token from the HTML
         csrf_token = csrf_response.split(
             "name=\"csrfauth\" value=\"")[1].split("\"")[0]
 
@@ -62,11 +60,11 @@ class Edupage:
 
     def parse_login_data(self, data):
         js_json = data.split("$j(document).ready(function() {")[1] \
-              .split(");")[0] \
-              .replace("\t", "") \
-              .split("userhome(")[1] \
-              .replace("\n", "") \
-              .replace("\r", "")
+            .split(");")[0] \
+            .replace("\t", "") \
+            .split("userhome(")[1] \
+            .replace("\n", "") \
+            .replace("\r", "")
         self.data = json.loads(js_json)
         self.is_logged_in = True
         self.ids = IdUtil(self.data)
@@ -76,7 +74,7 @@ class Edupage:
             return None
 
         dp = self.data.get("dp")
-        if dp is None:
+        if dp == None:
             return None
 
         dates = dp.get("dates")
@@ -86,12 +84,12 @@ class Edupage:
         if not self.is_logged_in:
             return None
         dp = self.data.get("dp")
-        if dp is None:
+        if dp == None:
             return None
 
         dates = dp.get("dates")
         date_plans = dates.get(str(date))
-        if date_plans is None:
+        if date_plans == None:
             return None
 
         plan = date_plans.get("plan")
@@ -104,19 +102,19 @@ class Edupage:
             period = subj.get("uniperiod")
 
             subject_id = subj.get("subjectid")
-            if subject_id is not None and len(subject_id) != 0:
+            if subject_id != None and len(subject_id) != 0:
                 subject_name = self.ids.id_to_subject(subject_id)
             else:
                 subject_name = header[0].get("text")
 
             teacher_id = subj.get("teacherids")
-            if teacher_id is not None and len(teacher_id) != 0:
+            if teacher_id != None and len(teacher_id) != 0:
                 teacher_full_name = self.ids.id_to_teacher(teacher_id[0])
             else:
                 teacher_full_name = None
 
             classroom_id = subj.get("classroomids")
-            if classroom_id is not None and len(classroom_id) != 0:
+            if classroom_id != None and len(classroom_id) != 0:
                 classroom_number = self.ids.id_to_classroom(classroom_id[0])
             else:
                 classroom_number = None
@@ -127,7 +125,7 @@ class Edupage:
 
             online_lesson_link = subj.get("ol_url")
 
-            if online_lesson_link is not None:
+            if online_lesson_link != None:
                 lesson = EduOnlineLesson(period, subject_name, subject_id,
                                          teacher_full_name, classroom_number,
                                          length, online_lesson_link)
@@ -144,7 +142,7 @@ class Edupage:
             return None
 
         items = self.data.get("items")
-        if items is None:
+        if items == None:
             return None
 
         ids = IdUtil(self.data)
@@ -156,10 +154,10 @@ class Edupage:
 
             data = json.loads(item.get("data"))
 
-            if data is None:
+            if data == None:
                 continue
 
-            if data.get("triedaid") is None:
+            if data.get("triedaid") == None:
                 continue
 
             title = data.get("nazov")
@@ -199,7 +197,7 @@ class Edupage:
             return None
 
         items = self.data.get("items")
-        if items is None:
+        if items == None:
             return None
 
         news = []
@@ -218,7 +216,8 @@ class Edupage:
         return news
 
     # This method will soon be removed
-    # because all messages will be try:
+    # because all messages will be try
+    # handled in some other way:
     """
     def get_grade_messages(self):
         if not self.is_logged_in:
@@ -273,7 +272,7 @@ class Edupage:
         for event_id in events:
             event = events.get(event_id)
 
-            if event.get("stav") is None:
+            if event.get("stav") == None:
                 continue
 
             name = event.get("p_meno")
@@ -288,8 +287,7 @@ class Edupage:
             subject_id = event.get("PredmetID")
             subject = id_util.id_to_subject(subject_id)
 
-            event = EduGradeEvent(teacher, name, subject, average, weight,
-                                  timestamp)
+            event = EduGradeEvent(teacher, name, subject, average, weight, timestamp)
             received_grade_events.append(event)
 
         return received_grade_events
@@ -332,7 +330,7 @@ class Edupage:
                 teacher = None
 
             max_points = details.get("p_vaha_body")
-            max_points = int(max_points) if max_points is not None else None
+            max_points = int(max_points) if max_points != None else None
 
             importance = details.get("p_vaha")
             importance = 0 if float(importance) == 0 else 20 / float(importance)
@@ -381,7 +379,7 @@ class Edupage:
 
             notification_type = notification.get("typ")
             notification_type = NotificationType.parse(notification_type)
-            if notification_type is None:
+            if notification_type == None:
                 continue
 
             author = notification.get("vlastnik_meno")
@@ -398,7 +396,8 @@ class Edupage:
             try:
                 atts = data.get("attachements")
                 for attachment in atts:
-                    attachments.append(EduAttachment(attachment, atts[attachment]))
+                    attachments.append(EduAttachment(
+                        attachment, atts[attachment]))
             except:
                 pass
 
@@ -431,7 +430,7 @@ class Edupage:
                                            grade, start, end, duration, event_type_name)
             output.append(notification)
         return output
-        
+
     def get_lunch(self, date):
         if not self.is_logged_in:
             return None
@@ -445,14 +444,15 @@ class Edupage:
 
         try:
             boarder_id = response.split('var stravnikid = "')[1].split('"')[0]
-            lunch_data = json.loads(response.split('var novyListok = ')[1].split(";")[0])
+            lunch_data = json.loads(response.split(
+                'var novyListok = ')[1].split(";")[0])
         except:
             return None
 
-        lunch = lunch_data.get(str(date)) 
+        lunch = lunch_data.get(str(date))
         if lunch == None:
             return None
-        
+
         lunch = lunch.get("2")
 
         served_from = lunch.get("vydaj_od")
@@ -489,16 +489,16 @@ class Edupage:
                     quantity_average = quantity.get("priemer")
                     quantity_ratings = quantity.get("pocet")
 
-                    rating = EduRating(date, boarder_id, quality_average, 
+                    rating = EduRating(date, boarder_id, quality_average,
                                        quantity_average, quality_ratings,
                                        quantity_ratings)
                 else:
                     rating = None
-            
+
             menus.append(EduMenu(name, allergens, weight, number, rating))
-        
-        return EduLunch(served_from, served_to, amount_of_foods, 
-                        chooseable_menus, can_be_changed_until, 
+
+        return EduLunch(served_from, served_to, amount_of_foods,
+                        chooseable_menus, can_be_changed_until,
                         title, menus, date, boarder_id)
 
     def get_students(self):
@@ -510,7 +510,7 @@ class Edupage:
         except Exception as e:
             print(e)
             return None
-        if students is None:
+        if students == None:
             return []
 
         result = []
@@ -526,7 +526,8 @@ class Edupage:
             odbor_id = student_data.get("odborid")
             is_out = student_data.get("isOut")
 
-            student = EduStudent(student_id, class_id, firstname, lastname, gender, date_from, date_to, number_in_class,
+            student = EduStudent(student_id, class_id, firstname, lastname,
+                                 gender, date_from, date_to, number_in_class,
                                  odbor_id, is_out)
             result.append(student)
 
@@ -537,7 +538,7 @@ class Edupage:
             return None
 
         dbi = self.data.get("dbi")
-        if dbi is None:
+        if dbi == None:
             return None
 
         id_util = IdUtil(self.data)
@@ -564,8 +565,9 @@ class Edupage:
 
             is_out = teacher_data.get("isOut")
 
-            teacher = EduTeacher(teacher_id, firstname, lastname, short, gender, classroom_id, classroom_name,
-                                 date_from, date_to, is_out)
+            teacher = EduTeacher(teacher_id, firstname, lastname, short, gender,
+                                 classroom_id, classroom_name, date_from, date_to,
+                                 is_out)
             result.append(teacher)
 
         return result
@@ -593,7 +595,7 @@ class Edupage:
     #     postData["repliesToAllDisabled"] = '1';
     # }
     def send_message(self, recipients, body, attachments=None):
-        if attachments is None:
+        if attachments == None:
             attachments = []
         recipients_post_data = ""
 

@@ -40,7 +40,7 @@ class EduRating:
             response = edupage.session.post(request_url, data=data)
             parsed_response = json.loads(response.content.decode())
             error = parsed_response.get("error")
-            if not error == None and error == "":
+            if not error is None and error == "":
                 return True
             else:
                 return False

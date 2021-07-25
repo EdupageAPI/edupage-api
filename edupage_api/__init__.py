@@ -74,7 +74,7 @@ class Edupage:
             return None
 
         dp = self.data.get("dp")
-        if dp == None:
+        if dp is None:
             return None
 
         dates = dp.get("dates")
@@ -84,12 +84,12 @@ class Edupage:
         if not self.is_logged_in:
             return None
         dp = self.data.get("dp")
-        if dp == None:
+        if dp is None:
             return None
 
         dates = dp.get("dates")
         date_plans = dates.get(str(date))
-        if date_plans == None:
+        if date_plans is None:
             return None
 
         plan = date_plans.get("plan")
@@ -102,19 +102,19 @@ class Edupage:
             period = subj.get("uniperiod")
 
             subject_id = subj.get("subjectid")
-            if subject_id != None and len(subject_id) != 0:
+            if subject_id is not None and len(subject_id) != 0:
                 subject_name = self.ids.id_to_subject(subject_id)
             else:
                 subject_name = header[0].get("text")
 
             teacher_id = subj.get("teacherids")
-            if teacher_id != None and len(teacher_id) != 0:
+            if teacher_id is not None and len(teacher_id) != 0:
                 teacher_full_name = self.ids.id_to_teacher(teacher_id[0])
             else:
                 teacher_full_name = None
 
             classroom_id = subj.get("classroomids")
-            if classroom_id != None and len(classroom_id) != 0:
+            if classroom_id is not None and len(classroom_id) != 0:
                 classroom_number = self.ids.id_to_classroom(classroom_id[0])
             else:
                 classroom_number = None
@@ -125,7 +125,7 @@ class Edupage:
 
             online_lesson_link = subj.get("ol_url")
 
-            if online_lesson_link != None:
+            if online_lesson_link is not None:
                 lesson = EduOnlineLesson(period, subject_name, subject_id,
                                          teacher_full_name, classroom_number,
                                          length, online_lesson_link)
@@ -142,7 +142,7 @@ class Edupage:
             return None
 
         items = self.data.get("items")
-        if items == None:
+        if items is None:
             return None
 
         ids = IdUtil(self.data)
@@ -154,10 +154,10 @@ class Edupage:
 
             data = json.loads(item.get("data"))
 
-            if data == None:
+            if data is None:
                 continue
 
-            if data.get("triedaid") == None:
+            if data.get("triedaid") is None:
                 continue
 
             title = data.get("nazov")
@@ -197,7 +197,7 @@ class Edupage:
             return None
 
         items = self.data.get("items")
-        if items == None:
+        if items is None:
             return None
 
         news = []
@@ -224,7 +224,7 @@ class Edupage:
             return None
 
         items = self.data.get("items")
-        if items == None:
+        if items is None:
             return None
         ids = IdUtil(self.data)
         messages = []
@@ -272,7 +272,7 @@ class Edupage:
         for event_id in events:
             event = events.get(event_id)
 
-            if event.get("stav") == None:
+            if event.get("stav") is None:
                 continue
 
             name = event.get("p_meno")
@@ -322,7 +322,7 @@ class Edupage:
                 subject = subjects[str(subject_id)].get("p_meno")
 
             teacher_id = details.get("UcitelID")
-            if teacher_id != None:
+            if teacher_id is not None:
                 teacher_id = int(teacher_id)
                 teacher = teachers[str(teacher_id)]
                 teacher = teacher.get("firstname") + " " + teacher.get("lastname")
@@ -330,7 +330,7 @@ class Edupage:
                 teacher = None
 
             max_points = details.get("p_vaha_body")
-            max_points = int(max_points) if max_points != None else None
+            max_points = int(max_points) if max_points is not None else None
 
             importance = details.get("p_vaha")
             importance = 0 if float(importance) == 0 else 20 / float(importance)
@@ -379,7 +379,7 @@ class Edupage:
 
             notification_type = notification.get("typ")
             notification_type = NotificationType.parse(notification_type)
-            if notification_type == None:
+            if notification_type is None:
                 continue
 
             author = notification.get("vlastnik_meno")
@@ -450,7 +450,7 @@ class Edupage:
             return None
 
         lunch = lunch_data.get(str(date))
-        if lunch == None:
+        if lunch is None:
             return None
 
         lunch = lunch.get("2")
@@ -475,10 +475,10 @@ class Edupage:
             number = food.get("menusStr")
             rating = None
 
-            if number != None:
+            if number is not None:
                 number = number.replace(": ", "")
                 rating = lunch.get("hodnotenia")
-                if rating != None and rating != []:
+                if rating is not None and rating != []:
                     rating = rating.get(number)
 
                     [quality, quantity] = rating
@@ -510,7 +510,7 @@ class Edupage:
         except Exception as e:
             print(e)
             return None
-        if students == None:
+        if students is None:
             return []
 
         result = []
@@ -538,7 +538,7 @@ class Edupage:
             return None
 
         dbi = self.data.get("dbi")
-        if dbi == None:
+        if dbi is None:
             return None
 
         id_util = IdUtil(self.data)
@@ -595,7 +595,7 @@ class Edupage:
     #     postData["repliesToAllDisabled"] = '1';
     # }
     def send_message(self, recipients, body, attachments=None):
-        if attachments == None:
+        if attachments is None:
             attachments = []
         recipients_post_data = ""
 

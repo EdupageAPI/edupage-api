@@ -24,7 +24,7 @@ class Edupage:
         self.session = requests.session()
 
         # Set a timeout for all requests made with this session
-        self.session.request = functools.partial(self.session.request, timeout = 2)
+        self.session.request = functools.partial(self.session.request, timeout = 5)
 
     # A new way of logging in, contains some neat new features
     # and security measures such as english code or csrf tokens
@@ -58,7 +58,19 @@ class Edupage:
 
         return True
 
+    def send_keepalive(self):
+        if not self.is_logged_in:
+            return None
+
+        response = self.session.post(f"https://{self.school}.edupage.org/login/eauth?portalping")
+
+        try:
+            return json.loads(response.content.decode())
+        except:
+            return None
+
     def parse_login_data(self, data):
+        
         js_json = data.split("$j(document).ready(function() {")[1] \
             .split(");")[0] \
             .replace("\t", "") \

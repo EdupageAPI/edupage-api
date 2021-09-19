@@ -16,7 +16,7 @@ globals().update(NotificationType.__members__)  # Statically import the Notifica
 
 
 class Edupage:
-    def __init__(self, school, username, password):
+    def __init__(self, school, username, password, timeout = 5):
         self.school = school
         self.username = username
         self.password = password
@@ -24,7 +24,7 @@ class Edupage:
         self.session = requests.session()
 
         # Set a timeout for all requests made with this session
-        self.session.request = functools.partial(self.session.request, timeout = 5)
+        self.session.request = functools.partial(self.session.request, timeout = timeout)
 
     # A new way of logging in, contains some neat new features
     # and security measures such as english code or csrf tokens

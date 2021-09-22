@@ -2,7 +2,8 @@ from edupage_api.lunches import EduLunch, EduMenu, EduRating
 import requests
 import json
 import functools
-
+import sys
+import os
 
 from edupage_api.utils import *
 from edupage_api.date import *
@@ -11,12 +12,21 @@ from edupage_api.messages import *
 from edupage_api.grades import *
 from edupage_api.people import *
 from edupage_api.exceptions import *
+from edupage_api.logging import *
 
 globals().update(NotificationType.__members__)  # Statically import the NotificationType enum
 
+# https://stackoverflow.com/questions/7445658/how-to-detect-if-the-console-does-support-ansi-escape-codes-in-python
+def term_supports_color():
+    plat = sys.platform
+    supported_platform = plat != 'Pocket PC' and (plat != 'win32' or
+                                                  'ANSICON' in os.environ)
+    # isatty is not always implemented, #6223.
+    is_a_tty = hasattr(sys.stdout, 'isatty') and sys.stdout.isatty()
+    return supported_platform and is_a_tty
 
 class Edupage:
-    def __init__(self, school, username, password, timeout = 5):
+    def __init__(self, school, username, password, timeout = 5, log_level: LogLevel = LogLevel.WARNING):
         self.school = school
         self.username = username
         self.password = password
@@ -25,6 +35,8 @@ class Edupage:
 
         # Set a timeout for all requests made with this session
         self.session.request = functools.partial(self.session.request, timeout = timeout)
+
+        self.logger = Logger(log_level, term_supports_color())
 
     # A new way of logging in, contains some neat new features
     # and security measures such as english code or csrf tokens
@@ -38,6 +50,8 @@ class Edupage:
         csrf_token = csrf_response.split(
             "name=\"csrfauth\" value=\"")[1].split("\"")[0]
 
+        self.logger.debug(f"Fetched csrf token: {csrf_token}")
+
         # Now is everything the same as in the first approach, we just add the csrf token
         parameters = {
             "username": self.username,
@@ -49,13 +63,19 @@ class Edupage:
         response = self.session.post(request_url, parameters)
 
         if "bad=1" in response.url:
+            self.logger.warning("Incorrect credentials")
             raise BadCredentialsException()
 
         try:
             self.parse_login_data(response.content.decode())
-        except (IndexError, TypeError):
+        except (IndexError, TypeError) as e:
+            self.logger.warning(f"There was an error while parsing login response: {e}")
             raise LoginDataParsingException()
+        except Exception as e:
+            self.logger.warning("There was a unhandled error, parsing login data. Printing additional information")
+            raise e
 
+        self.logger.debug("Successfully logged in!")
         return True
 
     def send_keepalive(self):
@@ -77,7 +97,13 @@ class Edupage:
             .split("userhome(")[1] \
             .replace("\n", "") \
             .replace("\r", "")
+        self.logger.debug(f"Parsed html document: {js_json[:50]}")
+        
         self.data = json.loads(js_json)
+        
+        
+        self.logger.debug("Successfully deseralised data json!")
+        
         self.is_logged_in = True
         self.ids = IdUtil(self.data)
 
@@ -87,6 +113,7 @@ class Edupage:
 
         dp = self.data.get("dp")
         if dp is None:
+            self.logger.warning("DP is none!")
             return None
 
         dates = dp.get("dates")
@@ -97,38 +124,52 @@ class Edupage:
             return None
         dp = self.data.get("dp")
         if dp is None:
+            self.logger.warning("DP is none!")
             return None
 
         dates = dp.get("dates")
+        self.logger.debug("Getting date plans...")
         date_plans = dates.get(str(date))
         if date_plans is None:
+            self.logger.warning("Date plans is none!")
             return None
 
+        self.logger.debug("Starting lesson parsing...")
         plan = date_plans.get("plan")
         lessons = []
         for subj in plan:
             header = subj.get("header")
             if len(header) == 0:
+                self.logger.debug("Found dummy lesson!")
                 continue
 
             period = subj.get("uniperiod")
 
             subject_id = subj.get("subjectid")
+            self.logger.debug(f"Parsing subject with id {subject_id}")
             if subject_id is not None and len(subject_id) != 0:
                 subject_name = self.ids.id_to_subject(subject_id)
+                self.logger.debug("Successfully fetched subject name from data!")
             else:
+                self.logger.warning("Subject id couldn't be found in data or is none!")
                 subject_name = header[0].get("text")
 
             teacher_id = subj.get("teacherids")
+            self.logger.debug(f"Parsing teacher with id {teacher_id}")
             if teacher_id is not None and len(teacher_id) != 0:
                 teacher_full_name = self.ids.id_to_teacher(teacher_id[0])
+                self.logger.debug("Successfully fetched teacher name from data!")
             else:
+                self.logger.warning("The teacher's name couldn't be found in data or is none!")
                 teacher_full_name = None
 
             classroom_id = subj.get("classroomids")
+            self.logger.debug(f"Parsing classroom number with id {classroom_id}")
             if classroom_id is not None and len(classroom_id) != 0:
                 classroom_number = self.ids.id_to_classroom(classroom_id[0])
+                self.logger.debug("Successfully fetched classroom number from data!")
             else:
+                self.logger.warning("The classroom's number couldn't be found in data or is none!")
                 classroom_number = None
 
             start = subj.get("starttime")
@@ -147,6 +188,7 @@ class Edupage:
 
             lessons.append(lesson)
 
+        self.logger.debug("Successfully constructed timetable!")
         return EduTimetable(lessons)
 
     def get_homework(self):
@@ -155,10 +197,12 @@ class Edupage:
 
         items = self.data.get("items")
         if items is None:
+            self.logger.warning("The items entry in data is empty, couldn't parse homework!")
             return None
 
         ids = IdUtil(self.data)
 
+        self.logger.debug("Starting homework parsing...")
         homework = []
         for item in items:
             if not item.get("typ") == "homework":
@@ -167,9 +211,11 @@ class Edupage:
             data = json.loads(item.get("data"))
 
             if data is None:
+                self.logger.warning("Found item with homework type with empty data, skipping...")
                 continue
 
             if data.get("triedaid") is None:
+                self.logger.warning("Found item with homework type with empty classroom id, skipping...")
                 continue
 
             title = data.get("nazov")
@@ -178,9 +224,11 @@ class Edupage:
 
             if str(homework_id) in self.data["userProps"]:
                 if self.data["userProps"][str(homework_id)]["doneMaxCas"]:
+                    self.logger.debug("Homework is done!")
                     done = True
                     done_date = self.data["userProps"][str(homework_id)]["doneMaxCas"]
             else:
+                self.logger.debug("Homework is not done!")
                 done = False
                 done_date = None
 
@@ -191,8 +239,10 @@ class Edupage:
 
             event_id = data.get("superid")
 
+            self.logger.debug("Parsing class name...")
             class_name = ids.id_to_class(data.get("triedaid"))
 
+            self.logger.debug("Parsing subject name...")
             subject = ids.id_to_subject(data.get("predmetid"))
 
             timestamp = item.get("timestamp")
@@ -202,6 +252,7 @@ class Edupage:
                                            timestamp)
             homework.append(current_homework)
 
+        self.logger.debug("Successfully constructed list of homework!")
         return homework
 
     def get_news(self):
@@ -210,8 +261,10 @@ class Edupage:
 
         items = self.data.get("items")
         if items is None:
+            self.logger.warning("The items entry in data is empty, couldn't parse news!")
             return None
 
+        self.logger.debug("Starting news parsing...")
         news = []
         for item in items:
             if not item.get("typ") == "news":
@@ -225,6 +278,7 @@ class Edupage:
             news_message = EduNews(text, timestamp, author, recipient)
             news.append(news_message)
 
+        self.logger.debug("Successfully constructed list of news!")
         return news
 
     # This method will soon be removed
@@ -279,12 +333,14 @@ class Edupage:
 
         received_grade_events = []
 
+        self.logger.debug("Starting grade event parsing...")
         providers = grade_data.get("vsetkyUdalosti")
         events = providers.get("edupage")
         for event_id in events:
             event = events.get(event_id)
 
             if event.get("stav") is None:
+                self.logger.debug("Found dummy grade, skipping...")
                 continue
 
             name = event.get("p_meno")
@@ -294,14 +350,17 @@ class Edupage:
             weight = event.get("p_vaha")
 
             teacher_id = event.get("UcitelID")
+            self.logger.debug(f"Parsing teacher with id: {teacher_id}")
             teacher = util.id_to_teacher(teacher_id)
-
+            
             subject_id = event.get("PredmetID")
+            self.logger.debug(f"Parsing subject with id: {subject_id}")
             subject = id_util.id_to_subject(subject_id)
 
             event = EduGradeEvent(teacher, name, subject, average, weight, timestamp)
             received_grade_events.append(event)
 
+        self.logger.debug("Successfully constructed list of grade events!")
         return received_grade_events
 
     def get_grades(self):
@@ -317,6 +376,7 @@ class Edupage:
 
         teachers = grade_data.get("ucitelia")
 
+        self.logger.debug("Starting grade parsing...")
         for grade in grades:
             event_id = str(grade.get("udalostid"))
             details = grade_details.get(event_id)
@@ -329,16 +389,19 @@ class Edupage:
 
             subject_id = details.get("PredmetID")
             if subject_id == "vsetky":
+                self.logger.warning("Found grade with bad subject id!")
                 continue
             else:
                 subject = subjects[str(subject_id)].get("p_meno")
 
             teacher_id = details.get("UcitelID")
+            self.logger.debug(f"Parsing teacher with id {teacher_id}")
             if teacher_id is not None:
                 teacher_id = int(teacher_id)
                 teacher = teachers[str(teacher_id)]
                 teacher = teacher.get("firstname") + " " + teacher.get("lastname")
             else:
+                self.logger.warning("Couldn't parse teacher id!")
                 teacher = None
 
             max_points = details.get("p_vaha_body")
@@ -360,6 +423,8 @@ class Edupage:
             grade = EduGrade(event_id, title, grade_n, importance,
                              datetime_added, subject, teacher, percent, verbal, max_points)
             output.append(grade)
+
+        self.logger.debug("Successfully constructed a list of grades!")
         return output
 
     def get_notifications(self):
@@ -372,6 +437,7 @@ class Edupage:
         event_types = self.data.get("dbi").get("event_types")
         grades = self.get_grades()
 
+        self.logger.debug("Starting notification parsing...")
         for notification in self.data.get("items"):
             text = None
             date_added = None
@@ -392,6 +458,7 @@ class Edupage:
             notification_type = notification.get("typ")
             notification_type = NotificationType.parse(notification_type)
             if notification_type is None:
+                self.logger.warning("Found notification with empty type, skipping...")
                 continue
 
             author = notification.get("vlastnik_meno")
@@ -448,6 +515,7 @@ class Edupage:
                                            date_added, attachments, subject, name, due_date,
                                            grade, start, end, duration, event_type_name)
             output.append(notification)
+        self.logger.debug("Finished notification parsing!")
         return output
 
     def get_lunch(self, date):
@@ -461,11 +529,14 @@ class Edupage:
         boarder_id = None
         lunch_data = None
 
+        self.logger.debug("Starting lunch parsing...")
         try:
             boarder_id = response.split('var stravnikid = "')[1].split('"')[0]
             lunch_data = json.loads(response.split(
                 'var novyListok = ')[1].split(";")[0])
+            self.logger.debug(f"Successfully parsed data and boarder id ({boarder_id})!")
         except:
+            self.logger.warning("Couldn't parse lunch data!")
             return None
 
         lunch = lunch_data.get(str(date))
@@ -487,6 +558,7 @@ class Edupage:
         menus = []
         for food in lunch.get("rows"):
             if food == []:
+                self.logger.warning("Found empty food object")
                 continue
             name = food.get("nazov")
             allergens = food.get("alergenyStr")
@@ -515,6 +587,8 @@ class Edupage:
                     rating = None
 
             menus.append(EduMenu(name, allergens, weight, number, rating))
+        
+        self.logger.debug("Succesfully constructed lunch object!")
 
         return EduLunch(served_from, served_to, amount_of_foods,
                         chooseable_menus, can_be_changed_until,
@@ -527,9 +601,10 @@ class Edupage:
         try:
             students = self.data.get("dbi").get("students")
         except Exception as e:
-            print(e)
+            self.logger.warning("Couldn't fetch students from DBI!")
             return None
         if students is None:
+            self.logger.warning("The list students is empty!")
             return []
 
         result = []
@@ -550,6 +625,7 @@ class Edupage:
                                  odbor_id, is_out)
             result.append(student)
 
+        self.logger.debug("Succesfully constructed list of students!")
         return result
 
     def get_teachers(self):
@@ -558,6 +634,7 @@ class Edupage:
 
         dbi = self.data.get("dbi")
         if dbi is None:
+            self.logger.warning("DBI is none!")
             return None
 
         id_util = IdUtil(self.data)
@@ -588,7 +665,7 @@ class Edupage:
                                  classroom_id, classroom_name, date_from, date_to,
                                  is_out)
             result.append(teacher)
-
+        self.logger.debug("Successfully constructed list of teachers!")
         return result
 
     def get_user_id(self):

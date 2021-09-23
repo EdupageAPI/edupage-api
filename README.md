@@ -259,10 +259,11 @@ The file will be hosted forever (and for free) on Edupage's servers. The file is
 Anyway, Edupage limits file size to 50 MB and the file can have only some extensions. All supported file extensions could be found on this [Edupage help site](https://help.edupage.org/?p=u1/u113/u132/u362/u467).
 
 ```python
-from edupage_api import Edupage, EduStudent
+from edupage_api import Edupage
 from edupage_api.cloud import EduCloud
 
-edupage = Edupage("Subdomain (Name) of your school", "Username or E-Mail", "Password")
+# You will need to add bigger timeout for bigger files
+edupage = Edupage("Subdomain (Name) of your school", "Username or E-Mail", "Password", timeout=30)
 edupage.login()
 
 f = open("image.png", "rb")
@@ -270,7 +271,7 @@ f = open("image.png", "rb")
 uploaded_file = EduCloud.upload_file(edupage, f)
 link = uploaded_file.get_url(edupage)
 
-print(link)
+print(f"Link to your file: {link}")
 ```
 
 # Upcoming features

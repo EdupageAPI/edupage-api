@@ -1,3 +1,0 @@
-disable=
-    singleton-comparison,
-    redefined-builtin

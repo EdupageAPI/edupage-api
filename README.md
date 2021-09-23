@@ -36,7 +36,7 @@ except LoginDataParsingException:
 ```
 
 ## Timetable
-### Check all available timetables
+### Check all available timetable dates
 ```python
 from edupage_api import Edupage
 
@@ -188,10 +188,9 @@ from edupage_api import Edupage, EduStudent
 edupage = Edupage("Subdomain (Name) of your school", "Username or E-Mail", "Password")
 edupage.login()
 
-# Note: This list doesn't have to be sorted!
-students = edupage.get_students()
+students = edupage.get_students() # This list is usually sorted alphabetically
 
-# Sort the list by student numbers
+# Sort the list by student's numbers
 students.sort(key = EduStudent.__sort__)
 
 for student in students:
@@ -199,19 +198,19 @@ for student in students:
 ```
 
 ## Get a list of teachers
-This list is not sorted in any way and this library doesn't provide a way to sort it.
-
 ```python
-from edupage_api import Edupage
+from edupage_api import Edupage, EduTeacher
 
 edupage = Edupage("Subdomain (Name) of your school", "Username or E-Mail", "Password")
 edupage.login()
 
-# Note: This list is not sorted and you cannot sort it with EduStudent.__sort__!
-teachers = edupage.get_teachers()
+teachers = edupage.get_teachers() # This list is usually sorted alphabetically
+
+# Sort the list by teacher's numbers
+teachers.sort(key = EduTeacher.__sort__)
 
 for teacher in teachers:
-    print(str(teacher))
+    print(f"{teacher.id}: {teacher.fullname}")
 ```
 
 ## Get homework
@@ -224,7 +223,7 @@ edupage.login()
 homework = edupage.get_homework()
 
 for hw in homework:
-    print(hw.due_date)
+    print(f"{hw.due_date} | {hw.subject}: {hw.title}")
 ```
 
 Homework, other than its title and description, provides some more information:
@@ -232,7 +231,7 @@ Homework, other than its title and description, provides some more information:
 #### `EduHomework`
 - `due_date`: `EduDate` –> When the homework is due
 - `subject`: The subject which this homework is from
-- `groups`: If this subject is divided into groups, the target should be here. __Needs testing__
+- `groups`: If this subject is divided into groups, the target should be here. **Needs testing**
 - `title`: The title of the homework message. This is usually what you in a notification in the Edupage app.
 - `description`: A detailed description of the homework. (It's usually blank)
 - `event_id`: A internal Edupage ID, which can be used to find the event corresponding to this homework. Useless for now.

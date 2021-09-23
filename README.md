@@ -163,6 +163,42 @@ else:
     print("The next lesson is not an online lesson!")
 ```
 
+## Get notifications
+```python
+from edupage_api import Edupage
+
+edupage = Edupage("Subdomain (Name) of your school", "Username or E-Mail", "Password")
+edupage.login()
+
+notifications = edupage.get_notifications()
+
+for notification in notifications:
+    print(f"{notification.date_added} | {notification.event_type}: {notification.text}")
+```
+
+The `EduNotification` class provides some more information about the notifications:
+
+#### `EduNotification`
+- `id`: An internal Edupage ID, which can be used to find the event corresponding to this notification. Useless for now.
+- `event_type`: Type of notification. Currently, we have 6 types:
+    + `NotificationType.MESSAGE`
+    + `NotificationType.HOMEWORK`
+    + `NotificationType.GRADE`
+    + `NotificationType.SUBSTITUTION`
+    + `NotificationType.TIMETABLE`
+    + `NotificationType.EVENT`
+- `author`: Author of notification.
+- `recipient`: Recipient of notification. It can be, for example, whole school, some class, current student, ...
+- `text`: Text of notification.
+- `date_added`: `EduExactDateTime` –> When was this notification published.
+- `attachments`: List of `EduAttachment` objects.
+- `subject`: The subject which this notification is from.
+- `due_date`: `EduDate` –> **Just for homeworks!** When the notification (homework) is due.
+- `grade`: `EduGrade` –> **Just for grades!** Grade of notification.
+- `start`: `EduDate` –> **Just for events!** Start date of event.
+- `end`: `EduDate` –> **Just for events!** End date of event.
+- `event_type_name`: **Just for events!** Type of event. For example: Holiday, Distance education, Short test, Exam, ...
+
 ## Get news from the webpage
 Thanks to how EduPage's message system works, you can get recent news from the webpage like this:
 

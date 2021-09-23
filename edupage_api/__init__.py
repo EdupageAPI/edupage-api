@@ -443,7 +443,6 @@ class Edupage:
             date_added = None
             attachments = None
             subject = None
-            name = None
             due_date = None
             grade = None
             start = None
@@ -495,10 +494,7 @@ class Edupage:
                 pass
 
             if notification_type == HOMEWORK and data:
-                name = data.get("nazov")
                 due_date = data.get("date")
-            elif notification_type == EVENT and data:
-                name = data.get("name")
             elif notification_type == GRADE:
                 for g in grades:
                     if int(g.id) == int(notification_id):
@@ -512,7 +508,7 @@ class Edupage:
                 event_type_name = event_types[event_type].get("name")
 
             notification = EduNotification(notification_id, notification_type, author, recipient, text,
-                                           date_added, attachments, subject, name, due_date,
+                                           date_added, attachments, subject, due_date,
                                            grade, start, end, duration, event_type_name)
             output.append(notification)
         self.logger.debug("Finished notification parsing!")

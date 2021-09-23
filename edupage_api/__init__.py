@@ -447,7 +447,6 @@ class Edupage:
             grade = None
             start = None
             end = None
-            duration = None
             event_type_name = None
 
             data = json.loads(notification.get("data"))
@@ -509,7 +508,7 @@ class Edupage:
 
             notification = EduNotification(notification_id, notification_type, author, recipient, text,
                                            date_added, attachments, subject, due_date,
-                                           grade, start, end, duration, event_type_name)
+                                           grade, start, end, event_type_name)
             output.append(notification)
         self.logger.debug("Finished notification parsing!")
         return output

@@ -66,7 +66,7 @@ class NotificationType(Enum):
 
 class EduNotification:
     def __init__(self, notification_id, event_type, author, recipient, text, date_added, attachments, subject,
-                    due_date, grade, start, end, duration, event_type_name):
+                    due_date, grade, start, end, event_type_name):
         self.id = notification_id
         self.event_type = event_type
         self.author = author
@@ -79,7 +79,6 @@ class EduNotification:
         self.grade = grade
         self.start = EduDate.from_formatted_string(start)
         self.end = EduDate.from_formatted_string(end)
-        self.duration = duration
         self.event_type_name = event_type_name
 
     def __str__(self):

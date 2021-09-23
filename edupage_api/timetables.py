@@ -60,6 +60,9 @@ class EduTimetable:
     def __init__(self, lessons):
         self.lessons = lessons
 
+    def __iter__(self):
+        return iter(self.lessons)
+
     def get_lesson_at_time(self, edutime):
         for lesson in self.lessons:
             if edutime.is_after_or_equals(lesson.length.start) and edutime.is_before_or_equals(lesson.length.end):

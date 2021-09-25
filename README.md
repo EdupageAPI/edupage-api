@@ -32,6 +32,8 @@ except LoginDataParsingException:
     print("Try again or open an issue!")
 ```
 
+# Documentation
+
 To learn display the documentation for this library, you can run: `python -m http.server --directory docs`.
 Then a local webpage will be served on http://127.0.0.1:8000.
 

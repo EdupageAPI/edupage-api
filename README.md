@@ -1,6 +1,3 @@
-# Disclaimer
-I do not have the energy to update this project. I can make bug-fixes or some small feature updates from time to time, but I am fed up with Python's weak typing. 
-
 # `edupage-api`
 [![CodeFactor](https://www.codefactor.io/repository/github/ivanhrabcak/edupage-api/badge)](https://www.codefactor.io/repository/github/ivanhrabcak/edupage-api) 
 

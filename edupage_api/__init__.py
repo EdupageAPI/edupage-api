@@ -18,7 +18,7 @@ class Edupage(EdupageModule):
 
         self.session = requests.session()
         self.session.request = functools.partial(self.session.request, timeout = request_timeout)
-    
+
     def login(self, username: str, password: str, subdomain: str):
         Login(self).login(username, password, subdomain)
 

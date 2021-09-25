@@ -34,7 +34,7 @@ except LoginDataParsingException:
 
 # Documentation
 
-To learn display the documentation for this library, you can run: `python -m http.server --directory docs`.
+To learn display the documentation for this library, you can run: `python -m http.server --directory docs`. 
 Then a local webpage will be served on http://127.0.0.1:8000.
 
 Feel free to suggest any other features! Just open an [issue with the *Feature Request* tag](https://github.com/ivanhrabcak/edupage-api/issues/new?labels=feature+request&template=feature_request.md&title=%5BFeature+request%5D+).

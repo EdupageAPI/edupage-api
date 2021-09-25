@@ -1,10 +1,18 @@
+
+class NotLoggedInException(Exception):
+    pass
+
+class MissingDataException(Exception):
+    pass
+
 class BadCredentialsException(Exception):
     pass
 
-
-class LoginDataParsingException(Exception):
+class NotAnOnlineLessonError(Exception):
     pass
 
+class FailedToRateException(Exception):
+    pass
 
-class FailedToUploadFileException(Exception):
+class FailedToChangeLunchError(Exception):
     pass

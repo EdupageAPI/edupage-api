@@ -15,8 +15,8 @@ class Gender(Enum):
 
         if not filtered:
             return None
-        else:
-            return filtered[0]
+        
+        return filtered[0]
 
 
 

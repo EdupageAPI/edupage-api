@@ -28,5 +28,3 @@ class Messages(Module):
 
         request_url = f"https://{self.edupage.subdomain}.edupage.org/timeline"
         self.edupage.session.post(request_url, params=params, data=ModuleHelper.encode_form_data(data))
-        
-

@@ -92,7 +92,7 @@ class Timetable:
 class Timetables(Module):
     def __get_dp(self) -> dict:
         dp = self.edupage.data.get("dp")
-        if dp == None:
+        if dp is None:
             raise MissingDataException()
         
         return dp

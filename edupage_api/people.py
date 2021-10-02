@@ -1,5 +1,5 @@
 from __future__ import annotations # for postponed evaluation of annotations
-from typing import Union
+from typing import Optional, Union
 from edupage_api.module import Module, ModuleHelper
 from edupage_api.dbi import DbiHelper
 from enum import Enum
@@ -10,7 +10,7 @@ class Gender(Enum):
     FEMALE = "F"
 
     @staticmethod
-    def parse(gender_str: str) -> Union[Gender, None]:
+    def parse(gender_str: str) -> Optional[Gender]:
         filtered = list(filter(lambda x: x.value == gender_str, list(Gender)))
 
         if not filtered:
@@ -30,6 +30,7 @@ class EduAccount:
         self.name = name
         self.gender = gender
         self.in_school_since = in_school_since
+        self.account_type = account_type
 
 class EduStudent(EduAccount):
     def __init__(self, person_id: int, name: str, gender: Gender, in_school_since: datetime,
@@ -48,7 +49,7 @@ class EduTeacher(EduAccount):
 
 class People(Module):
     @ModuleHelper.logged_in
-    def get_students(self) -> Union[list, None]:
+    def get_students(self) -> Optional[list]:
         students = DbiHelper(self.edupage).fetch_student_list()
         if students is None:
             return None
@@ -76,7 +77,7 @@ class People(Module):
         return result
 
     @ModuleHelper.logged_in
-    def get_teacher(self, teacher_id: int) -> Union[EduTeacher, None]:
+    def get_teacher(self, teacher_id: int) -> Optional[EduTeacher]:
         teacher_data = DbiHelper(self.edupage).fetch_teacher_data(teacher_id)
         if teacher_data is None:
             return None
@@ -94,7 +95,7 @@ class People(Module):
 
     
     @ModuleHelper.logged_in
-    def get_student(self, student_id: int) -> Union[EduStudent, None]:
+    def get_student(self, student_id: int) -> Optional[EduStudent]:
         student_data = DbiHelper(self.edupage).fetch_student_data(student_id)
         if student_data is None:
             return None
@@ -110,7 +111,7 @@ class People(Module):
         return EduStudent(student_id, name, gender, student_since, class_id, number_in_class)
     
     @ModuleHelper.logged_in
-    def get_teachers(self) -> Union[list, None]:
+    def get_teachers(self) -> Optional[list]:
         teachers = DbiHelper(self.edupage).fetch_teacher_list()
         if teachers is None:
             return None

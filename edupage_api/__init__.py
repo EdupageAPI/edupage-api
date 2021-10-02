@@ -92,11 +92,11 @@ class Edupage:
     def parse_login_data(self, data):
         
         js_json = data.split("$j(document).ready(function() {")[1] \
-            .split(");")[0] \
+            .split("});")[0] \
             .replace("\t", "") \
             .split("userhome(")[1] \
             .replace("\n", "") \
-            .replace("\r", "")
+            .replace("\r", "") + "}"
         self.logger.debug(f"Parsed html document: {js_json[:50]}")
         
         self.data = json.loads(js_json)

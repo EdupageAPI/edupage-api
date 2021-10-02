@@ -1,4 +1,5 @@
 from datetime import datetime
+from enum import Enum
 
 import requests
 from functools import wraps
@@ -31,6 +32,15 @@ class ModuleHelper:
     def assert_none(*args):
         if None in args:
             raise MissingDataException()
+    
+    @staticmethod
+    def parse_enum(string: str, enum_type: Enum):
+        filtered = list(filter(lambda x: x.value == string, list(enum_type)))
+
+        if not filtered:
+            return None
+        
+        return filtered[0]
 
     
     @staticmethod

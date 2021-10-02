@@ -1,5 +1,5 @@
 from __future__ import annotations # for postponed evaluation of annotations
-from typing import Optional, Union
+from typing import Optional
 from edupage_api.module import Module, ModuleHelper
 from edupage_api.dbi import DbiHelper
 from enum import Enum
@@ -11,18 +11,12 @@ class Gender(Enum):
 
     @staticmethod
     def parse(gender_str: str) -> Optional[Gender]:
-        filtered = list(filter(lambda x: x.value == gender_str, list(Gender)))
-
-        if not filtered:
-            return None
-        
-        return filtered[0]
-
-
+        return ModuleHelper.parse_enum(gender_str, Gender)
 
 class EduAccountType(Enum):
     STUDENT = "Student"
     TEACHER = "Teacher"
+    PARENT = "Rodic"
 
 class EduAccount:
     def __init__(self, person_id: int, name: str, gender: Gender, in_school_since: datetime, account_type: EduAccountType):
@@ -31,6 +25,9 @@ class EduAccount:
         self.gender = gender
         self.in_school_since = in_school_since
         self.account_type = account_type
+    
+    def get_id(self):
+        return f"{self.account_type.value}-{self.person_id}"
 
 class EduStudent(EduAccount):
     def __init__(self, person_id: int, name: str, gender: Gender, in_school_since: datetime,
@@ -39,6 +36,10 @@ class EduStudent(EduAccount):
 
         self.class_id = class_id
         self.number_in_class = number_in_class
+
+class EduParent(EduAccount):
+    def __init__(self, person_id: int, name: str, gender: Gender, in_school_since: datetime):
+        super().__init__(person_id, name, gender, in_school_since, EduAccountType.PARENT)
 
 class EduTeacher(EduAccount):
     def __init__(self, person_id: int, name: str, gender: Gender, in_school_since: datetime,

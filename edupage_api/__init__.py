@@ -1,4 +1,5 @@
 from datetime import datetime
+from edupage_api.timeline import TimelineEvents
 from edupage_api.lunches import Lunches
 from edupage_api.timetables import Timetable, Timetables
 from typing import Optional, Union
@@ -39,3 +40,6 @@ class Edupage(EdupageModule):
     
     def get_lunches(self, date: datetime):
         return Lunches(self).get_lunch(date)
+    
+    def get_notifications(self):
+        return TimelineEvents(self).get_notifications()

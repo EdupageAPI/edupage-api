@@ -42,6 +42,11 @@ class ModuleHelper:
         
         return filtered[0]
 
+    @staticmethod
+    def return_first_not_null(*args):
+        for x in args:
+            if x:
+                return x
     
     @staticmethod
     def urlencode(string: str) -> str:

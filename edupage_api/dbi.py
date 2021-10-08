@@ -1,5 +1,5 @@
 from typing import Optional, Union
-from edupage_api.module import Module
+from edupage_api.module import Module, ModuleHelper
 
 class DbiHelper(Module):
     def __get_dbi(self) -> dict:
@@ -61,3 +61,37 @@ class DbiHelper(Module):
     
     def fetch_student_data(self, student_id: int) -> Optional[dict]:
         return self.__get_item_with_id("students", student_id)
+
+    def fetch_student_data_by_name(self, student_name: str) -> Optional[dict]:
+        item_group = self.__get_item_group("students")
+
+        for student_id in item_group:
+            student_data = item_group.get(student_id)
+            if self.__get_full_name(student_data) in student_name:
+                student_data["id"] = student_id
+                return student_data       
+        
+    def fetch_teacher_data_by_name(self, teacher_name: str) -> Optional[dict]:
+        item_group = self.__get_item_group("teachers")
+
+        for teacher_id in item_group:
+            teacher_data = item_group.get(teacher_id)
+            if self.__get_full_name(teacher_data) in teacher_name:
+                teacher_data["id"] = teacher_id
+                return teacher_data
+    
+    def fetch_parent_data_by_name(self, parent_name: str) -> Optional[dict]:
+        item_group = self.__get_item_group("parents")
+
+        for parent_id in item_group:
+            parent_data = item_group.get(parent_id)
+            if self.__get_full_name(parent_data) in parent_name:
+                parent_data["id"] = parent_id
+                return parent_data
+
+    def fetch_person_data_by_name(self, name: str) -> Optional[dict]:
+        teacher_data = self.fetch_teacher_data_by_name(name)
+        student_data = self.fetch_student_data_by_name(name)
+        parent_data = self.fetch_parent_data_by_name(name)
+
+        return ModuleHelper.return_first_not_null(teacher_data, student_data, parent_data)

@@ -10,15 +10,18 @@ class GradeUtil:
         if teacher_id is None:
             return None
 
-        teachers = self.data.get("ucitelia")
+        try:
+            teachers = self.data.get("ucitelia")
 
-        # This dict contains data about the
-        # date when this teacher was employed
-        # or when will he/she retire / is planned quit this job
-        # (datefrom, dateto)
-        teacher = teachers.get(teacher_id)
+            # This dict contains data about the
+            # date when this teacher was employed
+            # or when will he/she retire / is planned quit this job
+            # (datefrom, dateto)
+            teacher = teachers.get(teacher_id)
 
-        teacher_name = teacher.get("firstname") + " " + teacher.get("lastname")
+            teacher_name = teacher.get("firstname") + " " + teacher.get("lastname")
+        except:
+            teacher_name = None
 
         return teacher_name
 
@@ -39,26 +42,47 @@ class IdUtil:
         if c_id is None:
             return None
 
-        return self.dbi.get("classes").get(c_id).get("name")
+        try:
+            class_name = self.dbi.get("classes").get(c_id).get("name")
+        except:
+            class_name = None
+
+        return class_name
 
     def id_to_teacher(self, t_id):
         if t_id is None:
             return None
 
-        teacher_data = self.dbi.get("teachers").get(t_id)
-        teacher_full_name = teacher_data.get(
-            "firstname") + " " + teacher_data.get("lastname")
+        try:
+            teacher_data = self.dbi.get("teachers").get(t_id)
+            teacher_full_name = teacher_data.get(
+                "firstname") + " " + teacher_data.get("lastname")
+        except:
+            teacher_full_name = None
+
         return teacher_full_name
 
     def id_to_classroom(self, c_id):
         if c_id is None:
             return None
-        return self.dbi.get("classrooms").get(c_id).get("short")
+
+        try:
+            classroom = self.dbi.get("classrooms").get(c_id).get("short")
+        except:
+            classroom = None
+
+        return classroom
 
     def id_to_subject(self, s_id):
         if s_id is None:
             return s_id
-        return self.dbi.get("subjects").get(s_id).get("short")
+
+        try:
+            subject = self.dbi.get("subjects").get(s_id).get("short")
+        except:
+            subject = None
+
+        return subject
 
 
 class RequestUtil:

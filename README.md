@@ -310,6 +310,79 @@ link = uploaded_file.get_url(edupage)
 print(f"Link to your file: {link}")
 ```
 
+# Lunch
+You can get menu for a day like this:
+```python
+from edupage_api import Edupage
+from edupage_api.date import EduDate
+
+edupage = Edupage("Subdomain (Name) of your school", "Username or E-Mail", "Password")
+edupage.login()
+
+today = EduDate.today()
+lunch_for_today = edupage.get_lunch(today)
+
+# Now you have access to these fields:
+# .date --> date of the lunch
+# .served_from (EduDate) --> time when the lunch will start to be served
+# .served_to (EduDate) --> time when the lunch will no longer be served
+# .amount_of_foods  --> how many choices there are
+# .chooseable_menus (list) --> which menus can be choosed
+# .can_be_changed_until (EduDateTime) --> last date when the lunch can be changed
+# .title (str) --> title of the whole lunch (usually contains information about all choices)
+# .menus (list) --> list of all choices for this lunch
+
+# menu is of type EduMenu
+for menu in lunch_for_today.menus:
+    print(f"Number: {menu.number}") # This field can also be None!!
+    print(f"Name: {menu.name}")
+    print(f"Weight: {menu.weight}")
+    print(f"Allergens: {menu.allergens}")
+    
+    # can be None if noone rated this menu or this menu is not rateable
+    # Example: Soups in my school cannot be rated
+    if menu.rating: 
+        print("Rating:")
+        print(f"        Quantity: {menu.rating.quantity_average}")
+        print(f"        Quality:  {menu.rating.quality_average}")
+    else:
+        print("No rating!")
+    
+    print("-" * 30)
+```
+
+# Rate a lunch
+Here's an example of rating the first rateable menu that was served today:
+```python
+from edupage_api import Edupage
+from edupage_api.date import EduDate
+
+edupage = Edupage("Subdomain (Name) of your school", "Username or E-Mail", "Password")
+edupage.login()
+
+today = EduDate.today()
+lunch_for_today = edupage.get_lunch(today)
+
+first_food = None
+
+# find the first food that is has a number -> is rateable
+for menu in lunch_for_today.menus:
+    if menu.number:
+        first_food = menu
+        break
+
+if first_food == None:
+    print("No rateable food!")
+
+# def rate(edupage, quantity_rating, quality_rating)
+was_rating_successful = first_food.rating.rate(edupage, 5, 5)
+
+# if the rating was unsucessful, it can be because 
+# the food wasn't served to you, or it's not in the
+# edupage database that the food was served to you
+print(was_rating_successful)
+```
+
 # Upcoming features
 - [x] Lunches
 - [x] Grades

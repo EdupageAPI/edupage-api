@@ -26,7 +26,7 @@ def term_supports_color():
     return supported_platform and is_a_tty
 
 class Edupage:
-    def __init__(self, school, username, password, timeout = 5, log_level: LogLevel = LogLevel.WARNING):
+    def __init__(self, school, username, password, timeout = 5, log_level: LogLevel = LogLevel.NONE):
         self.school = school
         self.username = username
         self.password = password

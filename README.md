@@ -1,5 +1,5 @@
-# Disclaimer
-I do not have the energy to update this project. I can make bug-fixes or some small feature updates from time to time, but I am fed up with Python's weak typing. 
+# Credit
+I would like everybody to know, that this project is not only mine, but each contributor (especially [@BelKed](https://github.com/BelKed)) has provided a great amount of help, it would not be in its current state without everyone's contributions. Thank you very much!
 
 # `edupage-api`
 [![CodeFactor](https://www.codefactor.io/repository/github/ivanhrabcak/edupage-api/badge)](https://www.codefactor.io/repository/github/ivanhrabcak/edupage-api) 

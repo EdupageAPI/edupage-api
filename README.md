@@ -1,5 +1,5 @@
 # Credit
-I would like everybody to know, that this project is not only mine, but each contributor (especially [@BelKed](https://github.com/BelKed)) has provided a great amount of help, it would not be in its current state without everyone's contributions. Thank you very much!
+I would like everybody to know, that this project is not only mine, but each contributor (especially [@BelKed](https://github.com/BelKed)) has provided a great amount of help. It would not be in its current state without everyone's contributions. Thank you very much!
 
 # `edupage-api`
 [![CodeFactor](https://www.codefactor.io/repository/github/ivanhrabcak/edupage-api/badge)](https://www.codefactor.io/repository/github/ivanhrabcak/edupage-api) 

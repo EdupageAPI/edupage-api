@@ -20,7 +20,7 @@ class EduGradeEvent:
 
 class EduGrade:
     def __init__(self, event_id, title, grade, importance, datetime_added, subject, teacher, percent, verbal,
-                 max_points):
+                 max_points, subject_id):
         self.id = event_id
         self.title = title
         self.grade = grade
@@ -31,6 +31,7 @@ class EduGrade:
         self.percent = percent
         self.verbal = verbal
         self.max_points = max_points
+        self.subject_id = subject_id
 
     def __str__(self):
         return f'{self.title}: {self.grade}'

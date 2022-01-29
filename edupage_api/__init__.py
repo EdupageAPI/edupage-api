@@ -421,7 +421,7 @@ class Edupage:
                 percent = None
 
             grade = EduGrade(event_id, title, grade_n, importance,
-                             datetime_added, subject, teacher, percent, verbal, max_points)
+                             datetime_added, subject, teacher, percent, verbal, max_points, subject_id)
             output.append(grade)
 
         self.logger.debug("Successfully constructed a list of grades!")

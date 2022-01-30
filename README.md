@@ -39,5 +39,4 @@ To learn display the documentation for this library, you can run: `python -m htt
 Then a local webpage will be served on http://127.0.0.1:8000.
 
 # I have a problem or an idea!
-
 Feel free to suggest any other features! Just open an [issue with the *Feature Request* tag](https://github.com/ivanhrabcak/edupage-api/issues/new?labels=feature+request&template=feature_request.md&title=%5BFeature+request%5D+).

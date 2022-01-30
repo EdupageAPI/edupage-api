@@ -34,9 +34,15 @@ except LoginDataParsingException:
 
 # Documentation
 
+## Hosted
+The docs are available on [yesdaddyfuck.me/edupage-api](https://yesdaddyfuck.me/edupage-api/)
+
+## Host it yourself locally
 To learn display the documentation for this library, you can run: `python -m http.server --directory docs`. 
 
 Then a local webpage will be served on http://127.0.0.1:8000.
+
+
 
 # I have a problem or an idea!
 Feel free to suggest any other features! Just open an [issue with the *Feature Request* tag](https://github.com/ivanhrabcak/edupage-api/issues/new?labels=feature+request&template=feature_request.md&title=%5BFeature+request%5D+).

@@ -16,3 +16,9 @@ class FailedToRateException(Exception):
 
 class FailedToChangeLunchError(Exception):
     pass
+
+class FailedToUploadFileException(Exception):
+    pass
+
+class FailedToParseGradeDataError(Exception):
+    pass

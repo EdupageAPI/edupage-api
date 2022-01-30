@@ -1,4 +1,4 @@
-from typing import Optional, Union
+from typing import Optional
 from edupage_api.module import Module, ModuleHelper
 
 class DbiHelper(Module):

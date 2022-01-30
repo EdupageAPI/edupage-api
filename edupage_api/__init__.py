@@ -1,13 +1,17 @@
 from datetime import datetime
-from edupage_api.timeline import TimelineEvents
-from edupage_api.lunches import Lunches
+from io import TextIOWrapper
+from edupage_api.cloud import Cloud, EduCloudFile
+from edupage_api.custom_request import CustomRequest
+from edupage_api.grades import EduGrade, Grades
+from edupage_api.timeline import TimelineEvent, TimelineEvents
+from edupage_api.lunches import Lunch, Lunches
 from edupage_api.timetables import Timetable, Timetables
-from typing import Optional, Union
+from typing import Optional
 from edupage_api.messages import Messages
 from edupage_api.login import Login
 from edupage_api.people import EduAccount, EduStudent, EduTeacher, People
 from edupage_api.module import EdupageModule
-from functools import wraps
+from requests import Response
 import functools
 import requests
 
@@ -38,8 +42,21 @@ class Edupage(EdupageModule):
     def get_timetable(self, date: datetime) -> Optional[Timetable]:
         return Timetables(self).get_timetable(date)
     
-    def get_lunches(self, date: datetime):
+    def get_lunches(self, date: datetime) -> Optional[Lunch]:
         return Lunches(self).get_lunch(date)
     
-    def get_notifications(self):
+    def get_notifications(self) -> list[TimelineEvent]:
         return TimelineEvents(self).get_notifications()
+    
+    def cloud_upload(self, fd: TextIOWrapper) -> EduCloudFile:
+        return Cloud(self).upload_file(fd)
+    
+    def get_grades(self) -> list[EduGrade]:
+        return Grades(self).get_grades()
+    
+    def get_user_id(self) -> str:
+        return self.data.get("userid")
+    
+    # method -> "GET" or "POST"
+    def custom_request(self, url: str, method: str, data: str = "", headers: dict = {}) -> Response:
+        return CustomRequest(self).custom_request(url, method, data, headers)

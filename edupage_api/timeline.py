@@ -45,13 +45,15 @@ class EventType(Enum):
 
 class TimelineEvent:
     def __init__(self, event_id: int, timestamp: datetime, text: str,
-                 author: EduAccount, recipient: EduAccount, event_type: EventType):
+                 author: EduAccount, recipient: EduAccount, event_type: EventType,
+                 additional_data: dict):
         self.event_id = event_id
         self.timestamp = timestamp
         self.text = text
         self.author = author
         self.recipient = recipient
         self.event_type = event_type
+        self.additional_data = additional_data
 
 class TimelineEvents(Module):
     @ModuleHelper.logged_in
@@ -110,6 +112,8 @@ class TimelineEvents(Module):
                 ModuleHelper.assert_none(author_data)
                 author = EduAccount.parse(author_data, author_data.get("id"), self.edupage)
 
-            event = TimelineEvent(event_id, event_timestamp, text, author, recipient, event_type)
+            additional_data = event.get("data")
+
+            event = TimelineEvent(event_id, event_timestamp, text, author, recipient, event_type, additional_data)
             output.append(event)
         return output

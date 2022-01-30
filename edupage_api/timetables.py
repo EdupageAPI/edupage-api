@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta
+from datetime import datetime
 
 import json
 from edupage_api.people import EduTeacher, People

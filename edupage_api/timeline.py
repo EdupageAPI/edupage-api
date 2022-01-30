@@ -38,6 +38,34 @@ class EventType(Enum):
     CLASS_BOOK = "other_cb"
     REPRESENTATION = "representation"
     NEW_MENU = "h_stravamenu"
+    HOMEWORK_TEST = "etesthw"
+    PROJECT_EXAM = "pexam"
+    EVENT = "event"
+    H_SUBSTITUTION = "h_substitution"
+    H_CLEARCACHE = "h_clearcache"
+    H_FINANCES = "h_financie"
+    H_CLEARPLANS = "h_clearplany"
+    H_HOMEWORK = "h_homework"
+    H_DAILYPLAN = "h_dailyplan"
+    ARRIVAL_TO_SCHOOL = "pipnutie"
+    FOOD_SERVED = "strava_vydaj"
+    GRADE = "znamka"
+    MESSAGE = "sprava"
+    NEWS = "news"
+    TIMETABLE = "timetable"
+    HOMEWORK = "homework"
+    H_PROCESSTYPES = "h_processtypes"
+    CONFIRMATION = "confirmation"
+    H_TIMETABLE = "h_timetable"
+    STUDENT_ABSENT = "student_absent"
+    H_GRADES = "h_znamky"
+    GRADES_DOC = "znamkydoc"
+    H_CLEARDBI = "h_cleardbi"
+    H_CLEARISICDATA = "h_clearisicdata"
+    H_EDUSETTINGS = "h_edusettings"
+    SUBSTITUTION = "substitution"
+    H_ATTENDANCE = "h_attendance"
+    EXCUSED_LESSON = "ospravedlnenka"
 
     @staticmethod
     def parse(string: str) -> Optional[Gender]:
@@ -75,6 +103,9 @@ class TimelineEvents(Module):
                 continue
             event_type = EventType.parse(event_type_str)
 
+            if event_type == None:
+                print(event_type_str)
+
             event_timestamp = datetime.strptime(event.get("timestamp"), "%Y-%m-%d %H:%M:%S")
             text = event.get("text")
 
@@ -92,10 +123,11 @@ class TimelineEvents(Module):
             # todo: add support for "*"
             recipient_name = event.get("user_meno")
             recipient_data = DbiHelper(self.edupage).fetch_person_data_by_name(recipient_name)
-            print(recipient_name)
 
             if recipient_name == "*" or recipient_name == "Celá škola":
                 recipient = "*"
+            elif type(recipient_name) == str:
+                author = recipient_name
             else:
                 ModuleHelper.assert_none(recipient_data)
 
@@ -105,14 +137,17 @@ class TimelineEvents(Module):
             author_name = event.get("vlastnik_meno")
             author_data = DbiHelper(self.edupage).fetch_person_data_by_name(author_name)
 
-            print(author_name)
             if author_name == "*":
                 author = "*"
+            elif type(author_name) == str:
+                author = author_name
             else:
                 ModuleHelper.assert_none(author_data)
                 author = EduAccount.parse(author_data, author_data.get("id"), self.edupage)
 
             additional_data = event.get("data")
+            if additional_data and type(additional_data) == str:
+                additional_data = json.loads(additional_data)
 
             event = TimelineEvent(event_id, event_timestamp, text, author, recipient, event_type, additional_data)
             output.append(event)

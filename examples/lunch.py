@@ -5,7 +5,7 @@ import sys
 edupage = Edupage()
 edupage.login_auto("Username (or e-mail)", "Password")
 
-today = datetime(2022, 1, 24)
+today = datetime.now()
 lunch = edupage.get_lunches(today)
 
 if lunch is None:

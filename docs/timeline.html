@@ -1,0 +1,596 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.10.0" />
+<title>edupage_api.timeline API documentation</title>
+<meta name="description" content="" />
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
+<link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/highlight.min.js" integrity="sha256-Uv3H6lx7dJmRfRvH8TH6kJD1TSK1aFcwgx+mdg3epi8=" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => hljs.initHighlighting())</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>edupage_api.timeline</code></h1>
+</header>
+<section id="section-intro">
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">from datetime import datetime
+from edupage_api.dbi import DbiHelper
+from edupage_api.people import EduAccount, Gender
+from typing import Optional
+from edupage_api.module import Module, ModuleHelper
+from enum import Enum
+import json
+
+# data.dbi.event_types
+class EventType(Enum):
+    TT_CANCEL = &#34;ttcancel&#34;
+    HOLIDAY = &#34;holiday&#34;
+    SHORT_HOLIDAY = &#34;sholiday&#34;
+    FREE_DAY = &#34;freeday&#34;
+    DISTANT_LEARNING = &#34;distant&#34;
+    LESSON = &#34;lesson&#34;
+    PROJECT_LESSON = &#34;plesson&#34;
+    TUTORING = &#34;rlesson&#34;
+    CLASS_TEACHER_LESSON = &#34;ctlesson&#34;
+    SCHOOL_EVENT = &#34;schoolevent&#34;
+    SCHOOL_TRIP = &#34;trip&#34;
+    CULTURE = &#34;culture&#34;
+    EXCURSION = &#34;excursion&#34;
+    CLASS_TEACHER_EVENT = &#34;ctevent&#34;
+    TESTING = &#34;testing&#34;
+    BIG_EXAM = &#34;bexam&#34;
+    SHORT_EXAM = &#34;sexam&#34;
+    ORAL_EXAM = &#34;oexam&#34;
+    PAPER = &#34;rexam&#34;
+    PROJECT = &#34;project&#34;
+    TEACHER_MEETING = &#34;meeting&#34;
+    CLASSIFICATION_MEETING = &#34;bmeeting&#34;
+    BOOKED_ROOM = &#34;bookroom&#34;
+    CHANGE_ROOM = &#34;changeroom&#34;
+    OTHER = &#34;other&#34;
+    SAFETY_INSTRUCTIONING = &#34;other_safety&#34;
+    PARENTS_EVENING = &#34;parentsevening&#34;
+    CLASS_BOOK = &#34;other_cb&#34;
+    REPRESENTATION = &#34;representation&#34;
+    NEW_MENU = &#34;h_stravamenu&#34;
+
+    @staticmethod
+    def parse(string: str) -&gt; Optional[Gender]:
+        return ModuleHelper.parse_enum(string, EventType)
+
+class TimelineEvent:
+    def __init__(self, event_id: int, timestamp: datetime, text: str,
+                 author: EduAccount, recipient: EduAccount, event_type: EventType,
+                 additional_data: dict):
+        self.event_id = event_id
+        self.timestamp = timestamp
+        self.text = text
+        self.author = author
+        self.recipient = recipient
+        self.event_type = event_type
+        self.additional_data = additional_data
+
+class TimelineEvents(Module):
+    @ModuleHelper.logged_in
+    def get_notifications(self):
+        output = []
+
+        timeline_items = self.edupage.data.get(&#34;items&#34;)
+
+        for event in timeline_items:
+            event_id_str = event.get(&#34;timelineid&#34;)
+            if not event_id_str:
+                continue
+
+            event_id = int(event_id_str)
+            event_data = json.loads(event.get(&#34;data&#34;))
+
+            event_type_str = event.get(&#34;typ&#34;)
+            if not event_id_str:
+                continue
+            event_type = EventType.parse(event_type_str)
+
+            event_timestamp = datetime.strptime(event.get(&#34;timestamp&#34;), &#34;%Y-%m-%d %H:%M:%S&#34;)
+            text = event.get(&#34;text&#34;)
+
+            # what about different languages?
+            # for message event type
+            if text.startswith(&#34;Dôležitá správa&#34;):
+                text = event_data.get(&#34;messageContent&#34;)
+            
+            if text == &#34;&#34;:
+                try:
+                    text = event_data.get(&#34;nazov&#34;)
+                except:
+                    text = &#34;&#34;
+
+            # todo: add support for &#34;*&#34;
+            recipient_name = event.get(&#34;user_meno&#34;)
+            recipient_data = DbiHelper(self.edupage).fetch_person_data_by_name(recipient_name)
+            print(recipient_name)
+
+            if recipient_name == &#34;*&#34; or recipient_name == &#34;Celá škola&#34;:
+                recipient = &#34;*&#34;
+            else:
+                ModuleHelper.assert_none(recipient_data)
+
+                recipient = EduAccount.parse(recipient_data, recipient_data.get(&#34;id&#34;), self.edupage)
+
+            # todo: add support for &#34;*&#34;
+            author_name = event.get(&#34;vlastnik_meno&#34;)
+            author_data = DbiHelper(self.edupage).fetch_person_data_by_name(author_name)
+
+            print(author_name)
+            if author_name == &#34;*&#34;:
+                author = &#34;*&#34;
+            else:
+                ModuleHelper.assert_none(author_data)
+                author = EduAccount.parse(author_data, author_data.get(&#34;id&#34;), self.edupage)
+
+            additional_data = event.get(&#34;data&#34;)
+
+            event = TimelineEvent(event_id, event_timestamp, text, author, recipient, event_type, additional_data)
+            output.append(event)
+        return output</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="edupage_api.timeline.EventType"><code class="flex name class">
+<span>class <span class="ident">EventType</span></span>
+<span>(</span><span>value, names=None, *, module=None, qualname=None, type=None, start=1)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>An enumeration.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class EventType(Enum):
+    TT_CANCEL = &#34;ttcancel&#34;
+    HOLIDAY = &#34;holiday&#34;
+    SHORT_HOLIDAY = &#34;sholiday&#34;
+    FREE_DAY = &#34;freeday&#34;
+    DISTANT_LEARNING = &#34;distant&#34;
+    LESSON = &#34;lesson&#34;
+    PROJECT_LESSON = &#34;plesson&#34;
+    TUTORING = &#34;rlesson&#34;
+    CLASS_TEACHER_LESSON = &#34;ctlesson&#34;
+    SCHOOL_EVENT = &#34;schoolevent&#34;
+    SCHOOL_TRIP = &#34;trip&#34;
+    CULTURE = &#34;culture&#34;
+    EXCURSION = &#34;excursion&#34;
+    CLASS_TEACHER_EVENT = &#34;ctevent&#34;
+    TESTING = &#34;testing&#34;
+    BIG_EXAM = &#34;bexam&#34;
+    SHORT_EXAM = &#34;sexam&#34;
+    ORAL_EXAM = &#34;oexam&#34;
+    PAPER = &#34;rexam&#34;
+    PROJECT = &#34;project&#34;
+    TEACHER_MEETING = &#34;meeting&#34;
+    CLASSIFICATION_MEETING = &#34;bmeeting&#34;
+    BOOKED_ROOM = &#34;bookroom&#34;
+    CHANGE_ROOM = &#34;changeroom&#34;
+    OTHER = &#34;other&#34;
+    SAFETY_INSTRUCTIONING = &#34;other_safety&#34;
+    PARENTS_EVENING = &#34;parentsevening&#34;
+    CLASS_BOOK = &#34;other_cb&#34;
+    REPRESENTATION = &#34;representation&#34;
+    NEW_MENU = &#34;h_stravamenu&#34;
+
+    @staticmethod
+    def parse(string: str) -&gt; Optional[Gender]:
+        return ModuleHelper.parse_enum(string, EventType)</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>enum.Enum</li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="edupage_api.timeline.EventType.BIG_EXAM"><code class="name">var <span class="ident">BIG_EXAM</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.timeline.EventType.BOOKED_ROOM"><code class="name">var <span class="ident">BOOKED_ROOM</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.timeline.EventType.CHANGE_ROOM"><code class="name">var <span class="ident">CHANGE_ROOM</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.timeline.EventType.CLASSIFICATION_MEETING"><code class="name">var <span class="ident">CLASSIFICATION_MEETING</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.timeline.EventType.CLASS_BOOK"><code class="name">var <span class="ident">CLASS_BOOK</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.timeline.EventType.CLASS_TEACHER_EVENT"><code class="name">var <span class="ident">CLASS_TEACHER_EVENT</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.timeline.EventType.CLASS_TEACHER_LESSON"><code class="name">var <span class="ident">CLASS_TEACHER_LESSON</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.timeline.EventType.CULTURE"><code class="name">var <span class="ident">CULTURE</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.timeline.EventType.DISTANT_LEARNING"><code class="name">var <span class="ident">DISTANT_LEARNING</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.timeline.EventType.EXCURSION"><code class="name">var <span class="ident">EXCURSION</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.timeline.EventType.FREE_DAY"><code class="name">var <span class="ident">FREE_DAY</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.timeline.EventType.HOLIDAY"><code class="name">var <span class="ident">HOLIDAY</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.timeline.EventType.LESSON"><code class="name">var <span class="ident">LESSON</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.timeline.EventType.NEW_MENU"><code class="name">var <span class="ident">NEW_MENU</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.timeline.EventType.ORAL_EXAM"><code class="name">var <span class="ident">ORAL_EXAM</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.timeline.EventType.OTHER"><code class="name">var <span class="ident">OTHER</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.timeline.EventType.PAPER"><code class="name">var <span class="ident">PAPER</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.timeline.EventType.PARENTS_EVENING"><code class="name">var <span class="ident">PARENTS_EVENING</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.timeline.EventType.PROJECT"><code class="name">var <span class="ident">PROJECT</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.timeline.EventType.PROJECT_LESSON"><code class="name">var <span class="ident">PROJECT_LESSON</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.timeline.EventType.REPRESENTATION"><code class="name">var <span class="ident">REPRESENTATION</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.timeline.EventType.SAFETY_INSTRUCTIONING"><code class="name">var <span class="ident">SAFETY_INSTRUCTIONING</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.timeline.EventType.SCHOOL_EVENT"><code class="name">var <span class="ident">SCHOOL_EVENT</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.timeline.EventType.SCHOOL_TRIP"><code class="name">var <span class="ident">SCHOOL_TRIP</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.timeline.EventType.SHORT_EXAM"><code class="name">var <span class="ident">SHORT_EXAM</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.timeline.EventType.SHORT_HOLIDAY"><code class="name">var <span class="ident">SHORT_HOLIDAY</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.timeline.EventType.TEACHER_MEETING"><code class="name">var <span class="ident">TEACHER_MEETING</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.timeline.EventType.TESTING"><code class="name">var <span class="ident">TESTING</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.timeline.EventType.TT_CANCEL"><code class="name">var <span class="ident">TT_CANCEL</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.timeline.EventType.TUTORING"><code class="name">var <span class="ident">TUTORING</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+<h3>Static methods</h3>
+<dl>
+<dt id="edupage_api.timeline.EventType.parse"><code class="name flex">
+<span>def <span class="ident">parse</span></span>(<span>string: str) ‑> Optional[<a title="edupage_api.people.Gender" href="people.html#edupage_api.people.Gender">Gender</a>]</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def parse(string: str) -&gt; Optional[Gender]:
+    return ModuleHelper.parse_enum(string, EventType)</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="edupage_api.timeline.TimelineEvent"><code class="flex name class">
+<span>class <span class="ident">TimelineEvent</span></span>
+<span>(</span><span>event_id: int, timestamp: datetime.datetime, text: str, author: <a title="edupage_api.people.EduAccount" href="people.html#edupage_api.people.EduAccount">EduAccount</a>, recipient: <a title="edupage_api.people.EduAccount" href="people.html#edupage_api.people.EduAccount">EduAccount</a>, event_type: <a title="edupage_api.timeline.EventType" href="#edupage_api.timeline.EventType">EventType</a>, additional_data: dict)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class TimelineEvent:
+    def __init__(self, event_id: int, timestamp: datetime, text: str,
+                 author: EduAccount, recipient: EduAccount, event_type: EventType,
+                 additional_data: dict):
+        self.event_id = event_id
+        self.timestamp = timestamp
+        self.text = text
+        self.author = author
+        self.recipient = recipient
+        self.event_type = event_type
+        self.additional_data = additional_data</code></pre>
+</details>
+</dd>
+<dt id="edupage_api.timeline.TimelineEvents"><code class="flex name class">
+<span>class <span class="ident">TimelineEvents</span></span>
+<span>(</span><span>edupage: <a title="edupage_api.module.EdupageModule" href="module.html#edupage_api.module.EdupageModule">EdupageModule</a>)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class TimelineEvents(Module):
+    @ModuleHelper.logged_in
+    def get_notifications(self):
+        output = []
+
+        timeline_items = self.edupage.data.get(&#34;items&#34;)
+
+        for event in timeline_items:
+            event_id_str = event.get(&#34;timelineid&#34;)
+            if not event_id_str:
+                continue
+
+            event_id = int(event_id_str)
+            event_data = json.loads(event.get(&#34;data&#34;))
+
+            event_type_str = event.get(&#34;typ&#34;)
+            if not event_id_str:
+                continue
+            event_type = EventType.parse(event_type_str)
+
+            event_timestamp = datetime.strptime(event.get(&#34;timestamp&#34;), &#34;%Y-%m-%d %H:%M:%S&#34;)
+            text = event.get(&#34;text&#34;)
+
+            # what about different languages?
+            # for message event type
+            if text.startswith(&#34;Dôležitá správa&#34;):
+                text = event_data.get(&#34;messageContent&#34;)
+            
+            if text == &#34;&#34;:
+                try:
+                    text = event_data.get(&#34;nazov&#34;)
+                except:
+                    text = &#34;&#34;
+
+            # todo: add support for &#34;*&#34;
+            recipient_name = event.get(&#34;user_meno&#34;)
+            recipient_data = DbiHelper(self.edupage).fetch_person_data_by_name(recipient_name)
+            print(recipient_name)
+
+            if recipient_name == &#34;*&#34; or recipient_name == &#34;Celá škola&#34;:
+                recipient = &#34;*&#34;
+            else:
+                ModuleHelper.assert_none(recipient_data)
+
+                recipient = EduAccount.parse(recipient_data, recipient_data.get(&#34;id&#34;), self.edupage)
+
+            # todo: add support for &#34;*&#34;
+            author_name = event.get(&#34;vlastnik_meno&#34;)
+            author_data = DbiHelper(self.edupage).fetch_person_data_by_name(author_name)
+
+            print(author_name)
+            if author_name == &#34;*&#34;:
+                author = &#34;*&#34;
+            else:
+                ModuleHelper.assert_none(author_data)
+                author = EduAccount.parse(author_data, author_data.get(&#34;id&#34;), self.edupage)
+
+            additional_data = event.get(&#34;data&#34;)
+
+            event = TimelineEvent(event_id, event_timestamp, text, author, recipient, event_type, additional_data)
+            output.append(event)
+        return output</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="edupage_api.module.Module" href="module.html#edupage_api.module.Module">Module</a></li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="edupage_api.timeline.TimelineEvents.get_notifications"><code class="name flex">
+<span>def <span class="ident">get_notifications</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@ModuleHelper.logged_in
+def get_notifications(self):
+    output = []
+
+    timeline_items = self.edupage.data.get(&#34;items&#34;)
+
+    for event in timeline_items:
+        event_id_str = event.get(&#34;timelineid&#34;)
+        if not event_id_str:
+            continue
+
+        event_id = int(event_id_str)
+        event_data = json.loads(event.get(&#34;data&#34;))
+
+        event_type_str = event.get(&#34;typ&#34;)
+        if not event_id_str:
+            continue
+        event_type = EventType.parse(event_type_str)
+
+        event_timestamp = datetime.strptime(event.get(&#34;timestamp&#34;), &#34;%Y-%m-%d %H:%M:%S&#34;)
+        text = event.get(&#34;text&#34;)
+
+        # what about different languages?
+        # for message event type
+        if text.startswith(&#34;Dôležitá správa&#34;):
+            text = event_data.get(&#34;messageContent&#34;)
+        
+        if text == &#34;&#34;:
+            try:
+                text = event_data.get(&#34;nazov&#34;)
+            except:
+                text = &#34;&#34;
+
+        # todo: add support for &#34;*&#34;
+        recipient_name = event.get(&#34;user_meno&#34;)
+        recipient_data = DbiHelper(self.edupage).fetch_person_data_by_name(recipient_name)
+        print(recipient_name)
+
+        if recipient_name == &#34;*&#34; or recipient_name == &#34;Celá škola&#34;:
+            recipient = &#34;*&#34;
+        else:
+            ModuleHelper.assert_none(recipient_data)
+
+            recipient = EduAccount.parse(recipient_data, recipient_data.get(&#34;id&#34;), self.edupage)
+
+        # todo: add support for &#34;*&#34;
+        author_name = event.get(&#34;vlastnik_meno&#34;)
+        author_data = DbiHelper(self.edupage).fetch_person_data_by_name(author_name)
+
+        print(author_name)
+        if author_name == &#34;*&#34;:
+            author = &#34;*&#34;
+        else:
+            ModuleHelper.assert_none(author_data)
+            author = EduAccount.parse(author_data, author_data.get(&#34;id&#34;), self.edupage)
+
+        additional_data = event.get(&#34;data&#34;)
+
+        event = TimelineEvent(event_id, event_timestamp, text, author, recipient, event_type, additional_data)
+        output.append(event)
+    return output</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="edupage_api" href="index.html">edupage_api</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="edupage_api.timeline.EventType" href="#edupage_api.timeline.EventType">EventType</a></code></h4>
+<ul class="">
+<li><code><a title="edupage_api.timeline.EventType.BIG_EXAM" href="#edupage_api.timeline.EventType.BIG_EXAM">BIG_EXAM</a></code></li>
+<li><code><a title="edupage_api.timeline.EventType.BOOKED_ROOM" href="#edupage_api.timeline.EventType.BOOKED_ROOM">BOOKED_ROOM</a></code></li>
+<li><code><a title="edupage_api.timeline.EventType.CHANGE_ROOM" href="#edupage_api.timeline.EventType.CHANGE_ROOM">CHANGE_ROOM</a></code></li>
+<li><code><a title="edupage_api.timeline.EventType.CLASSIFICATION_MEETING" href="#edupage_api.timeline.EventType.CLASSIFICATION_MEETING">CLASSIFICATION_MEETING</a></code></li>
+<li><code><a title="edupage_api.timeline.EventType.CLASS_BOOK" href="#edupage_api.timeline.EventType.CLASS_BOOK">CLASS_BOOK</a></code></li>
+<li><code><a title="edupage_api.timeline.EventType.CLASS_TEACHER_EVENT" href="#edupage_api.timeline.EventType.CLASS_TEACHER_EVENT">CLASS_TEACHER_EVENT</a></code></li>
+<li><code><a title="edupage_api.timeline.EventType.CLASS_TEACHER_LESSON" href="#edupage_api.timeline.EventType.CLASS_TEACHER_LESSON">CLASS_TEACHER_LESSON</a></code></li>
+<li><code><a title="edupage_api.timeline.EventType.CULTURE" href="#edupage_api.timeline.EventType.CULTURE">CULTURE</a></code></li>
+<li><code><a title="edupage_api.timeline.EventType.DISTANT_LEARNING" href="#edupage_api.timeline.EventType.DISTANT_LEARNING">DISTANT_LEARNING</a></code></li>
+<li><code><a title="edupage_api.timeline.EventType.EXCURSION" href="#edupage_api.timeline.EventType.EXCURSION">EXCURSION</a></code></li>
+<li><code><a title="edupage_api.timeline.EventType.FREE_DAY" href="#edupage_api.timeline.EventType.FREE_DAY">FREE_DAY</a></code></li>
+<li><code><a title="edupage_api.timeline.EventType.HOLIDAY" href="#edupage_api.timeline.EventType.HOLIDAY">HOLIDAY</a></code></li>
+<li><code><a title="edupage_api.timeline.EventType.LESSON" href="#edupage_api.timeline.EventType.LESSON">LESSON</a></code></li>
+<li><code><a title="edupage_api.timeline.EventType.NEW_MENU" href="#edupage_api.timeline.EventType.NEW_MENU">NEW_MENU</a></code></li>
+<li><code><a title="edupage_api.timeline.EventType.ORAL_EXAM" href="#edupage_api.timeline.EventType.ORAL_EXAM">ORAL_EXAM</a></code></li>
+<li><code><a title="edupage_api.timeline.EventType.OTHER" href="#edupage_api.timeline.EventType.OTHER">OTHER</a></code></li>
+<li><code><a title="edupage_api.timeline.EventType.PAPER" href="#edupage_api.timeline.EventType.PAPER">PAPER</a></code></li>
+<li><code><a title="edupage_api.timeline.EventType.PARENTS_EVENING" href="#edupage_api.timeline.EventType.PARENTS_EVENING">PARENTS_EVENING</a></code></li>
+<li><code><a title="edupage_api.timeline.EventType.PROJECT" href="#edupage_api.timeline.EventType.PROJECT">PROJECT</a></code></li>
+<li><code><a title="edupage_api.timeline.EventType.PROJECT_LESSON" href="#edupage_api.timeline.EventType.PROJECT_LESSON">PROJECT_LESSON</a></code></li>
+<li><code><a title="edupage_api.timeline.EventType.REPRESENTATION" href="#edupage_api.timeline.EventType.REPRESENTATION">REPRESENTATION</a></code></li>
+<li><code><a title="edupage_api.timeline.EventType.SAFETY_INSTRUCTIONING" href="#edupage_api.timeline.EventType.SAFETY_INSTRUCTIONING">SAFETY_INSTRUCTIONING</a></code></li>
+<li><code><a title="edupage_api.timeline.EventType.SCHOOL_EVENT" href="#edupage_api.timeline.EventType.SCHOOL_EVENT">SCHOOL_EVENT</a></code></li>
+<li><code><a title="edupage_api.timeline.EventType.SCHOOL_TRIP" href="#edupage_api.timeline.EventType.SCHOOL_TRIP">SCHOOL_TRIP</a></code></li>
+<li><code><a title="edupage_api.timeline.EventType.SHORT_EXAM" href="#edupage_api.timeline.EventType.SHORT_EXAM">SHORT_EXAM</a></code></li>
+<li><code><a title="edupage_api.timeline.EventType.SHORT_HOLIDAY" href="#edupage_api.timeline.EventType.SHORT_HOLIDAY">SHORT_HOLIDAY</a></code></li>
+<li><code><a title="edupage_api.timeline.EventType.TEACHER_MEETING" href="#edupage_api.timeline.EventType.TEACHER_MEETING">TEACHER_MEETING</a></code></li>
+<li><code><a title="edupage_api.timeline.EventType.TESTING" href="#edupage_api.timeline.EventType.TESTING">TESTING</a></code></li>
+<li><code><a title="edupage_api.timeline.EventType.TT_CANCEL" href="#edupage_api.timeline.EventType.TT_CANCEL">TT_CANCEL</a></code></li>
+<li><code><a title="edupage_api.timeline.EventType.TUTORING" href="#edupage_api.timeline.EventType.TUTORING">TUTORING</a></code></li>
+<li><code><a title="edupage_api.timeline.EventType.parse" href="#edupage_api.timeline.EventType.parse">parse</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="edupage_api.timeline.TimelineEvent" href="#edupage_api.timeline.TimelineEvent">TimelineEvent</a></code></h4>
+</li>
+<li>
+<h4><code><a title="edupage_api.timeline.TimelineEvents" href="#edupage_api.timeline.TimelineEvents">TimelineEvents</a></code></h4>
+<ul class="">
+<li><code><a title="edupage_api.timeline.TimelineEvents.get_notifications" href="#edupage_api.timeline.TimelineEvents.get_notifications">get_notifications</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.10.0</a>.</p>
+</footer>
+</body>
+</html>

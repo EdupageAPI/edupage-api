@@ -1,35 +1,44 @@
+from io import TextIOWrapper
 import json
 from edupage_api.exceptions import FailedToUploadFileException
-
+from edupage_api.module import EdupageModule, Module, ModuleHelper
 
 class EduCloudFile:
-    def __init__(self, uri, name, ftype, cloudid):
-        self.uri = uri
+    def __init__(self, cloud_id: str, extension: str, file_type: str, file: str, name: str):
+        self.cloud_id = cloud_id
+        self.extension = extension
+        self.type = file_type
+        self.file = file
         self.name = name
-        self.type = ftype
-        self.cloudid = cloudid
+    
+    def get_url(self, edupage: EdupageModule):
+        return f"https://{edupage.subdomain}.edupage.org{self.name}"
 
-    def get_url(self, edupage):
-        return f"https://{edupage.school}.edupage.org{self.uri}"
-
-
-class EduCloud:
     @staticmethod
-    def upload_file(edupage, fd):
-        request_url = f"https://{edupage.school}.edupage.org/timeline/?akcia=uploadAtt"
+    def parse(data: dict):
+        return EduCloudFile(
+            data.get("cloudid"),
+            data.get("extension"),
+            data.get("type"),
+            data.get("file"),
+            data.get("name")
+        )
+
+class Cloud(Module):
+    @ModuleHelper.logged_in
+    def upload_file(self, fd: TextIOWrapper) -> EduCloudFile:
+        request_url = f"https://{self.edupage.subdomain}.edupage.org/timeline/?akcia=uploadAtt"
 
         files = {"att": fd}
 
-        response = edupage.session.post(request_url,
-                                        files=files).content.decode()
+        response = self.edupage.session.post(request_url, files=files).content.decode()
 
         try:
             response_json = json.loads(response)
             if response_json.get("status") != "ok":
-                raise FailedToUploadFileException()
-
+                raise FailedToUploadFileException("Edupage returned a failing status")
+            
             metadata = response_json.get("data")
-            return EduCloudFile(metadata.get("file"), metadata.get("name"),
-                                metadata.get("type"), metadata.get("cloudid"))
-        except:
-            raise FailedToUploadFileException()
+            return EduCloudFile.parse(metadata)
+        except json.JSONDecodeError:
+            raise FailedToUploadFileException("Failed to decode json response")

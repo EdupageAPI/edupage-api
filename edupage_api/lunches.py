@@ -49,7 +49,7 @@ class Menu:
 
 class Lunch:
     def __init__(self, served_from: Optional[datetime], served_to: Optional[datetime],
-                 amount_of_foods: str, chooseable_menus: str,
+                 amount_of_foods: int, chooseable_menus: list[str],
                  can_be_changed_until: datetime, title: str,
                  menus: List[Menu], date: datetime,
                  boarder_id: str):
@@ -165,7 +165,6 @@ class Lunches(Module):
                                     quality_ratings, quantity_ratings)
                 else:
                     rating = None
-            
             menus.append(Menu(name, allergens, weight, number, rating))
     
         return Lunch(served_from, served_to, amount_of_foods, 

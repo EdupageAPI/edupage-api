@@ -15,3 +15,6 @@ build/*
 edupage_api.egg-info
 edupage_api.egg-info/*
 test.py
+
+USERNAME
+PASSWORD

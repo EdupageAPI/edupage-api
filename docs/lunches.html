@@ -36,11 +36,11 @@ class Rating:
     def __init__(self, mysql_date, boarder_id, 
                 quality_average, quantity_average, 
                 quality_ratings, quantity_ratings):
+        self.quality_ratings = quality_ratings
         self.quality_average = quality_average
-        self.quantity_average = quantity_average
 
         self.quantity_ratings = quantity_ratings
-        self.quantity_average = quantity_ratings
+        self.quantity_average = quantity_average
 
         self.__date = mysql_date
         self.__boarder_id = boarder_id
@@ -512,11 +512,11 @@ def get_lunch(self, date: datetime):
     def __init__(self, mysql_date, boarder_id, 
                 quality_average, quantity_average, 
                 quality_ratings, quantity_ratings):
+        self.quality_ratings = quality_ratings
         self.quality_average = quality_average
-        self.quantity_average = quantity_average
 
         self.quantity_ratings = quantity_ratings
-        self.quantity_average = quantity_ratings
+        self.quantity_average = quantity_average
 
         self.__date = mysql_date
         self.__boarder_id = boarder_id

@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 <meta name="generator" content="pdoc 0.10.0" />
-<title>edupage_api.messages API documentation</title>
+<title>edupage_api.custom_request API documentation</title>
 <meta name="description" content="" />
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
@@ -19,43 +19,24 @@
 <main>
 <article id="content">
 <header>
-<h1 class="title">Module <code>edupage_api.messages</code></h1>
+<h1 class="title">Module <code>edupage_api.custom_request</code></h1>
 </header>
 <section id="section-intro">
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">from edupage_api.people import EduAccount
-from typing import Union
-from edupage_api.module import Module, ModuleHelper
+<pre><code class="python">from edupage_api.module import Module
+from requests import Response
 
-class Messages(Module):
-    def send_message(self, recipients: Union[list[EduAccount], EduAccount], body: str):
-        recipient_string = &#34;&#34;
+class CustomRequest(Module):
+    def custom_request(self, url: str, method: str, data: str = &#34;&#34;, headers: dict = {}) -&gt; Response:
+        if method == &#34;GET&#34;:
+            response = self.edupage.session.get(url, headers=headers)
+        elif method == &#34;POST&#34;:
+            response = self.edupage.session.post(url, data=data, headers=headers)
 
-        if isinstance(recipients, list):
-            for i, recipient in recipients:
-                recipient_string += f&#34;{recipient.get_id()}&#34;
-                if i == len(recipients) - 1:
-                    recipient_string += &#34;;&#34;
-        else:
-            recipient_string = recipients.get_id()
-        
-        data = {
-            &#34;receipt&#34;: &#34;0&#34;,
-            &#34;selectedUser&#34;: recipient_string,
-            &#34;text&#34;: body,
-            &#34;typ&#34;: &#34;sprava&#34;,
-            &#34;attachments&#34;: &#34;{}&#34;
-        }
-
-        params = (
-            (&#34;akcia&#34;, &#34;createItem&#34;),
-        )
-
-        request_url = f&#34;https://{self.edupage.subdomain}.edupage.org/timeline&#34;
-        self.edupage.session.post(request_url, params=params, data=ModuleHelper.encode_form_data(data))</code></pre>
+        return response</code></pre>
 </details>
 </section>
 <section>
@@ -67,8 +48,8 @@ class Messages(Module):
 <section>
 <h2 class="section-title" id="header-classes">Classes</h2>
 <dl>
-<dt id="edupage_api.messages.Messages"><code class="flex name class">
-<span>class <span class="ident">Messages</span></span>
+<dt id="edupage_api.custom_request.CustomRequest"><code class="flex name class">
+<span>class <span class="ident">CustomRequest</span></span>
 <span>(</span><span>edupage: <a title="edupage_api.module.EdupageModule" href="module.html#edupage_api.module.EdupageModule">EdupageModule</a>)</span>
 </code></dt>
 <dd>
@@ -77,32 +58,14 @@ class Messages(Module):
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">class Messages(Module):
-    def send_message(self, recipients: Union[list[EduAccount], EduAccount], body: str):
-        recipient_string = &#34;&#34;
+<pre><code class="python">class CustomRequest(Module):
+    def custom_request(self, url: str, method: str, data: str = &#34;&#34;, headers: dict = {}) -&gt; Response:
+        if method == &#34;GET&#34;:
+            response = self.edupage.session.get(url, headers=headers)
+        elif method == &#34;POST&#34;:
+            response = self.edupage.session.post(url, data=data, headers=headers)
 
-        if isinstance(recipients, list):
-            for i, recipient in recipients:
-                recipient_string += f&#34;{recipient.get_id()}&#34;
-                if i == len(recipients) - 1:
-                    recipient_string += &#34;;&#34;
-        else:
-            recipient_string = recipients.get_id()
-        
-        data = {
-            &#34;receipt&#34;: &#34;0&#34;,
-            &#34;selectedUser&#34;: recipient_string,
-            &#34;text&#34;: body,
-            &#34;typ&#34;: &#34;sprava&#34;,
-            &#34;attachments&#34;: &#34;{}&#34;
-        }
-
-        params = (
-            (&#34;akcia&#34;, &#34;createItem&#34;),
-        )
-
-        request_url = f&#34;https://{self.edupage.subdomain}.edupage.org/timeline&#34;
-        self.edupage.session.post(request_url, params=params, data=ModuleHelper.encode_form_data(data))</code></pre>
+        return response</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
@@ -110,8 +73,8 @@ class Messages(Module):
 </ul>
 <h3>Methods</h3>
 <dl>
-<dt id="edupage_api.messages.Messages.send_message"><code class="name flex">
-<span>def <span class="ident">send_message</span></span>(<span>self, recipients: Union[list[<a title="edupage_api.people.EduAccount" href="people.html#edupage_api.people.EduAccount">EduAccount</a>], <a title="edupage_api.people.EduAccount" href="people.html#edupage_api.people.EduAccount">EduAccount</a>], body: str)</span>
+<dt id="edupage_api.custom_request.CustomRequest.custom_request"><code class="name flex">
+<span>def <span class="ident">custom_request</span></span>(<span>self, url: str, method: str, data: str = '', headers: dict = {}) ‑> requests.models.Response</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
@@ -119,31 +82,13 @@ class Messages(Module):
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def send_message(self, recipients: Union[list[EduAccount], EduAccount], body: str):
-    recipient_string = &#34;&#34;
+<pre><code class="python">def custom_request(self, url: str, method: str, data: str = &#34;&#34;, headers: dict = {}) -&gt; Response:
+    if method == &#34;GET&#34;:
+        response = self.edupage.session.get(url, headers=headers)
+    elif method == &#34;POST&#34;:
+        response = self.edupage.session.post(url, data=data, headers=headers)
 
-    if isinstance(recipients, list):
-        for i, recipient in recipients:
-            recipient_string += f&#34;{recipient.get_id()}&#34;
-            if i == len(recipients) - 1:
-                recipient_string += &#34;;&#34;
-    else:
-        recipient_string = recipients.get_id()
-    
-    data = {
-        &#34;receipt&#34;: &#34;0&#34;,
-        &#34;selectedUser&#34;: recipient_string,
-        &#34;text&#34;: body,
-        &#34;typ&#34;: &#34;sprava&#34;,
-        &#34;attachments&#34;: &#34;{}&#34;
-    }
-
-    params = (
-        (&#34;akcia&#34;, &#34;createItem&#34;),
-    )
-
-    request_url = f&#34;https://{self.edupage.subdomain}.edupage.org/timeline&#34;
-    self.edupage.session.post(request_url, params=params, data=ModuleHelper.encode_form_data(data))</code></pre>
+    return response</code></pre>
 </details>
 </dd>
 </dl>
@@ -165,9 +110,9 @@ class Messages(Module):
 <li><h3><a href="#header-classes">Classes</a></h3>
 <ul>
 <li>
-<h4><code><a title="edupage_api.messages.Messages" href="#edupage_api.messages.Messages">Messages</a></code></h4>
+<h4><code><a title="edupage_api.custom_request.CustomRequest" href="#edupage_api.custom_request.CustomRequest">CustomRequest</a></code></h4>
 <ul class="">
-<li><code><a title="edupage_api.messages.Messages.send_message" href="#edupage_api.messages.Messages.send_message">send_message</a></code></li>
+<li><code><a title="edupage_api.custom_request.CustomRequest.custom_request" href="#edupage_api.custom_request.CustomRequest.custom_request">custom_request</a></code></li>
 </ul>
 </li>
 </ul>

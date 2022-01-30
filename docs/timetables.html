@@ -26,7 +26,7 @@
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">from datetime import datetime, timedelta
+<pre><code class="python">from datetime import datetime
 
 import json
 from edupage_api.people import EduTeacher, People
@@ -120,7 +120,7 @@ class Timetable:
 class Timetables(Module):
     def __get_dp(self) -&gt; dict:
         dp = self.edupage.data.get(&#34;dp&#34;)
-        if dp == None:
+        if dp is None:
             raise MissingDataException()
         
         return dp
@@ -457,7 +457,7 @@ def sign_into_lesson(self, edupage: EdupageModule):
 <pre><code class="python">class Timetables(Module):
     def __get_dp(self) -&gt; dict:
         dp = self.edupage.data.get(&#34;dp&#34;)
-        if dp == None:
+        if dp is None:
             raise MissingDataException()
         
         return dp

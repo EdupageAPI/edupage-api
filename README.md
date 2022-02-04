@@ -1,5 +1,4 @@
-# `edupage-api`
-[![CodeFactor](https://www.codefactor.io/repository/github/ivanhrabcak/edupage-api/badge)](https://www.codefactor.io/repository/github/ivanhrabcak/edupage-api) 
+# `edupage-api` &middot; [![Current version on PyPI](https://img.shields.io/pypi/v/edupage-api)](https://pypi.org/project/edupage-api/) [![Supported Python versions](https://img.shields.io/pypi/pyversions/edupage-api)](https://pypi.org/project/edupage-api/) [![Downloads per month](https://pepy.tech/badge/edupage-api/month)](https://pepy.tech/project/edupage-api) [![CodeFactor](https://www.codefactor.io/repository/github/ivanhrabcak/edupage-api/badge)](https://www.codefactor.io/repository/github/ivanhrabcak/edupage-api)
 
 This python library allows easy access to EduPage. This is not a Selenium web scraper. 
 It makes requests directly to EduPage's endpoints and parses the HTML document.

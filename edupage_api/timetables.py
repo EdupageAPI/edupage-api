@@ -79,9 +79,8 @@ class Timetable:
 
     def get_next_online_lesson_at_time(self, time: datetime):
         for lesson in self.lessons:
-            if time < lesson.start_of_lesson:
-                if lesson.is_online_lesson():
-                    return lesson
+            if time < lesson.start_of_lesson and lesson.is_online_lesson():
+                return lesson
 
     def get_first_lesson(self):
         if len(self.lessons) > 0:
@@ -122,9 +121,9 @@ class Timetables(Module):
             else:
                 subject_name = header[0].get("text")
 
+            teachers = []
             teacher_ids = subject.get("teacherids")
             if teacher_ids is not None and len(teacher_ids) != 0:
-                teachers = []
                 for teacher_id_str in teacher_ids:
                     if not teacher_id_str:
                         continue
@@ -133,12 +132,10 @@ class Timetables(Module):
                     teacher = People(self.edupage).get_teacher(teacher_id)
 
                     teachers.append(teacher)
-            else:
-                teachers = []
 
+            classrooms = []
             classroom_ids = subject.get("classroomids")
             if classroom_ids is not None and len(classroom_ids) != 0:
-                classrooms = []
                 for classroom_id_str in classroom_ids:
                     if not classroom_id_str:
                         continue
@@ -147,8 +144,6 @@ class Timetables(Module):
                     classroom_number = DbiHelper(self.edupage).fetch_classroom_number(classroom_id)
 
                     classrooms.append(classroom_number)
-            else:
-                classrooms = []
 
             start_of_lesson_str = subject.get("starttime")
             end_of_lesson_str = subject.get("endtime")

@@ -97,18 +97,11 @@ class RequestUtil:
             value = data[key]
             entry = f"{RequestUtil.urlencode(key)}={RequestUtil.urlencode(value)}"
 
-            if i != 0:
-                output += f"&{entry}"
-            else:
-                output += entry
-
+            output += f"&{entry}" if i != 0 else entry
         return output
 
     @staticmethod
     def encode_attachments(attachments):
-        output = {}
-
-        for attachment in attachments:
-            output[attachment.url] = attachment.filename
+        output = {attachment.url: attachment.filename for attachment in attachments}
 
         return json.dumps(output)

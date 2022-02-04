@@ -65,11 +65,7 @@ class ModuleHelper:
             value = data[key]
             entry = f"{ModuleHelper.urlencode(key)}={ModuleHelper.urlencode(value)}"
 
-            if i != 0:
-                output += f"&{entry}"
-            else:
-                output += entry
-
+            output += f"&{entry}" if i != 0 else entry
         return output
 
     @staticmethod
@@ -92,9 +88,7 @@ class ModuleHelper:
             if not self.edupage.is_logged_in:
                 raise NotLoggedInException()
 
-            method_output = method(self, *method_args, **method_kwargs)
-
-            return method_output
+            return method(self, *method_args, **method_kwargs)
         return __impl
 
     @staticmethod
@@ -103,8 +97,6 @@ class ModuleHelper:
         def __impl(self, *method_args, **method_kwargs):
             if self.online_lesson_link is None:
                 raise NotAnOnlineLessonError()
-            method_output = method(self, *method_args, **method_kwargs)
-
-            return method_output
+            return method(self, *method_args, **method_kwargs)
 
         return __impl

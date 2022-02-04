@@ -107,7 +107,7 @@ class TimelineEvents(Module):
                 continue
             event_type = EventType.parse(event_type_str)
 
-            if event_type == None:
+            if event_type is None:
                 print(event_type_str)
 
             event_timestamp = datetime.strptime(event.get("timestamp"), "%Y-%m-%d %H:%M:%S")
@@ -128,7 +128,7 @@ class TimelineEvents(Module):
             recipient_name = event.get("user_meno")
             recipient_data = DbiHelper(self.edupage).fetch_person_data_by_name(recipient_name)
 
-            if recipient_name == "*" or recipient_name == "Celá škola":
+            if recipient_name in ["*", "Celá škola"]:
                 recipient = "*"
             elif type(recipient_name) == str:
                 author = recipient_name

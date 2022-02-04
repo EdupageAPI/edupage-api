@@ -53,8 +53,7 @@ class EduAccount:
 
             ModuleHelper.assert_none(name)
 
-            student = EduStudent(person_id, name, gender, student_since, class_id, number_in_class)
-            return student
+            return EduStudent(person_id, name, gender, student_since, class_id, number_in_class)
         elif account_type == EduAccountType.TEACHER:
             classroom_id = person_data.get("classroomid")
             classroom_name = DbiHelper(edupage).fetch_classroom_number(
@@ -63,20 +62,17 @@ class EduAccount:
             name = DbiHelper(edupage).fetch_teacher_name(person_id)
 
             gender = Gender.parse(person_data.get("gender"))
-            teacher_since_str = person_data.get("datefrom")
-            if teacher_since_str:
+            if teacher_since_str := person_data.get("datefrom"):
                 teacher_since = datetime.strptime(teacher_since_str, "%Y-%m-%d")
             else:
                 teacher_since = None
 
-            teacher_to_str = person_data.get("dateto")
-            if teacher_to_str:
+            if teacher_to_str := person_data.get("dateto"):
                 teacher_to = datetime.strptime(teacher_to_str, "%Y-%m-%d")
             else:
                 teacher_to = None
 
-            teacher = EduTeacher(person_id, name, gender, teacher_since, classroom_name, teacher_to)
-            return teacher
+            return EduTeacher(person_id, name, gender, teacher_since, classroom_name, teacher_to)
         else:
             return None
 
@@ -133,8 +129,7 @@ class People(Module):
         if teacher_data is None:
             return None
 
-        teacher = EduAccount.parse(teacher_data, teacher_id, self.edupage)
-        return teacher
+        return EduAccount.parse(teacher_data, teacher_id, self.edupage)
 
     @ModuleHelper.logged_in
     def get_student(self, student_id: int) -> Optional[EduStudent]:
@@ -142,7 +137,7 @@ class People(Module):
         if student_data is None:
             return None
 
-        student = EduAccount.parse(student_data, student_id, self.edupage)
+        return EduAccount.parse(student_data, student_id, self.edupage)
 
     @ModuleHelper.logged_in
     def get_teachers(self) -> Optional[list]:

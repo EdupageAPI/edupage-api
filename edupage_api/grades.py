@@ -38,8 +38,7 @@ class Grades(Module):
         response = self.edupage.session.get(request_url).content.decode()
 
         try:
-            data = self.__parse_grade_data(response)
-            return data
+            return self.__parse_grade_data(response)
         except json.JSONDecodeError:
             raise FailedToParseGradeDataError("Failed to parse JSON")
 
@@ -49,9 +48,6 @@ class Grades(Module):
 
         grades = grade_data.get("vsetkyZnamky")
         grade_details = grade_data.get("vsetkyUdalosti").get("edupage")
-
-        subjects = grade_data.get("predmety")
-        teachers = grade_data.get("ucitelia")
 
         output = []
         for grade in grades:

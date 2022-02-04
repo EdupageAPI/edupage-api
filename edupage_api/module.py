@@ -7,16 +7,19 @@ from typing import Union
 from edupage_api.exceptions import MissingDataException, NotAnOnlineLessonError, NotLoggedInException
 import urllib.parse
 
+
 class EdupageModule:
     subdomain: str
     session: requests.Session
     data: dict
     is_logged_in: bool
 
+
 class Module:
     def __init__(self, edupage: EdupageModule):
         self.edupage = edupage
-    
+
+
 class ModuleHelper:
     # Helper Functions
 
@@ -32,14 +35,14 @@ class ModuleHelper:
     def assert_none(*args):
         if None in args:
             raise MissingDataException()
-    
+
     @staticmethod
     def parse_enum(string: str, enum_type: Enum):
         filtered = list(filter(lambda x: x.value == string, list(enum_type)))
 
         if not filtered:
             return None
-        
+
         return filtered[0]
 
     @staticmethod
@@ -47,7 +50,7 @@ class ModuleHelper:
         for x in args:
             if x:
                 return x
-    
+
     @staticmethod
     def urlencode(string: str) -> str:
         return urllib.parse.quote(string)
@@ -65,7 +68,7 @@ class ModuleHelper:
                 output += entry
 
         return output
-    
+
     @staticmethod
     def strptime_or_none(date_string: str, format: str) -> Union[datetime, None]:
         try:
@@ -87,10 +90,10 @@ class ModuleHelper:
                 raise NotLoggedInException()
 
             method_output = method(self, *method_args, **method_kwargs)
-            
+
             return method_output
         return __impl
-    
+
     @staticmethod
     def online_lesson(method):
         @wraps(method)
@@ -100,5 +103,5 @@ class ModuleHelper:
             method_output = method(self, *method_args, **method_kwargs)
 
             return method_output
-        
+
         return __impl

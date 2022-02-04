@@ -71,6 +71,7 @@ class EventType(Enum):
     def parse(string: str) -> Optional[Gender]:
         return ModuleHelper.parse_enum(string, EventType)
 
+
 class TimelineEvent:
     def __init__(self, event_id: int, timestamp: datetime, text: str,
                  author: EduAccount, recipient: EduAccount, event_type: EventType,
@@ -82,6 +83,7 @@ class TimelineEvent:
         self.recipient = recipient
         self.event_type = event_type
         self.additional_data = additional_data
+
 
 class TimelineEvents(Module):
     @ModuleHelper.logged_in
@@ -113,7 +115,7 @@ class TimelineEvents(Module):
             # for message event type
             if text.startswith("Dôležitá správa"):
                 text = event_data.get("messageContent")
-            
+
             if text == "":
                 try:
                     text = event_data.get("nazov")
@@ -149,6 +151,7 @@ class TimelineEvents(Module):
             if additional_data and type(additional_data) == str:
                 additional_data = json.loads(additional_data)
 
-            event = TimelineEvent(event_id, event_timestamp, text, author, recipient, event_type, additional_data)
+            event = TimelineEvent(event_id, event_timestamp, text, author,
+                                  recipient, event_type, additional_data)
             output.append(event)
         return output

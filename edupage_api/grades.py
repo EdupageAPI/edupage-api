@@ -7,11 +7,12 @@ import json
 
 from edupage_api.people import EduTeacher
 
+
 class EduGrade:
-    def __init__(self, event_id: int, title: str, grade_n: int, 
-                    date: datetime, subject_id: int, subject_name: str, 
-                    teacher: EduTeacher, max_points: float, importance: float, 
-                    verbal: True, percent: float):
+    def __init__(self, event_id: int, title: str, grade_n: int,
+                 date: datetime, subject_id: int, subject_name: str,
+                 teacher: EduTeacher, max_points: float, importance: float,
+                 verbal: True, percent: float):
         self.event_id = event_id
         self.title = title
         self.grade_n = grade_n
@@ -24,11 +25,12 @@ class EduGrade:
         self.verbal = verbal
         self.percent = percent
 
+
 class Grades(Module):
     def __parse_grade_data(self, data: str) -> dict:
         json_string = data.split(".znamkyStudentViewer(")[1] \
                           .split(");\r\n\t\t});\r\n\t\t</script>")[0]
-        
+
         return json.loads(json_string)
 
     def __get_grade_data(self):
@@ -41,7 +43,7 @@ class Grades(Module):
             return data
         except json.JSONDecodeError:
             raise FailedToParseGradeDataError("Failed to parse JSON")
-        
+
     @ModuleHelper.logged_in
     def get_grades(self) -> list[EduGrade]:
         grade_data = self.__get_grade_data()
@@ -82,9 +84,9 @@ class Grades(Module):
             else:
                 teacher_id = int(teacher_id_str)
                 teacher_data = DbiHelper(self.edupage).fetch_teacher_data(teacher_id)
-                
+
                 teacher = EduTeacher.parse(teacher_data, teacher_id, self.edupage)
-            
+
             max_points = details.get("p_vaha_body")
             max_points = int(max_points) if max_points is not None else None
 
@@ -101,8 +103,8 @@ class Grades(Module):
             except:
                 verbal = True
 
-            grade = EduGrade(event_id, title, grade_n_int, date, subject_id, 
-                        subject_name, teacher, max_points, importance, verbal, percent)
+            grade = EduGrade(event_id, title, grade_n_int, date, subject_id,
+                             subject_name, teacher, max_points, importance, verbal, percent)
             output.append(grade)
-        
+
         return output

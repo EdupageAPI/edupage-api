@@ -1,6 +1,7 @@
 from edupage_api.module import Module
 from requests import Response
 
+
 class CustomRequest(Module):
     def custom_request(self, url: str, method: str, data: str = "", headers: dict = {}) -> Response:
         if method == "GET":

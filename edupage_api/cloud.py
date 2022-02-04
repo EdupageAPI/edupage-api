@@ -1,5 +1,6 @@
-from io import TextIOWrapper
 import json
+from io import TextIOWrapper
+
 from edupage_api.exceptions import FailedToUploadFileException
 from edupage_api.module import EdupageModule, Module, ModuleHelper
 

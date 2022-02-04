@@ -1,11 +1,14 @@
+import urllib.parse
 from datetime import datetime
 from enum import Enum
-
-import requests
 from functools import wraps
 from typing import Union
-from edupage_api.exceptions import MissingDataException, NotAnOnlineLessonError, NotLoggedInException
-import urllib.parse
+
+import requests
+
+from edupage_api.exceptions import (MissingDataException,
+                                    NotAnOnlineLessonError,
+                                    NotLoggedInException)
 
 
 class EdupageModule:

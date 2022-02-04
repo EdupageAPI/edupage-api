@@ -1,4 +1,5 @@
 from typing import Optional
+
 from edupage_api.module import Module, ModuleHelper
 
 

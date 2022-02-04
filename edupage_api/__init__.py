@@ -1,19 +1,21 @@
+import functools
 from datetime import datetime
 from io import TextIOWrapper
+from typing import Optional
+
+import requests
+from requests import Response
+
 from edupage_api.cloud import Cloud, EduCloudFile
 from edupage_api.custom_request import CustomRequest
 from edupage_api.grades import EduGrade, Grades
-from edupage_api.timeline import TimelineEvent, TimelineEvents
-from edupage_api.lunches import Lunch, Lunches
-from edupage_api.timetables import Timetable, Timetables
-from typing import Optional
-from edupage_api.messages import Messages
 from edupage_api.login import Login
-from edupage_api.people import EduAccount, EduStudent, EduTeacher, People
+from edupage_api.lunches import Lunch, Lunches
+from edupage_api.messages import Messages
 from edupage_api.module import EdupageModule
-from requests import Response
-import functools
-import requests
+from edupage_api.people import EduAccount, EduStudent, EduTeacher, People
+from edupage_api.timeline import TimelineEvent, TimelineEvents
+from edupage_api.timetables import Timetable, Timetables
 
 
 class Edupage(EdupageModule):

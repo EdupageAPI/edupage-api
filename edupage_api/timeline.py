@@ -1,10 +1,12 @@
-from datetime import datetime
-from edupage_api.dbi import DbiHelper
-from edupage_api.people import EduAccount, Gender
-from typing import Optional
-from edupage_api.module import Module, ModuleHelper
-from enum import Enum
 import json
+from datetime import datetime
+from enum import Enum
+from typing import Optional
+
+from edupage_api.dbi import DbiHelper
+from edupage_api.module import Module, ModuleHelper
+from edupage_api.people import EduAccount, Gender
+
 
 # data.dbi.event_types
 class EventType(Enum):

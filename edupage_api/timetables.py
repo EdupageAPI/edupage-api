@@ -1,11 +1,11 @@
-from datetime import datetime
-
 import json
-from edupage_api.people import EduTeacher, People
-from edupage_api.exceptions import MissingDataException
+from datetime import datetime
 from typing import List, Optional, Union
-from edupage_api.module import EdupageModule, ModuleHelper, Module
+
 from edupage_api.dbi import DbiHelper
+from edupage_api.exceptions import MissingDataException
+from edupage_api.module import EdupageModule, Module, ModuleHelper
+from edupage_api.people import EduTeacher, People
 
 
 class Lesson:

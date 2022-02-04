@@ -1,6 +1,7 @@
-from edupage_api.people import EduAccount
 from typing import Union
+
 from edupage_api.module import Module, ModuleHelper
+from edupage_api.people import EduAccount
 
 
 class Messages(Module):

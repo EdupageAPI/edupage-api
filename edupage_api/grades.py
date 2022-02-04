@@ -1,10 +1,9 @@
+import json
 from datetime import datetime
+
+from edupage_api.dbi import DbiHelper
 from edupage_api.exceptions import FailedToParseGradeDataError
 from edupage_api.module import Module, ModuleHelper
-from edupage_api.dbi import DbiHelper
-
-import json
-
 from edupage_api.people import EduTeacher
 
 

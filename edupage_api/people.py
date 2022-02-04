@@ -1,9 +1,11 @@
 from __future__ import annotations # for postponed evaluation of annotations
-from typing import Optional
-from edupage_api.module import EdupageModule, Module, ModuleHelper
-from edupage_api.dbi import DbiHelper
-from enum import Enum
+
 from datetime import datetime
+from enum import Enum
+from typing import Optional
+
+from edupage_api.dbi import DbiHelper
+from edupage_api.module import EdupageModule, Module, ModuleHelper
 
 
 class Gender(Enum):

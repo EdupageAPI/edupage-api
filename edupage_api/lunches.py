@@ -1,8 +1,11 @@
+import json
 from datetime import datetime
 from typing import List, Optional
-from edupage_api.exceptions import FailedToChangeLunchError, FailedToRateException, NotLoggedInException
-from edupage_api.module import EdupageModule, ModuleHelper, Module
-import json
+
+from edupage_api.exceptions import (FailedToChangeLunchError,
+                                    FailedToRateException,
+                                    NotLoggedInException)
+from edupage_api.module import EdupageModule, Module, ModuleHelper
 
 
 class Rating:

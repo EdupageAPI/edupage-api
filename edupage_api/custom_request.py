@@ -1,5 +1,6 @@
-from edupage_api.module import Module
 from requests import Response
+
+from edupage_api.module import Module
 
 
 class CustomRequest(Module):

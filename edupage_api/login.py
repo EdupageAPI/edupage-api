@@ -1,6 +1,7 @@
+import json
+
 from edupage_api.exceptions import BadCredentialsException
 from edupage_api.module import Module
-import json
 
 
 class Login(Module):

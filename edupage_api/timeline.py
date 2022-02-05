@@ -135,7 +135,7 @@ class TimelineEvents(Module):
             if recipient_name in ["*", "Celá škola"]:
                 recipient = "*"
             elif type(recipient_name) == str:
-                author = recipient_name
+                recipient = recipient_name
             else:
                 ModuleHelper.assert_none(recipient_data)
 

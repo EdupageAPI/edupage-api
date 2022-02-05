@@ -72,6 +72,11 @@ class EventType(Enum):
     EXAM_ASSIGNMENT = "testpridelenie"
     H_SETTINGS = "h_settings"
     HOMEWORK_EVALUATION = "homeworkstudentstav"
+    ASSIGNED_TEST = "testpridelenie"
+    H_BEE = "h_vcelicka"
+    H_CONTENST = "h_contest"
+    TEST_RESULT = "testvysledok"
+    HOMEWORK_STUDENT_STATE = "homeworkstudentstav"
 
     @staticmethod
     def parse(string: str) -> Optional[Gender]:

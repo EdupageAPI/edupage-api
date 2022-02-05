@@ -1,8 +1,7 @@
 from datetime import datetime
+
 from edupage_api import Edupage
 from edupage_api.timeline import EventType
-
-import json
 
 edupage = Edupage()
 edupage.login("Username (or e-mail)", "Password",

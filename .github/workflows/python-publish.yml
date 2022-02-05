@@ -6,6 +6,8 @@ name: Upload Python Package
 on:
   release:
     types: [created]
+  
+  workflow_dispatch:
 
 jobs:
   deploy:
@@ -24,11 +26,11 @@ jobs:
         pip install setuptools wheel twine build pdoc3
 
     - name: Regenerate documentation
-      run:
+      run: |
         pdoc3 --html edupage_api
         rm -rf docs
         mv html/edupage_api docs
-        
+
     - name: Commit and push documentation changes
     - uses: EndBug/add-and-commit@v8 # You can change this to use a specific version.
       with:

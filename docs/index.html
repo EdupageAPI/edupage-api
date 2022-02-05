@@ -265,7 +265,7 @@ class Edupage(EdupageModule):
 </details>
 </dd>
 <dt id="edupage_api.Edupage.get_grades"><code class="name flex">
-<span>def <span class="ident">get_grades</span></span>(<span>self) ‑> list</span>
+<span>def <span class="ident">get_grades</span></span>(<span>self) ‑> list[<a title="edupage_api.grades.EduGrade" href="grades.html#edupage_api.grades.EduGrade">EduGrade</a>]</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
@@ -291,7 +291,7 @@ class Edupage(EdupageModule):
 </details>
 </dd>
 <dt id="edupage_api.Edupage.get_notifications"><code class="name flex">
-<span>def <span class="ident">get_notifications</span></span>(<span>self) ‑> list</span>
+<span>def <span class="ident">get_notifications</span></span>(<span>self) ‑> list[<a title="edupage_api.timeline.TimelineEvent" href="timeline.html#edupage_api.timeline.TimelineEvent">TimelineEvent</a>]</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
@@ -304,7 +304,7 @@ class Edupage(EdupageModule):
 </details>
 </dd>
 <dt id="edupage_api.Edupage.get_students"><code class="name flex">
-<span>def <span class="ident">get_students</span></span>(<span>self) ‑> Optional[list]</span>
+<span>def <span class="ident">get_students</span></span>(<span>self) ‑> Optional[list[<a title="edupage_api.people.EduStudent" href="people.html#edupage_api.people.EduStudent">EduStudent</a>]]</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
@@ -317,7 +317,7 @@ class Edupage(EdupageModule):
 </details>
 </dd>
 <dt id="edupage_api.Edupage.get_teachers"><code class="name flex">
-<span>def <span class="ident">get_teachers</span></span>(<span>self) ‑> Optional[list]</span>
+<span>def <span class="ident">get_teachers</span></span>(<span>self) ‑> Optional[list[<a title="edupage_api.people.EduTeacher" href="people.html#edupage_api.people.EduTeacher">EduTeacher</a>]]</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
@@ -382,7 +382,7 @@ class Edupage(EdupageModule):
 </details>
 </dd>
 <dt id="edupage_api.Edupage.send_message"><code class="name flex">
-<span>def <span class="ident">send_message</span></span>(<span>self, recipients: Optional[list], body: str)</span>
+<span>def <span class="ident">send_message</span></span>(<span>self, recipients: Optional[list[<a title="edupage_api.people.EduAccount" href="people.html#edupage_api.people.EduAccount">EduAccount</a>]], body: str)</span>
 </code></dt>
 <dd>
 <div class="desc"></div>

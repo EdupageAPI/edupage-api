@@ -3,6 +3,7 @@
 This Python library allows easy access to EduPage. It's not a Selenium web scraper. It makes requests directly to EduPage's endpoints and parses the HTML document.
 
 # Installing
+__Warning__: Requires Python >= 3.9!
 
 You can install this library using [`pip`](https://pypi.org/project/pip/):
 

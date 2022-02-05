@@ -31,16 +31,7 @@ except LoginDataParsingException:
 ```
 
 # Documentation
-
-## Hosted
-
 The docs are available on [yesdaddyfuck.me/edupage-api](https://yesdaddyfuck.me/edupage-api/)
-
-## Host it yourself locally
-
-To display the documentation for this library, you can run: `python -m http.server --directory docs`.
-
-Then a local webpage will be served on http://127.0.0.1:8000.
 
 # I have a problem or an idea!
 

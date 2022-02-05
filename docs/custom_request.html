@@ -26,8 +26,10 @@
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">from edupage_api.module import Module
-from requests import Response
+<pre><code class="python">from requests import Response
+
+from edupage_api.module import Module
+
 
 class CustomRequest(Module):
     def custom_request(self, url: str, method: str, data: str = &#34;&#34;, headers: dict = {}) -&gt; Response:

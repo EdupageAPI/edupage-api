@@ -26,20 +26,20 @@
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">from datetime import datetime
+<pre><code class="python">import json
+from datetime import datetime
+
+from edupage_api.dbi import DbiHelper
 from edupage_api.exceptions import FailedToParseGradeDataError
 from edupage_api.module import Module, ModuleHelper
-from edupage_api.dbi import DbiHelper
-
-import json
-
 from edupage_api.people import EduTeacher
 
+
 class EduGrade:
-    def __init__(self, event_id: int, title: str, grade_n: int, 
-                    date: datetime, subject_id: int, subject_name: str, 
-                    teacher: EduTeacher, max_points: float, importance: float, 
-                    verbal: True, percent: float):
+    def __init__(self, event_id: int, title: str, grade_n: int,
+                 date: datetime, subject_id: int, subject_name: str,
+                 teacher: EduTeacher, max_points: float, importance: float,
+                 verbal: True, percent: float):
         self.event_id = event_id
         self.title = title
         self.grade_n = grade_n
@@ -52,11 +52,12 @@ class EduGrade:
         self.verbal = verbal
         self.percent = percent
 
+
 class Grades(Module):
     def __parse_grade_data(self, data: str) -&gt; dict:
         json_string = data.split(&#34;.znamkyStudentViewer(&#34;)[1] \
                           .split(&#34;);\r\n\t\t});\r\n\t\t&lt;/script&gt;&#34;)[0]
-        
+
         return json.loads(json_string)
 
     def __get_grade_data(self):
@@ -65,20 +66,16 @@ class Grades(Module):
         response = self.edupage.session.get(request_url).content.decode()
 
         try:
-            data = self.__parse_grade_data(response)
-            return data
+            return self.__parse_grade_data(response)
         except json.JSONDecodeError:
             raise FailedToParseGradeDataError(&#34;Failed to parse JSON&#34;)
-        
+
     @ModuleHelper.logged_in
     def get_grades(self) -&gt; list[EduGrade]:
         grade_data = self.__get_grade_data()
 
         grades = grade_data.get(&#34;vsetkyZnamky&#34;)
         grade_details = grade_data.get(&#34;vsetkyUdalosti&#34;).get(&#34;edupage&#34;)
-
-        subjects = grade_data.get(&#34;predmety&#34;)
-        teachers = grade_data.get(&#34;ucitelia&#34;)
 
         output = []
         for grade in grades:
@@ -110,9 +107,9 @@ class Grades(Module):
             else:
                 teacher_id = int(teacher_id_str)
                 teacher_data = DbiHelper(self.edupage).fetch_teacher_data(teacher_id)
-                
+
                 teacher = EduTeacher.parse(teacher_data, teacher_id, self.edupage)
-            
+
             max_points = details.get(&#34;p_vaha_body&#34;)
             max_points = int(max_points) if max_points is not None else None
 
@@ -129,10 +126,10 @@ class Grades(Module):
             except:
                 verbal = True
 
-            grade = EduGrade(event_id, title, grade_n_int, date, subject_id, 
-                        subject_name, teacher, max_points, importance, verbal, percent)
+            grade = EduGrade(event_id, title, grade_n_int, date, subject_id,
+                             subject_name, teacher, max_points, importance, verbal, percent)
             output.append(grade)
-        
+
         return output</code></pre>
 </details>
 </section>
@@ -156,10 +153,10 @@ class Grades(Module):
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">class EduGrade:
-    def __init__(self, event_id: int, title: str, grade_n: int, 
-                    date: datetime, subject_id: int, subject_name: str, 
-                    teacher: EduTeacher, max_points: float, importance: float, 
-                    verbal: True, percent: float):
+    def __init__(self, event_id: int, title: str, grade_n: int,
+                 date: datetime, subject_id: int, subject_name: str,
+                 teacher: EduTeacher, max_points: float, importance: float,
+                 verbal: True, percent: float):
         self.event_id = event_id
         self.title = title
         self.grade_n = grade_n
@@ -187,7 +184,7 @@ class Grades(Module):
     def __parse_grade_data(self, data: str) -&gt; dict:
         json_string = data.split(&#34;.znamkyStudentViewer(&#34;)[1] \
                           .split(&#34;);\r\n\t\t});\r\n\t\t&lt;/script&gt;&#34;)[0]
-        
+
         return json.loads(json_string)
 
     def __get_grade_data(self):
@@ -196,20 +193,16 @@ class Grades(Module):
         response = self.edupage.session.get(request_url).content.decode()
 
         try:
-            data = self.__parse_grade_data(response)
-            return data
+            return self.__parse_grade_data(response)
         except json.JSONDecodeError:
             raise FailedToParseGradeDataError(&#34;Failed to parse JSON&#34;)
-        
+
     @ModuleHelper.logged_in
     def get_grades(self) -&gt; list[EduGrade]:
         grade_data = self.__get_grade_data()
 
         grades = grade_data.get(&#34;vsetkyZnamky&#34;)
         grade_details = grade_data.get(&#34;vsetkyUdalosti&#34;).get(&#34;edupage&#34;)
-
-        subjects = grade_data.get(&#34;predmety&#34;)
-        teachers = grade_data.get(&#34;ucitelia&#34;)
 
         output = []
         for grade in grades:
@@ -241,9 +234,9 @@ class Grades(Module):
             else:
                 teacher_id = int(teacher_id_str)
                 teacher_data = DbiHelper(self.edupage).fetch_teacher_data(teacher_id)
-                
+
                 teacher = EduTeacher.parse(teacher_data, teacher_id, self.edupage)
-            
+
             max_points = details.get(&#34;p_vaha_body&#34;)
             max_points = int(max_points) if max_points is not None else None
 
@@ -260,10 +253,10 @@ class Grades(Module):
             except:
                 verbal = True
 
-            grade = EduGrade(event_id, title, grade_n_int, date, subject_id, 
-                        subject_name, teacher, max_points, importance, verbal, percent)
+            grade = EduGrade(event_id, title, grade_n_int, date, subject_id,
+                             subject_name, teacher, max_points, importance, verbal, percent)
             output.append(grade)
-        
+
         return output</code></pre>
 </details>
 <h3>Ancestors</h3>
@@ -273,7 +266,7 @@ class Grades(Module):
 <h3>Methods</h3>
 <dl>
 <dt id="edupage_api.grades.Grades.get_grades"><code class="name flex">
-<span>def <span class="ident">get_grades</span></span>(<span>self) ‑> list[<a title="edupage_api.grades.EduGrade" href="#edupage_api.grades.EduGrade">EduGrade</a>]</span>
+<span>def <span class="ident">get_grades</span></span>(<span>self) ‑> list</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
@@ -287,9 +280,6 @@ def get_grades(self) -&gt; list[EduGrade]:
 
     grades = grade_data.get(&#34;vsetkyZnamky&#34;)
     grade_details = grade_data.get(&#34;vsetkyUdalosti&#34;).get(&#34;edupage&#34;)
-
-    subjects = grade_data.get(&#34;predmety&#34;)
-    teachers = grade_data.get(&#34;ucitelia&#34;)
 
     output = []
     for grade in grades:
@@ -321,9 +311,9 @@ def get_grades(self) -&gt; list[EduGrade]:
         else:
             teacher_id = int(teacher_id_str)
             teacher_data = DbiHelper(self.edupage).fetch_teacher_data(teacher_id)
-            
+
             teacher = EduTeacher.parse(teacher_data, teacher_id, self.edupage)
-        
+
         max_points = details.get(&#34;p_vaha_body&#34;)
         max_points = int(max_points) if max_points is not None else None
 
@@ -340,10 +330,10 @@ def get_grades(self) -&gt; list[EduGrade]:
         except:
             verbal = True
 
-        grade = EduGrade(event_id, title, grade_n_int, date, subject_id, 
-                    subject_name, teacher, max_points, importance, verbal, percent)
+        grade = EduGrade(event_id, title, grade_n_int, date, subject_id,
+                         subject_name, teacher, max_points, importance, verbal, percent)
         output.append(grade)
-    
+
     return output</code></pre>
 </details>
 </dd>

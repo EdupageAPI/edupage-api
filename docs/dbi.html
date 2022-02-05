@@ -27,24 +27,26 @@
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">from typing import Optional
+
 from edupage_api.module import Module, ModuleHelper
+
 
 class DbiHelper(Module):
     def __get_dbi(self) -&gt; dict:
         return self.edupage.data.get(&#34;dbi&#34;)
-        
+
     def __get_item_group(self, item_group_name: str) -&gt; Optional[dict]:
         dbi = self.__get_dbi()
         if dbi is None:
             return None
-        
+
         return dbi.get(item_group_name)
 
     def __get_item_with_id(self, item_group_name: str, item_id: int) -&gt; Optional[dict]:
         items_in_group = self.__get_item_group(item_group_name)
         if items_in_group is None:
             return None
-        
+
         return items_in_group.get(str(item_id))
 
     def __get_full_name(self, person_item: dict) -&gt; str:
@@ -57,12 +59,12 @@ class DbiHelper(Module):
         subject_item = self.__get_item_with_id(&#34;subjects&#34;, subject_id)
         if subject_item is not None:
             return subject_item.get(&#34;short&#34;)
-    
+
     def fetch_classroom_number(self, classroom_id: int) -&gt; Optional[str]:
         classroom_item = self.__get_item_with_id(&#34;classrooms&#34;, classroom_id)
         if classroom_item is not None:
             return classroom_item.get(&#34;short&#34;)
-    
+
     def fetch_class_name(self, class_id: int) -&gt; Optional[str]:
         class_item = self.__get_item_with_id(&#34;classes&#34;, class_id)
         if class_item is not None:
@@ -72,21 +74,21 @@ class DbiHelper(Module):
         teacher_item = self.__get_item_with_id(&#34;teachers&#34;, teacher_id)
         if teacher_item is not None:
             return self.__get_full_name(teacher_item)
-    
+
     def fetch_student_name(self, student_id: int) -&gt; Optional[str]:
         student_item = self.__get_item_with_id(&#34;students&#34;, student_id)
         if student_item is not None:
             return self.__get_full_name(student_item)
-        
+
     def fetch_student_list(self) -&gt; Optional[list]:
         return self.__get_item_group(&#34;students&#34;)
-    
+
     def fetch_teacher_list(self) -&gt; Optional[list]:
         return self.__get_item_group(&#34;teachers&#34;)
-    
+
     def fetch_teacher_data(self, teacher_id: int) -&gt; Optional[dict]:
         return self.__get_item_with_id(&#34;teachers&#34;, teacher_id)
-    
+
     def fetch_student_data(self, student_id: int) -&gt; Optional[dict]:
         return self.__get_item_with_id(&#34;students&#34;, student_id)
 
@@ -97,8 +99,8 @@ class DbiHelper(Module):
             student_data = item_group.get(student_id)
             if self.__get_full_name(student_data) in student_name:
                 student_data[&#34;id&#34;] = student_id
-                return student_data       
-        
+                return student_data
+
     def fetch_teacher_data_by_name(self, teacher_name: str) -&gt; Optional[dict]:
         item_group = self.__get_item_group(&#34;teachers&#34;)
 
@@ -107,7 +109,7 @@ class DbiHelper(Module):
             if self.__get_full_name(teacher_data) in teacher_name:
                 teacher_data[&#34;id&#34;] = teacher_id
                 return teacher_data
-    
+
     def fetch_parent_data_by_name(self, parent_name: str) -&gt; Optional[dict]:
         item_group = self.__get_item_group(&#34;parents&#34;)
 
@@ -147,19 +149,19 @@ class DbiHelper(Module):
 <pre><code class="python">class DbiHelper(Module):
     def __get_dbi(self) -&gt; dict:
         return self.edupage.data.get(&#34;dbi&#34;)
-        
+
     def __get_item_group(self, item_group_name: str) -&gt; Optional[dict]:
         dbi = self.__get_dbi()
         if dbi is None:
             return None
-        
+
         return dbi.get(item_group_name)
 
     def __get_item_with_id(self, item_group_name: str, item_id: int) -&gt; Optional[dict]:
         items_in_group = self.__get_item_group(item_group_name)
         if items_in_group is None:
             return None
-        
+
         return items_in_group.get(str(item_id))
 
     def __get_full_name(self, person_item: dict) -&gt; str:
@@ -172,12 +174,12 @@ class DbiHelper(Module):
         subject_item = self.__get_item_with_id(&#34;subjects&#34;, subject_id)
         if subject_item is not None:
             return subject_item.get(&#34;short&#34;)
-    
+
     def fetch_classroom_number(self, classroom_id: int) -&gt; Optional[str]:
         classroom_item = self.__get_item_with_id(&#34;classrooms&#34;, classroom_id)
         if classroom_item is not None:
             return classroom_item.get(&#34;short&#34;)
-    
+
     def fetch_class_name(self, class_id: int) -&gt; Optional[str]:
         class_item = self.__get_item_with_id(&#34;classes&#34;, class_id)
         if class_item is not None:
@@ -187,21 +189,21 @@ class DbiHelper(Module):
         teacher_item = self.__get_item_with_id(&#34;teachers&#34;, teacher_id)
         if teacher_item is not None:
             return self.__get_full_name(teacher_item)
-    
+
     def fetch_student_name(self, student_id: int) -&gt; Optional[str]:
         student_item = self.__get_item_with_id(&#34;students&#34;, student_id)
         if student_item is not None:
             return self.__get_full_name(student_item)
-        
+
     def fetch_student_list(self) -&gt; Optional[list]:
         return self.__get_item_group(&#34;students&#34;)
-    
+
     def fetch_teacher_list(self) -&gt; Optional[list]:
         return self.__get_item_group(&#34;teachers&#34;)
-    
+
     def fetch_teacher_data(self, teacher_id: int) -&gt; Optional[dict]:
         return self.__get_item_with_id(&#34;teachers&#34;, teacher_id)
-    
+
     def fetch_student_data(self, student_id: int) -&gt; Optional[dict]:
         return self.__get_item_with_id(&#34;students&#34;, student_id)
 
@@ -212,8 +214,8 @@ class DbiHelper(Module):
             student_data = item_group.get(student_id)
             if self.__get_full_name(student_data) in student_name:
                 student_data[&#34;id&#34;] = student_id
-                return student_data       
-        
+                return student_data
+
     def fetch_teacher_data_by_name(self, teacher_name: str) -&gt; Optional[dict]:
         item_group = self.__get_item_group(&#34;teachers&#34;)
 
@@ -222,7 +224,7 @@ class DbiHelper(Module):
             if self.__get_full_name(teacher_data) in teacher_name:
                 teacher_data[&#34;id&#34;] = teacher_id
                 return teacher_data
-    
+
     def fetch_parent_data_by_name(self, parent_name: str) -&gt; Optional[dict]:
         item_group = self.__get_item_group(&#34;parents&#34;)
 
@@ -340,7 +342,7 @@ class DbiHelper(Module):
         student_data = item_group.get(student_id)
         if self.__get_full_name(student_data) in student_name:
             student_data[&#34;id&#34;] = student_id
-            return student_data       </code></pre>
+            return student_data</code></pre>
 </details>
 </dd>
 <dt id="edupage_api.dbi.DbiHelper.fetch_student_list"><code class="name flex">

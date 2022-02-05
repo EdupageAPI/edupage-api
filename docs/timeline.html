@@ -26,13 +26,15 @@
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">from datetime import datetime
-from edupage_api.dbi import DbiHelper
-from edupage_api.people import EduAccount, Gender
-from typing import Optional
-from edupage_api.module import Module, ModuleHelper
+<pre><code class="python">import json
+from datetime import datetime
 from enum import Enum
-import json
+from typing import Optional
+
+from edupage_api.dbi import DbiHelper
+from edupage_api.module import Module, ModuleHelper
+from edupage_api.people import EduAccount, Gender
+
 
 # data.dbi.event_types
 class EventType(Enum):
@@ -66,10 +68,43 @@ class EventType(Enum):
     CLASS_BOOK = &#34;other_cb&#34;
     REPRESENTATION = &#34;representation&#34;
     NEW_MENU = &#34;h_stravamenu&#34;
+    HOMEWORK_TEST = &#34;etesthw&#34;
+    PROJECT_EXAM = &#34;pexam&#34;
+    EVENT = &#34;event&#34;
+    H_SUBSTITUTION = &#34;h_substitution&#34;
+    H_CLEARCACHE = &#34;h_clearcache&#34;
+    H_FINANCES = &#34;h_financie&#34;
+    H_CLEARPLANS = &#34;h_clearplany&#34;
+    H_HOMEWORK = &#34;h_homework&#34;
+    H_DAILYPLAN = &#34;h_dailyplan&#34;
+    ARRIVAL_TO_SCHOOL = &#34;pipnutie&#34;
+    FOOD_SERVED = &#34;strava_vydaj&#34;
+    GRADE = &#34;znamka&#34;
+    MESSAGE = &#34;sprava&#34;
+    NEWS = &#34;news&#34;
+    TIMETABLE = &#34;timetable&#34;
+    HOMEWORK = &#34;homework&#34;
+    H_PROCESSTYPES = &#34;h_processtypes&#34;
+    CONFIRMATION = &#34;confirmation&#34;
+    H_TIMETABLE = &#34;h_timetable&#34;
+    STUDENT_ABSENT = &#34;student_absent&#34;
+    H_GRADES = &#34;h_znamky&#34;
+    GRADES_DOC = &#34;znamkydoc&#34;
+    H_CLEARDBI = &#34;h_cleardbi&#34;
+    H_CLEARISICDATA = &#34;h_clearisicdata&#34;
+    H_EDUSETTINGS = &#34;h_edusettings&#34;
+    SUBSTITUTION = &#34;substitution&#34;
+    H_ATTENDANCE = &#34;h_attendance&#34;
+    EXCUSED_LESSON = &#34;ospravedlnenka&#34;
+    EXAM_EVALUATION = &#34;testvysledok&#34;
+    EXAM_ASSIGNMENT = &#34;testpridelenie&#34;
+    H_SETTINGS = &#34;h_settings&#34;
+    HOMEWORK_EVALUATION = &#34;homeworkstudentstav&#34;
 
     @staticmethod
     def parse(string: str) -&gt; Optional[Gender]:
         return ModuleHelper.parse_enum(string, EventType)
+
 
 class TimelineEvent:
     def __init__(self, event_id: int, timestamp: datetime, text: str,
@@ -82,6 +117,7 @@ class TimelineEvent:
         self.recipient = recipient
         self.event_type = event_type
         self.additional_data = additional_data
+
 
 class TimelineEvents(Module):
     @ModuleHelper.logged_in
@@ -103,6 +139,9 @@ class TimelineEvents(Module):
                 continue
             event_type = EventType.parse(event_type_str)
 
+            if event_type is None:
+                print(event_type_str)
+
             event_timestamp = datetime.strptime(event.get(&#34;timestamp&#34;), &#34;%Y-%m-%d %H:%M:%S&#34;)
             text = event.get(&#34;text&#34;)
 
@@ -110,7 +149,7 @@ class TimelineEvents(Module):
             # for message event type
             if text.startswith(&#34;Dôležitá správa&#34;):
                 text = event_data.get(&#34;messageContent&#34;)
-            
+
             if text == &#34;&#34;:
                 try:
                     text = event_data.get(&#34;nazov&#34;)
@@ -120,10 +159,11 @@ class TimelineEvents(Module):
             # todo: add support for &#34;*&#34;
             recipient_name = event.get(&#34;user_meno&#34;)
             recipient_data = DbiHelper(self.edupage).fetch_person_data_by_name(recipient_name)
-            print(recipient_name)
 
-            if recipient_name == &#34;*&#34; or recipient_name == &#34;Celá škola&#34;:
+            if recipient_name in [&#34;*&#34;, &#34;Celá škola&#34;]:
                 recipient = &#34;*&#34;
+            elif type(recipient_name) == str:
+                recipient = recipient_name
             else:
                 ModuleHelper.assert_none(recipient_data)
 
@@ -133,16 +173,20 @@ class TimelineEvents(Module):
             author_name = event.get(&#34;vlastnik_meno&#34;)
             author_data = DbiHelper(self.edupage).fetch_person_data_by_name(author_name)
 
-            print(author_name)
             if author_name == &#34;*&#34;:
                 author = &#34;*&#34;
+            elif type(author_name) == str:
+                author = author_name
             else:
                 ModuleHelper.assert_none(author_data)
                 author = EduAccount.parse(author_data, author_data.get(&#34;id&#34;), self.edupage)
 
             additional_data = event.get(&#34;data&#34;)
+            if additional_data and type(additional_data) == str:
+                additional_data = json.loads(additional_data)
 
-            event = TimelineEvent(event_id, event_timestamp, text, author, recipient, event_type, additional_data)
+            event = TimelineEvent(event_id, event_timestamp, text, author,
+                                  recipient, event_type, additional_data)
             output.append(event)
         return output</code></pre>
 </details>
@@ -197,6 +241,38 @@ class TimelineEvents(Module):
     CLASS_BOOK = &#34;other_cb&#34;
     REPRESENTATION = &#34;representation&#34;
     NEW_MENU = &#34;h_stravamenu&#34;
+    HOMEWORK_TEST = &#34;etesthw&#34;
+    PROJECT_EXAM = &#34;pexam&#34;
+    EVENT = &#34;event&#34;
+    H_SUBSTITUTION = &#34;h_substitution&#34;
+    H_CLEARCACHE = &#34;h_clearcache&#34;
+    H_FINANCES = &#34;h_financie&#34;
+    H_CLEARPLANS = &#34;h_clearplany&#34;
+    H_HOMEWORK = &#34;h_homework&#34;
+    H_DAILYPLAN = &#34;h_dailyplan&#34;
+    ARRIVAL_TO_SCHOOL = &#34;pipnutie&#34;
+    FOOD_SERVED = &#34;strava_vydaj&#34;
+    GRADE = &#34;znamka&#34;
+    MESSAGE = &#34;sprava&#34;
+    NEWS = &#34;news&#34;
+    TIMETABLE = &#34;timetable&#34;
+    HOMEWORK = &#34;homework&#34;
+    H_PROCESSTYPES = &#34;h_processtypes&#34;
+    CONFIRMATION = &#34;confirmation&#34;
+    H_TIMETABLE = &#34;h_timetable&#34;
+    STUDENT_ABSENT = &#34;student_absent&#34;
+    H_GRADES = &#34;h_znamky&#34;
+    GRADES_DOC = &#34;znamkydoc&#34;
+    H_CLEARDBI = &#34;h_cleardbi&#34;
+    H_CLEARISICDATA = &#34;h_clearisicdata&#34;
+    H_EDUSETTINGS = &#34;h_edusettings&#34;
+    SUBSTITUTION = &#34;substitution&#34;
+    H_ATTENDANCE = &#34;h_attendance&#34;
+    EXCUSED_LESSON = &#34;ospravedlnenka&#34;
+    EXAM_EVALUATION = &#34;testvysledok&#34;
+    EXAM_ASSIGNMENT = &#34;testpridelenie&#34;
+    H_SETTINGS = &#34;h_settings&#34;
+    HOMEWORK_EVALUATION = &#34;homeworkstudentstav&#34;
 
     @staticmethod
     def parse(string: str) -&gt; Optional[Gender]:
@@ -208,6 +284,10 @@ class TimelineEvents(Module):
 </ul>
 <h3>Class variables</h3>
 <dl>
+<dt id="edupage_api.timeline.EventType.ARRIVAL_TO_SCHOOL"><code class="name">var <span class="ident">ARRIVAL_TO_SCHOOL</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
 <dt id="edupage_api.timeline.EventType.BIG_EXAM"><code class="name">var <span class="ident">BIG_EXAM</span></code></dt>
 <dd>
 <div class="desc"></div>
@@ -236,6 +316,10 @@ class TimelineEvents(Module):
 <dd>
 <div class="desc"></div>
 </dd>
+<dt id="edupage_api.timeline.EventType.CONFIRMATION"><code class="name">var <span class="ident">CONFIRMATION</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
 <dt id="edupage_api.timeline.EventType.CULTURE"><code class="name">var <span class="ident">CULTURE</span></code></dt>
 <dd>
 <div class="desc"></div>
@@ -244,7 +328,27 @@ class TimelineEvents(Module):
 <dd>
 <div class="desc"></div>
 </dd>
+<dt id="edupage_api.timeline.EventType.EVENT"><code class="name">var <span class="ident">EVENT</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.timeline.EventType.EXAM_ASSIGNMENT"><code class="name">var <span class="ident">EXAM_ASSIGNMENT</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.timeline.EventType.EXAM_EVALUATION"><code class="name">var <span class="ident">EXAM_EVALUATION</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
 <dt id="edupage_api.timeline.EventType.EXCURSION"><code class="name">var <span class="ident">EXCURSION</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.timeline.EventType.EXCUSED_LESSON"><code class="name">var <span class="ident">EXCUSED_LESSON</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.timeline.EventType.FOOD_SERVED"><code class="name">var <span class="ident">FOOD_SERVED</span></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
@@ -252,11 +356,95 @@ class TimelineEvents(Module):
 <dd>
 <div class="desc"></div>
 </dd>
+<dt id="edupage_api.timeline.EventType.GRADE"><code class="name">var <span class="ident">GRADE</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.timeline.EventType.GRADES_DOC"><code class="name">var <span class="ident">GRADES_DOC</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
 <dt id="edupage_api.timeline.EventType.HOLIDAY"><code class="name">var <span class="ident">HOLIDAY</span></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
+<dt id="edupage_api.timeline.EventType.HOMEWORK"><code class="name">var <span class="ident">HOMEWORK</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.timeline.EventType.HOMEWORK_EVALUATION"><code class="name">var <span class="ident">HOMEWORK_EVALUATION</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.timeline.EventType.HOMEWORK_TEST"><code class="name">var <span class="ident">HOMEWORK_TEST</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.timeline.EventType.H_ATTENDANCE"><code class="name">var <span class="ident">H_ATTENDANCE</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.timeline.EventType.H_CLEARCACHE"><code class="name">var <span class="ident">H_CLEARCACHE</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.timeline.EventType.H_CLEARDBI"><code class="name">var <span class="ident">H_CLEARDBI</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.timeline.EventType.H_CLEARISICDATA"><code class="name">var <span class="ident">H_CLEARISICDATA</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.timeline.EventType.H_CLEARPLANS"><code class="name">var <span class="ident">H_CLEARPLANS</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.timeline.EventType.H_DAILYPLAN"><code class="name">var <span class="ident">H_DAILYPLAN</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.timeline.EventType.H_EDUSETTINGS"><code class="name">var <span class="ident">H_EDUSETTINGS</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.timeline.EventType.H_FINANCES"><code class="name">var <span class="ident">H_FINANCES</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.timeline.EventType.H_GRADES"><code class="name">var <span class="ident">H_GRADES</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.timeline.EventType.H_HOMEWORK"><code class="name">var <span class="ident">H_HOMEWORK</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.timeline.EventType.H_PROCESSTYPES"><code class="name">var <span class="ident">H_PROCESSTYPES</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.timeline.EventType.H_SETTINGS"><code class="name">var <span class="ident">H_SETTINGS</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.timeline.EventType.H_SUBSTITUTION"><code class="name">var <span class="ident">H_SUBSTITUTION</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.timeline.EventType.H_TIMETABLE"><code class="name">var <span class="ident">H_TIMETABLE</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
 <dt id="edupage_api.timeline.EventType.LESSON"><code class="name">var <span class="ident">LESSON</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.timeline.EventType.MESSAGE"><code class="name">var <span class="ident">MESSAGE</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.timeline.EventType.NEWS"><code class="name">var <span class="ident">NEWS</span></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
@@ -281,6 +469,10 @@ class TimelineEvents(Module):
 <div class="desc"></div>
 </dd>
 <dt id="edupage_api.timeline.EventType.PROJECT"><code class="name">var <span class="ident">PROJECT</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.timeline.EventType.PROJECT_EXAM"><code class="name">var <span class="ident">PROJECT_EXAM</span></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
@@ -312,11 +504,23 @@ class TimelineEvents(Module):
 <dd>
 <div class="desc"></div>
 </dd>
+<dt id="edupage_api.timeline.EventType.STUDENT_ABSENT"><code class="name">var <span class="ident">STUDENT_ABSENT</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.timeline.EventType.SUBSTITUTION"><code class="name">var <span class="ident">SUBSTITUTION</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
 <dt id="edupage_api.timeline.EventType.TEACHER_MEETING"><code class="name">var <span class="ident">TEACHER_MEETING</span></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
 <dt id="edupage_api.timeline.EventType.TESTING"><code class="name">var <span class="ident">TESTING</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.timeline.EventType.TIMETABLE"><code class="name">var <span class="ident">TIMETABLE</span></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
@@ -400,6 +604,9 @@ def parse(string: str) -&gt; Optional[Gender]:
                 continue
             event_type = EventType.parse(event_type_str)
 
+            if event_type is None:
+                print(event_type_str)
+
             event_timestamp = datetime.strptime(event.get(&#34;timestamp&#34;), &#34;%Y-%m-%d %H:%M:%S&#34;)
             text = event.get(&#34;text&#34;)
 
@@ -407,7 +614,7 @@ def parse(string: str) -&gt; Optional[Gender]:
             # for message event type
             if text.startswith(&#34;Dôležitá správa&#34;):
                 text = event_data.get(&#34;messageContent&#34;)
-            
+
             if text == &#34;&#34;:
                 try:
                     text = event_data.get(&#34;nazov&#34;)
@@ -417,10 +624,11 @@ def parse(string: str) -&gt; Optional[Gender]:
             # todo: add support for &#34;*&#34;
             recipient_name = event.get(&#34;user_meno&#34;)
             recipient_data = DbiHelper(self.edupage).fetch_person_data_by_name(recipient_name)
-            print(recipient_name)
 
-            if recipient_name == &#34;*&#34; or recipient_name == &#34;Celá škola&#34;:
+            if recipient_name in [&#34;*&#34;, &#34;Celá škola&#34;]:
                 recipient = &#34;*&#34;
+            elif type(recipient_name) == str:
+                recipient = recipient_name
             else:
                 ModuleHelper.assert_none(recipient_data)
 
@@ -430,16 +638,20 @@ def parse(string: str) -&gt; Optional[Gender]:
             author_name = event.get(&#34;vlastnik_meno&#34;)
             author_data = DbiHelper(self.edupage).fetch_person_data_by_name(author_name)
 
-            print(author_name)
             if author_name == &#34;*&#34;:
                 author = &#34;*&#34;
+            elif type(author_name) == str:
+                author = author_name
             else:
                 ModuleHelper.assert_none(author_data)
                 author = EduAccount.parse(author_data, author_data.get(&#34;id&#34;), self.edupage)
 
             additional_data = event.get(&#34;data&#34;)
+            if additional_data and type(additional_data) == str:
+                additional_data = json.loads(additional_data)
 
-            event = TimelineEvent(event_id, event_timestamp, text, author, recipient, event_type, additional_data)
+            event = TimelineEvent(event_id, event_timestamp, text, author,
+                                  recipient, event_type, additional_data)
             output.append(event)
         return output</code></pre>
 </details>
@@ -477,6 +689,9 @@ def get_notifications(self):
             continue
         event_type = EventType.parse(event_type_str)
 
+        if event_type is None:
+            print(event_type_str)
+
         event_timestamp = datetime.strptime(event.get(&#34;timestamp&#34;), &#34;%Y-%m-%d %H:%M:%S&#34;)
         text = event.get(&#34;text&#34;)
 
@@ -484,7 +699,7 @@ def get_notifications(self):
         # for message event type
         if text.startswith(&#34;Dôležitá správa&#34;):
             text = event_data.get(&#34;messageContent&#34;)
-        
+
         if text == &#34;&#34;:
             try:
                 text = event_data.get(&#34;nazov&#34;)
@@ -494,10 +709,11 @@ def get_notifications(self):
         # todo: add support for &#34;*&#34;
         recipient_name = event.get(&#34;user_meno&#34;)
         recipient_data = DbiHelper(self.edupage).fetch_person_data_by_name(recipient_name)
-        print(recipient_name)
 
-        if recipient_name == &#34;*&#34; or recipient_name == &#34;Celá škola&#34;:
+        if recipient_name in [&#34;*&#34;, &#34;Celá škola&#34;]:
             recipient = &#34;*&#34;
+        elif type(recipient_name) == str:
+            recipient = recipient_name
         else:
             ModuleHelper.assert_none(recipient_data)
 
@@ -507,16 +723,20 @@ def get_notifications(self):
         author_name = event.get(&#34;vlastnik_meno&#34;)
         author_data = DbiHelper(self.edupage).fetch_person_data_by_name(author_name)
 
-        print(author_name)
         if author_name == &#34;*&#34;:
             author = &#34;*&#34;
+        elif type(author_name) == str:
+            author = author_name
         else:
             ModuleHelper.assert_none(author_data)
             author = EduAccount.parse(author_data, author_data.get(&#34;id&#34;), self.edupage)
 
         additional_data = event.get(&#34;data&#34;)
+        if additional_data and type(additional_data) == str:
+            additional_data = json.loads(additional_data)
 
-        event = TimelineEvent(event_id, event_timestamp, text, author, recipient, event_type, additional_data)
+        event = TimelineEvent(event_id, event_timestamp, text, author,
+                              recipient, event_type, additional_data)
         output.append(event)
     return output</code></pre>
 </details>
@@ -542,6 +762,7 @@ def get_notifications(self):
 <li>
 <h4><code><a title="edupage_api.timeline.EventType" href="#edupage_api.timeline.EventType">EventType</a></code></h4>
 <ul class="">
+<li><code><a title="edupage_api.timeline.EventType.ARRIVAL_TO_SCHOOL" href="#edupage_api.timeline.EventType.ARRIVAL_TO_SCHOOL">ARRIVAL_TO_SCHOOL</a></code></li>
 <li><code><a title="edupage_api.timeline.EventType.BIG_EXAM" href="#edupage_api.timeline.EventType.BIG_EXAM">BIG_EXAM</a></code></li>
 <li><code><a title="edupage_api.timeline.EventType.BOOKED_ROOM" href="#edupage_api.timeline.EventType.BOOKED_ROOM">BOOKED_ROOM</a></code></li>
 <li><code><a title="edupage_api.timeline.EventType.CHANGE_ROOM" href="#edupage_api.timeline.EventType.CHANGE_ROOM">CHANGE_ROOM</a></code></li>
@@ -549,18 +770,46 @@ def get_notifications(self):
 <li><code><a title="edupage_api.timeline.EventType.CLASS_BOOK" href="#edupage_api.timeline.EventType.CLASS_BOOK">CLASS_BOOK</a></code></li>
 <li><code><a title="edupage_api.timeline.EventType.CLASS_TEACHER_EVENT" href="#edupage_api.timeline.EventType.CLASS_TEACHER_EVENT">CLASS_TEACHER_EVENT</a></code></li>
 <li><code><a title="edupage_api.timeline.EventType.CLASS_TEACHER_LESSON" href="#edupage_api.timeline.EventType.CLASS_TEACHER_LESSON">CLASS_TEACHER_LESSON</a></code></li>
+<li><code><a title="edupage_api.timeline.EventType.CONFIRMATION" href="#edupage_api.timeline.EventType.CONFIRMATION">CONFIRMATION</a></code></li>
 <li><code><a title="edupage_api.timeline.EventType.CULTURE" href="#edupage_api.timeline.EventType.CULTURE">CULTURE</a></code></li>
 <li><code><a title="edupage_api.timeline.EventType.DISTANT_LEARNING" href="#edupage_api.timeline.EventType.DISTANT_LEARNING">DISTANT_LEARNING</a></code></li>
+<li><code><a title="edupage_api.timeline.EventType.EVENT" href="#edupage_api.timeline.EventType.EVENT">EVENT</a></code></li>
+<li><code><a title="edupage_api.timeline.EventType.EXAM_ASSIGNMENT" href="#edupage_api.timeline.EventType.EXAM_ASSIGNMENT">EXAM_ASSIGNMENT</a></code></li>
+<li><code><a title="edupage_api.timeline.EventType.EXAM_EVALUATION" href="#edupage_api.timeline.EventType.EXAM_EVALUATION">EXAM_EVALUATION</a></code></li>
 <li><code><a title="edupage_api.timeline.EventType.EXCURSION" href="#edupage_api.timeline.EventType.EXCURSION">EXCURSION</a></code></li>
+<li><code><a title="edupage_api.timeline.EventType.EXCUSED_LESSON" href="#edupage_api.timeline.EventType.EXCUSED_LESSON">EXCUSED_LESSON</a></code></li>
+<li><code><a title="edupage_api.timeline.EventType.FOOD_SERVED" href="#edupage_api.timeline.EventType.FOOD_SERVED">FOOD_SERVED</a></code></li>
 <li><code><a title="edupage_api.timeline.EventType.FREE_DAY" href="#edupage_api.timeline.EventType.FREE_DAY">FREE_DAY</a></code></li>
+<li><code><a title="edupage_api.timeline.EventType.GRADE" href="#edupage_api.timeline.EventType.GRADE">GRADE</a></code></li>
+<li><code><a title="edupage_api.timeline.EventType.GRADES_DOC" href="#edupage_api.timeline.EventType.GRADES_DOC">GRADES_DOC</a></code></li>
 <li><code><a title="edupage_api.timeline.EventType.HOLIDAY" href="#edupage_api.timeline.EventType.HOLIDAY">HOLIDAY</a></code></li>
+<li><code><a title="edupage_api.timeline.EventType.HOMEWORK" href="#edupage_api.timeline.EventType.HOMEWORK">HOMEWORK</a></code></li>
+<li><code><a title="edupage_api.timeline.EventType.HOMEWORK_EVALUATION" href="#edupage_api.timeline.EventType.HOMEWORK_EVALUATION">HOMEWORK_EVALUATION</a></code></li>
+<li><code><a title="edupage_api.timeline.EventType.HOMEWORK_TEST" href="#edupage_api.timeline.EventType.HOMEWORK_TEST">HOMEWORK_TEST</a></code></li>
+<li><code><a title="edupage_api.timeline.EventType.H_ATTENDANCE" href="#edupage_api.timeline.EventType.H_ATTENDANCE">H_ATTENDANCE</a></code></li>
+<li><code><a title="edupage_api.timeline.EventType.H_CLEARCACHE" href="#edupage_api.timeline.EventType.H_CLEARCACHE">H_CLEARCACHE</a></code></li>
+<li><code><a title="edupage_api.timeline.EventType.H_CLEARDBI" href="#edupage_api.timeline.EventType.H_CLEARDBI">H_CLEARDBI</a></code></li>
+<li><code><a title="edupage_api.timeline.EventType.H_CLEARISICDATA" href="#edupage_api.timeline.EventType.H_CLEARISICDATA">H_CLEARISICDATA</a></code></li>
+<li><code><a title="edupage_api.timeline.EventType.H_CLEARPLANS" href="#edupage_api.timeline.EventType.H_CLEARPLANS">H_CLEARPLANS</a></code></li>
+<li><code><a title="edupage_api.timeline.EventType.H_DAILYPLAN" href="#edupage_api.timeline.EventType.H_DAILYPLAN">H_DAILYPLAN</a></code></li>
+<li><code><a title="edupage_api.timeline.EventType.H_EDUSETTINGS" href="#edupage_api.timeline.EventType.H_EDUSETTINGS">H_EDUSETTINGS</a></code></li>
+<li><code><a title="edupage_api.timeline.EventType.H_FINANCES" href="#edupage_api.timeline.EventType.H_FINANCES">H_FINANCES</a></code></li>
+<li><code><a title="edupage_api.timeline.EventType.H_GRADES" href="#edupage_api.timeline.EventType.H_GRADES">H_GRADES</a></code></li>
+<li><code><a title="edupage_api.timeline.EventType.H_HOMEWORK" href="#edupage_api.timeline.EventType.H_HOMEWORK">H_HOMEWORK</a></code></li>
+<li><code><a title="edupage_api.timeline.EventType.H_PROCESSTYPES" href="#edupage_api.timeline.EventType.H_PROCESSTYPES">H_PROCESSTYPES</a></code></li>
+<li><code><a title="edupage_api.timeline.EventType.H_SETTINGS" href="#edupage_api.timeline.EventType.H_SETTINGS">H_SETTINGS</a></code></li>
+<li><code><a title="edupage_api.timeline.EventType.H_SUBSTITUTION" href="#edupage_api.timeline.EventType.H_SUBSTITUTION">H_SUBSTITUTION</a></code></li>
+<li><code><a title="edupage_api.timeline.EventType.H_TIMETABLE" href="#edupage_api.timeline.EventType.H_TIMETABLE">H_TIMETABLE</a></code></li>
 <li><code><a title="edupage_api.timeline.EventType.LESSON" href="#edupage_api.timeline.EventType.LESSON">LESSON</a></code></li>
+<li><code><a title="edupage_api.timeline.EventType.MESSAGE" href="#edupage_api.timeline.EventType.MESSAGE">MESSAGE</a></code></li>
+<li><code><a title="edupage_api.timeline.EventType.NEWS" href="#edupage_api.timeline.EventType.NEWS">NEWS</a></code></li>
 <li><code><a title="edupage_api.timeline.EventType.NEW_MENU" href="#edupage_api.timeline.EventType.NEW_MENU">NEW_MENU</a></code></li>
 <li><code><a title="edupage_api.timeline.EventType.ORAL_EXAM" href="#edupage_api.timeline.EventType.ORAL_EXAM">ORAL_EXAM</a></code></li>
 <li><code><a title="edupage_api.timeline.EventType.OTHER" href="#edupage_api.timeline.EventType.OTHER">OTHER</a></code></li>
 <li><code><a title="edupage_api.timeline.EventType.PAPER" href="#edupage_api.timeline.EventType.PAPER">PAPER</a></code></li>
 <li><code><a title="edupage_api.timeline.EventType.PARENTS_EVENING" href="#edupage_api.timeline.EventType.PARENTS_EVENING">PARENTS_EVENING</a></code></li>
 <li><code><a title="edupage_api.timeline.EventType.PROJECT" href="#edupage_api.timeline.EventType.PROJECT">PROJECT</a></code></li>
+<li><code><a title="edupage_api.timeline.EventType.PROJECT_EXAM" href="#edupage_api.timeline.EventType.PROJECT_EXAM">PROJECT_EXAM</a></code></li>
 <li><code><a title="edupage_api.timeline.EventType.PROJECT_LESSON" href="#edupage_api.timeline.EventType.PROJECT_LESSON">PROJECT_LESSON</a></code></li>
 <li><code><a title="edupage_api.timeline.EventType.REPRESENTATION" href="#edupage_api.timeline.EventType.REPRESENTATION">REPRESENTATION</a></code></li>
 <li><code><a title="edupage_api.timeline.EventType.SAFETY_INSTRUCTIONING" href="#edupage_api.timeline.EventType.SAFETY_INSTRUCTIONING">SAFETY_INSTRUCTIONING</a></code></li>
@@ -568,8 +817,11 @@ def get_notifications(self):
 <li><code><a title="edupage_api.timeline.EventType.SCHOOL_TRIP" href="#edupage_api.timeline.EventType.SCHOOL_TRIP">SCHOOL_TRIP</a></code></li>
 <li><code><a title="edupage_api.timeline.EventType.SHORT_EXAM" href="#edupage_api.timeline.EventType.SHORT_EXAM">SHORT_EXAM</a></code></li>
 <li><code><a title="edupage_api.timeline.EventType.SHORT_HOLIDAY" href="#edupage_api.timeline.EventType.SHORT_HOLIDAY">SHORT_HOLIDAY</a></code></li>
+<li><code><a title="edupage_api.timeline.EventType.STUDENT_ABSENT" href="#edupage_api.timeline.EventType.STUDENT_ABSENT">STUDENT_ABSENT</a></code></li>
+<li><code><a title="edupage_api.timeline.EventType.SUBSTITUTION" href="#edupage_api.timeline.EventType.SUBSTITUTION">SUBSTITUTION</a></code></li>
 <li><code><a title="edupage_api.timeline.EventType.TEACHER_MEETING" href="#edupage_api.timeline.EventType.TEACHER_MEETING">TEACHER_MEETING</a></code></li>
 <li><code><a title="edupage_api.timeline.EventType.TESTING" href="#edupage_api.timeline.EventType.TESTING">TESTING</a></code></li>
+<li><code><a title="edupage_api.timeline.EventType.TIMETABLE" href="#edupage_api.timeline.EventType.TIMETABLE">TIMETABLE</a></code></li>
 <li><code><a title="edupage_api.timeline.EventType.TT_CANCEL" href="#edupage_api.timeline.EventType.TT_CANCEL">TT_CANCEL</a></code></li>
 <li><code><a title="edupage_api.timeline.EventType.TUTORING" href="#edupage_api.timeline.EventType.TUTORING">TUTORING</a></code></li>
 <li><code><a title="edupage_api.timeline.EventType.parse" href="#edupage_api.timeline.EventType.parse">parse</a></code></li>

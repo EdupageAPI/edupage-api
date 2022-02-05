@@ -26,25 +26,26 @@
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">from datetime import datetime
-
-import json
-from edupage_api.people import EduTeacher, People
-from edupage_api.exceptions import MissingDataException
+<pre><code class="python">import json
+from datetime import datetime
 from typing import List, Optional, Union
-from edupage_api.module import EdupageModule, ModuleHelper, Module
+
 from edupage_api.dbi import DbiHelper
+from edupage_api.exceptions import MissingDataException
+from edupage_api.module import EdupageModule, Module, ModuleHelper
+from edupage_api.people import EduTeacher, People
+
 
 class Lesson:
-    def __init__(self, teachers: List[EduTeacher], classrooms: List[str], 
-                start_of_lesson: datetime, end_of_lesson: datetime, 
-                online_lesson_link: Optional[str], subject_id: int, name: str):
+    def __init__(self, teachers: List[EduTeacher], classrooms: List[str],
+                 start_of_lesson: datetime, end_of_lesson: datetime,
+                 online_lesson_link: Optional[str], subject_id: int, name: str):
         self.teachers = teachers
         self.classrooms = classrooms
         self.start_of_lesson = start_of_lesson
         self.end_of_lesson = end_of_lesson
         self.online_lesson_link = online_lesson_link
-        self.subject_id = subject_id 
+        self.subject_id = subject_id
         self.name = name
 
     def is_online_lesson(self) -&gt; bool:
@@ -59,7 +60,7 @@ class Lesson:
         gse_hash = response.content.decode() \
                                    .split(&#34;gsechash=&#34;)[1] \
                                    .split(&#39;&#34;&#39;)[1]
-        
+
         request_url = f&#34;https://{edupage.subdomain}.edupage.org/dashboard/server/onlinelesson.js?__func=getOnlineLessonOpenUrl&#34;
         today = datetime.today()
         post_data = {
@@ -78,22 +79,23 @@ class Lesson:
         response = edupage.session.post(request_url, json=post_data)
         return json.loads(response.content.decode()).get(&#34;reload&#34;) is not None
 
+
 class Timetable:
     def __init__(self, lessons: List[Lesson]):
         self.lessons = lessons
-    
+
     def __iter__(self):
         return iter(self.lessons)
-    
+
     def get_lesson_at_time(self, time: datetime):
         # this is done to drop the date part of the datetime
         hour, minute = time.hour, time.minute
-        time = datetime(hour=hour, minute=minute) 
+        time = datetime(hour=hour, minute=minute)
 
         for lesson in self.lessons:
             if time &gt;= lesson.start_of_lesson and time &lt;= lesson.end_of_lesson:
                 return lesson
-    
+
     def get_next_lesson_at_time(self, time: datetime):
         # this is done to drop the date part of the datetime
         hour, minute = time.hour, time.minute
@@ -102,27 +104,27 @@ class Timetable:
         for lesson in self.lessons:
             if time &lt; lesson.start_of_lesson:
                 return lesson
-    
+
     def get_next_online_lesson_at_time(self, time: datetime):
         for lesson in self.lessons:
-            if time &lt; lesson.start_of_lesson:
-                if lesson.is_online_lesson():
-                    return lesson
-        
+            if time &lt; lesson.start_of_lesson and lesson.is_online_lesson():
+                return lesson
+
     def get_first_lesson(self):
         if len(self.lessons) &gt; 0:
             return self.lessons[0]
-    
+
     def get_last_lesson(self):
         if len(self.lessons) &gt; 0:
             return self.lessons[-1]
+
 
 class Timetables(Module):
     def __get_dp(self) -&gt; dict:
         dp = self.edupage.data.get(&#34;dp&#34;)
         if dp is None:
             raise MissingDataException()
-        
+
         return dp
 
     def get_timetable(self, date: datetime) -&gt; Union[Timetable, None]:
@@ -132,7 +134,7 @@ class Timetables(Module):
         date_plans = dates.get(date.strftime(&#34;%Y-%m-%d&#34;))
         if date_plans is None:
             raise MissingDataException()
-        
+
         plan = date_plans.get(&#34;plan&#34;)
 
         lessons = []
@@ -147,9 +149,9 @@ class Timetables(Module):
             else:
                 subject_name = header[0].get(&#34;text&#34;)
 
+            teachers = []
             teacher_ids = subject.get(&#34;teacherids&#34;)
             if teacher_ids is not None and len(teacher_ids) != 0:
-                teachers = []
                 for teacher_id_str in teacher_ids:
                     if not teacher_id_str:
                         continue
@@ -158,25 +160,20 @@ class Timetables(Module):
                     teacher = People(self.edupage).get_teacher(teacher_id)
 
                     teachers.append(teacher)
-            else:
-                teachers = []
-            
-            
+
+            classrooms = []
             classroom_ids = subject.get(&#34;classroomids&#34;)
             if classroom_ids is not None and len(classroom_ids) != 0:
-                classrooms = []
                 for classroom_id_str in classroom_ids:
                     if not classroom_id_str:
                         continue
 
                     classroom_id = int(classroom_id_str)
                     classroom_number = DbiHelper(self.edupage).fetch_classroom_number(classroom_id)
-                    
-                    classrooms.append(classroom_number)
-            else:
-                classrooms = []
 
-            start_of_lesson_str = subject.get(&#34;starttime&#34;)    
+                    classrooms.append(classroom_number)
+
+            start_of_lesson_str = subject.get(&#34;starttime&#34;)
             end_of_lesson_str = subject.get(&#34;endtime&#34;)
 
             ModuleHelper.assert_none(start_of_lesson_str, end_of_lesson_str)
@@ -186,7 +183,8 @@ class Timetables(Module):
 
             online_lesson_link = subject.get(&#34;ol_url&#34;)
 
-            lesson = Lesson(teachers, classrooms, start_of_lesson, end_of_lesson, online_lesson_link, subject_id, subject_name)
+            lesson = Lesson(teachers, classrooms, start_of_lesson, end_of_lesson,
+                            online_lesson_link, subject_id, subject_name)
             lessons.append(lesson)
 
         return Timetable(lessons)</code></pre>
@@ -212,15 +210,15 @@ class Timetables(Module):
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">class Lesson:
-    def __init__(self, teachers: List[EduTeacher], classrooms: List[str], 
-                start_of_lesson: datetime, end_of_lesson: datetime, 
-                online_lesson_link: Optional[str], subject_id: int, name: str):
+    def __init__(self, teachers: List[EduTeacher], classrooms: List[str],
+                 start_of_lesson: datetime, end_of_lesson: datetime,
+                 online_lesson_link: Optional[str], subject_id: int, name: str):
         self.teachers = teachers
         self.classrooms = classrooms
         self.start_of_lesson = start_of_lesson
         self.end_of_lesson = end_of_lesson
         self.online_lesson_link = online_lesson_link
-        self.subject_id = subject_id 
+        self.subject_id = subject_id
         self.name = name
 
     def is_online_lesson(self) -&gt; bool:
@@ -235,7 +233,7 @@ class Timetables(Module):
         gse_hash = response.content.decode() \
                                    .split(&#34;gsechash=&#34;)[1] \
                                    .split(&#39;&#34;&#39;)[1]
-        
+
         request_url = f&#34;https://{edupage.subdomain}.edupage.org/dashboard/server/onlinelesson.js?__func=getOnlineLessonOpenUrl&#34;
         today = datetime.today()
         post_data = {
@@ -287,7 +285,7 @@ def sign_into_lesson(self, edupage: EdupageModule):
     gse_hash = response.content.decode() \
                                .split(&#34;gsechash=&#34;)[1] \
                                .split(&#39;&#34;&#39;)[1]
-    
+
     request_url = f&#34;https://{edupage.subdomain}.edupage.org/dashboard/server/onlinelesson.js?__func=getOnlineLessonOpenUrl&#34;
     today = datetime.today()
     post_data = {
@@ -322,19 +320,19 @@ def sign_into_lesson(self, edupage: EdupageModule):
 <pre><code class="python">class Timetable:
     def __init__(self, lessons: List[Lesson]):
         self.lessons = lessons
-    
+
     def __iter__(self):
         return iter(self.lessons)
-    
+
     def get_lesson_at_time(self, time: datetime):
         # this is done to drop the date part of the datetime
         hour, minute = time.hour, time.minute
-        time = datetime(hour=hour, minute=minute) 
+        time = datetime(hour=hour, minute=minute)
 
         for lesson in self.lessons:
             if time &gt;= lesson.start_of_lesson and time &lt;= lesson.end_of_lesson:
                 return lesson
-    
+
     def get_next_lesson_at_time(self, time: datetime):
         # this is done to drop the date part of the datetime
         hour, minute = time.hour, time.minute
@@ -343,17 +341,16 @@ def sign_into_lesson(self, edupage: EdupageModule):
         for lesson in self.lessons:
             if time &lt; lesson.start_of_lesson:
                 return lesson
-    
+
     def get_next_online_lesson_at_time(self, time: datetime):
         for lesson in self.lessons:
-            if time &lt; lesson.start_of_lesson:
-                if lesson.is_online_lesson():
-                    return lesson
-        
+            if time &lt; lesson.start_of_lesson and lesson.is_online_lesson():
+                return lesson
+
     def get_first_lesson(self):
         if len(self.lessons) &gt; 0:
             return self.lessons[0]
-    
+
     def get_last_lesson(self):
         if len(self.lessons) &gt; 0:
             return self.lessons[-1]</code></pre>
@@ -400,7 +397,7 @@ def sign_into_lesson(self, edupage: EdupageModule):
 <pre><code class="python">def get_lesson_at_time(self, time: datetime):
     # this is done to drop the date part of the datetime
     hour, minute = time.hour, time.minute
-    time = datetime(hour=hour, minute=minute) 
+    time = datetime(hour=hour, minute=minute)
 
     for lesson in self.lessons:
         if time &gt;= lesson.start_of_lesson and time &lt;= lesson.end_of_lesson:
@@ -437,9 +434,8 @@ def sign_into_lesson(self, edupage: EdupageModule):
 </summary>
 <pre><code class="python">def get_next_online_lesson_at_time(self, time: datetime):
     for lesson in self.lessons:
-        if time &lt; lesson.start_of_lesson:
-            if lesson.is_online_lesson():
-                return lesson</code></pre>
+        if time &lt; lesson.start_of_lesson and lesson.is_online_lesson():
+            return lesson</code></pre>
 </details>
 </dd>
 </dl>
@@ -459,7 +455,7 @@ def sign_into_lesson(self, edupage: EdupageModule):
         dp = self.edupage.data.get(&#34;dp&#34;)
         if dp is None:
             raise MissingDataException()
-        
+
         return dp
 
     def get_timetable(self, date: datetime) -&gt; Union[Timetable, None]:
@@ -469,7 +465,7 @@ def sign_into_lesson(self, edupage: EdupageModule):
         date_plans = dates.get(date.strftime(&#34;%Y-%m-%d&#34;))
         if date_plans is None:
             raise MissingDataException()
-        
+
         plan = date_plans.get(&#34;plan&#34;)
 
         lessons = []
@@ -484,9 +480,9 @@ def sign_into_lesson(self, edupage: EdupageModule):
             else:
                 subject_name = header[0].get(&#34;text&#34;)
 
+            teachers = []
             teacher_ids = subject.get(&#34;teacherids&#34;)
             if teacher_ids is not None and len(teacher_ids) != 0:
-                teachers = []
                 for teacher_id_str in teacher_ids:
                     if not teacher_id_str:
                         continue
@@ -495,25 +491,20 @@ def sign_into_lesson(self, edupage: EdupageModule):
                     teacher = People(self.edupage).get_teacher(teacher_id)
 
                     teachers.append(teacher)
-            else:
-                teachers = []
-            
-            
+
+            classrooms = []
             classroom_ids = subject.get(&#34;classroomids&#34;)
             if classroom_ids is not None and len(classroom_ids) != 0:
-                classrooms = []
                 for classroom_id_str in classroom_ids:
                     if not classroom_id_str:
                         continue
 
                     classroom_id = int(classroom_id_str)
                     classroom_number = DbiHelper(self.edupage).fetch_classroom_number(classroom_id)
-                    
-                    classrooms.append(classroom_number)
-            else:
-                classrooms = []
 
-            start_of_lesson_str = subject.get(&#34;starttime&#34;)    
+                    classrooms.append(classroom_number)
+
+            start_of_lesson_str = subject.get(&#34;starttime&#34;)
             end_of_lesson_str = subject.get(&#34;endtime&#34;)
 
             ModuleHelper.assert_none(start_of_lesson_str, end_of_lesson_str)
@@ -523,7 +514,8 @@ def sign_into_lesson(self, edupage: EdupageModule):
 
             online_lesson_link = subject.get(&#34;ol_url&#34;)
 
-            lesson = Lesson(teachers, classrooms, start_of_lesson, end_of_lesson, online_lesson_link, subject_id, subject_name)
+            lesson = Lesson(teachers, classrooms, start_of_lesson, end_of_lesson,
+                            online_lesson_link, subject_id, subject_name)
             lessons.append(lesson)
 
         return Timetable(lessons)</code></pre>
@@ -550,7 +542,7 @@ def sign_into_lesson(self, edupage: EdupageModule):
     date_plans = dates.get(date.strftime(&#34;%Y-%m-%d&#34;))
     if date_plans is None:
         raise MissingDataException()
-    
+
     plan = date_plans.get(&#34;plan&#34;)
 
     lessons = []
@@ -565,9 +557,9 @@ def sign_into_lesson(self, edupage: EdupageModule):
         else:
             subject_name = header[0].get(&#34;text&#34;)
 
+        teachers = []
         teacher_ids = subject.get(&#34;teacherids&#34;)
         if teacher_ids is not None and len(teacher_ids) != 0:
-            teachers = []
             for teacher_id_str in teacher_ids:
                 if not teacher_id_str:
                     continue
@@ -576,25 +568,20 @@ def sign_into_lesson(self, edupage: EdupageModule):
                 teacher = People(self.edupage).get_teacher(teacher_id)
 
                 teachers.append(teacher)
-        else:
-            teachers = []
-        
-        
+
+        classrooms = []
         classroom_ids = subject.get(&#34;classroomids&#34;)
         if classroom_ids is not None and len(classroom_ids) != 0:
-            classrooms = []
             for classroom_id_str in classroom_ids:
                 if not classroom_id_str:
                     continue
 
                 classroom_id = int(classroom_id_str)
                 classroom_number = DbiHelper(self.edupage).fetch_classroom_number(classroom_id)
-                
-                classrooms.append(classroom_number)
-        else:
-            classrooms = []
 
-        start_of_lesson_str = subject.get(&#34;starttime&#34;)    
+                classrooms.append(classroom_number)
+
+        start_of_lesson_str = subject.get(&#34;starttime&#34;)
         end_of_lesson_str = subject.get(&#34;endtime&#34;)
 
         ModuleHelper.assert_none(start_of_lesson_str, end_of_lesson_str)
@@ -604,7 +591,8 @@ def sign_into_lesson(self, edupage: EdupageModule):
 
         online_lesson_link = subject.get(&#34;ol_url&#34;)
 
-        lesson = Lesson(teachers, classrooms, start_of_lesson, end_of_lesson, online_lesson_link, subject_id, subject_name)
+        lesson = Lesson(teachers, classrooms, start_of_lesson, end_of_lesson,
+                        online_lesson_link, subject_id, subject_name)
         lessons.append(lesson)
 
     return Timetable(lessons)</code></pre>

@@ -26,65 +26,68 @@
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">from datetime import datetime
+<pre><code class="python">import functools
+from datetime import datetime
 from io import TextIOWrapper
+from typing import Optional
+
+import requests
+from requests import Response
+
 from edupage_api.cloud import Cloud, EduCloudFile
 from edupage_api.custom_request import CustomRequest
 from edupage_api.grades import EduGrade, Grades
-from edupage_api.timeline import TimelineEvent, TimelineEvents
-from edupage_api.lunches import Lunch, Lunches
-from edupage_api.timetables import Timetable, Timetables
-from typing import Optional
-from edupage_api.messages import Messages
 from edupage_api.login import Login
-from edupage_api.people import EduAccount, EduStudent, EduTeacher, People
+from edupage_api.lunches import Lunch, Lunches
+from edupage_api.messages import Messages
 from edupage_api.module import EdupageModule
-from requests import Response
-import functools
-import requests
+from edupage_api.people import EduAccount, EduStudent, EduTeacher, People
+from edupage_api.timeline import TimelineEvent, TimelineEvents
+from edupage_api.timetables import Timetable, Timetables
+
 
 class Edupage(EdupageModule):
-    def __init__(self, request_timeout = 5):
-        self.data = None 
+    def __init__(self, request_timeout=5):
+        self.data = None
         self.is_logged_in = False
         self.subdomain = None
 
         self.session = requests.session()
-        self.session.request = functools.partial(self.session.request, timeout = request_timeout)
+        self.session.request = functools.partial(self.session.request, timeout=request_timeout)
 
     def login(self, username: str, password: str, subdomain: str):
         Login(self).login(username, password, subdomain)
 
     def login_auto(self, username: str, password: str):
         Login(self).login_auto(username, password)
-    
+
     def get_students(self) -&gt; Optional[list[EduStudent]]:
         return People(self).get_students()
-    
+
     def get_teachers(self) -&gt; Optional[list[EduTeacher]]:
         return People(self).get_teachers()
-    
+
     def send_message(self, recipients: Optional[list[EduAccount]], body: str):
         Messages(self).send_message(recipients, body)
-    
+
     def get_timetable(self, date: datetime) -&gt; Optional[Timetable]:
         return Timetables(self).get_timetable(date)
-    
+
     def get_lunches(self, date: datetime) -&gt; Optional[Lunch]:
         return Lunches(self).get_lunch(date)
-    
+
     def get_notifications(self) -&gt; list[TimelineEvent]:
         return TimelineEvents(self).get_notifications()
-    
+
     def cloud_upload(self, fd: TextIOWrapper) -&gt; EduCloudFile:
         return Cloud(self).upload_file(fd)
-    
+
     def get_grades(self) -&gt; list[EduGrade]:
         return Grades(self).get_grades()
-    
+
     def get_user_id(self) -&gt; str:
         return self.data.get(&#34;userid&#34;)
-    
+
     # method -&gt; &#34;GET&#34; or &#34;POST&#34;
     def custom_request(self, url: str, method: str, data: str = &#34;&#34;, headers: dict = {}) -&gt; Response:
         return CustomRequest(self).custom_request(url, method, data, headers)</code></pre>
@@ -141,6 +144,10 @@ class Edupage(EdupageModule):
 <dd>
 <div class="desc"></div>
 </dd>
+<dt><code class="name"><a title="edupage_api.utils" href="utils.html">edupage_api.utils</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
 </dl>
 </section>
 <section>
@@ -161,47 +168,47 @@ class Edupage(EdupageModule):
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">class Edupage(EdupageModule):
-    def __init__(self, request_timeout = 5):
-        self.data = None 
+    def __init__(self, request_timeout=5):
+        self.data = None
         self.is_logged_in = False
         self.subdomain = None
 
         self.session = requests.session()
-        self.session.request = functools.partial(self.session.request, timeout = request_timeout)
+        self.session.request = functools.partial(self.session.request, timeout=request_timeout)
 
     def login(self, username: str, password: str, subdomain: str):
         Login(self).login(username, password, subdomain)
 
     def login_auto(self, username: str, password: str):
         Login(self).login_auto(username, password)
-    
+
     def get_students(self) -&gt; Optional[list[EduStudent]]:
         return People(self).get_students()
-    
+
     def get_teachers(self) -&gt; Optional[list[EduTeacher]]:
         return People(self).get_teachers()
-    
+
     def send_message(self, recipients: Optional[list[EduAccount]], body: str):
         Messages(self).send_message(recipients, body)
-    
+
     def get_timetable(self, date: datetime) -&gt; Optional[Timetable]:
         return Timetables(self).get_timetable(date)
-    
+
     def get_lunches(self, date: datetime) -&gt; Optional[Lunch]:
         return Lunches(self).get_lunch(date)
-    
+
     def get_notifications(self) -&gt; list[TimelineEvent]:
         return TimelineEvents(self).get_notifications()
-    
+
     def cloud_upload(self, fd: TextIOWrapper) -&gt; EduCloudFile:
         return Cloud(self).upload_file(fd)
-    
+
     def get_grades(self) -&gt; list[EduGrade]:
         return Grades(self).get_grades()
-    
+
     def get_user_id(self) -&gt; str:
         return self.data.get(&#34;userid&#34;)
-    
+
     # method -&gt; &#34;GET&#34; or &#34;POST&#34;
     def custom_request(self, url: str, method: str, data: str = &#34;&#34;, headers: dict = {}) -&gt; Response:
         return CustomRequest(self).custom_request(url, method, data, headers)</code></pre>
@@ -210,6 +217,25 @@ class Edupage(EdupageModule):
 <ul class="hlist">
 <li><a title="edupage_api.module.EdupageModule" href="module.html#edupage_api.module.EdupageModule">EdupageModule</a></li>
 </ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="edupage_api.Edupage.data"><code class="name">var <span class="ident">data</span> : dict</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.Edupage.is_logged_in"><code class="name">var <span class="ident">is_logged_in</span> : bool</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.Edupage.session"><code class="name">var <span class="ident">session</span> : requests.sessions.Session</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.Edupage.subdomain"><code class="name">var <span class="ident">subdomain</span> : str</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
 <h3>Methods</h3>
 <dl>
 <dt id="edupage_api.Edupage.cloud_upload"><code class="name flex">
@@ -239,7 +265,7 @@ class Edupage(EdupageModule):
 </details>
 </dd>
 <dt id="edupage_api.Edupage.get_grades"><code class="name flex">
-<span>def <span class="ident">get_grades</span></span>(<span>self) ‑> list[<a title="edupage_api.grades.EduGrade" href="grades.html#edupage_api.grades.EduGrade">EduGrade</a>]</span>
+<span>def <span class="ident">get_grades</span></span>(<span>self) ‑> list</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
@@ -265,7 +291,7 @@ class Edupage(EdupageModule):
 </details>
 </dd>
 <dt id="edupage_api.Edupage.get_notifications"><code class="name flex">
-<span>def <span class="ident">get_notifications</span></span>(<span>self) ‑> list[<a title="edupage_api.timeline.TimelineEvent" href="timeline.html#edupage_api.timeline.TimelineEvent">TimelineEvent</a>]</span>
+<span>def <span class="ident">get_notifications</span></span>(<span>self) ‑> list</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
@@ -278,7 +304,7 @@ class Edupage(EdupageModule):
 </details>
 </dd>
 <dt id="edupage_api.Edupage.get_students"><code class="name flex">
-<span>def <span class="ident">get_students</span></span>(<span>self) ‑> Optional[list[<a title="edupage_api.people.EduStudent" href="people.html#edupage_api.people.EduStudent">EduStudent</a>]]</span>
+<span>def <span class="ident">get_students</span></span>(<span>self) ‑> Optional[list]</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
@@ -291,7 +317,7 @@ class Edupage(EdupageModule):
 </details>
 </dd>
 <dt id="edupage_api.Edupage.get_teachers"><code class="name flex">
-<span>def <span class="ident">get_teachers</span></span>(<span>self) ‑> Optional[list[<a title="edupage_api.people.EduTeacher" href="people.html#edupage_api.people.EduTeacher">EduTeacher</a>]]</span>
+<span>def <span class="ident">get_teachers</span></span>(<span>self) ‑> Optional[list]</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
@@ -356,7 +382,7 @@ class Edupage(EdupageModule):
 </details>
 </dd>
 <dt id="edupage_api.Edupage.send_message"><code class="name flex">
-<span>def <span class="ident">send_message</span></span>(<span>self, recipients: Optional[list[<a title="edupage_api.people.EduAccount" href="people.html#edupage_api.people.EduAccount">EduAccount</a>]], body: str)</span>
+<span>def <span class="ident">send_message</span></span>(<span>self, recipients: Optional[list], body: str)</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
@@ -393,6 +419,7 @@ class Edupage(EdupageModule):
 <li><code><a title="edupage_api.people" href="people.html">edupage_api.people</a></code></li>
 <li><code><a title="edupage_api.timeline" href="timeline.html">edupage_api.timeline</a></code></li>
 <li><code><a title="edupage_api.timetables" href="timetables.html">edupage_api.timetables</a></code></li>
+<li><code><a title="edupage_api.utils" href="utils.html">edupage_api.utils</a></code></li>
 </ul>
 </li>
 <li><h3><a href="#header-classes">Classes</a></h3>
@@ -402,6 +429,7 @@ class Edupage(EdupageModule):
 <ul class="two-column">
 <li><code><a title="edupage_api.Edupage.cloud_upload" href="#edupage_api.Edupage.cloud_upload">cloud_upload</a></code></li>
 <li><code><a title="edupage_api.Edupage.custom_request" href="#edupage_api.Edupage.custom_request">custom_request</a></code></li>
+<li><code><a title="edupage_api.Edupage.data" href="#edupage_api.Edupage.data">data</a></code></li>
 <li><code><a title="edupage_api.Edupage.get_grades" href="#edupage_api.Edupage.get_grades">get_grades</a></code></li>
 <li><code><a title="edupage_api.Edupage.get_lunches" href="#edupage_api.Edupage.get_lunches">get_lunches</a></code></li>
 <li><code><a title="edupage_api.Edupage.get_notifications" href="#edupage_api.Edupage.get_notifications">get_notifications</a></code></li>
@@ -409,9 +437,12 @@ class Edupage(EdupageModule):
 <li><code><a title="edupage_api.Edupage.get_teachers" href="#edupage_api.Edupage.get_teachers">get_teachers</a></code></li>
 <li><code><a title="edupage_api.Edupage.get_timetable" href="#edupage_api.Edupage.get_timetable">get_timetable</a></code></li>
 <li><code><a title="edupage_api.Edupage.get_user_id" href="#edupage_api.Edupage.get_user_id">get_user_id</a></code></li>
+<li><code><a title="edupage_api.Edupage.is_logged_in" href="#edupage_api.Edupage.is_logged_in">is_logged_in</a></code></li>
 <li><code><a title="edupage_api.Edupage.login" href="#edupage_api.Edupage.login">login</a></code></li>
 <li><code><a title="edupage_api.Edupage.login_auto" href="#edupage_api.Edupage.login_auto">login_auto</a></code></li>
 <li><code><a title="edupage_api.Edupage.send_message" href="#edupage_api.Edupage.send_message">send_message</a></code></li>
+<li><code><a title="edupage_api.Edupage.session" href="#edupage_api.Edupage.session">session</a></code></li>
+<li><code><a title="edupage_api.Edupage.subdomain" href="#edupage_api.Edupage.subdomain">subdomain</a></code></li>
 </ul>
 </li>
 </ul>

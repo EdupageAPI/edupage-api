@@ -26,16 +26,20 @@
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">from datetime import datetime
+<pre><code class="python">import json
+from datetime import datetime
 from typing import List, Optional
-from edupage_api.exceptions import FailedToChangeLunchError, FailedToRateException, NotLoggedInException
-from edupage_api.module import EdupageModule, ModuleHelper, Module
-import json
+
+from edupage_api.exceptions import (FailedToChangeLunchError,
+                                    FailedToRateException,
+                                    NotLoggedInException)
+from edupage_api.module import EdupageModule, Module, ModuleHelper
+
 
 class Rating:
-    def __init__(self, mysql_date, boarder_id, 
-                quality_average, quantity_average, 
-                quality_ratings, quantity_ratings):
+    def __init__(self, mysql_date, boarder_id,
+                 quality_average, quantity_average,
+                 quality_ratings, quantity_ratings):
         self.quality_ratings = quality_ratings
         self.quality_average = quality_average
 
@@ -48,7 +52,7 @@ class Rating:
     def rate(self, edupage: EdupageModule, quantity: int, quality: int):
         if not edupage.is_logged_in:
             raise NotLoggedInException()
-        
+
         request_url = f&#34;https://{edupage.subdomain}.edupage.org/menu/&#34;
 
         data = {
@@ -67,6 +71,7 @@ class Rating:
         if error is None or error != &#34;&#34;:
             raise FailedToRateException()
 
+
 class Menu:
     def __init__(self, name: str, allergens: str, weight: str, number: str, rating: Optional[Rating]):
         self.name = name
@@ -75,9 +80,10 @@ class Menu:
         self.number = number
         self.rating = rating
 
+
 class Lunch:
     def __init__(self, served_from: Optional[datetime], served_to: Optional[datetime],
-                 amount_of_foods: str, chooseable_menus: str,
+                 amount_of_foods: int, chooseable_menus: list[str],
                  can_be_changed_until: datetime, title: str,
                  menus: List[Menu], date: datetime,
                  boarder_id: str):
@@ -90,10 +96,10 @@ class Lunch:
         self.title = title
         self.menus = menus
         self.__boarder_id = boarder_id
-    
+
     def __iter__(self):
         return iter(self.menus)
-    
+
     def __make_choice(self, edupage: EdupageModule, choice_str: str):
         request_url = f&#34;https://{edupage.subdomain}.edupage.org/menu/&#34;
 
@@ -116,15 +122,16 @@ class Lunch:
 
         if json.loads(response).get(&#34;error&#34;) != &#34;&#34;:
             raise FailedToChangeLunchError()
-    
+
     def choose(self, edupage: EdupageModule, number: int):
         letters = &#34;ABCDEFGH&#34;
         letter = letters[number - 1]
 
         self.__make_choice(edupage, letter)
-    
+
     def sign_off(self, edupage: EdupageModule):
         self.__make_choice(edupage, &#34;AX&#34;)
+
 
 class Lunches(Module):
     @ModuleHelper.logged_in
@@ -136,10 +143,10 @@ class Lunches(Module):
         lunch_data = json.loads(response.split(&#34;var novyListok = &#34;)[1].split(&#34;;&#34;)[0])
 
         lunch = lunch_data.get(date.strftime(&#34;%Y-%m-%d&#34;))
-        
+
         if lunch is None:
             return None
-        
+
         lunch = lunch.get(&#34;2&#34;)
 
         served_from_str = lunch.get(&#34;vydaj_od&#34;)
@@ -149,11 +156,11 @@ class Lunches(Module):
             served_from = datetime.strptime(served_from_str, &#34;%H:%M&#34;)
         else:
             served_from = None
-        
+
         if served_to_str:
             served_to = datetime.strptime(served_to_str, &#34;%H:%M&#34;)
         else:
-            served_to = None 
+            served_to = None
 
         title = lunch.get(&#34;nazov&#34;)
 
@@ -189,15 +196,14 @@ class Lunches(Module):
                     quantity_ratings = quantity.get(&#34;pocet&#34;)
 
                     rating = Rating(date.strftime(&#34;%Y-%m-%d&#34;), boarder_id,
-                                    quality_average, quantity_average, 
+                                    quality_average, quantity_average,
                                     quality_ratings, quantity_ratings)
                 else:
                     rating = None
-            
             menus.append(Menu(name, allergens, weight, number, rating))
-    
-        return Lunch(served_from, served_to, amount_of_foods, 
-                     chooseable_menus, can_be_changed_until, 
+
+        return Lunch(served_from, served_to, amount_of_foods,
+                     chooseable_menus, can_be_changed_until,
                      title, menus, date, boarder_id)</code></pre>
 </details>
 </section>
@@ -212,7 +218,7 @@ class Lunches(Module):
 <dl>
 <dt id="edupage_api.lunches.Lunch"><code class="flex name class">
 <span>class <span class="ident">Lunch</span></span>
-<span>(</span><span>served_from: Optional[datetime.datetime], served_to: Optional[datetime.datetime], amount_of_foods: str, chooseable_menus: str, can_be_changed_until: datetime.datetime, title: str, menus: List[<a title="edupage_api.lunches.Menu" href="#edupage_api.lunches.Menu">Menu</a>], date: datetime.datetime, boarder_id: str)</span>
+<span>(</span><span>served_from: Optional[datetime.datetime], served_to: Optional[datetime.datetime], amount_of_foods: int, chooseable_menus: list, can_be_changed_until: datetime.datetime, title: str, menus: List[<a title="edupage_api.lunches.Menu" href="#edupage_api.lunches.Menu">Menu</a>], date: datetime.datetime, boarder_id: str)</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
@@ -222,7 +228,7 @@ class Lunches(Module):
 </summary>
 <pre><code class="python">class Lunch:
     def __init__(self, served_from: Optional[datetime], served_to: Optional[datetime],
-                 amount_of_foods: str, chooseable_menus: str,
+                 amount_of_foods: int, chooseable_menus: list[str],
                  can_be_changed_until: datetime, title: str,
                  menus: List[Menu], date: datetime,
                  boarder_id: str):
@@ -235,10 +241,10 @@ class Lunches(Module):
         self.title = title
         self.menus = menus
         self.__boarder_id = boarder_id
-    
+
     def __iter__(self):
         return iter(self.menus)
-    
+
     def __make_choice(self, edupage: EdupageModule, choice_str: str):
         request_url = f&#34;https://{edupage.subdomain}.edupage.org/menu/&#34;
 
@@ -261,13 +267,13 @@ class Lunches(Module):
 
         if json.loads(response).get(&#34;error&#34;) != &#34;&#34;:
             raise FailedToChangeLunchError()
-    
+
     def choose(self, edupage: EdupageModule, number: int):
         letters = &#34;ABCDEFGH&#34;
         letter = letters[number - 1]
 
         self.__make_choice(edupage, letter)
-    
+
     def sign_off(self, edupage: EdupageModule):
         self.__make_choice(edupage, &#34;AX&#34;)</code></pre>
 </details>
@@ -324,10 +330,10 @@ class Lunches(Module):
         lunch_data = json.loads(response.split(&#34;var novyListok = &#34;)[1].split(&#34;;&#34;)[0])
 
         lunch = lunch_data.get(date.strftime(&#34;%Y-%m-%d&#34;))
-        
+
         if lunch is None:
             return None
-        
+
         lunch = lunch.get(&#34;2&#34;)
 
         served_from_str = lunch.get(&#34;vydaj_od&#34;)
@@ -337,11 +343,11 @@ class Lunches(Module):
             served_from = datetime.strptime(served_from_str, &#34;%H:%M&#34;)
         else:
             served_from = None
-        
+
         if served_to_str:
             served_to = datetime.strptime(served_to_str, &#34;%H:%M&#34;)
         else:
-            served_to = None 
+            served_to = None
 
         title = lunch.get(&#34;nazov&#34;)
 
@@ -377,15 +383,14 @@ class Lunches(Module):
                     quantity_ratings = quantity.get(&#34;pocet&#34;)
 
                     rating = Rating(date.strftime(&#34;%Y-%m-%d&#34;), boarder_id,
-                                    quality_average, quantity_average, 
+                                    quality_average, quantity_average,
                                     quality_ratings, quantity_ratings)
                 else:
                     rating = None
-            
             menus.append(Menu(name, allergens, weight, number, rating))
-    
-        return Lunch(served_from, served_to, amount_of_foods, 
-                     chooseable_menus, can_be_changed_until, 
+
+        return Lunch(served_from, served_to, amount_of_foods,
+                     chooseable_menus, can_be_changed_until,
                      title, menus, date, boarder_id)</code></pre>
 </details>
 <h3>Ancestors</h3>
@@ -412,10 +417,10 @@ def get_lunch(self, date: datetime):
     lunch_data = json.loads(response.split(&#34;var novyListok = &#34;)[1].split(&#34;;&#34;)[0])
 
     lunch = lunch_data.get(date.strftime(&#34;%Y-%m-%d&#34;))
-    
+
     if lunch is None:
         return None
-    
+
     lunch = lunch.get(&#34;2&#34;)
 
     served_from_str = lunch.get(&#34;vydaj_od&#34;)
@@ -425,11 +430,11 @@ def get_lunch(self, date: datetime):
         served_from = datetime.strptime(served_from_str, &#34;%H:%M&#34;)
     else:
         served_from = None
-    
+
     if served_to_str:
         served_to = datetime.strptime(served_to_str, &#34;%H:%M&#34;)
     else:
-        served_to = None 
+        served_to = None
 
     title = lunch.get(&#34;nazov&#34;)
 
@@ -465,15 +470,14 @@ def get_lunch(self, date: datetime):
                 quantity_ratings = quantity.get(&#34;pocet&#34;)
 
                 rating = Rating(date.strftime(&#34;%Y-%m-%d&#34;), boarder_id,
-                                quality_average, quantity_average, 
+                                quality_average, quantity_average,
                                 quality_ratings, quantity_ratings)
             else:
                 rating = None
-        
         menus.append(Menu(name, allergens, weight, number, rating))
 
-    return Lunch(served_from, served_to, amount_of_foods, 
-                 chooseable_menus, can_be_changed_until, 
+    return Lunch(served_from, served_to, amount_of_foods,
+                 chooseable_menus, can_be_changed_until,
                  title, menus, date, boarder_id)</code></pre>
 </details>
 </dd>
@@ -509,9 +513,9 @@ def get_lunch(self, date: datetime):
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">class Rating:
-    def __init__(self, mysql_date, boarder_id, 
-                quality_average, quantity_average, 
-                quality_ratings, quantity_ratings):
+    def __init__(self, mysql_date, boarder_id,
+                 quality_average, quantity_average,
+                 quality_ratings, quantity_ratings):
         self.quality_ratings = quality_ratings
         self.quality_average = quality_average
 
@@ -524,7 +528,7 @@ def get_lunch(self, date: datetime):
     def rate(self, edupage: EdupageModule, quantity: int, quality: int):
         if not edupage.is_logged_in:
             raise NotLoggedInException()
-        
+
         request_url = f&#34;https://{edupage.subdomain}.edupage.org/menu/&#34;
 
         data = {
@@ -557,7 +561,7 @@ def get_lunch(self, date: datetime):
 <pre><code class="python">def rate(self, edupage: EdupageModule, quantity: int, quality: int):
     if not edupage.is_logged_in:
         raise NotLoggedInException()
-    
+
     request_url = f&#34;https://{edupage.subdomain}.edupage.org/menu/&#34;
 
     data = {

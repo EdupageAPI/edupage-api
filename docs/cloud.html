@@ -26,10 +26,12 @@
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">from io import TextIOWrapper
-import json
+<pre><code class="python">import json
+from io import TextIOWrapper
+
 from edupage_api.exceptions import FailedToUploadFileException
 from edupage_api.module import EdupageModule, Module, ModuleHelper
+
 
 class EduCloudFile:
     def __init__(self, cloud_id: str, extension: str, file_type: str, file: str, name: str):
@@ -38,7 +40,7 @@ class EduCloudFile:
         self.type = file_type
         self.file = file
         self.name = name
-    
+
     def get_url(self, edupage: EdupageModule):
         return f&#34;https://{edupage.subdomain}.edupage.org{self.name}&#34;
 
@@ -51,6 +53,7 @@ class EduCloudFile:
             data.get(&#34;file&#34;),
             data.get(&#34;name&#34;)
         )
+
 
 class Cloud(Module):
     @ModuleHelper.logged_in
@@ -65,7 +68,7 @@ class Cloud(Module):
             response_json = json.loads(response)
             if response_json.get(&#34;status&#34;) != &#34;ok&#34;:
                 raise FailedToUploadFileException(&#34;Edupage returned a failing status&#34;)
-            
+
             metadata = response_json.get(&#34;data&#34;)
             return EduCloudFile.parse(metadata)
         except json.JSONDecodeError:
@@ -104,7 +107,7 @@ class Cloud(Module):
             response_json = json.loads(response)
             if response_json.get(&#34;status&#34;) != &#34;ok&#34;:
                 raise FailedToUploadFileException(&#34;Edupage returned a failing status&#34;)
-            
+
             metadata = response_json.get(&#34;data&#34;)
             return EduCloudFile.parse(metadata)
         except json.JSONDecodeError:
@@ -137,7 +140,7 @@ def upload_file(self, fd: TextIOWrapper) -&gt; EduCloudFile:
         response_json = json.loads(response)
         if response_json.get(&#34;status&#34;) != &#34;ok&#34;:
             raise FailedToUploadFileException(&#34;Edupage returned a failing status&#34;)
-        
+
         metadata = response_json.get(&#34;data&#34;)
         return EduCloudFile.parse(metadata)
     except json.JSONDecodeError:
@@ -163,7 +166,7 @@ def upload_file(self, fd: TextIOWrapper) -&gt; EduCloudFile:
         self.type = file_type
         self.file = file
         self.name = name
-    
+
     def get_url(self, edupage: EdupageModule):
         return f&#34;https://{edupage.subdomain}.edupage.org{self.name}&#34;
 

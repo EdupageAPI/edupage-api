@@ -22,8 +22,11 @@ for hw in homework:
     hw_title = None
 
     if old_vals:
-        due_date = old_vals.get("date")
-        due_date = datetime.strptime(due_date, "%Y-%m-%d")
+        try:
+            due_date = old_vals.get("date")
+            due_date = datetime.strptime(due_date, "%Y-%m-%d")
+        except TypeError:
+            pass
 
         hw_title = old_vals.get("title")
 

@@ -68,6 +68,10 @@ class EventType(Enum):
     SUBSTITUTION = "substitution"
     H_ATTENDANCE = "h_attendance"
     EXCUSED_LESSON = "ospravedlnenka"
+    EXAM_EVALUATION = "testvysledok"
+    EXAM_ASSIGNMENT = "testpridelenie"
+    H_SETTINGS = "h_settings"
+    HOMEWORK_EVALUATION = "homeworkstudentstav"
 
     @staticmethod
     def parse(string: str) -> Optional[Gender]:

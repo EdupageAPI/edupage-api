@@ -6,12 +6,11 @@ from edupage_api.module import Module
 
 class Login(Module):
     def __parse_login_data(self, data):
-        json_string = data.split("$j(document).ready(function() {")[1] \
-            .split(");")[0] \
-            .replace("\t", "") \
-            .split("userhome(")[1] \
-            .replace("\n", "") \
-            .replace("\r", "")
+        json_string = (data.split("userhome(", 1)[1]
+                           .rsplit(");", 2)[0]
+                           .replace("\t", "")
+                           .replace("\n", "")
+                           .replace("\r", ""))
 
         self.edupage.data = json.loads(json_string)
         self.edupage.is_logged_in = True

@@ -96,6 +96,11 @@ class EventType(Enum):
     SUBSTITUTION = &#34;substitution&#34;
     H_ATTENDANCE = &#34;h_attendance&#34;
     EXCUSED_LESSON = &#34;ospravedlnenka&#34;
+    ALBUM = &#34;album&#34;
+    H_PROCESS = &#34;h_process&#34;
+    CONTEST = &#34;contest&#34;
+    FOOD_CREDIT = &#34;strava_kredit&#34;
+    PROCESS = &#34;process&#34;
     EXAM_EVALUATION = &#34;testvysledok&#34;
     EXAM_ASSIGNMENT = &#34;testpridelenie&#34;
     H_SETTINGS = &#34;h_settings&#34;
@@ -274,6 +279,11 @@ class TimelineEvents(Module):
     SUBSTITUTION = &#34;substitution&#34;
     H_ATTENDANCE = &#34;h_attendance&#34;
     EXCUSED_LESSON = &#34;ospravedlnenka&#34;
+    ALBUM = &#34;album&#34;
+    H_PROCESS = &#34;h_process&#34;
+    CONTEST = &#34;contest&#34;
+    FOOD_CREDIT = &#34;strava_kredit&#34;
+    PROCESS = &#34;process&#34;
     EXAM_EVALUATION = &#34;testvysledok&#34;
     EXAM_ASSIGNMENT = &#34;testpridelenie&#34;
     H_SETTINGS = &#34;h_settings&#34;
@@ -294,6 +304,10 @@ class TimelineEvents(Module):
 </ul>
 <h3>Class variables</h3>
 <dl>
+<dt id="edupage_api.timeline.EventType.ALBUM"><code class="name">var <span class="ident">ALBUM</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
 <dt id="edupage_api.timeline.EventType.ARRIVAL_TO_SCHOOL"><code class="name">var <span class="ident">ARRIVAL_TO_SCHOOL</span></code></dt>
 <dd>
 <div class="desc"></div>
@@ -334,6 +348,10 @@ class TimelineEvents(Module):
 <dd>
 <div class="desc"></div>
 </dd>
+<dt id="edupage_api.timeline.EventType.CONTEST"><code class="name">var <span class="ident">CONTEST</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
 <dt id="edupage_api.timeline.EventType.CULTURE"><code class="name">var <span class="ident">CULTURE</span></code></dt>
 <dd>
 <div class="desc"></div>
@@ -359,6 +377,10 @@ class TimelineEvents(Module):
 <div class="desc"></div>
 </dd>
 <dt id="edupage_api.timeline.EventType.EXCUSED_LESSON"><code class="name">var <span class="ident">EXCUSED_LESSON</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.timeline.EventType.FOOD_CREDIT"><code class="name">var <span class="ident">FOOD_CREDIT</span></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
@@ -446,6 +468,10 @@ class TimelineEvents(Module):
 <dd>
 <div class="desc"></div>
 </dd>
+<dt id="edupage_api.timeline.EventType.H_PROCESS"><code class="name">var <span class="ident">H_PROCESS</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
 <dt id="edupage_api.timeline.EventType.H_PROCESSTYPES"><code class="name">var <span class="ident">H_PROCESSTYPES</span></code></dt>
 <dd>
 <div class="desc"></div>
@@ -491,6 +517,10 @@ class TimelineEvents(Module):
 <div class="desc"></div>
 </dd>
 <dt id="edupage_api.timeline.EventType.PARENTS_EVENING"><code class="name">var <span class="ident">PARENTS_EVENING</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.timeline.EventType.PROCESS"><code class="name">var <span class="ident">PROCESS</span></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
@@ -792,6 +822,7 @@ def get_notifications(self):
 <li>
 <h4><code><a title="edupage_api.timeline.EventType" href="#edupage_api.timeline.EventType">EventType</a></code></h4>
 <ul class="">
+<li><code><a title="edupage_api.timeline.EventType.ALBUM" href="#edupage_api.timeline.EventType.ALBUM">ALBUM</a></code></li>
 <li><code><a title="edupage_api.timeline.EventType.ARRIVAL_TO_SCHOOL" href="#edupage_api.timeline.EventType.ARRIVAL_TO_SCHOOL">ARRIVAL_TO_SCHOOL</a></code></li>
 <li><code><a title="edupage_api.timeline.EventType.ASSIGNED_TEST" href="#edupage_api.timeline.EventType.ASSIGNED_TEST">ASSIGNED_TEST</a></code></li>
 <li><code><a title="edupage_api.timeline.EventType.BIG_EXAM" href="#edupage_api.timeline.EventType.BIG_EXAM">BIG_EXAM</a></code></li>
@@ -802,6 +833,7 @@ def get_notifications(self):
 <li><code><a title="edupage_api.timeline.EventType.CLASS_TEACHER_EVENT" href="#edupage_api.timeline.EventType.CLASS_TEACHER_EVENT">CLASS_TEACHER_EVENT</a></code></li>
 <li><code><a title="edupage_api.timeline.EventType.CLASS_TEACHER_LESSON" href="#edupage_api.timeline.EventType.CLASS_TEACHER_LESSON">CLASS_TEACHER_LESSON</a></code></li>
 <li><code><a title="edupage_api.timeline.EventType.CONFIRMATION" href="#edupage_api.timeline.EventType.CONFIRMATION">CONFIRMATION</a></code></li>
+<li><code><a title="edupage_api.timeline.EventType.CONTEST" href="#edupage_api.timeline.EventType.CONTEST">CONTEST</a></code></li>
 <li><code><a title="edupage_api.timeline.EventType.CULTURE" href="#edupage_api.timeline.EventType.CULTURE">CULTURE</a></code></li>
 <li><code><a title="edupage_api.timeline.EventType.DISTANT_LEARNING" href="#edupage_api.timeline.EventType.DISTANT_LEARNING">DISTANT_LEARNING</a></code></li>
 <li><code><a title="edupage_api.timeline.EventType.EVENT" href="#edupage_api.timeline.EventType.EVENT">EVENT</a></code></li>
@@ -809,6 +841,7 @@ def get_notifications(self):
 <li><code><a title="edupage_api.timeline.EventType.EXAM_EVALUATION" href="#edupage_api.timeline.EventType.EXAM_EVALUATION">EXAM_EVALUATION</a></code></li>
 <li><code><a title="edupage_api.timeline.EventType.EXCURSION" href="#edupage_api.timeline.EventType.EXCURSION">EXCURSION</a></code></li>
 <li><code><a title="edupage_api.timeline.EventType.EXCUSED_LESSON" href="#edupage_api.timeline.EventType.EXCUSED_LESSON">EXCUSED_LESSON</a></code></li>
+<li><code><a title="edupage_api.timeline.EventType.FOOD_CREDIT" href="#edupage_api.timeline.EventType.FOOD_CREDIT">FOOD_CREDIT</a></code></li>
 <li><code><a title="edupage_api.timeline.EventType.FOOD_SERVED" href="#edupage_api.timeline.EventType.FOOD_SERVED">FOOD_SERVED</a></code></li>
 <li><code><a title="edupage_api.timeline.EventType.FREE_DAY" href="#edupage_api.timeline.EventType.FREE_DAY">FREE_DAY</a></code></li>
 <li><code><a title="edupage_api.timeline.EventType.GRADE" href="#edupage_api.timeline.EventType.GRADE">GRADE</a></code></li>
@@ -830,6 +863,7 @@ def get_notifications(self):
 <li><code><a title="edupage_api.timeline.EventType.H_FINANCES" href="#edupage_api.timeline.EventType.H_FINANCES">H_FINANCES</a></code></li>
 <li><code><a title="edupage_api.timeline.EventType.H_GRADES" href="#edupage_api.timeline.EventType.H_GRADES">H_GRADES</a></code></li>
 <li><code><a title="edupage_api.timeline.EventType.H_HOMEWORK" href="#edupage_api.timeline.EventType.H_HOMEWORK">H_HOMEWORK</a></code></li>
+<li><code><a title="edupage_api.timeline.EventType.H_PROCESS" href="#edupage_api.timeline.EventType.H_PROCESS">H_PROCESS</a></code></li>
 <li><code><a title="edupage_api.timeline.EventType.H_PROCESSTYPES" href="#edupage_api.timeline.EventType.H_PROCESSTYPES">H_PROCESSTYPES</a></code></li>
 <li><code><a title="edupage_api.timeline.EventType.H_SETTINGS" href="#edupage_api.timeline.EventType.H_SETTINGS">H_SETTINGS</a></code></li>
 <li><code><a title="edupage_api.timeline.EventType.H_SUBSTITUTION" href="#edupage_api.timeline.EventType.H_SUBSTITUTION">H_SUBSTITUTION</a></code></li>
@@ -842,6 +876,7 @@ def get_notifications(self):
 <li><code><a title="edupage_api.timeline.EventType.OTHER" href="#edupage_api.timeline.EventType.OTHER">OTHER</a></code></li>
 <li><code><a title="edupage_api.timeline.EventType.PAPER" href="#edupage_api.timeline.EventType.PAPER">PAPER</a></code></li>
 <li><code><a title="edupage_api.timeline.EventType.PARENTS_EVENING" href="#edupage_api.timeline.EventType.PARENTS_EVENING">PARENTS_EVENING</a></code></li>
+<li><code><a title="edupage_api.timeline.EventType.PROCESS" href="#edupage_api.timeline.EventType.PROCESS">PROCESS</a></code></li>
 <li><code><a title="edupage_api.timeline.EventType.PROJECT" href="#edupage_api.timeline.EventType.PROJECT">PROJECT</a></code></li>
 <li><code><a title="edupage_api.timeline.EventType.PROJECT_EXAM" href="#edupage_api.timeline.EventType.PROJECT_EXAM">PROJECT_EXAM</a></code></li>
 <li><code><a title="edupage_api.timeline.EventType.PROJECT_LESSON" href="#edupage_api.timeline.EventType.PROJECT_LESSON">PROJECT_LESSON</a></code></li>

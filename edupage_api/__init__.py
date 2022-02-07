@@ -36,7 +36,7 @@ class Edupage(EdupageModule):
     def get_teachers(self) -> Optional[list[EduTeacher]]:
         return People(self).get_teachers()
     
-    def send_message(self, recipients: Optional[list[EduAccount]], body: str):
+    def send_message(self, recipients: list[EduAccount], body: str):
         Messages(self).send_message(recipients, body)
     
     def get_timetable(self, date: datetime) -> Optional[Timetable]:

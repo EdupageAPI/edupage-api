@@ -66,6 +66,10 @@ class EventType(Enum):
     SUBSTITUTION = "substitution"
     H_ATTENDANCE = "h_attendance"
     EXCUSED_LESSON = "ospravedlnenka"
+    ALBUM = "album"
+    H_PROCESS = "h_process"
+    CONTEST = "contest"
+    FOOD_CREDIT = "strava_kredit"
 
     @staticmethod
     def parse(string: str) -> Optional[Gender]:

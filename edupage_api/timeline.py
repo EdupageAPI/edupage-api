@@ -70,6 +70,7 @@ class EventType(Enum):
     H_PROCESS = "h_process"
     CONTEST = "contest"
     FOOD_CREDIT = "strava_kredit"
+    PROCESS = "process"
 
     @staticmethod
     def parse(string: str) -> Optional[Gender]:

@@ -26,14 +26,18 @@
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">from datetime import datetime
+<pre><code class="python">import urllib.parse
+from datetime import datetime
 from enum import Enum
-
-import requests
 from functools import wraps
 from typing import Union
-from edupage_api.exceptions import MissingDataException, NotAnOnlineLessonError, NotLoggedInException
-import urllib.parse
+
+import requests
+
+from edupage_api.exceptions import (MissingDataException,
+                                    NotAnOnlineLessonError,
+                                    NotLoggedInException)
+
 
 class EdupageModule:
     subdomain: str
@@ -41,10 +45,12 @@ class EdupageModule:
     data: dict
     is_logged_in: bool
 
+
 class Module:
     def __init__(self, edupage: EdupageModule):
         self.edupage = edupage
-    
+
+
 class ModuleHelper:
     # Helper Functions
 
@@ -60,14 +66,14 @@ class ModuleHelper:
     def assert_none(*args):
         if None in args:
             raise MissingDataException()
-    
+
     @staticmethod
     def parse_enum(string: str, enum_type: Enum):
         filtered = list(filter(lambda x: x.value == string, list(enum_type)))
 
         if not filtered:
             return None
-        
+
         return filtered[0]
 
     @staticmethod
@@ -75,7 +81,7 @@ class ModuleHelper:
         for x in args:
             if x:
                 return x
-    
+
     @staticmethod
     def urlencode(string: str) -&gt; str:
         return urllib.parse.quote(string)
@@ -87,13 +93,9 @@ class ModuleHelper:
             value = data[key]
             entry = f&#34;{ModuleHelper.urlencode(key)}={ModuleHelper.urlencode(value)}&#34;
 
-            if i != 0:
-                output += f&#34;&amp;{entry}&#34;
-            else:
-                output += entry
-
+            output += f&#34;&amp;{entry}&#34; if i != 0 else entry
         return output
-    
+
     @staticmethod
     def strptime_or_none(date_string: str, format: str) -&gt; Union[datetime, None]:
         try:
@@ -114,21 +116,17 @@ class ModuleHelper:
             if not self.edupage.is_logged_in:
                 raise NotLoggedInException()
 
-            method_output = method(self, *method_args, **method_kwargs)
-            
-            return method_output
+            return method(self, *method_args, **method_kwargs)
         return __impl
-    
+
     @staticmethod
     def online_lesson(method):
         @wraps(method)
         def __impl(self, *method_args, **method_kwargs):
             if self.online_lesson_link is None:
                 raise NotAnOnlineLessonError()
-            method_output = method(self, *method_args, **method_kwargs)
+            return method(self, *method_args, **method_kwargs)
 
-            return method_output
-        
         return __impl</code></pre>
 </details>
 </section>
@@ -232,14 +230,14 @@ class ModuleHelper:
     def assert_none(*args):
         if None in args:
             raise MissingDataException()
-    
+
     @staticmethod
     def parse_enum(string: str, enum_type: Enum):
         filtered = list(filter(lambda x: x.value == string, list(enum_type)))
 
         if not filtered:
             return None
-        
+
         return filtered[0]
 
     @staticmethod
@@ -247,7 +245,7 @@ class ModuleHelper:
         for x in args:
             if x:
                 return x
-    
+
     @staticmethod
     def urlencode(string: str) -&gt; str:
         return urllib.parse.quote(string)
@@ -259,13 +257,9 @@ class ModuleHelper:
             value = data[key]
             entry = f&#34;{ModuleHelper.urlencode(key)}={ModuleHelper.urlencode(value)}&#34;
 
-            if i != 0:
-                output += f&#34;&amp;{entry}&#34;
-            else:
-                output += entry
-
+            output += f&#34;&amp;{entry}&#34; if i != 0 else entry
         return output
-    
+
     @staticmethod
     def strptime_or_none(date_string: str, format: str) -&gt; Union[datetime, None]:
         try:
@@ -286,21 +280,17 @@ class ModuleHelper:
             if not self.edupage.is_logged_in:
                 raise NotLoggedInException()
 
-            method_output = method(self, *method_args, **method_kwargs)
-            
-            return method_output
+            return method(self, *method_args, **method_kwargs)
         return __impl
-    
+
     @staticmethod
     def online_lesson(method):
         @wraps(method)
         def __impl(self, *method_args, **method_kwargs):
             if self.online_lesson_link is None:
                 raise NotAnOnlineLessonError()
-            method_output = method(self, *method_args, **method_kwargs)
+            return method(self, *method_args, **method_kwargs)
 
-            return method_output
-        
         return __impl</code></pre>
 </details>
 <h3>Static methods</h3>
@@ -336,11 +326,7 @@ def encode_form_data(data: dict) -&gt; str:
         value = data[key]
         entry = f&#34;{ModuleHelper.urlencode(key)}={ModuleHelper.urlencode(value)}&#34;
 
-        if i != 0:
-            output += f&#34;&amp;{entry}&#34;
-        else:
-            output += entry
-
+        output += f&#34;&amp;{entry}&#34; if i != 0 else entry
     return output</code></pre>
 </details>
 </dd>
@@ -375,9 +361,7 @@ def logged_in(method):
         if not self.edupage.is_logged_in:
             raise NotLoggedInException()
 
-        method_output = method(self, *method_args, **method_kwargs)
-        
-        return method_output
+        return method(self, *method_args, **method_kwargs)
     return __impl</code></pre>
 </details>
 </dd>
@@ -396,10 +380,8 @@ def online_lesson(method):
     def __impl(self, *method_args, **method_kwargs):
         if self.online_lesson_link is None:
             raise NotAnOnlineLessonError()
-        method_output = method(self, *method_args, **method_kwargs)
+        return method(self, *method_args, **method_kwargs)
 
-        return method_output
-    
     return __impl</code></pre>
 </details>
 </dd>
@@ -418,7 +400,7 @@ def parse_enum(string: str, enum_type: Enum):
 
     if not filtered:
         return None
-    
+
     return filtered[0]</code></pre>
 </details>
 </dd>

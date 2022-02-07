@@ -1,13 +1,17 @@
+import json
 from datetime import datetime
 from typing import List, Optional
-from edupage_api.exceptions import FailedToChangeLunchError, FailedToRateException, NotLoggedInException
-from edupage_api.module import EdupageModule, ModuleHelper, Module
-import json
+
+from edupage_api.exceptions import (FailedToChangeLunchError,
+                                    FailedToRateException,
+                                    NotLoggedInException)
+from edupage_api.module import EdupageModule, Module, ModuleHelper
+
 
 class Rating:
-    def __init__(self, mysql_date, boarder_id, 
-                quality_average, quantity_average, 
-                quality_ratings, quantity_ratings):
+    def __init__(self, mysql_date, boarder_id,
+                 quality_average, quantity_average,
+                 quality_ratings, quantity_ratings):
         self.quality_ratings = quality_ratings
         self.quality_average = quality_average
 
@@ -20,7 +24,7 @@ class Rating:
     def rate(self, edupage: EdupageModule, quantity: int, quality: int):
         if not edupage.is_logged_in:
             raise NotLoggedInException()
-        
+
         request_url = f"https://{edupage.subdomain}.edupage.org/menu/"
 
         data = {
@@ -39,6 +43,7 @@ class Rating:
         if error is None or error != "":
             raise FailedToRateException()
 
+
 class Menu:
     def __init__(self, name: str, allergens: str, weight: str, number: str, rating: Optional[Rating]):
         self.name = name
@@ -46,6 +51,7 @@ class Menu:
         self.weight = weight
         self.number = number
         self.rating = rating
+
 
 class Lunch:
     def __init__(self, served_from: Optional[datetime], served_to: Optional[datetime],
@@ -62,10 +68,10 @@ class Lunch:
         self.title = title
         self.menus = menus
         self.__boarder_id = boarder_id
-    
+
     def __iter__(self):
         return iter(self.menus)
-    
+
     def __make_choice(self, edupage: EdupageModule, choice_str: str):
         request_url = f"https://{edupage.subdomain}.edupage.org/menu/"
 
@@ -88,15 +94,16 @@ class Lunch:
 
         if json.loads(response).get("error") != "":
             raise FailedToChangeLunchError()
-    
+
     def choose(self, edupage: EdupageModule, number: int):
         letters = "ABCDEFGH"
         letter = letters[number - 1]
 
         self.__make_choice(edupage, letter)
-    
+
     def sign_off(self, edupage: EdupageModule):
         self.__make_choice(edupage, "AX")
+
 
 class Lunches(Module):
     @ModuleHelper.logged_in
@@ -108,10 +115,10 @@ class Lunches(Module):
         lunch_data = json.loads(response.split("var novyListok = ")[1].split(";")[0])
 
         lunch = lunch_data.get(date.strftime("%Y-%m-%d"))
-        
+
         if lunch is None:
             return None
-        
+
         lunch = lunch.get("2")
 
         served_from_str = lunch.get("vydaj_od")
@@ -121,11 +128,11 @@ class Lunches(Module):
             served_from = datetime.strptime(served_from_str, "%H:%M")
         else:
             served_from = None
-        
+
         if served_to_str:
             served_to = datetime.strptime(served_to_str, "%H:%M")
         else:
-            served_to = None 
+            served_to = None
 
         title = lunch.get("nazov")
 
@@ -161,12 +168,12 @@ class Lunches(Module):
                     quantity_ratings = quantity.get("pocet")
 
                     rating = Rating(date.strftime("%Y-%m-%d"), boarder_id,
-                                    quality_average, quantity_average, 
+                                    quality_average, quantity_average,
                                     quality_ratings, quantity_ratings)
                 else:
                     rating = None
             menus.append(Menu(name, allergens, weight, number, rating))
-    
-        return Lunch(served_from, served_to, amount_of_foods, 
-                     chooseable_menus, can_be_changed_until, 
+
+        return Lunch(served_from, served_to, amount_of_foods,
+                     chooseable_menus, can_be_changed_until,
                      title, menus, date, boarder_id)

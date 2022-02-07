@@ -6,6 +6,8 @@ name: Upload Python Package
 on:
   release:
     types: [created]
+  
+  workflow_dispatch:
 
 jobs:
   deploy:
@@ -14,14 +16,34 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+
     - name: Set up Python
       uses: actions/setup-python@v2
       with:
-        python-version: '3.x'
+        python-version: '3.9'
+
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install setuptools wheel twine build
+        pip install setuptools wheel twine build pdoc3
+
+    - name: Regenerate documentation
+      run: |
+        pdoc3 --html edupage_api
+        rm -rf docs
+        mv html/edupage_api docs
+
+    - name: Commit and push documentation changes
+      uses: EndBug/add-and-commit@v8
+      with:
+        add: 'docs'
+        default_author: github_actions
+        message: 'Regenerate documentation'
+
+        pathspec_error_handling: ignore
+        
+        push: true
+
     - name: Build and publish
       env:
         TWINE_USERNAME: ${{ secrets.PYPI_USERNAME }}
@@ -29,3 +51,4 @@ jobs:
       run: |
         python -m build
         twine upload dist/*
+

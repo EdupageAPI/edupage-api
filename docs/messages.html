@@ -26,9 +26,11 @@
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">from edupage_api.people import EduAccount
-from typing import Union
+<pre><code class="python">from typing import Union
+
 from edupage_api.module import Module, ModuleHelper
+from edupage_api.people import EduAccount
+
 
 class Messages(Module):
     def send_message(self, recipients: Union[list[EduAccount], EduAccount], body: str):
@@ -41,7 +43,7 @@ class Messages(Module):
                     recipient_string += &#34;;&#34;
         else:
             recipient_string = recipients.get_id()
-        
+
         data = {
             &#34;receipt&#34;: &#34;0&#34;,
             &#34;selectedUser&#34;: recipient_string,
@@ -55,7 +57,8 @@ class Messages(Module):
         )
 
         request_url = f&#34;https://{self.edupage.subdomain}.edupage.org/timeline&#34;
-        self.edupage.session.post(request_url, params=params, data=ModuleHelper.encode_form_data(data))</code></pre>
+        self.edupage.session.post(request_url, params=params,
+                                  data=ModuleHelper.encode_form_data(data))</code></pre>
 </details>
 </section>
 <section>
@@ -88,7 +91,7 @@ class Messages(Module):
                     recipient_string += &#34;;&#34;
         else:
             recipient_string = recipients.get_id()
-        
+
         data = {
             &#34;receipt&#34;: &#34;0&#34;,
             &#34;selectedUser&#34;: recipient_string,
@@ -102,7 +105,8 @@ class Messages(Module):
         )
 
         request_url = f&#34;https://{self.edupage.subdomain}.edupage.org/timeline&#34;
-        self.edupage.session.post(request_url, params=params, data=ModuleHelper.encode_form_data(data))</code></pre>
+        self.edupage.session.post(request_url, params=params,
+                                  data=ModuleHelper.encode_form_data(data))</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
@@ -129,7 +133,7 @@ class Messages(Module):
                 recipient_string += &#34;;&#34;
     else:
         recipient_string = recipients.get_id()
-    
+
     data = {
         &#34;receipt&#34;: &#34;0&#34;,
         &#34;selectedUser&#34;: recipient_string,
@@ -143,7 +147,8 @@ class Messages(Module):
     )
 
     request_url = f&#34;https://{self.edupage.subdomain}.edupage.org/timeline&#34;
-    self.edupage.session.post(request_url, params=params, data=ModuleHelper.encode_form_data(data))</code></pre>
+    self.edupage.session.post(request_url, params=params,
+                              data=ModuleHelper.encode_form_data(data))</code></pre>
 </details>
 </dd>
 </dl>

@@ -27,11 +27,14 @@
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">from __future__ import annotations # for postponed evaluation of annotations
-from typing import Optional
-from edupage_api.module import EdupageModule, Module, ModuleHelper
-from edupage_api.dbi import DbiHelper
-from enum import Enum
+
 from datetime import datetime
+from enum import Enum
+from typing import Optional
+
+from edupage_api.dbi import DbiHelper
+from edupage_api.module import EdupageModule, Module, ModuleHelper
+
 
 class Gender(Enum):
     MALE = &#34;M&#34;
@@ -41,10 +44,12 @@ class Gender(Enum):
     def parse(gender_str: str) -&gt; Optional[Gender]:
         return ModuleHelper.parse_enum(gender_str, Gender)
 
+
 class EduAccountType(Enum):
     STUDENT = &#34;Student&#34;
     TEACHER = &#34;Teacher&#34;
     PARENT = &#34;Rodic&#34;
+
 
 class EduAccount:
     def __init__(self, person_id: int, name: str, gender: Gender, in_school_since: datetime, account_type: EduAccountType):
@@ -53,7 +58,7 @@ class EduAccount:
         self.gender = gender
         self.in_school_since = in_school_since
         self.account_type = account_type
-    
+
     @staticmethod
     def recognize_account_type(person_data: dict) -&gt; EduAccountType:
         if person_data.get(&#34;number_in_class&#34;) is not None:
@@ -75,55 +80,56 @@ class EduAccount:
             number_in_class = ModuleHelper.int_or_none(person_data.get(&#34;numberinclass&#34;))
 
             ModuleHelper.assert_none(name)
-            
-            student = EduStudent(person_id, name, gender, student_since, class_id, number_in_class)
-            return student
+
+            return EduStudent(person_id, name, gender, student_since, class_id, number_in_class)
         elif account_type == EduAccountType.TEACHER:
             classroom_id = person_data.get(&#34;classroomid&#34;)
-            classroom_name =  DbiHelper(edupage).fetch_classroom_number(classroom_id) if ModuleHelper.int_or_none(classroom_id) else &#34;&#34;
+            classroom_name = DbiHelper(edupage).fetch_classroom_number(
+                classroom_id) if ModuleHelper.int_or_none(classroom_id) else &#34;&#34;
 
             name = DbiHelper(edupage).fetch_teacher_name(person_id)
 
             gender = Gender.parse(person_data.get(&#34;gender&#34;))
-            teacher_since_str = person_data.get(&#34;datefrom&#34;)
-            if teacher_since_str:
+            if teacher_since_str := person_data.get(&#34;datefrom&#34;):
                 teacher_since = datetime.strptime(teacher_since_str, &#34;%Y-%m-%d&#34;)
             else:
                 teacher_since = None
 
-            teacher_to_str = person_data.get(&#34;dateto&#34;)
-            if teacher_to_str:
+            if teacher_to_str := person_data.get(&#34;dateto&#34;):
                 teacher_to = datetime.strptime(teacher_to_str, &#34;%Y-%m-%d&#34;)
             else:
                 teacher_to = None
-            
-            teacher = EduTeacher(person_id, name, gender, teacher_since, classroom_name, teacher_to)
-            return teacher
+
+            return EduTeacher(person_id, name, gender, teacher_since, classroom_name, teacher_to)
         else:
             return None
 
     def get_id(self):
         return f&#34;{self.account_type.value}-{self.person_id}&#34;
 
+
 class EduStudent(EduAccount):
     def __init__(self, person_id: int, name: str, gender: Gender, in_school_since: datetime,
-                class_id: int, number_in_class: int):
+                 class_id: int, number_in_class: int):
         super().__init__(person_id, name, gender, in_school_since, EduAccountType.STUDENT)
 
         self.class_id = class_id
         self.number_in_class = number_in_class
 
+
 class EduParent(EduAccount):
     def __init__(self, person_id: int, name: str, gender: Gender, in_school_since: datetime):
         super().__init__(person_id, name, gender, in_school_since, EduAccountType.PARENT)
 
+
 class EduTeacher(EduAccount):
     def __init__(self, person_id: int, name: str, gender: Gender, in_school_since: datetime,
-                classroom_name: str, teacher_to: datetime):
+                 classroom_name: str, teacher_to: datetime):
         super().__init__(person_id, name, gender, in_school_since, EduAccountType.TEACHER)
 
         self.teacher_to = teacher_to
         self.classroom_name = classroom_name
+
 
 class People(Module):
     @ModuleHelper.logged_in
@@ -131,18 +137,18 @@ class People(Module):
         students = DbiHelper(self.edupage).fetch_student_list()
         if students is None:
             return None
-        
+
         result = []
         for student_id_str in students:
             if not student_id_str:
-                continue            
+                continue
 
             student_id = int(student_id_str)
             student_data = students.get(student_id_str)
-            
+
             student = EduAccount.parse(student_data, student_id, self.edupage)
             result.append(student)
-        
+
         return result
 
     @ModuleHelper.logged_in
@@ -151,23 +157,22 @@ class People(Module):
         if teacher_data is None:
             return None
 
-        teacher = EduAccount.parse(teacher_data, teacher_id, self.edupage)
-        return teacher
-    
+        return EduAccount.parse(teacher_data, teacher_id, self.edupage)
+
     @ModuleHelper.logged_in
     def get_student(self, student_id: int) -&gt; Optional[EduStudent]:
         student_data = DbiHelper(self.edupage).fetch_student_data(student_id)
         if student_data is None:
             return None
 
-        student = EduAccount.parse(student_data, student_id, self.edupage)
-    
+        return EduAccount.parse(student_data, student_id, self.edupage)
+
     @ModuleHelper.logged_in
     def get_teachers(self) -&gt; Optional[list]:
         teachers = DbiHelper(self.edupage).fetch_teacher_list()
         if teachers is None:
             return None
-        
+
         result = []
         for teacher_id_str in teachers:
             if not teacher_id_str:
@@ -178,7 +183,7 @@ class People(Module):
 
             teacher = EduAccount.parse(teacher_data, teacher_id, self.edupage)
             result.append(teacher)
-        
+
         return result</code></pre>
 </details>
 </section>
@@ -208,7 +213,7 @@ class People(Module):
         self.gender = gender
         self.in_school_since = in_school_since
         self.account_type = account_type
-    
+
     @staticmethod
     def recognize_account_type(person_data: dict) -&gt; EduAccountType:
         if person_data.get(&#34;number_in_class&#34;) is not None:
@@ -230,30 +235,27 @@ class People(Module):
             number_in_class = ModuleHelper.int_or_none(person_data.get(&#34;numberinclass&#34;))
 
             ModuleHelper.assert_none(name)
-            
-            student = EduStudent(person_id, name, gender, student_since, class_id, number_in_class)
-            return student
+
+            return EduStudent(person_id, name, gender, student_since, class_id, number_in_class)
         elif account_type == EduAccountType.TEACHER:
             classroom_id = person_data.get(&#34;classroomid&#34;)
-            classroom_name =  DbiHelper(edupage).fetch_classroom_number(classroom_id) if ModuleHelper.int_or_none(classroom_id) else &#34;&#34;
+            classroom_name = DbiHelper(edupage).fetch_classroom_number(
+                classroom_id) if ModuleHelper.int_or_none(classroom_id) else &#34;&#34;
 
             name = DbiHelper(edupage).fetch_teacher_name(person_id)
 
             gender = Gender.parse(person_data.get(&#34;gender&#34;))
-            teacher_since_str = person_data.get(&#34;datefrom&#34;)
-            if teacher_since_str:
+            if teacher_since_str := person_data.get(&#34;datefrom&#34;):
                 teacher_since = datetime.strptime(teacher_since_str, &#34;%Y-%m-%d&#34;)
             else:
                 teacher_since = None
 
-            teacher_to_str = person_data.get(&#34;dateto&#34;)
-            if teacher_to_str:
+            if teacher_to_str := person_data.get(&#34;dateto&#34;):
                 teacher_to = datetime.strptime(teacher_to_str, &#34;%Y-%m-%d&#34;)
             else:
                 teacher_to = None
-            
-            teacher = EduTeacher(person_id, name, gender, teacher_since, classroom_name, teacher_to)
-            return teacher
+
+            return EduTeacher(person_id, name, gender, teacher_since, classroom_name, teacher_to)
         else:
             return None
 
@@ -289,30 +291,27 @@ def parse(person_data: dict, person_id: int, edupage: EdupageModule) -&gt; Optio
         number_in_class = ModuleHelper.int_or_none(person_data.get(&#34;numberinclass&#34;))
 
         ModuleHelper.assert_none(name)
-        
-        student = EduStudent(person_id, name, gender, student_since, class_id, number_in_class)
-        return student
+
+        return EduStudent(person_id, name, gender, student_since, class_id, number_in_class)
     elif account_type == EduAccountType.TEACHER:
         classroom_id = person_data.get(&#34;classroomid&#34;)
-        classroom_name =  DbiHelper(edupage).fetch_classroom_number(classroom_id) if ModuleHelper.int_or_none(classroom_id) else &#34;&#34;
+        classroom_name = DbiHelper(edupage).fetch_classroom_number(
+            classroom_id) if ModuleHelper.int_or_none(classroom_id) else &#34;&#34;
 
         name = DbiHelper(edupage).fetch_teacher_name(person_id)
 
         gender = Gender.parse(person_data.get(&#34;gender&#34;))
-        teacher_since_str = person_data.get(&#34;datefrom&#34;)
-        if teacher_since_str:
+        if teacher_since_str := person_data.get(&#34;datefrom&#34;):
             teacher_since = datetime.strptime(teacher_since_str, &#34;%Y-%m-%d&#34;)
         else:
             teacher_since = None
 
-        teacher_to_str = person_data.get(&#34;dateto&#34;)
-        if teacher_to_str:
+        if teacher_to_str := person_data.get(&#34;dateto&#34;):
             teacher_to = datetime.strptime(teacher_to_str, &#34;%Y-%m-%d&#34;)
         else:
             teacher_to = None
-        
-        teacher = EduTeacher(person_id, name, gender, teacher_since, classroom_name, teacher_to)
-        return teacher
+
+        return EduTeacher(person_id, name, gender, teacher_since, classroom_name, teacher_to)
     else:
         return None</code></pre>
 </details>
@@ -420,7 +419,7 @@ def recognize_account_type(person_data: dict) -&gt; EduAccountType:
 </summary>
 <pre><code class="python">class EduStudent(EduAccount):
     def __init__(self, person_id: int, name: str, gender: Gender, in_school_since: datetime,
-                class_id: int, number_in_class: int):
+                 class_id: int, number_in_class: int):
         super().__init__(person_id, name, gender, in_school_since, EduAccountType.STUDENT)
 
         self.class_id = class_id
@@ -443,7 +442,7 @@ def recognize_account_type(person_data: dict) -&gt; EduAccountType:
 </summary>
 <pre><code class="python">class EduTeacher(EduAccount):
     def __init__(self, person_id: int, name: str, gender: Gender, in_school_since: datetime,
-                classroom_name: str, teacher_to: datetime):
+                 classroom_name: str, teacher_to: datetime):
         super().__init__(person_id, name, gender, in_school_since, EduAccountType.TEACHER)
 
         self.teacher_to = teacher_to
@@ -521,18 +520,18 @@ def parse(gender_str: str) -&gt; Optional[Gender]:
         students = DbiHelper(self.edupage).fetch_student_list()
         if students is None:
             return None
-        
+
         result = []
         for student_id_str in students:
             if not student_id_str:
-                continue            
+                continue
 
             student_id = int(student_id_str)
             student_data = students.get(student_id_str)
-            
+
             student = EduAccount.parse(student_data, student_id, self.edupage)
             result.append(student)
-        
+
         return result
 
     @ModuleHelper.logged_in
@@ -541,23 +540,22 @@ def parse(gender_str: str) -&gt; Optional[Gender]:
         if teacher_data is None:
             return None
 
-        teacher = EduAccount.parse(teacher_data, teacher_id, self.edupage)
-        return teacher
-    
+        return EduAccount.parse(teacher_data, teacher_id, self.edupage)
+
     @ModuleHelper.logged_in
     def get_student(self, student_id: int) -&gt; Optional[EduStudent]:
         student_data = DbiHelper(self.edupage).fetch_student_data(student_id)
         if student_data is None:
             return None
 
-        student = EduAccount.parse(student_data, student_id, self.edupage)
-    
+        return EduAccount.parse(student_data, student_id, self.edupage)
+
     @ModuleHelper.logged_in
     def get_teachers(self) -&gt; Optional[list]:
         teachers = DbiHelper(self.edupage).fetch_teacher_list()
         if teachers is None:
             return None
-        
+
         result = []
         for teacher_id_str in teachers:
             if not teacher_id_str:
@@ -568,7 +566,7 @@ def parse(gender_str: str) -&gt; Optional[Gender]:
 
             teacher = EduAccount.parse(teacher_data, teacher_id, self.edupage)
             result.append(teacher)
-        
+
         return result</code></pre>
 </details>
 <h3>Ancestors</h3>
@@ -592,7 +590,7 @@ def get_student(self, student_id: int) -&gt; Optional[EduStudent]:
     if student_data is None:
         return None
 
-    student = EduAccount.parse(student_data, student_id, self.edupage)</code></pre>
+    return EduAccount.parse(student_data, student_id, self.edupage)</code></pre>
 </details>
 </dd>
 <dt id="edupage_api.people.People.get_students"><code class="name flex">
@@ -609,18 +607,18 @@ def get_students(self) -&gt; Optional[list]:
     students = DbiHelper(self.edupage).fetch_student_list()
     if students is None:
         return None
-    
+
     result = []
     for student_id_str in students:
         if not student_id_str:
-            continue            
+            continue
 
         student_id = int(student_id_str)
         student_data = students.get(student_id_str)
-        
+
         student = EduAccount.parse(student_data, student_id, self.edupage)
         result.append(student)
-    
+
     return result</code></pre>
 </details>
 </dd>
@@ -639,8 +637,7 @@ def get_teacher(self, teacher_id: int) -&gt; Optional[EduTeacher]:
     if teacher_data is None:
         return None
 
-    teacher = EduAccount.parse(teacher_data, teacher_id, self.edupage)
-    return teacher</code></pre>
+    return EduAccount.parse(teacher_data, teacher_id, self.edupage)</code></pre>
 </details>
 </dd>
 <dt id="edupage_api.people.People.get_teachers"><code class="name flex">
@@ -657,7 +654,7 @@ def get_teachers(self) -&gt; Optional[list]:
     teachers = DbiHelper(self.edupage).fetch_teacher_list()
     if teachers is None:
         return None
-    
+
     result = []
     for teacher_id_str in teachers:
         if not teacher_id_str:
@@ -668,7 +665,7 @@ def get_teachers(self) -&gt; Optional[list]:
 
         teacher = EduAccount.parse(teacher_data, teacher_id, self.edupage)
         result.append(teacher)
-    
+
     return result</code></pre>
 </details>
 </dd>

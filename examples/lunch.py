@@ -1,6 +1,7 @@
-from datetime import datetime
-from edupage_api import Edupage
 import sys
+from datetime import datetime
+
+from edupage_api import Edupage
 
 edupage = Edupage()
 edupage.login_auto("Username (or e-mail)", "Password")

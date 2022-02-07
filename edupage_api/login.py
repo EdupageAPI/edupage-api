@@ -1,16 +1,17 @@
+import json
+
 from edupage_api.exceptions import BadCredentialsException
 from edupage_api.module import Module
-import json
+
 
 class Login(Module):
     def __parse_login_data(self, data):
-        json_string = data.split("$j(document).ready(function() {")[1] \
-            .split(");")[0] \
-            .replace("\t", "") \
-            .split("userhome(")[1] \
-            .replace("\n", "") \
-            .replace("\r", "")
-        
+        json_string = (data.split("userhome(", 1)[1]
+                           .rsplit(");", 2)[0]
+                           .replace("\t", "")
+                           .replace("\n", "")
+                           .replace("\r", ""))
+
         self.edupage.data = json.loads(json_string)
         self.edupage.is_logged_in = True
 
@@ -30,7 +31,6 @@ class Login(Module):
 
         data = response.content.decode()
 
-        
         self.__parse_login_data(data)
         self.edupage.subdomain = data.split("-->")[0].split(" ")[-1]
 
@@ -54,7 +54,6 @@ class Login(Module):
 
         if "bad=1" in response.url:
             raise BadCredentialsException()
-        
+
         self.__parse_login_data(response.content.decode())
         self.edupage.subdomain = subdomain
-        

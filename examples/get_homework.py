@@ -1,11 +1,11 @@
 from datetime import datetime
+
 from edupage_api import Edupage
 from edupage_api.timeline import EventType
 
-import json
-
 edupage = Edupage()
-edupage.login("Username (or e-mail)", "Password", "Subdomain of your school (SUBDOMAIN.edupage.org)")
+edupage.login("Username (or e-mail)", "Password",
+              "Subdomain of your school (SUBDOMAIN.edupage.org)")
 
 notifications = edupage.get_notifications()
 
@@ -16,13 +16,16 @@ for hw in homework:
     additional_data = hw.additional_data
 
     old_vals = additional_data.get("oldVals")
-    
+
     due_date = None
     hw_title = None
-    
+
     if old_vals:
-        due_date = old_vals.get("date")
-        due_date = datetime.strptime(due_date, "%Y-%m-%d")
+        try:
+            due_date = old_vals.get("date")
+            due_date = datetime.strptime(due_date, "%Y-%m-%d")
+        except TypeError:
+            pass
 
         hw_title = old_vals.get("title")
 
@@ -43,5 +46,3 @@ for hw in homework:
     print("-------------------------------------")
 
 print(f"You have {homework_not_due} homework that is not finished.")
-
-    

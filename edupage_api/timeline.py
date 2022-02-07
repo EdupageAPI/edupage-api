@@ -1,10 +1,12 @@
-from datetime import datetime
-from edupage_api.dbi import DbiHelper
-from edupage_api.people import EduAccount, Gender
-from typing import Optional
-from edupage_api.module import Module, ModuleHelper
-from enum import Enum
 import json
+from datetime import datetime
+from enum import Enum
+from typing import Optional
+
+from edupage_api.dbi import DbiHelper
+from edupage_api.module import Module, ModuleHelper
+from edupage_api.people import EduAccount, Gender
+
 
 # data.dbi.event_types
 class EventType(Enum):
@@ -71,10 +73,20 @@ class EventType(Enum):
     CONTEST = "contest"
     FOOD_CREDIT = "strava_kredit"
     PROCESS = "process"
+    EXAM_EVALUATION = "testvysledok"
+    EXAM_ASSIGNMENT = "testpridelenie"
+    H_SETTINGS = "h_settings"
+    HOMEWORK_EVALUATION = "homeworkstudentstav"
+    ASSIGNED_TEST = "testpridelenie"
+    H_BEE = "h_vcelicka"
+    H_CONTENST = "h_contest"
+    TEST_RESULT = "testvysledok"
+    HOMEWORK_STUDENT_STATE = "homeworkstudentstav"
 
     @staticmethod
     def parse(string: str) -> Optional[Gender]:
         return ModuleHelper.parse_enum(string, EventType)
+
 
 class TimelineEvent:
     def __init__(self, event_id: int, timestamp: datetime, text: str,
@@ -87,6 +99,7 @@ class TimelineEvent:
         self.recipient = recipient
         self.event_type = event_type
         self.additional_data = additional_data
+
 
 class TimelineEvents(Module):
     @ModuleHelper.logged_in
@@ -108,7 +121,7 @@ class TimelineEvents(Module):
                 continue
             event_type = EventType.parse(event_type_str)
 
-            if event_type == None:
+            if event_type is None:
                 print(event_type_str)
 
             event_timestamp = datetime.strptime(event.get("timestamp"), "%Y-%m-%d %H:%M:%S")
@@ -118,7 +131,7 @@ class TimelineEvents(Module):
             # for message event type
             if text.startswith("Dôležitá správa"):
                 text = event_data.get("messageContent")
-            
+
             if text == "":
                 try:
                     text = event_data.get("nazov")
@@ -129,10 +142,10 @@ class TimelineEvents(Module):
             recipient_name = event.get("user_meno")
             recipient_data = DbiHelper(self.edupage).fetch_person_data_by_name(recipient_name)
 
-            if recipient_name == "*" or recipient_name == "Celá škola":
+            if recipient_name in ["*", "Celá škola"]:
                 recipient = "*"
             elif type(recipient_name) == str:
-                author = recipient_name
+                recipient = recipient_name
             else:
                 ModuleHelper.assert_none(recipient_data)
 
@@ -154,6 +167,7 @@ class TimelineEvents(Module):
             if additional_data and type(additional_data) == str:
                 additional_data = json.loads(additional_data)
 
-            event = TimelineEvent(event_id, event_timestamp, text, author, recipient, event_type, additional_data)
+            event = TimelineEvent(event_id, event_timestamp, text, author,
+                                  recipient, event_type, additional_data)
             output.append(event)
         return output

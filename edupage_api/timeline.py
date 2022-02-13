@@ -26,10 +26,8 @@ class EventType(Enum):
     TESTING = "testing"
 
     # Exam manipulation
-    ASSIGNED_TEST = "testpridelenie"
     EXAM_ASSIGNMENT = "testpridelenie"
     EXAM_EVALUATION = "testvysledok"
-    HOMEWORK_EVALUATION = "homeworkstudentstav"
     HOMEWORK_STUDENT_STATE = "homeworkstudentstav"
     HOMEWORK_TEST = "etesthw"
     TEST_RESULT = "testvysledok"

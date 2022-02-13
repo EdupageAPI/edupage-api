@@ -10,78 +10,123 @@ from edupage_api.people import EduAccount, Gender
 
 # data.dbi.event_types
 class EventType(Enum):
-    TT_CANCEL = "ttcancel"
-    HOLIDAY = "holiday"
-    SHORT_HOLIDAY = "sholiday"
-    FREE_DAY = "freeday"
-    DISTANT_LEARNING = "distant"
-    LESSON = "lesson"
-    PROJECT_LESSON = "plesson"
-    TUTORING = "rlesson"
-    CLASS_TEACHER_LESSON = "ctlesson"
-    SCHOOL_EVENT = "schoolevent"
-    SCHOOL_TRIP = "trip"
-    CULTURE = "culture"
-    EXCURSION = "excursion"
-    CLASS_TEACHER_EVENT = "ctevent"
-    TESTING = "testing"
-    BIG_EXAM = "bexam"
-    SHORT_EXAM = "sexam"
-    ORAL_EXAM = "oexam"
-    PAPER = "rexam"
-    PROJECT = "project"
-    TEACHER_MEETING = "meeting"
-    CLASSIFICATION_MEETING = "bmeeting"
-    BOOKED_ROOM = "bookroom"
-    CHANGE_ROOM = "changeroom"
-    OTHER = "other"
-    SAFETY_INSTRUCTIONING = "other_safety"
-    PARENTS_EVENING = "parentsevening"
-    CLASS_BOOK = "other_cb"
-    REPRESENTATION = "representation"
-    NEW_MENU = "h_stravamenu"
-    HOMEWORK_TEST = "etesthw"
-    PROJECT_EXAM = "pexam"
-    EVENT = "event"
-    H_SUBSTITUTION = "h_substitution"
-    H_CLEARCACHE = "h_clearcache"
-    H_FINANCES = "h_financie"
-    H_CLEARPLANS = "h_clearplany"
-    H_HOMEWORK = "h_homework"
-    H_DAILYPLAN = "h_dailyplan"
-    ARRIVAL_TO_SCHOOL = "pipnutie"
-    FOOD_SERVED = "strava_vydaj"
-    GRADE = "znamka"
+    # Messages
     MESSAGE = "sprava"
     NEWS = "news"
-    TIMETABLE = "timetable"
+
+    # ****************************************
+
+    # Exam types
+    BIG_EXAM = "bexam"
     HOMEWORK = "homework"
-    H_PROCESSTYPES = "h_processtypes"
-    CONFIRMATION = "confirmation"
-    H_TIMETABLE = "h_timetable"
-    STUDENT_ABSENT = "student_absent"
-    H_GRADES = "h_znamky"
+    ORAL_EXAM = "oexam"
+    PAPER = "rexam"
+    PROJECT_EXAM = "pexam"
+    SHORT_EXAM = "sexam"
+    TESTING = "testing"
+
+    # Exam manipulation
+    ASSIGNED_TEST = "testpridelenie"
+    EXAM_ASSIGNMENT = "testpridelenie"
+    EXAM_EVALUATION = "testvysledok"
+    HOMEWORK_EVALUATION = "homeworkstudentstav"
+    HOMEWORK_STUDENT_STATE = "homeworkstudentstav"
+    HOMEWORK_TEST = "etesthw"
+    TEST_RESULT = "testvysledok"
+
+    # ****************************************
+
+    # Grades
+    GRADE = "znamka"
     GRADES_DOC = "znamkydoc"
+
+    # ****************************************
+
+    # Events
+    CLASS_BOOK = "other_cb"
+    CLASS_TEACHER_EVENT = "ctevent"
+    CLASSIFICATION_MEETING = "bmeeting"
+    CULTURE = "culture"
+    EVENT = "event"
+    EXCURSION = "excursion"
+    PARENTS_EVENING = "parentsevening"
+    PROCESS = "process"
+    SCHOOL_EVENT = "schoolevent"
+    SCHOOL_TRIP = "trip"
+    TEACHER_MEETING = "meeting"
+
+    # Free days
+    FREE_DAY = "freeday"
+    HOLIDAY = "holiday"
+    SHORT_HOLIDAY = "sholiday"
+    TT_CANCEL = "ttcancel"
+
+    # Lessons
+    CLASS_TEACHER_LESSON = "ctlesson"
+    DISTANT_LEARNING = "distant"
+    LESSON = "lesson"
+    PROJECT = "project"
+    PROJECT_LESSON = "plesson"
+    SAFETY_INSTRUCTIONING = "other_safety"
+    TUTORING = "rlesson"
+
+    # ****************************************
+
+    # Timetable
+    TIMETABLE = "timetable"
+
+    # Substitution
+    BOOKED_ROOM = "bookroom"
+    CHANGE_ROOM = "changeroom"
+    SUBSTITUTION = "substitution"
+
+    # ****************************************
+
+    # Presence
+    ARRIVAL_TO_SCHOOL = "pipnutie"
+
+    # Absence
+    EXCUSED_LESSON = "ospravedlnenka"
+    REPRESENTATION = "representation"
+    STUDENT_ABSENT = "student_absent"
+
+    # ****************************************
+
+    # Food
+    FOOD_CREDIT = "strava_kredit"
+    FOOD_SERVED = "strava_vydaj"
+    NEW_MENU = "h_stravamenu"
+
+    # ****************************************
+
+    # Contest
+    CONFIRMATION = "confirmation"
+    CONTEST = "contest"
+
+    # Photo album
+    ALBUM = "album"
+
+    # Other
+    OTHER = "other"
+
+    # Helper
+    H_ATTENDANCE = "h_attendance"
+    H_BEE = "h_vcelicka"
+    H_CLEARCACHE = "h_clearcache"
     H_CLEARDBI = "h_cleardbi"
     H_CLEARISICDATA = "h_clearisicdata"
-    H_EDUSETTINGS = "h_edusettings"
-    SUBSTITUTION = "substitution"
-    H_ATTENDANCE = "h_attendance"
-    EXCUSED_LESSON = "ospravedlnenka"
-    ALBUM = "album"
-    H_PROCESS = "h_process"
-    CONTEST = "contest"
-    FOOD_CREDIT = "strava_kredit"
-    PROCESS = "process"
-    EXAM_EVALUATION = "testvysledok"
-    EXAM_ASSIGNMENT = "testpridelenie"
-    H_SETTINGS = "h_settings"
-    HOMEWORK_EVALUATION = "homeworkstudentstav"
-    ASSIGNED_TEST = "testpridelenie"
-    H_BEE = "h_vcelicka"
+    H_CLEARPLANS = "h_clearplany"
     H_CONTENST = "h_contest"
-    TEST_RESULT = "testvysledok"
-    HOMEWORK_STUDENT_STATE = "homeworkstudentstav"
+    H_DAILYPLAN = "h_dailyplan"
+    H_EDUSETTINGS = "h_edusettings"
+    H_FINANCES = "h_financie"
+    H_GRADES = "h_znamky"
+    H_HOMEWORK = "h_homework"
+    H_PROCESS = "h_process"
+    H_PROCESSTYPES = "h_processtypes"
+    H_SETTINGS = "h_settings"
+    H_SUBSTITUTION = "h_substitution"
+    H_TIMETABLE = "h_timetable"
 
     @staticmethod
     def parse(string: str) -> Optional[Gender]:

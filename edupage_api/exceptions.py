@@ -29,3 +29,9 @@ class FailedToUploadFileException(Exception):
 
 class FailedToParseGradeDataError(Exception):
     pass
+
+class ExpiredSessionException(Exception):
+    pass
+
+class InvalidTeacherException(Exception):
+    pass

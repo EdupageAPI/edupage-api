@@ -1,5 +1,5 @@
 import functools
-from datetime import datetime
+from datetime import date, datetime
 from io import TextIOWrapper
 from typing import Optional
 
@@ -14,6 +14,7 @@ from edupage_api.lunches import Lunch, Lunches
 from edupage_api.messages import Messages
 from edupage_api.module import EdupageModule
 from edupage_api.people import EduAccount, EduStudent, EduTeacher, People
+from edupage_api.substitution import Substitution
 from edupage_api.timeline import TimelineEvent, TimelineEvents
 from edupage_api.timetables import Timetable, Timetables
 
@@ -29,6 +30,7 @@ class Edupage(EdupageModule):
         self.data = None
         self.is_logged_in = False
         self.subdomain = None
+        self.gsec_hash = None
 
         self.session = requests.session()
         self.session.request = functools.partial(self.session.request, timeout=request_timeout)
@@ -159,3 +161,14 @@ class Edupage(EdupageModule):
         """
 
         return CustomRequest(self).custom_request(url, method, data, headers)
+
+    def get_missing_teachers(self, date: date) -> list[EduTeacher]:
+        """Get missing teachers for a given date.
+        
+        Args:
+            date (datetime.date): The date you want to get this information for
+        
+        Returns:
+            list[EduTeacher]: List of the missing teachers for `date`
+        """
+        return Substitution(self).get_missing_teachers(date)

@@ -16,6 +16,7 @@ class EdupageModule:
     session: requests.Session
     data: dict
     is_logged_in: bool
+    gsec_hash: str
 
 
 class Module:

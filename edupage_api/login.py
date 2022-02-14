@@ -14,6 +14,8 @@ class Login(Module):
 
         self.edupage.data = json.loads(json_string)
         self.edupage.is_logged_in = True
+        
+        self.edupage.gsec_hash = data.split("ASC.gsechash=\"")[1].split("\"")[0]
 
     """Login with portal.edupage.org. if this doesn't work, please use `Login.login`"""
     def login_auto(self, username: str, password: str):

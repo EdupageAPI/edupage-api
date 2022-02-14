@@ -38,78 +38,121 @@ from edupage_api.people import EduAccount, Gender
 
 # data.dbi.event_types
 class EventType(Enum):
-    TT_CANCEL = &#34;ttcancel&#34;
-    HOLIDAY = &#34;holiday&#34;
-    SHORT_HOLIDAY = &#34;sholiday&#34;
-    FREE_DAY = &#34;freeday&#34;
-    DISTANT_LEARNING = &#34;distant&#34;
-    LESSON = &#34;lesson&#34;
-    PROJECT_LESSON = &#34;plesson&#34;
-    TUTORING = &#34;rlesson&#34;
-    CLASS_TEACHER_LESSON = &#34;ctlesson&#34;
-    SCHOOL_EVENT = &#34;schoolevent&#34;
-    SCHOOL_TRIP = &#34;trip&#34;
-    CULTURE = &#34;culture&#34;
-    EXCURSION = &#34;excursion&#34;
-    CLASS_TEACHER_EVENT = &#34;ctevent&#34;
-    TESTING = &#34;testing&#34;
-    BIG_EXAM = &#34;bexam&#34;
-    SHORT_EXAM = &#34;sexam&#34;
-    ORAL_EXAM = &#34;oexam&#34;
-    PAPER = &#34;rexam&#34;
-    PROJECT = &#34;project&#34;
-    TEACHER_MEETING = &#34;meeting&#34;
-    CLASSIFICATION_MEETING = &#34;bmeeting&#34;
-    BOOKED_ROOM = &#34;bookroom&#34;
-    CHANGE_ROOM = &#34;changeroom&#34;
-    OTHER = &#34;other&#34;
-    SAFETY_INSTRUCTIONING = &#34;other_safety&#34;
-    PARENTS_EVENING = &#34;parentsevening&#34;
-    CLASS_BOOK = &#34;other_cb&#34;
-    REPRESENTATION = &#34;representation&#34;
-    NEW_MENU = &#34;h_stravamenu&#34;
-    HOMEWORK_TEST = &#34;etesthw&#34;
-    PROJECT_EXAM = &#34;pexam&#34;
-    EVENT = &#34;event&#34;
-    H_SUBSTITUTION = &#34;h_substitution&#34;
-    H_CLEARCACHE = &#34;h_clearcache&#34;
-    H_FINANCES = &#34;h_financie&#34;
-    H_CLEARPLANS = &#34;h_clearplany&#34;
-    H_HOMEWORK = &#34;h_homework&#34;
-    H_DAILYPLAN = &#34;h_dailyplan&#34;
-    ARRIVAL_TO_SCHOOL = &#34;pipnutie&#34;
-    FOOD_SERVED = &#34;strava_vydaj&#34;
-    GRADE = &#34;znamka&#34;
+    # Messages
     MESSAGE = &#34;sprava&#34;
     NEWS = &#34;news&#34;
-    TIMETABLE = &#34;timetable&#34;
+
+    # ****************************************
+
+    # Exam types
+    BIG_EXAM = &#34;bexam&#34;
     HOMEWORK = &#34;homework&#34;
-    H_PROCESSTYPES = &#34;h_processtypes&#34;
-    CONFIRMATION = &#34;confirmation&#34;
-    H_TIMETABLE = &#34;h_timetable&#34;
-    STUDENT_ABSENT = &#34;student_absent&#34;
-    H_GRADES = &#34;h_znamky&#34;
+    ORAL_EXAM = &#34;oexam&#34;
+    PAPER = &#34;rexam&#34;
+    PROJECT_EXAM = &#34;pexam&#34;
+    SHORT_EXAM = &#34;sexam&#34;
+    TESTING = &#34;testing&#34;
+
+    # Exam manipulation
+    EXAM_ASSIGNMENT = &#34;testpridelenie&#34;
+    EXAM_EVALUATION = &#34;testvysledok&#34;
+    HOMEWORK_STUDENT_STATE = &#34;homeworkstudentstav&#34;
+    HOMEWORK_TEST = &#34;etesthw&#34;
+    TEST_RESULT = &#34;testvysledok&#34;
+
+    # ****************************************
+
+    # Grades
+    GRADE = &#34;znamka&#34;
     GRADES_DOC = &#34;znamkydoc&#34;
+
+    # ****************************************
+
+    # Events
+    CLASS_BOOK = &#34;other_cb&#34;
+    CLASS_TEACHER_EVENT = &#34;ctevent&#34;
+    CLASSIFICATION_MEETING = &#34;bmeeting&#34;
+    CULTURE = &#34;culture&#34;
+    EVENT = &#34;event&#34;
+    EXCURSION = &#34;excursion&#34;
+    PARENTS_EVENING = &#34;parentsevening&#34;
+    PROCESS = &#34;process&#34;
+    SCHOOL_EVENT = &#34;schoolevent&#34;
+    SCHOOL_TRIP = &#34;trip&#34;
+    TEACHER_MEETING = &#34;meeting&#34;
+
+    # Free days
+    FREE_DAY = &#34;freeday&#34;
+    HOLIDAY = &#34;holiday&#34;
+    SHORT_HOLIDAY = &#34;sholiday&#34;
+    TT_CANCEL = &#34;ttcancel&#34;
+
+    # Lessons
+    CLASS_TEACHER_LESSON = &#34;ctlesson&#34;
+    DISTANT_LEARNING = &#34;distant&#34;
+    LESSON = &#34;lesson&#34;
+    PROJECT = &#34;project&#34;
+    PROJECT_LESSON = &#34;plesson&#34;
+    SAFETY_INSTRUCTIONING = &#34;other_safety&#34;
+    TUTORING = &#34;rlesson&#34;
+
+    # ****************************************
+
+    # Timetable
+    TIMETABLE = &#34;timetable&#34;
+
+    # Substitution
+    BOOKED_ROOM = &#34;bookroom&#34;
+    CHANGE_ROOM = &#34;changeroom&#34;
+    SUBSTITUTION = &#34;substitution&#34;
+
+    # ****************************************
+
+    # Presence
+    ARRIVAL_TO_SCHOOL = &#34;pipnutie&#34;
+
+    # Absence
+    EXCUSED_LESSON = &#34;ospravedlnenka&#34;
+    REPRESENTATION = &#34;representation&#34;
+    STUDENT_ABSENT = &#34;student_absent&#34;
+
+    # ****************************************
+
+    # Food
+    FOOD_CREDIT = &#34;strava_kredit&#34;
+    FOOD_SERVED = &#34;strava_vydaj&#34;
+    NEW_MENU = &#34;h_stravamenu&#34;
+
+    # ****************************************
+
+    # Contest
+    CONFIRMATION = &#34;confirmation&#34;
+    CONTEST = &#34;contest&#34;
+
+    # Photo album
+    ALBUM = &#34;album&#34;
+
+    # Other
+    OTHER = &#34;other&#34;
+
+    # Helper
+    H_ATTENDANCE = &#34;h_attendance&#34;
+    H_BEE = &#34;h_vcelicka&#34;
+    H_CLEARCACHE = &#34;h_clearcache&#34;
     H_CLEARDBI = &#34;h_cleardbi&#34;
     H_CLEARISICDATA = &#34;h_clearisicdata&#34;
-    H_EDUSETTINGS = &#34;h_edusettings&#34;
-    SUBSTITUTION = &#34;substitution&#34;
-    H_ATTENDANCE = &#34;h_attendance&#34;
-    EXCUSED_LESSON = &#34;ospravedlnenka&#34;
-    ALBUM = &#34;album&#34;
-    H_PROCESS = &#34;h_process&#34;
-    CONTEST = &#34;contest&#34;
-    FOOD_CREDIT = &#34;strava_kredit&#34;
-    PROCESS = &#34;process&#34;
-    EXAM_EVALUATION = &#34;testvysledok&#34;
-    EXAM_ASSIGNMENT = &#34;testpridelenie&#34;
-    H_SETTINGS = &#34;h_settings&#34;
-    HOMEWORK_EVALUATION = &#34;homeworkstudentstav&#34;
-    ASSIGNED_TEST = &#34;testpridelenie&#34;
-    H_BEE = &#34;h_vcelicka&#34;
+    H_CLEARPLANS = &#34;h_clearplany&#34;
     H_CONTENST = &#34;h_contest&#34;
-    TEST_RESULT = &#34;testvysledok&#34;
-    HOMEWORK_STUDENT_STATE = &#34;homeworkstudentstav&#34;
+    H_DAILYPLAN = &#34;h_dailyplan&#34;
+    H_EDUSETTINGS = &#34;h_edusettings&#34;
+    H_FINANCES = &#34;h_financie&#34;
+    H_GRADES = &#34;h_znamky&#34;
+    H_HOMEWORK = &#34;h_homework&#34;
+    H_PROCESS = &#34;h_process&#34;
+    H_PROCESSTYPES = &#34;h_processtypes&#34;
+    H_SETTINGS = &#34;h_settings&#34;
+    H_SUBSTITUTION = &#34;h_substitution&#34;
+    H_TIMETABLE = &#34;h_timetable&#34;
 
     @staticmethod
     def parse(string: str) -&gt; Optional[Gender]:
@@ -221,78 +264,121 @@ class TimelineEvents(Module):
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">class EventType(Enum):
-    TT_CANCEL = &#34;ttcancel&#34;
-    HOLIDAY = &#34;holiday&#34;
-    SHORT_HOLIDAY = &#34;sholiday&#34;
-    FREE_DAY = &#34;freeday&#34;
-    DISTANT_LEARNING = &#34;distant&#34;
-    LESSON = &#34;lesson&#34;
-    PROJECT_LESSON = &#34;plesson&#34;
-    TUTORING = &#34;rlesson&#34;
-    CLASS_TEACHER_LESSON = &#34;ctlesson&#34;
-    SCHOOL_EVENT = &#34;schoolevent&#34;
-    SCHOOL_TRIP = &#34;trip&#34;
-    CULTURE = &#34;culture&#34;
-    EXCURSION = &#34;excursion&#34;
-    CLASS_TEACHER_EVENT = &#34;ctevent&#34;
-    TESTING = &#34;testing&#34;
-    BIG_EXAM = &#34;bexam&#34;
-    SHORT_EXAM = &#34;sexam&#34;
-    ORAL_EXAM = &#34;oexam&#34;
-    PAPER = &#34;rexam&#34;
-    PROJECT = &#34;project&#34;
-    TEACHER_MEETING = &#34;meeting&#34;
-    CLASSIFICATION_MEETING = &#34;bmeeting&#34;
-    BOOKED_ROOM = &#34;bookroom&#34;
-    CHANGE_ROOM = &#34;changeroom&#34;
-    OTHER = &#34;other&#34;
-    SAFETY_INSTRUCTIONING = &#34;other_safety&#34;
-    PARENTS_EVENING = &#34;parentsevening&#34;
-    CLASS_BOOK = &#34;other_cb&#34;
-    REPRESENTATION = &#34;representation&#34;
-    NEW_MENU = &#34;h_stravamenu&#34;
-    HOMEWORK_TEST = &#34;etesthw&#34;
-    PROJECT_EXAM = &#34;pexam&#34;
-    EVENT = &#34;event&#34;
-    H_SUBSTITUTION = &#34;h_substitution&#34;
-    H_CLEARCACHE = &#34;h_clearcache&#34;
-    H_FINANCES = &#34;h_financie&#34;
-    H_CLEARPLANS = &#34;h_clearplany&#34;
-    H_HOMEWORK = &#34;h_homework&#34;
-    H_DAILYPLAN = &#34;h_dailyplan&#34;
-    ARRIVAL_TO_SCHOOL = &#34;pipnutie&#34;
-    FOOD_SERVED = &#34;strava_vydaj&#34;
-    GRADE = &#34;znamka&#34;
+    # Messages
     MESSAGE = &#34;sprava&#34;
     NEWS = &#34;news&#34;
-    TIMETABLE = &#34;timetable&#34;
+
+    # ****************************************
+
+    # Exam types
+    BIG_EXAM = &#34;bexam&#34;
     HOMEWORK = &#34;homework&#34;
-    H_PROCESSTYPES = &#34;h_processtypes&#34;
-    CONFIRMATION = &#34;confirmation&#34;
-    H_TIMETABLE = &#34;h_timetable&#34;
-    STUDENT_ABSENT = &#34;student_absent&#34;
-    H_GRADES = &#34;h_znamky&#34;
+    ORAL_EXAM = &#34;oexam&#34;
+    PAPER = &#34;rexam&#34;
+    PROJECT_EXAM = &#34;pexam&#34;
+    SHORT_EXAM = &#34;sexam&#34;
+    TESTING = &#34;testing&#34;
+
+    # Exam manipulation
+    EXAM_ASSIGNMENT = &#34;testpridelenie&#34;
+    EXAM_EVALUATION = &#34;testvysledok&#34;
+    HOMEWORK_STUDENT_STATE = &#34;homeworkstudentstav&#34;
+    HOMEWORK_TEST = &#34;etesthw&#34;
+    TEST_RESULT = &#34;testvysledok&#34;
+
+    # ****************************************
+
+    # Grades
+    GRADE = &#34;znamka&#34;
     GRADES_DOC = &#34;znamkydoc&#34;
+
+    # ****************************************
+
+    # Events
+    CLASS_BOOK = &#34;other_cb&#34;
+    CLASS_TEACHER_EVENT = &#34;ctevent&#34;
+    CLASSIFICATION_MEETING = &#34;bmeeting&#34;
+    CULTURE = &#34;culture&#34;
+    EVENT = &#34;event&#34;
+    EXCURSION = &#34;excursion&#34;
+    PARENTS_EVENING = &#34;parentsevening&#34;
+    PROCESS = &#34;process&#34;
+    SCHOOL_EVENT = &#34;schoolevent&#34;
+    SCHOOL_TRIP = &#34;trip&#34;
+    TEACHER_MEETING = &#34;meeting&#34;
+
+    # Free days
+    FREE_DAY = &#34;freeday&#34;
+    HOLIDAY = &#34;holiday&#34;
+    SHORT_HOLIDAY = &#34;sholiday&#34;
+    TT_CANCEL = &#34;ttcancel&#34;
+
+    # Lessons
+    CLASS_TEACHER_LESSON = &#34;ctlesson&#34;
+    DISTANT_LEARNING = &#34;distant&#34;
+    LESSON = &#34;lesson&#34;
+    PROJECT = &#34;project&#34;
+    PROJECT_LESSON = &#34;plesson&#34;
+    SAFETY_INSTRUCTIONING = &#34;other_safety&#34;
+    TUTORING = &#34;rlesson&#34;
+
+    # ****************************************
+
+    # Timetable
+    TIMETABLE = &#34;timetable&#34;
+
+    # Substitution
+    BOOKED_ROOM = &#34;bookroom&#34;
+    CHANGE_ROOM = &#34;changeroom&#34;
+    SUBSTITUTION = &#34;substitution&#34;
+
+    # ****************************************
+
+    # Presence
+    ARRIVAL_TO_SCHOOL = &#34;pipnutie&#34;
+
+    # Absence
+    EXCUSED_LESSON = &#34;ospravedlnenka&#34;
+    REPRESENTATION = &#34;representation&#34;
+    STUDENT_ABSENT = &#34;student_absent&#34;
+
+    # ****************************************
+
+    # Food
+    FOOD_CREDIT = &#34;strava_kredit&#34;
+    FOOD_SERVED = &#34;strava_vydaj&#34;
+    NEW_MENU = &#34;h_stravamenu&#34;
+
+    # ****************************************
+
+    # Contest
+    CONFIRMATION = &#34;confirmation&#34;
+    CONTEST = &#34;contest&#34;
+
+    # Photo album
+    ALBUM = &#34;album&#34;
+
+    # Other
+    OTHER = &#34;other&#34;
+
+    # Helper
+    H_ATTENDANCE = &#34;h_attendance&#34;
+    H_BEE = &#34;h_vcelicka&#34;
+    H_CLEARCACHE = &#34;h_clearcache&#34;
     H_CLEARDBI = &#34;h_cleardbi&#34;
     H_CLEARISICDATA = &#34;h_clearisicdata&#34;
-    H_EDUSETTINGS = &#34;h_edusettings&#34;
-    SUBSTITUTION = &#34;substitution&#34;
-    H_ATTENDANCE = &#34;h_attendance&#34;
-    EXCUSED_LESSON = &#34;ospravedlnenka&#34;
-    ALBUM = &#34;album&#34;
-    H_PROCESS = &#34;h_process&#34;
-    CONTEST = &#34;contest&#34;
-    FOOD_CREDIT = &#34;strava_kredit&#34;
-    PROCESS = &#34;process&#34;
-    EXAM_EVALUATION = &#34;testvysledok&#34;
-    EXAM_ASSIGNMENT = &#34;testpridelenie&#34;
-    H_SETTINGS = &#34;h_settings&#34;
-    HOMEWORK_EVALUATION = &#34;homeworkstudentstav&#34;
-    ASSIGNED_TEST = &#34;testpridelenie&#34;
-    H_BEE = &#34;h_vcelicka&#34;
+    H_CLEARPLANS = &#34;h_clearplany&#34;
     H_CONTENST = &#34;h_contest&#34;
-    TEST_RESULT = &#34;testvysledok&#34;
-    HOMEWORK_STUDENT_STATE = &#34;homeworkstudentstav&#34;
+    H_DAILYPLAN = &#34;h_dailyplan&#34;
+    H_EDUSETTINGS = &#34;h_edusettings&#34;
+    H_FINANCES = &#34;h_financie&#34;
+    H_GRADES = &#34;h_znamky&#34;
+    H_HOMEWORK = &#34;h_homework&#34;
+    H_PROCESS = &#34;h_process&#34;
+    H_PROCESSTYPES = &#34;h_processtypes&#34;
+    H_SETTINGS = &#34;h_settings&#34;
+    H_SUBSTITUTION = &#34;h_substitution&#34;
+    H_TIMETABLE = &#34;h_timetable&#34;
 
     @staticmethod
     def parse(string: str) -&gt; Optional[Gender]:
@@ -309,10 +395,6 @@ class TimelineEvents(Module):
 <div class="desc"></div>
 </dd>
 <dt id="edupage_api.timeline.EventType.ARRIVAL_TO_SCHOOL"><code class="name">var <span class="ident">ARRIVAL_TO_SCHOOL</span></code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-<dt id="edupage_api.timeline.EventType.ASSIGNED_TEST"><code class="name">var <span class="ident">ASSIGNED_TEST</span></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
@@ -405,10 +487,6 @@ class TimelineEvents(Module):
 <div class="desc"></div>
 </dd>
 <dt id="edupage_api.timeline.EventType.HOMEWORK"><code class="name">var <span class="ident">HOMEWORK</span></code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-<dt id="edupage_api.timeline.EventType.HOMEWORK_EVALUATION"><code class="name">var <span class="ident">HOMEWORK_EVALUATION</span></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
@@ -824,7 +902,6 @@ def get_notifications(self):
 <ul class="">
 <li><code><a title="edupage_api.timeline.EventType.ALBUM" href="#edupage_api.timeline.EventType.ALBUM">ALBUM</a></code></li>
 <li><code><a title="edupage_api.timeline.EventType.ARRIVAL_TO_SCHOOL" href="#edupage_api.timeline.EventType.ARRIVAL_TO_SCHOOL">ARRIVAL_TO_SCHOOL</a></code></li>
-<li><code><a title="edupage_api.timeline.EventType.ASSIGNED_TEST" href="#edupage_api.timeline.EventType.ASSIGNED_TEST">ASSIGNED_TEST</a></code></li>
 <li><code><a title="edupage_api.timeline.EventType.BIG_EXAM" href="#edupage_api.timeline.EventType.BIG_EXAM">BIG_EXAM</a></code></li>
 <li><code><a title="edupage_api.timeline.EventType.BOOKED_ROOM" href="#edupage_api.timeline.EventType.BOOKED_ROOM">BOOKED_ROOM</a></code></li>
 <li><code><a title="edupage_api.timeline.EventType.CHANGE_ROOM" href="#edupage_api.timeline.EventType.CHANGE_ROOM">CHANGE_ROOM</a></code></li>
@@ -848,7 +925,6 @@ def get_notifications(self):
 <li><code><a title="edupage_api.timeline.EventType.GRADES_DOC" href="#edupage_api.timeline.EventType.GRADES_DOC">GRADES_DOC</a></code></li>
 <li><code><a title="edupage_api.timeline.EventType.HOLIDAY" href="#edupage_api.timeline.EventType.HOLIDAY">HOLIDAY</a></code></li>
 <li><code><a title="edupage_api.timeline.EventType.HOMEWORK" href="#edupage_api.timeline.EventType.HOMEWORK">HOMEWORK</a></code></li>
-<li><code><a title="edupage_api.timeline.EventType.HOMEWORK_EVALUATION" href="#edupage_api.timeline.EventType.HOMEWORK_EVALUATION">HOMEWORK_EVALUATION</a></code></li>
 <li><code><a title="edupage_api.timeline.EventType.HOMEWORK_STUDENT_STATE" href="#edupage_api.timeline.EventType.HOMEWORK_STUDENT_STATE">HOMEWORK_STUDENT_STATE</a></code></li>
 <li><code><a title="edupage_api.timeline.EventType.HOMEWORK_TEST" href="#edupage_api.timeline.EventType.HOMEWORK_TEST">HOMEWORK_TEST</a></code></li>
 <li><code><a title="edupage_api.timeline.EventType.H_ATTENDANCE" href="#edupage_api.timeline.EventType.H_ATTENDANCE">H_ATTENDANCE</a></code></li>

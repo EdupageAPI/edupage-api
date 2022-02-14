@@ -48,6 +48,12 @@ from edupage_api.timetables import Timetable, Timetables
 
 class Edupage(EdupageModule):
     def __init__(self, request_timeout=5):
+        &#34;&#34;&#34;Initialize `Edupage` object
+
+        Args:
+            request_timeout (int, optional): Length of request timeout in seconds. If want to upload bigger files, you will have to increase its value. Defaults to `5`.
+        &#34;&#34;&#34;
+
         self.data = None
         self.is_logged_in = False
         self.subdomain = None
@@ -56,40 +62,130 @@ class Edupage(EdupageModule):
         self.session.request = functools.partial(self.session.request, timeout=request_timeout)
 
     def login(self, username: str, password: str, subdomain: str):
+        &#34;&#34;&#34;Login while specifying the subdomain to log into.
+
+        Args:
+            username (str): Your username.
+            password (str): Your password.
+            subdomain (str): Subdomain of your school (https://{subdomain}.edupage.org).
+        &#34;&#34;&#34;
+
         Login(self).login(username, password, subdomain)
 
     def login_auto(self, username: str, password: str):
+        &#34;&#34;&#34;Login using https://portal.edupage.org. If this doesn&#39;t work, please use `Edupage.login`.
+
+        Args:
+            username (str): Your username.
+            password (str): Your password.
+        &#34;&#34;&#34;
+
         Login(self).login_auto(username, password)
 
     def get_students(self) -&gt; Optional[list[EduStudent]]:
+        &#34;&#34;&#34;Get list of all students in your class.
+
+        Returns:
+            Optional[list[EduStudent]]: List of `EduStudent`s.
+        &#34;&#34;&#34;
+
         return People(self).get_students()
 
     def get_teachers(self) -&gt; Optional[list[EduTeacher]]:
+        &#34;&#34;&#34;Get list of all teachers in your school.
+
+        Returns:
+            Optional[list[EduTeacher]]: List of `EduTeacher`s.
+        &#34;&#34;&#34;
+
         return People(self).get_teachers()
 
     def send_message(self, recipients: Optional[list[EduAccount]], body: str):
+        &#34;&#34;&#34;Send message.
+
+        Args:
+            recipients (Optional[list[EduAccount]]): Recipients of your message (list of `EduAccount`s).
+            body (str): Body of your message.
+        &#34;&#34;&#34;
+
         Messages(self).send_message(recipients, body)
 
     def get_timetable(self, date: datetime) -&gt; Optional[Timetable]:
+        &#34;&#34;&#34;Get timetable.
+
+        Args:
+            date (datetime): Date from which you want to get timetable.
+
+        Returns:
+            Optional[Timetable]: Timetable object for entered date.
+        &#34;&#34;&#34;
+
         return Timetables(self).get_timetable(date)
 
     def get_lunches(self, date: datetime) -&gt; Optional[Lunch]:
+        &#34;&#34;&#34;Get lunches.
+
+        Args:
+            date (datetime): Date from which you want to get lunches.
+
+        Returns:
+            Optional[Lunch]: Lunch object for entered date.
+        &#34;&#34;&#34;
+
         return Lunches(self).get_lunch(date)
 
     def get_notifications(self) -&gt; list[TimelineEvent]:
+        &#34;&#34;&#34;Get list of all available notifications.
+
+        Returns:
+            list[TimelineEvent]: List of `TimelineEvent`s.
+        &#34;&#34;&#34;
+
         return TimelineEvents(self).get_notifications()
 
     def cloud_upload(self, fd: TextIOWrapper) -&gt; EduCloudFile:
+        &#34;&#34;&#34;Upload file to EduPage cloud.
+
+        Args:
+            fd (TextIOWrapper): File you want to upload.
+
+        Returns:
+            EduCloudFile: Object of uploaded file.
+        &#34;&#34;&#34;
+
         return Cloud(self).upload_file(fd)
 
     def get_grades(self) -&gt; list[EduGrade]:
+        &#34;&#34;&#34;Get list of all available grades.
+
+        Returns:
+            list[EduGrade]: List of `EduGrade`s.
+        &#34;&#34;&#34;
+
         return Grades(self).get_grades()
 
     def get_user_id(self) -&gt; str:
+        &#34;&#34;&#34;Get your EduPage user ID.
+
+        Returns:
+            str: Your EduPage user ID.
+        &#34;&#34;&#34;
+
         return self.data.get(&#34;userid&#34;)
 
-    # method -&gt; &#34;GET&#34; or &#34;POST&#34;
     def custom_request(self, url: str, method: str, data: str = &#34;&#34;, headers: dict = {}) -&gt; Response:
+        &#34;&#34;&#34;Send custom request to EduPage.
+
+        Args:
+            url (str): URL endpoint.
+            method (str): Method (`GET` or `POST`).
+            data (str, optional): Request data. Defaults to `&#34;&#34;`.
+            headers (dict, optional): Request headers. Defaults to `{}`.
+
+        Returns:
+            Response: Response.
+        &#34;&#34;&#34;
+
         return CustomRequest(self).custom_request(url, method, data, headers)</code></pre>
 </details>
 </section>
@@ -162,13 +258,24 @@ class Edupage(EdupageModule):
 <span>(</span><span>request_timeout=5)</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Initialize <code><a title="edupage_api.Edupage" href="#edupage_api.Edupage">Edupage</a></code> object</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>request_timeout</code></strong> :&ensp;<code>int</code>, optional</dt>
+<dd>Length of request timeout in seconds. If want to upload bigger files, you will have to increase its value. Defaults to <code>5</code>.</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">class Edupage(EdupageModule):
     def __init__(self, request_timeout=5):
+        &#34;&#34;&#34;Initialize `Edupage` object
+
+        Args:
+            request_timeout (int, optional): Length of request timeout in seconds. If want to upload bigger files, you will have to increase its value. Defaults to `5`.
+        &#34;&#34;&#34;
+
         self.data = None
         self.is_logged_in = False
         self.subdomain = None
@@ -177,40 +284,130 @@ class Edupage(EdupageModule):
         self.session.request = functools.partial(self.session.request, timeout=request_timeout)
 
     def login(self, username: str, password: str, subdomain: str):
+        &#34;&#34;&#34;Login while specifying the subdomain to log into.
+
+        Args:
+            username (str): Your username.
+            password (str): Your password.
+            subdomain (str): Subdomain of your school (https://{subdomain}.edupage.org).
+        &#34;&#34;&#34;
+
         Login(self).login(username, password, subdomain)
 
     def login_auto(self, username: str, password: str):
+        &#34;&#34;&#34;Login using https://portal.edupage.org. If this doesn&#39;t work, please use `Edupage.login`.
+
+        Args:
+            username (str): Your username.
+            password (str): Your password.
+        &#34;&#34;&#34;
+
         Login(self).login_auto(username, password)
 
     def get_students(self) -&gt; Optional[list[EduStudent]]:
+        &#34;&#34;&#34;Get list of all students in your class.
+
+        Returns:
+            Optional[list[EduStudent]]: List of `EduStudent`s.
+        &#34;&#34;&#34;
+
         return People(self).get_students()
 
     def get_teachers(self) -&gt; Optional[list[EduTeacher]]:
+        &#34;&#34;&#34;Get list of all teachers in your school.
+
+        Returns:
+            Optional[list[EduTeacher]]: List of `EduTeacher`s.
+        &#34;&#34;&#34;
+
         return People(self).get_teachers()
 
     def send_message(self, recipients: Optional[list[EduAccount]], body: str):
+        &#34;&#34;&#34;Send message.
+
+        Args:
+            recipients (Optional[list[EduAccount]]): Recipients of your message (list of `EduAccount`s).
+            body (str): Body of your message.
+        &#34;&#34;&#34;
+
         Messages(self).send_message(recipients, body)
 
     def get_timetable(self, date: datetime) -&gt; Optional[Timetable]:
+        &#34;&#34;&#34;Get timetable.
+
+        Args:
+            date (datetime): Date from which you want to get timetable.
+
+        Returns:
+            Optional[Timetable]: Timetable object for entered date.
+        &#34;&#34;&#34;
+
         return Timetables(self).get_timetable(date)
 
     def get_lunches(self, date: datetime) -&gt; Optional[Lunch]:
+        &#34;&#34;&#34;Get lunches.
+
+        Args:
+            date (datetime): Date from which you want to get lunches.
+
+        Returns:
+            Optional[Lunch]: Lunch object for entered date.
+        &#34;&#34;&#34;
+
         return Lunches(self).get_lunch(date)
 
     def get_notifications(self) -&gt; list[TimelineEvent]:
+        &#34;&#34;&#34;Get list of all available notifications.
+
+        Returns:
+            list[TimelineEvent]: List of `TimelineEvent`s.
+        &#34;&#34;&#34;
+
         return TimelineEvents(self).get_notifications()
 
     def cloud_upload(self, fd: TextIOWrapper) -&gt; EduCloudFile:
+        &#34;&#34;&#34;Upload file to EduPage cloud.
+
+        Args:
+            fd (TextIOWrapper): File you want to upload.
+
+        Returns:
+            EduCloudFile: Object of uploaded file.
+        &#34;&#34;&#34;
+
         return Cloud(self).upload_file(fd)
 
     def get_grades(self) -&gt; list[EduGrade]:
+        &#34;&#34;&#34;Get list of all available grades.
+
+        Returns:
+            list[EduGrade]: List of `EduGrade`s.
+        &#34;&#34;&#34;
+
         return Grades(self).get_grades()
 
     def get_user_id(self) -&gt; str:
+        &#34;&#34;&#34;Get your EduPage user ID.
+
+        Returns:
+            str: Your EduPage user ID.
+        &#34;&#34;&#34;
+
         return self.data.get(&#34;userid&#34;)
 
-    # method -&gt; &#34;GET&#34; or &#34;POST&#34;
     def custom_request(self, url: str, method: str, data: str = &#34;&#34;, headers: dict = {}) -&gt; Response:
+        &#34;&#34;&#34;Send custom request to EduPage.
+
+        Args:
+            url (str): URL endpoint.
+            method (str): Method (`GET` or `POST`).
+            data (str, optional): Request data. Defaults to `&#34;&#34;`.
+            headers (dict, optional): Request headers. Defaults to `{}`.
+
+        Returns:
+            Response: Response.
+        &#34;&#34;&#34;
+
         return CustomRequest(self).custom_request(url, method, data, headers)</code></pre>
 </details>
 <h3>Ancestors</h3>
@@ -242,12 +439,31 @@ class Edupage(EdupageModule):
 <span>def <span class="ident">cloud_upload</span></span>(<span>self, fd: _io.TextIOWrapper) ‑> <a title="edupage_api.cloud.EduCloudFile" href="cloud.html#edupage_api.cloud.EduCloudFile">EduCloudFile</a></span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Upload file to EduPage cloud.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>fd</code></strong> :&ensp;<code>TextIOWrapper</code></dt>
+<dd>File you want to upload.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>EduCloudFile</code></dt>
+<dd>Object of uploaded file.</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def cloud_upload(self, fd: TextIOWrapper) -&gt; EduCloudFile:
+    &#34;&#34;&#34;Upload file to EduPage cloud.
+
+    Args:
+        fd (TextIOWrapper): File you want to upload.
+
+    Returns:
+        EduCloudFile: Object of uploaded file.
+    &#34;&#34;&#34;
+
     return Cloud(self).upload_file(fd)</code></pre>
 </details>
 </dd>
@@ -255,12 +471,40 @@ class Edupage(EdupageModule):
 <span>def <span class="ident">custom_request</span></span>(<span>self, url: str, method: str, data: str = '', headers: dict = {}) ‑> requests.models.Response</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Send custom request to EduPage.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>url</code></strong> :&ensp;<code>str</code></dt>
+<dd>URL endpoint.</dd>
+<dt><strong><code>method</code></strong> :&ensp;<code>str</code></dt>
+<dd>Method (<code>GET</code> or <code>POST</code>).</dd>
+<dt><strong><code>data</code></strong> :&ensp;<code>str</code>, optional</dt>
+<dd>Request data. Defaults to <code>""</code>.</dd>
+<dt><strong><code>headers</code></strong> :&ensp;<code>dict</code>, optional</dt>
+<dd>Request headers. Defaults to <code>{}</code>.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>Response</code></dt>
+<dd>Response.</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def custom_request(self, url: str, method: str, data: str = &#34;&#34;, headers: dict = {}) -&gt; Response:
+    &#34;&#34;&#34;Send custom request to EduPage.
+
+    Args:
+        url (str): URL endpoint.
+        method (str): Method (`GET` or `POST`).
+        data (str, optional): Request data. Defaults to `&#34;&#34;`.
+        headers (dict, optional): Request headers. Defaults to `{}`.
+
+    Returns:
+        Response: Response.
+    &#34;&#34;&#34;
+
     return CustomRequest(self).custom_request(url, method, data, headers)</code></pre>
 </details>
 </dd>
@@ -268,12 +512,23 @@ class Edupage(EdupageModule):
 <span>def <span class="ident">get_grades</span></span>(<span>self) ‑> list[<a title="edupage_api.grades.EduGrade" href="grades.html#edupage_api.grades.EduGrade">EduGrade</a>]</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Get list of all available grades.</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>list[EduGrade]</code></dt>
+<dd>List of <code>EduGrade</code>s.</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def get_grades(self) -&gt; list[EduGrade]:
+    &#34;&#34;&#34;Get list of all available grades.
+
+    Returns:
+        list[EduGrade]: List of `EduGrade`s.
+    &#34;&#34;&#34;
+
     return Grades(self).get_grades()</code></pre>
 </details>
 </dd>
@@ -281,12 +536,31 @@ class Edupage(EdupageModule):
 <span>def <span class="ident">get_lunches</span></span>(<span>self, date: datetime.datetime) ‑> Optional[<a title="edupage_api.lunches.Lunch" href="lunches.html#edupage_api.lunches.Lunch">Lunch</a>]</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Get lunches.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>date</code></strong> :&ensp;<code>datetime</code></dt>
+<dd>Date from which you want to get lunches.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>Optional[Lunch]</code></dt>
+<dd>Lunch object for entered date.</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def get_lunches(self, date: datetime) -&gt; Optional[Lunch]:
+    &#34;&#34;&#34;Get lunches.
+
+    Args:
+        date (datetime): Date from which you want to get lunches.
+
+    Returns:
+        Optional[Lunch]: Lunch object for entered date.
+    &#34;&#34;&#34;
+
     return Lunches(self).get_lunch(date)</code></pre>
 </details>
 </dd>
@@ -294,38 +568,71 @@ class Edupage(EdupageModule):
 <span>def <span class="ident">get_notifications</span></span>(<span>self) ‑> list[<a title="edupage_api.timeline.TimelineEvent" href="timeline.html#edupage_api.timeline.TimelineEvent">TimelineEvent</a>]</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Get list of all available notifications.</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>list[TimelineEvent]</code></dt>
+<dd>List of <code>TimelineEvent</code>s.</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def get_notifications(self) -&gt; list[TimelineEvent]:
+    &#34;&#34;&#34;Get list of all available notifications.
+
+    Returns:
+        list[TimelineEvent]: List of `TimelineEvent`s.
+    &#34;&#34;&#34;
+
     return TimelineEvents(self).get_notifications()</code></pre>
 </details>
 </dd>
 <dt id="edupage_api.Edupage.get_students"><code class="name flex">
-<span>def <span class="ident">get_students</span></span>(<span>self) ‑> Optional[list[<a title="edupage_api.people.EduStudent" href="people.html#edupage_api.people.EduStudent">EduStudent</a>]]</span>
+<span>def <span class="ident">get_students</span></span>(<span>self) ‑> Optional[list]</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Get list of all students in your class.</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>Optional[list[EduStudent]]</code></dt>
+<dd>List of <code>EduStudent</code>s.</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def get_students(self) -&gt; Optional[list[EduStudent]]:
+    &#34;&#34;&#34;Get list of all students in your class.
+
+    Returns:
+        Optional[list[EduStudent]]: List of `EduStudent`s.
+    &#34;&#34;&#34;
+
     return People(self).get_students()</code></pre>
 </details>
 </dd>
 <dt id="edupage_api.Edupage.get_teachers"><code class="name flex">
-<span>def <span class="ident">get_teachers</span></span>(<span>self) ‑> Optional[list[<a title="edupage_api.people.EduTeacher" href="people.html#edupage_api.people.EduTeacher">EduTeacher</a>]]</span>
+<span>def <span class="ident">get_teachers</span></span>(<span>self) ‑> Optional[list]</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Get list of all teachers in your school.</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>Optional[list[EduTeacher]]</code></dt>
+<dd>List of <code>EduTeacher</code>s.</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def get_teachers(self) -&gt; Optional[list[EduTeacher]]:
+    &#34;&#34;&#34;Get list of all teachers in your school.
+
+    Returns:
+        Optional[list[EduTeacher]]: List of `EduTeacher`s.
+    &#34;&#34;&#34;
+
     return People(self).get_teachers()</code></pre>
 </details>
 </dd>
@@ -333,12 +640,31 @@ class Edupage(EdupageModule):
 <span>def <span class="ident">get_timetable</span></span>(<span>self, date: datetime.datetime) ‑> Optional[<a title="edupage_api.timetables.Timetable" href="timetables.html#edupage_api.timetables.Timetable">Timetable</a>]</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Get timetable.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>date</code></strong> :&ensp;<code>datetime</code></dt>
+<dd>Date from which you want to get timetable.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>Optional[Timetable]</code></dt>
+<dd>Timetable object for entered date.</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def get_timetable(self, date: datetime) -&gt; Optional[Timetable]:
+    &#34;&#34;&#34;Get timetable.
+
+    Args:
+        date (datetime): Date from which you want to get timetable.
+
+    Returns:
+        Optional[Timetable]: Timetable object for entered date.
+    &#34;&#34;&#34;
+
     return Timetables(self).get_timetable(date)</code></pre>
 </details>
 </dd>
@@ -346,12 +672,23 @@ class Edupage(EdupageModule):
 <span>def <span class="ident">get_user_id</span></span>(<span>self) ‑> str</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Get your EduPage user ID.</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>str</code></dt>
+<dd>Your EduPage user ID.</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def get_user_id(self) -&gt; str:
+    &#34;&#34;&#34;Get your EduPage user ID.
+
+    Returns:
+        str: Your EduPage user ID.
+    &#34;&#34;&#34;
+
     return self.data.get(&#34;userid&#34;)</code></pre>
 </details>
 </dd>
@@ -359,12 +696,29 @@ class Edupage(EdupageModule):
 <span>def <span class="ident">login</span></span>(<span>self, username: str, password: str, subdomain: str)</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Login while specifying the subdomain to log into.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>username</code></strong> :&ensp;<code>str</code></dt>
+<dd>Your username.</dd>
+<dt><strong><code>password</code></strong> :&ensp;<code>str</code></dt>
+<dd>Your password.</dd>
+<dt><strong><code>subdomain</code></strong> :&ensp;<code>str</code></dt>
+<dd>Subdomain of your school (<a href="https://{subdomain}.edupage.org">https://{subdomain}.edupage.org</a>).</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def login(self, username: str, password: str, subdomain: str):
+    &#34;&#34;&#34;Login while specifying the subdomain to log into.
+
+    Args:
+        username (str): Your username.
+        password (str): Your password.
+        subdomain (str): Subdomain of your school (https://{subdomain}.edupage.org).
+    &#34;&#34;&#34;
+
     Login(self).login(username, password, subdomain)</code></pre>
 </details>
 </dd>
@@ -372,25 +726,53 @@ class Edupage(EdupageModule):
 <span>def <span class="ident">login_auto</span></span>(<span>self, username: str, password: str)</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Login using <a href="https://portal.edupage.org.">https://portal.edupage.org.</a> If this doesn't work, please use <code><a title="edupage_api.Edupage.login" href="#edupage_api.Edupage.login">Edupage.login()</a></code>.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>username</code></strong> :&ensp;<code>str</code></dt>
+<dd>Your username.</dd>
+<dt><strong><code>password</code></strong> :&ensp;<code>str</code></dt>
+<dd>Your password.</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def login_auto(self, username: str, password: str):
+    &#34;&#34;&#34;Login using https://portal.edupage.org. If this doesn&#39;t work, please use `Edupage.login`.
+
+    Args:
+        username (str): Your username.
+        password (str): Your password.
+    &#34;&#34;&#34;
+
     Login(self).login_auto(username, password)</code></pre>
 </details>
 </dd>
 <dt id="edupage_api.Edupage.send_message"><code class="name flex">
-<span>def <span class="ident">send_message</span></span>(<span>self, recipients: Optional[list[<a title="edupage_api.people.EduAccount" href="people.html#edupage_api.people.EduAccount">EduAccount</a>]], body: str)</span>
+<span>def <span class="ident">send_message</span></span>(<span>self, recipients: Optional[list], body: str)</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Send message.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>recipients</code></strong> :&ensp;<code>Optional[list[EduAccount]]</code></dt>
+<dd>Recipients of your message (list of <code>EduAccount</code>s).</dd>
+<dt><strong><code>body</code></strong> :&ensp;<code>str</code></dt>
+<dd>Body of your message.</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def send_message(self, recipients: Optional[list[EduAccount]], body: str):
+    &#34;&#34;&#34;Send message.
+
+    Args:
+        recipients (Optional[list[EduAccount]]): Recipients of your message (list of `EduAccount`s).
+        body (str): Body of your message.
+    &#34;&#34;&#34;
+
     Messages(self).send_message(recipients, body)</code></pre>
 </details>
 </dd>

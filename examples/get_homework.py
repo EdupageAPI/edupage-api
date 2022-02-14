@@ -29,20 +29,22 @@ for hw in homework:
 
         hw_title = old_vals.get("title")
 
-    text = f"Homework from {hw.timestamp}:\n"
+    text = f"Homework from {hw.timestamp}\n"
 
-    hw_text = hw_title if hw_title else hw.text.replace("\n", " ")
+    hw_text = hw_title or hw.text.replace("\n", " ")
     text += (f"{hw_text}")
 
     if due_date:
         now = datetime.now()
+        text += f"\nDue to: {due_date} -> "
+
         if due_date > now:
-            text += "\n - DUE -"
+            text += "DUE"
         else:
             homework_not_due += 1
-            text += "\n- UNFINISHED -"
+            text += "UNFINISHED"
 
     print(text)
-    print("-------------------------------------")
+    print("—")
 
-print(f"You have {homework_not_due} homework that is not finished.")
+print(f"You have {homework_not_due} unfinished homework assignments.")

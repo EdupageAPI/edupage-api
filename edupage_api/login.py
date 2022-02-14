@@ -17,8 +17,17 @@ class Login(Module):
 
         self.edupage.gsec_hash = data.split("ASC.gsechash=\"")[1].split("\"")[0]
 
-    """Login with portal.edupage.org. if this doesn't work, please use `Login.login`"""
     def login_auto(self, username: str, password: str):
+        """Login using https://portal.edupage.org. If this doesn't work, please use `Login.login`.
+
+        Args:
+            username (str): Your username.
+            password (str): Your password.
+
+        Raises:
+            BadCredentialsException: Your credentials are invalid.
+        """
+
         parameters = {
             "meno": username,
             "heslo": password,
@@ -36,8 +45,18 @@ class Login(Module):
         self.__parse_login_data(data)
         self.edupage.subdomain = data.split("-->")[0].split(" ")[-1]
 
-    """Login while specifying the subdomain to log into."""
     def login(self, username: str, password: str, subdomain: str):
+        """Login while specifying the subdomain to log into.
+
+        Args:
+            username (str): Your username.
+            password (str): Your password.
+            subdomain (str): Subdomain of your school (https://{subdomain}.edupage.org).
+
+        Raises:
+            BadCredentialsException: Your credentials are invalid.
+        """
+
         request_url = f"https://{subdomain}.edupage.org/login/index.php"
 
         csrf_response = self.edupage.session.get(request_url).content.decode()

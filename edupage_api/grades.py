@@ -61,7 +61,7 @@ class Grades(Module):
             title = details.get("p_meno")
 
             grade_n = grade.get("data")
-            grade_n_int = int(grade_n)
+            grade_n_int = int("".join(filter(str.isdigit, grade_n)))
 
             date_str = grade.get("datum")
             date = datetime.strptime(date_str, "%Y-%m-%d %H:%M:%S")

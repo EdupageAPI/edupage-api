@@ -33,7 +33,7 @@ class EduAccount:
 
     @staticmethod
     def recognize_account_type(person_data: dict) -> EduAccountType:
-        if person_data.get("number_in_class") is not None:
+        if person_data.get("numberinclass") is not None:
             return EduAccountType.STUDENT
         elif person_data.get("classroomid") is not None:
             return EduAccountType.TEACHER

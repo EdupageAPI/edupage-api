@@ -164,11 +164,11 @@ class Edupage(EdupageModule):
 
     def get_missing_teachers(self, date: date) -> list[EduTeacher]:
         """Get missing teachers for a given date.
-        
+
         Args:
-            date (datetime.date): The date you want to get this information for
-        
+            date (datetime.date): The date you want to get this information for.
+
         Returns:
-            list[EduTeacher]: List of the missing teachers for `date`
+            list[EduTeacher]: List of the missing teachers for `date`.
         """
         return Substitution(self).get_missing_teachers(date)

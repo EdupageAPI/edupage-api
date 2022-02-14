@@ -108,7 +108,8 @@ class Lunch:
 class Lunches(Module):
     @ModuleHelper.logged_in
     def get_lunch(self, date: datetime):
-        request_url = f"https://{self.edupage.subdomain}.edupage.org/menu/"
+        date_strftime = date.strftime("%Y%m%d")
+        request_url = f"https://{self.edupage.subdomain}.edupage.org/menu/?date={date_strftime}"
         response = self.edupage.session.get(request_url).content.decode()
 
         boarder_id = response.split("var stravnikid = \"")[1].split("\"")[0]

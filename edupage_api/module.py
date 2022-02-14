@@ -71,7 +71,7 @@ class ModuleHelper:
     @staticmethod
     def strptime_or_none(date_string: str, format: str) -> Union[datetime, None]:
         try:
-            datetime.strptime(date_string, format)
+            return datetime.strptime(date_string, format)
         except ValueError:
             return None
 

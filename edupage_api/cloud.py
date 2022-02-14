@@ -14,7 +14,7 @@ class EduCloudFile:
         self.name = name
 
     def get_url(self, edupage: EdupageModule):
-        return f"https://{edupage.subdomain}.edupage.org{self.name}"
+        return f"https://{edupage.subdomain}.edupage.org{self.file}"
 
     @staticmethod
     def parse(data: dict):

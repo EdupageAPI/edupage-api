@@ -41,9 +41,7 @@ class Substitution(Module):
             raise ExpiredSessionException("Invalid gsec hash! "
                                           "(Expired session, try logging in again!)")
 
-        html = response.get("r")
-
-        return html
+        return response.get("r")
 
     @ModuleHelper.logged_in
     def get_missing_teachers(self, date: date) -> list[EduTeacher]:
@@ -82,50 +80,34 @@ class Substitution(Module):
         footer_delim = ("<div style=\"text-align:center;font-size:12px\">"
                         "<a href=\"https://www.asctimetables.com\" target=\"_blank\">"
                         "www.asctimetables.com</a> -")
-        changes_by_class_dirty[-1] = (changes_by_class_dirty[-1].split(footer_delim)[0]
-                                                                .replace(footer_delim, ""))
+        changes_by_class_dirty[-1] = changes_by_class_dirty[-1].split(footer_delim)[0]
 
         changes = [
-            x.replace("</span>", ";")
-            for x in changes_by_class_dirty
-        ]
-        changes = [
             (x.replace("</div>", "")
-              .replace("<div class=\"rows\">", ""))
-            for x in changes
-        ]
-        changes = [
-            (x.replace("<div class=\"period\">", "")
-              .replace("<span class=\"print-font-resizable\">", ""))
-            for x in changes
-        ]
-        changes = [
-            x.replace("<div class=\"info\">", "")
-            for x in changes
+              .replace("<div class=\"rows\">", "")
+              .replace("<div class=\"period\">", "")
+              .replace("<span class=\"print-font-resizable\">", "")
+              .replace("<div class=\"info\">", ""))
+            for x in changes_by_class_dirty
         ]
 
         lesson_changes = []
         for change in changes:
-            change_class, lesson_n, teacher, *_ = change.split(";")
+            change_class, lesson_n, teacher, *_ = change.split("</span>")
 
             action = None
             if "<div class=\"row change\">" in lesson_n:
                 action = Action.CHANGE
-                lesson_n = lesson_n.replace("<div class=\"row change\">", "")
             elif "<div class=\"row remove\">" in lesson_n:
                 action = Action.DELETION
-                lesson_n = (lesson_n.replace("<div class=\"row remove\">", "")
-                                    .replace("(", "")
-                                    .replace(")", ""))
             elif "<div class=\"row add\">" in lesson_n:
                 action = Action.ADDITION
-                lesson_n = lesson_n.replace("<div class=\"row add\">", "")
 
             if "-" in lesson_n:
                 lesson_from, lesson_to = lesson_n.split(" - ")
-                lesson_n = (int(lesson_from), int(lesson_to))
+                lesson_n = (ModuleHelper.parse_int(lesson_from), ModuleHelper.parse_int(lesson_to))
             else:
-                lesson_n = int(lesson_n)
+                lesson_n = ModuleHelper.parse_int(lesson_n)
 
             lesson_change = TimetableChange(change_class, lesson_n, action)
             lesson_changes.append(lesson_change)

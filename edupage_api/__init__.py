@@ -14,7 +14,7 @@ from edupage_api.lunches import Lunch, Lunches
 from edupage_api.messages import Messages
 from edupage_api.module import EdupageModule
 from edupage_api.people import EduAccount, EduStudent, EduTeacher, People
-from edupage_api.substitution import Substitution
+from edupage_api.substitution import Substitution, TimetableChange
 from edupage_api.timeline import TimelineEvent, TimelineEvents
 from edupage_api.timetables import Timetable, Timetables
 
@@ -174,3 +174,14 @@ class Edupage(EdupageModule):
             list[EduTeacher]: List of the missing teachers for `date`.
         """
         return Substitution(self).get_missing_teachers(date)
+    
+    def get_timetable_changes(self, date: date) -> list[TimetableChange]:
+        """Get the changes in the timetable for a given date.
+
+        Args:
+            date (datetime.date): The date you want to get this information for.
+        
+        Returns:
+            list[TimetableChange]: List of changes in the timetable
+        """
+        return Substitution(self).get_timetable_changes(date)

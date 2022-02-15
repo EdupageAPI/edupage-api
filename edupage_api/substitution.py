@@ -1,14 +1,26 @@
+import enum
 import json
 
 from datetime import date
+from typing import Union
 from edupage_api.exceptions import ExpiredSessionException, InvalidTeacherException
 from edupage_api.module import Module, ModuleHelper
 from edupage_api.people import EduTeacher, People
 
+class Action(enum.Enum):
+    DELETION = enum.auto()
+    CHANGE = enum.auto()
+    ADDITION = enum.auto()
+
+class TimetableChange:
+    def __init__(self, change_class: str, lesson_n: int, action: Union[Action, tuple[int, int]]):
+        self.change_class = change_class
+        self.lesson_n = lesson_n
+        self.action = action
+
 
 class Substitution(Module):
-    @ModuleHelper.logged_in
-    def get_missing_teachers(self, date: date) -> list[EduTeacher]:
+    def __get_substitution_data(self, date: date) -> str:
         url = f"https://{self.edupage.subdomain}.edupage.org/substitution/server/viewer.js?__func=getSubstViewerDayDataHtml"
 
         data = {
@@ -26,6 +38,12 @@ class Substitution(Module):
             raise ExpiredSessionException("Invalid gsec hash! (Expired session, try logging in again!)")
 
         html = response.get("r")
+
+        return html
+
+    @ModuleHelper.logged_in
+    def get_missing_teachers(self, date: date) -> list[EduTeacher]:
+        html = self.__get_substitution_data(date)
         missing_teachers_string = html.split("<span class=\"print-font-resizable\">")[1].split("</span>")[0]
 
         _title, missing_teachers = missing_teachers_string.split(": ")
@@ -39,3 +57,50 @@ class Substitution(Module):
             raise InvalidTeacherException("Invalid teacher in substitution! (The teacher is no longer frequenting this school)")
 
         return missing_teachers
+
+    @ModuleHelper.logged_in
+    def get_timetable_changes(self, date: date) -> list[TimetableChange]:
+        html = self.__get_substitution_data(date)
+
+        class_delim = "</div><div class=\"section print-nobreak\"><div class=\"header\"><span class=\"print-font-resizable\">"
+        changes_by_class_dirty = html.split(class_delim)[1:]
+
+        footer_delim = "<div style=\"text-align:center;font-size:12px\"><a href=\"https://www.asctimetables.com\" target=\"_blank\">www.asctimetables.com</a> -" 
+        changes_by_class_dirty[-1] = changes_by_class_dirty[-1].split(footer_delim)[0] \
+                                                                .replace(footer_delim, "")
+
+        changes = [x.replace("</span>", ";") for x in changes_by_class_dirty]
+        changes = [x.replace("</div>", "").replace("<div class=\"rows\">", "") for x in changes]
+        changes = [x.replace("<div class=\"period\">", "").replace("<span class=\"print-font-resizable\">", "") for x in changes]
+        changes = [x.replace("<div class=\"info\">", "") for x in changes]
+
+        lesson_changes = []
+        for change in changes:
+            change_class, lesson_n, teacher, *_ = change.split(";")
+            
+
+            action = None
+            if "<div class=\"row change\">" in lesson_n:
+                action = Action.CHANGE
+
+                lesson_n = lesson_n.replace("<div class=\"row change\">", "")
+                if "-" in lesson_n:
+                    lesson_from, lesson_to = lesson_n.split(" - ")
+
+                    lesson_n = (int(lesson_from), int(lesson_to))
+                else:
+                    lesson_n = int(lesson_n)
+            elif "<div class=\"row remove\">" in lesson_n:
+                action = Action.DELETION
+                lesson_n = lesson_n.replace("<div class=\"row remove\">", "") \
+                                    .replace("(", "").replace(")", "")
+                lesson_n = int(lesson_n)
+            elif "<div class=\"row add\">" in lesson_n:
+                action = Action.ADDITION
+                lesson_n = lesson_n.replace("<div class=\"row add\">", "")
+                lesson_n = int(lesson_n)
+
+            lesson_change = TimetableChange(change_class, lesson_n, action)
+            lesson_changes.append(lesson_change)
+
+        return lesson_changes

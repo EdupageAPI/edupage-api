@@ -21,10 +21,12 @@ from edupage_api.timetables import Timetable, Timetables
 
 class Edupage(EdupageModule):
     def __init__(self, request_timeout=5):
-        """Initialize `Edupage` object
+        """Initialize `Edupage` object.
 
         Args:
-            request_timeout (int, optional): Length of request timeout in seconds. If want to upload bigger files, you will have to increase its value. Defaults to `5`.
+            request_timeout (int, optional): Length of request timeout in seconds.
+                If want to upload bigger files, you will have to increase its value.
+                Defaults to `5`.
         """
 
         self.data = None

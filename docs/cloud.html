@@ -42,10 +42,28 @@ class EduCloudFile:
         self.name = name
 
     def get_url(self, edupage: EdupageModule):
-        return f&#34;https://{edupage.subdomain}.edupage.org{self.name}&#34;
+        &#34;&#34;&#34;Get url of given `EduCloudFile`.
+
+        Args:
+            edupage (EdupageModule): `Edupage` object.
+
+        Returns:
+            str: Direct URL to file.
+        &#34;&#34;&#34;
+
+        return f&#34;https://{edupage.subdomain}.edupage.org{self.file}&#34;
 
     @staticmethod
     def parse(data: dict):
+        &#34;&#34;&#34;Parse `EduCloudFile` data.
+
+        Args:
+            data (dict): Data to parse.
+
+        Returns:
+            EduCloudFile: `EduCloudFile` object.
+        &#34;&#34;&#34;
+
         return EduCloudFile(
             data.get(&#34;cloudid&#34;),
             data.get(&#34;extension&#34;),
@@ -58,6 +76,34 @@ class EduCloudFile:
 class Cloud(Module):
     @ModuleHelper.logged_in
     def upload_file(self, fd: TextIOWrapper) -&gt; EduCloudFile:
+        &#34;&#34;&#34;Upload file to EduPage cloud.
+
+        The file will be hosted forever (and for free) on EduPage&#39;s servers. The file is tied to
+        your user account, but anybody with a link can view it.
+
+        **Warning!** EduPage limits file size to 50 MB and the file can have only some extensions.
+        You can find all supported file extensions on this
+        [Edupage help site](https://help.edupage.org/?p=u1/u113/u132/u362/u467).
+
+        If you are willing to upload some files, you will probably have to increase the request
+        timeout.
+
+        ```
+        &gt;&gt;&gt; with open(&#34;image.jpg&#34;, &#34;rb&#34;) as f:
+        ...     edupage.cloud_upload(f)
+        &lt;edupage_api.cloud.EduCloudFile object at 0x10b107550&gt;
+        ```
+
+        Args:
+            fd (TextIOWrapper): File you want to upload.
+
+        Raises:
+            FailedToUploadFileException: There was a problem with uploading your file.
+
+        Returns:
+            EduCloudFile: `EduCloudFile` object.
+        &#34;&#34;&#34;
+
         request_url = f&#34;https://{self.edupage.subdomain}.edupage.org/timeline/?akcia=uploadAtt&#34;
 
         files = {&#34;att&#34;: fd}
@@ -97,6 +143,34 @@ class Cloud(Module):
 <pre><code class="python">class Cloud(Module):
     @ModuleHelper.logged_in
     def upload_file(self, fd: TextIOWrapper) -&gt; EduCloudFile:
+        &#34;&#34;&#34;Upload file to EduPage cloud.
+
+        The file will be hosted forever (and for free) on EduPage&#39;s servers. The file is tied to
+        your user account, but anybody with a link can view it.
+
+        **Warning!** EduPage limits file size to 50 MB and the file can have only some extensions.
+        You can find all supported file extensions on this
+        [Edupage help site](https://help.edupage.org/?p=u1/u113/u132/u362/u467).
+
+        If you are willing to upload some files, you will probably have to increase the request
+        timeout.
+
+        ```
+        &gt;&gt;&gt; with open(&#34;image.jpg&#34;, &#34;rb&#34;) as f:
+        ...     edupage.cloud_upload(f)
+        &lt;edupage_api.cloud.EduCloudFile object at 0x10b107550&gt;
+        ```
+
+        Args:
+            fd (TextIOWrapper): File you want to upload.
+
+        Raises:
+            FailedToUploadFileException: There was a problem with uploading your file.
+
+        Returns:
+            EduCloudFile: `EduCloudFile` object.
+        &#34;&#34;&#34;
+
         request_url = f&#34;https://{self.edupage.subdomain}.edupage.org/timeline/?akcia=uploadAtt&#34;
 
         files = {&#34;att&#34;: fd}
@@ -123,13 +197,67 @@ class Cloud(Module):
 <span>def <span class="ident">upload_file</span></span>(<span>self, fd: _io.TextIOWrapper) ‑> <a title="edupage_api.cloud.EduCloudFile" href="#edupage_api.cloud.EduCloudFile">EduCloudFile</a></span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Upload file to EduPage cloud.</p>
+<p>The file will be hosted forever (and for free) on EduPage's servers. The file is tied to
+your user account, but anybody with a link can view it.</p>
+<p><strong>Warning!</strong> EduPage limits file size to 50 MB and the file can have only some extensions.
+You can find all supported file extensions on this
+<a href="https://help.edupage.org/?p=u1/u113/u132/u362/u467">Edupage help site</a>.</p>
+<p>If you are willing to upload some files, you will probably have to increase the request
+timeout.</p>
+<pre><code>&gt;&gt;&gt; with open(&quot;image.jpg&quot;, &quot;rb&quot;) as f:
+...     edupage.cloud_upload(f)
+&lt;edupage_api.cloud.EduCloudFile object at 0x10b107550&gt;
+</code></pre>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>fd</code></strong> :&ensp;<code>TextIOWrapper</code></dt>
+<dd>File you want to upload.</dd>
+</dl>
+<h2 id="raises">Raises</h2>
+<dl>
+<dt><code>FailedToUploadFileException</code></dt>
+<dd>There was a problem with uploading your file.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code><a title="edupage_api.cloud.EduCloudFile" href="#edupage_api.cloud.EduCloudFile">EduCloudFile</a></code></dt>
+<dd><code><a title="edupage_api.cloud.EduCloudFile" href="#edupage_api.cloud.EduCloudFile">EduCloudFile</a></code> object.</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">@ModuleHelper.logged_in
 def upload_file(self, fd: TextIOWrapper) -&gt; EduCloudFile:
+    &#34;&#34;&#34;Upload file to EduPage cloud.
+
+    The file will be hosted forever (and for free) on EduPage&#39;s servers. The file is tied to
+    your user account, but anybody with a link can view it.
+
+    **Warning!** EduPage limits file size to 50 MB and the file can have only some extensions.
+    You can find all supported file extensions on this
+    [Edupage help site](https://help.edupage.org/?p=u1/u113/u132/u362/u467).
+
+    If you are willing to upload some files, you will probably have to increase the request
+    timeout.
+
+    ```
+    &gt;&gt;&gt; with open(&#34;image.jpg&#34;, &#34;rb&#34;) as f:
+    ...     edupage.cloud_upload(f)
+    &lt;edupage_api.cloud.EduCloudFile object at 0x10b107550&gt;
+    ```
+
+    Args:
+        fd (TextIOWrapper): File you want to upload.
+
+    Raises:
+        FailedToUploadFileException: There was a problem with uploading your file.
+
+    Returns:
+        EduCloudFile: `EduCloudFile` object.
+    &#34;&#34;&#34;
+
     request_url = f&#34;https://{self.edupage.subdomain}.edupage.org/timeline/?akcia=uploadAtt&#34;
 
     files = {&#34;att&#34;: fd}
@@ -168,10 +296,28 @@ def upload_file(self, fd: TextIOWrapper) -&gt; EduCloudFile:
         self.name = name
 
     def get_url(self, edupage: EdupageModule):
-        return f&#34;https://{edupage.subdomain}.edupage.org{self.name}&#34;
+        &#34;&#34;&#34;Get url of given `EduCloudFile`.
+
+        Args:
+            edupage (EdupageModule): `Edupage` object.
+
+        Returns:
+            str: Direct URL to file.
+        &#34;&#34;&#34;
+
+        return f&#34;https://{edupage.subdomain}.edupage.org{self.file}&#34;
 
     @staticmethod
     def parse(data: dict):
+        &#34;&#34;&#34;Parse `EduCloudFile` data.
+
+        Args:
+            data (dict): Data to parse.
+
+        Returns:
+            EduCloudFile: `EduCloudFile` object.
+        &#34;&#34;&#34;
+
         return EduCloudFile(
             data.get(&#34;cloudid&#34;),
             data.get(&#34;extension&#34;),
@@ -186,13 +332,32 @@ def upload_file(self, fd: TextIOWrapper) -&gt; EduCloudFile:
 <span>def <span class="ident">parse</span></span>(<span>data: dict)</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Parse <code><a title="edupage_api.cloud.EduCloudFile" href="#edupage_api.cloud.EduCloudFile">EduCloudFile</a></code> data.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>data</code></strong> :&ensp;<code>dict</code></dt>
+<dd>Data to parse.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code><a title="edupage_api.cloud.EduCloudFile" href="#edupage_api.cloud.EduCloudFile">EduCloudFile</a></code></dt>
+<dd><code><a title="edupage_api.cloud.EduCloudFile" href="#edupage_api.cloud.EduCloudFile">EduCloudFile</a></code> object.</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">@staticmethod
 def parse(data: dict):
+    &#34;&#34;&#34;Parse `EduCloudFile` data.
+
+    Args:
+        data (dict): Data to parse.
+
+    Returns:
+        EduCloudFile: `EduCloudFile` object.
+    &#34;&#34;&#34;
+
     return EduCloudFile(
         data.get(&#34;cloudid&#34;),
         data.get(&#34;extension&#34;),
@@ -209,13 +374,32 @@ def parse(data: dict):
 <span>def <span class="ident">get_url</span></span>(<span>self, edupage: <a title="edupage_api.module.EdupageModule" href="module.html#edupage_api.module.EdupageModule">EdupageModule</a>)</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Get url of given <code><a title="edupage_api.cloud.EduCloudFile" href="#edupage_api.cloud.EduCloudFile">EduCloudFile</a></code>.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>edupage</code></strong> :&ensp;<code>EdupageModule</code></dt>
+<dd><code>Edupage</code> object.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>str</code></dt>
+<dd>Direct URL to file.</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def get_url(self, edupage: EdupageModule):
-    return f&#34;https://{edupage.subdomain}.edupage.org{self.name}&#34;</code></pre>
+    &#34;&#34;&#34;Get url of given `EduCloudFile`.
+
+    Args:
+        edupage (EdupageModule): `Edupage` object.
+
+    Returns:
+        str: Direct URL to file.
+    &#34;&#34;&#34;
+
+    return f&#34;https://{edupage.subdomain}.edupage.org{self.file}&#34;</code></pre>
 </details>
 </dd>
 </dl>

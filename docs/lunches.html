@@ -136,7 +136,8 @@ class Lunch:
 class Lunches(Module):
     @ModuleHelper.logged_in
     def get_lunch(self, date: datetime):
-        request_url = f&#34;https://{self.edupage.subdomain}.edupage.org/menu/&#34;
+        date_strftime = date.strftime(&#34;%Y%m%d&#34;)
+        request_url = f&#34;https://{self.edupage.subdomain}.edupage.org/menu/?date={date_strftime}&#34;
         response = self.edupage.session.get(request_url).content.decode()
 
         boarder_id = response.split(&#34;var stravnikid = \&#34;&#34;)[1].split(&#34;\&#34;&#34;)[0]
@@ -323,7 +324,8 @@ class Lunches(Module):
 <pre><code class="python">class Lunches(Module):
     @ModuleHelper.logged_in
     def get_lunch(self, date: datetime):
-        request_url = f&#34;https://{self.edupage.subdomain}.edupage.org/menu/&#34;
+        date_strftime = date.strftime(&#34;%Y%m%d&#34;)
+        request_url = f&#34;https://{self.edupage.subdomain}.edupage.org/menu/?date={date_strftime}&#34;
         response = self.edupage.session.get(request_url).content.decode()
 
         boarder_id = response.split(&#34;var stravnikid = \&#34;&#34;)[1].split(&#34;\&#34;&#34;)[0]
@@ -410,7 +412,8 @@ class Lunches(Module):
 </summary>
 <pre><code class="python">@ModuleHelper.logged_in
 def get_lunch(self, date: datetime):
-    request_url = f&#34;https://{self.edupage.subdomain}.edupage.org/menu/&#34;
+    date_strftime = date.strftime(&#34;%Y%m%d&#34;)
+    request_url = f&#34;https://{self.edupage.subdomain}.edupage.org/menu/?date={date_strftime}&#34;
     response = self.edupage.session.get(request_url).content.decode()
 
     boarder_id = response.split(&#34;var stravnikid = \&#34;&#34;)[1].split(&#34;\&#34;&#34;)[0]

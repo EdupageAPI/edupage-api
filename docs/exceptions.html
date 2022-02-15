@@ -55,6 +55,14 @@ class FailedToUploadFileException(Exception):
 
 
 class FailedToParseGradeDataError(Exception):
+    pass
+
+
+class ExpiredSessionException(Exception):
+    pass
+
+
+class InvalidTeacherException(Exception):
     pass</code></pre>
 </details>
 </section>
@@ -78,6 +86,25 @@ class FailedToParseGradeDataError(Exception):
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">class BadCredentialsException(Exception):
+    pass</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>builtins.Exception</li>
+<li>builtins.BaseException</li>
+</ul>
+</dd>
+<dt id="edupage_api.exceptions.ExpiredSessionException"><code class="flex name class">
+<span>class <span class="ident">ExpiredSessionException</span></span>
+<span>(</span><span>*args, **kwargs)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Common base class for all non-exit exceptions.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class ExpiredSessionException(Exception):
     pass</code></pre>
 </details>
 <h3>Ancestors</h3>
@@ -154,6 +181,25 @@ class FailedToParseGradeDataError(Exception):
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">class FailedToUploadFileException(Exception):
+    pass</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>builtins.Exception</li>
+<li>builtins.BaseException</li>
+</ul>
+</dd>
+<dt id="edupage_api.exceptions.InvalidTeacherException"><code class="flex name class">
+<span>class <span class="ident">InvalidTeacherException</span></span>
+<span>(</span><span>*args, **kwargs)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Common base class for all non-exit exceptions.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class InvalidTeacherException(Exception):
     pass</code></pre>
 </details>
 <h3>Ancestors</h3>
@@ -239,6 +285,9 @@ class FailedToParseGradeDataError(Exception):
 <h4><code><a title="edupage_api.exceptions.BadCredentialsException" href="#edupage_api.exceptions.BadCredentialsException">BadCredentialsException</a></code></h4>
 </li>
 <li>
+<h4><code><a title="edupage_api.exceptions.ExpiredSessionException" href="#edupage_api.exceptions.ExpiredSessionException">ExpiredSessionException</a></code></h4>
+</li>
+<li>
 <h4><code><a title="edupage_api.exceptions.FailedToChangeLunchError" href="#edupage_api.exceptions.FailedToChangeLunchError">FailedToChangeLunchError</a></code></h4>
 </li>
 <li>
@@ -249,6 +298,9 @@ class FailedToParseGradeDataError(Exception):
 </li>
 <li>
 <h4><code><a title="edupage_api.exceptions.FailedToUploadFileException" href="#edupage_api.exceptions.FailedToUploadFileException">FailedToUploadFileException</a></code></h4>
+</li>
+<li>
+<h4><code><a title="edupage_api.exceptions.InvalidTeacherException" href="#edupage_api.exceptions.InvalidTeacherException">InvalidTeacherException</a></code></h4>
 </li>
 <li>
 <h4><code><a title="edupage_api.exceptions.MissingDataException" href="#edupage_api.exceptions.MissingDataException">MissingDataException</a></code></h4>

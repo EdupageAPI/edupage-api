@@ -88,8 +88,7 @@ class Grades(Module):
             details = grade_details.get(event_id_str)
             title = details.get(&#34;p_meno&#34;)
 
-            grade_n = grade.get(&#34;data&#34;)
-            grade_n_int = int(grade_n)
+            grade_n = ModuleHelper.parse_int(grade.get(&#34;data&#34;))
 
             date_str = grade.get(&#34;datum&#34;)
             date = datetime.strptime(date_str, &#34;%Y-%m-%d %H:%M:%S&#34;)
@@ -126,7 +125,7 @@ class Grades(Module):
             except:
                 verbal = True
 
-            grade = EduGrade(event_id, title, grade_n_int, date, subject_id,
+            grade = EduGrade(event_id, title, grade_n, date, subject_id,
                              subject_name, teacher, max_points, importance, verbal, percent)
             output.append(grade)
 
@@ -215,8 +214,7 @@ class Grades(Module):
             details = grade_details.get(event_id_str)
             title = details.get(&#34;p_meno&#34;)
 
-            grade_n = grade.get(&#34;data&#34;)
-            grade_n_int = int(grade_n)
+            grade_n = ModuleHelper.parse_int(grade.get(&#34;data&#34;))
 
             date_str = grade.get(&#34;datum&#34;)
             date = datetime.strptime(date_str, &#34;%Y-%m-%d %H:%M:%S&#34;)
@@ -253,7 +251,7 @@ class Grades(Module):
             except:
                 verbal = True
 
-            grade = EduGrade(event_id, title, grade_n_int, date, subject_id,
+            grade = EduGrade(event_id, title, grade_n, date, subject_id,
                              subject_name, teacher, max_points, importance, verbal, percent)
             output.append(grade)
 
@@ -292,8 +290,7 @@ def get_grades(self) -&gt; list[EduGrade]:
         details = grade_details.get(event_id_str)
         title = details.get(&#34;p_meno&#34;)
 
-        grade_n = grade.get(&#34;data&#34;)
-        grade_n_int = int(grade_n)
+        grade_n = ModuleHelper.parse_int(grade.get(&#34;data&#34;))
 
         date_str = grade.get(&#34;datum&#34;)
         date = datetime.strptime(date_str, &#34;%Y-%m-%d %H:%M:%S&#34;)
@@ -330,7 +327,7 @@ def get_grades(self) -&gt; list[EduGrade]:
         except:
             verbal = True
 
-        grade = EduGrade(event_id, title, grade_n_int, date, subject_id,
+        grade = EduGrade(event_id, title, grade_n, date, subject_id,
                          subject_name, teacher, max_points, importance, verbal, percent)
         output.append(grade)
 

@@ -27,7 +27,7 @@
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">import functools
-from datetime import datetime
+from datetime import date, datetime
 from io import TextIOWrapper
 from typing import Optional
 
@@ -42,21 +42,25 @@ from edupage_api.lunches import Lunch, Lunches
 from edupage_api.messages import Messages
 from edupage_api.module import EdupageModule
 from edupage_api.people import EduAccount, EduStudent, EduTeacher, People
+from edupage_api.substitution import Substitution, TimetableChange
 from edupage_api.timeline import TimelineEvent, TimelineEvents
 from edupage_api.timetables import Timetable, Timetables
 
 
 class Edupage(EdupageModule):
     def __init__(self, request_timeout=5):
-        &#34;&#34;&#34;Initialize `Edupage` object
+        &#34;&#34;&#34;Initialize `Edupage` object.
 
         Args:
-            request_timeout (int, optional): Length of request timeout in seconds. If want to upload bigger files, you will have to increase its value. Defaults to `5`.
+            request_timeout (int, optional): Length of request timeout in seconds.
+                If want to upload bigger files, you will have to increase its value.
+                Defaults to `5`.
         &#34;&#34;&#34;
 
         self.data = None
         self.is_logged_in = False
         self.subdomain = None
+        self.gsec_hash = None
 
         self.session = requests.session()
         self.session.request = functools.partial(self.session.request, timeout=request_timeout)
@@ -186,7 +190,29 @@ class Edupage(EdupageModule):
             Response: Response.
         &#34;&#34;&#34;
 
-        return CustomRequest(self).custom_request(url, method, data, headers)</code></pre>
+        return CustomRequest(self).custom_request(url, method, data, headers)
+
+    def get_missing_teachers(self, date: date) -&gt; list[EduTeacher]:
+        &#34;&#34;&#34;Get missing teachers for a given date.
+
+        Args:
+            date (datetime.date): The date you want to get this information for.
+
+        Returns:
+            list[EduTeacher]: List of the missing teachers for `date`.
+        &#34;&#34;&#34;
+        return Substitution(self).get_missing_teachers(date)
+
+    def get_timetable_changes(self, date: date) -&gt; list[TimetableChange]:
+        &#34;&#34;&#34;Get the changes in the timetable for a given date.
+
+        Args:
+            date (datetime.date): The date you want to get this information for.
+
+        Returns:
+            list[TimetableChange]: List of changes in the timetable
+        &#34;&#34;&#34;
+        return Substitution(self).get_timetable_changes(date)</code></pre>
 </details>
 </section>
 <section>
@@ -232,6 +258,10 @@ class Edupage(EdupageModule):
 <dd>
 <div class="desc"></div>
 </dd>
+<dt><code class="name"><a title="edupage_api.substitution" href="substitution.html">edupage_api.substitution</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
 <dt><code class="name"><a title="edupage_api.timeline" href="timeline.html">edupage_api.timeline</a></code></dt>
 <dd>
 <div class="desc"></div>
@@ -258,11 +288,13 @@ class Edupage(EdupageModule):
 <span>(</span><span>request_timeout=5)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Initialize <code><a title="edupage_api.Edupage" href="#edupage_api.Edupage">Edupage</a></code> object</p>
+<div class="desc"><p>Initialize <code><a title="edupage_api.Edupage" href="#edupage_api.Edupage">Edupage</a></code> object.</p>
 <h2 id="args">Args</h2>
 <dl>
 <dt><strong><code>request_timeout</code></strong> :&ensp;<code>int</code>, optional</dt>
-<dd>Length of request timeout in seconds. If want to upload bigger files, you will have to increase its value. Defaults to <code>5</code>.</dd>
+<dd>Length of request timeout in seconds.
+If want to upload bigger files, you will have to increase its value.
+Defaults to <code>5</code>.</dd>
 </dl></div>
 <details class="source">
 <summary>
@@ -270,15 +302,18 @@ class Edupage(EdupageModule):
 </summary>
 <pre><code class="python">class Edupage(EdupageModule):
     def __init__(self, request_timeout=5):
-        &#34;&#34;&#34;Initialize `Edupage` object
+        &#34;&#34;&#34;Initialize `Edupage` object.
 
         Args:
-            request_timeout (int, optional): Length of request timeout in seconds. If want to upload bigger files, you will have to increase its value. Defaults to `5`.
+            request_timeout (int, optional): Length of request timeout in seconds.
+                If want to upload bigger files, you will have to increase its value.
+                Defaults to `5`.
         &#34;&#34;&#34;
 
         self.data = None
         self.is_logged_in = False
         self.subdomain = None
+        self.gsec_hash = None
 
         self.session = requests.session()
         self.session.request = functools.partial(self.session.request, timeout=request_timeout)
@@ -408,7 +443,29 @@ class Edupage(EdupageModule):
             Response: Response.
         &#34;&#34;&#34;
 
-        return CustomRequest(self).custom_request(url, method, data, headers)</code></pre>
+        return CustomRequest(self).custom_request(url, method, data, headers)
+
+    def get_missing_teachers(self, date: date) -&gt; list[EduTeacher]:
+        &#34;&#34;&#34;Get missing teachers for a given date.
+
+        Args:
+            date (datetime.date): The date you want to get this information for.
+
+        Returns:
+            list[EduTeacher]: List of the missing teachers for `date`.
+        &#34;&#34;&#34;
+        return Substitution(self).get_missing_teachers(date)
+
+    def get_timetable_changes(self, date: date) -&gt; list[TimetableChange]:
+        &#34;&#34;&#34;Get the changes in the timetable for a given date.
+
+        Args:
+            date (datetime.date): The date you want to get this information for.
+
+        Returns:
+            list[TimetableChange]: List of changes in the timetable
+        &#34;&#34;&#34;
+        return Substitution(self).get_timetable_changes(date)</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
@@ -417,6 +474,10 @@ class Edupage(EdupageModule):
 <h3>Class variables</h3>
 <dl>
 <dt id="edupage_api.Edupage.data"><code class="name">var <span class="ident">data</span> : dict</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.Edupage.gsec_hash"><code class="name">var <span class="ident">gsec_hash</span> : str</code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
@@ -564,6 +625,37 @@ class Edupage(EdupageModule):
     return Lunches(self).get_lunch(date)</code></pre>
 </details>
 </dd>
+<dt id="edupage_api.Edupage.get_missing_teachers"><code class="name flex">
+<span>def <span class="ident">get_missing_teachers</span></span>(<span>self, date: datetime.date) ‑> list[<a title="edupage_api.people.EduTeacher" href="people.html#edupage_api.people.EduTeacher">EduTeacher</a>]</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Get missing teachers for a given date.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>date</code></strong> :&ensp;<code>datetime.date</code></dt>
+<dd>The date you want to get this information for.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>list[EduTeacher]</code></dt>
+<dd>List of the missing teachers for <code>date</code>.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_missing_teachers(self, date: date) -&gt; list[EduTeacher]:
+    &#34;&#34;&#34;Get missing teachers for a given date.
+
+    Args:
+        date (datetime.date): The date you want to get this information for.
+
+    Returns:
+        list[EduTeacher]: List of the missing teachers for `date`.
+    &#34;&#34;&#34;
+    return Substitution(self).get_missing_teachers(date)</code></pre>
+</details>
+</dd>
 <dt id="edupage_api.Edupage.get_notifications"><code class="name flex">
 <span>def <span class="ident">get_notifications</span></span>(<span>self) ‑> list[<a title="edupage_api.timeline.TimelineEvent" href="timeline.html#edupage_api.timeline.TimelineEvent">TimelineEvent</a>]</span>
 </code></dt>
@@ -589,7 +681,7 @@ class Edupage(EdupageModule):
 </details>
 </dd>
 <dt id="edupage_api.Edupage.get_students"><code class="name flex">
-<span>def <span class="ident">get_students</span></span>(<span>self) ‑> Optional[list]</span>
+<span>def <span class="ident">get_students</span></span>(<span>self) ‑> Optional[list[<a title="edupage_api.people.EduStudent" href="people.html#edupage_api.people.EduStudent">EduStudent</a>]]</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Get list of all students in your class.</p>
@@ -613,7 +705,7 @@ class Edupage(EdupageModule):
 </details>
 </dd>
 <dt id="edupage_api.Edupage.get_teachers"><code class="name flex">
-<span>def <span class="ident">get_teachers</span></span>(<span>self) ‑> Optional[list]</span>
+<span>def <span class="ident">get_teachers</span></span>(<span>self) ‑> Optional[list[<a title="edupage_api.people.EduTeacher" href="people.html#edupage_api.people.EduTeacher">EduTeacher</a>]]</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Get list of all teachers in your school.</p>
@@ -666,6 +758,37 @@ class Edupage(EdupageModule):
     &#34;&#34;&#34;
 
     return Timetables(self).get_timetable(date)</code></pre>
+</details>
+</dd>
+<dt id="edupage_api.Edupage.get_timetable_changes"><code class="name flex">
+<span>def <span class="ident">get_timetable_changes</span></span>(<span>self, date: datetime.date) ‑> list[<a title="edupage_api.substitution.TimetableChange" href="substitution.html#edupage_api.substitution.TimetableChange">TimetableChange</a>]</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Get the changes in the timetable for a given date.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>date</code></strong> :&ensp;<code>datetime.date</code></dt>
+<dd>The date you want to get this information for.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>list[TimetableChange]</code></dt>
+<dd>List of changes in the timetable</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_timetable_changes(self, date: date) -&gt; list[TimetableChange]:
+    &#34;&#34;&#34;Get the changes in the timetable for a given date.
+
+    Args:
+        date (datetime.date): The date you want to get this information for.
+
+    Returns:
+        list[TimetableChange]: List of changes in the timetable
+    &#34;&#34;&#34;
+    return Substitution(self).get_timetable_changes(date)</code></pre>
 </details>
 </dd>
 <dt id="edupage_api.Edupage.get_user_id"><code class="name flex">
@@ -750,7 +873,7 @@ class Edupage(EdupageModule):
 </details>
 </dd>
 <dt id="edupage_api.Edupage.send_message"><code class="name flex">
-<span>def <span class="ident">send_message</span></span>(<span>self, recipients: Optional[list], body: str)</span>
+<span>def <span class="ident">send_message</span></span>(<span>self, recipients: Optional[list[<a title="edupage_api.people.EduAccount" href="people.html#edupage_api.people.EduAccount">EduAccount</a>]], body: str)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Send message.</p>
@@ -799,6 +922,7 @@ class Edupage(EdupageModule):
 <li><code><a title="edupage_api.messages" href="messages.html">edupage_api.messages</a></code></li>
 <li><code><a title="edupage_api.module" href="module.html">edupage_api.module</a></code></li>
 <li><code><a title="edupage_api.people" href="people.html">edupage_api.people</a></code></li>
+<li><code><a title="edupage_api.substitution" href="substitution.html">edupage_api.substitution</a></code></li>
 <li><code><a title="edupage_api.timeline" href="timeline.html">edupage_api.timeline</a></code></li>
 <li><code><a title="edupage_api.timetables" href="timetables.html">edupage_api.timetables</a></code></li>
 <li><code><a title="edupage_api.utils" href="utils.html">edupage_api.utils</a></code></li>
@@ -808,17 +932,20 @@ class Edupage(EdupageModule):
 <ul>
 <li>
 <h4><code><a title="edupage_api.Edupage" href="#edupage_api.Edupage">Edupage</a></code></h4>
-<ul class="two-column">
+<ul class="">
 <li><code><a title="edupage_api.Edupage.cloud_upload" href="#edupage_api.Edupage.cloud_upload">cloud_upload</a></code></li>
 <li><code><a title="edupage_api.Edupage.custom_request" href="#edupage_api.Edupage.custom_request">custom_request</a></code></li>
 <li><code><a title="edupage_api.Edupage.data" href="#edupage_api.Edupage.data">data</a></code></li>
 <li><code><a title="edupage_api.Edupage.get_grades" href="#edupage_api.Edupage.get_grades">get_grades</a></code></li>
 <li><code><a title="edupage_api.Edupage.get_lunches" href="#edupage_api.Edupage.get_lunches">get_lunches</a></code></li>
+<li><code><a title="edupage_api.Edupage.get_missing_teachers" href="#edupage_api.Edupage.get_missing_teachers">get_missing_teachers</a></code></li>
 <li><code><a title="edupage_api.Edupage.get_notifications" href="#edupage_api.Edupage.get_notifications">get_notifications</a></code></li>
 <li><code><a title="edupage_api.Edupage.get_students" href="#edupage_api.Edupage.get_students">get_students</a></code></li>
 <li><code><a title="edupage_api.Edupage.get_teachers" href="#edupage_api.Edupage.get_teachers">get_teachers</a></code></li>
 <li><code><a title="edupage_api.Edupage.get_timetable" href="#edupage_api.Edupage.get_timetable">get_timetable</a></code></li>
+<li><code><a title="edupage_api.Edupage.get_timetable_changes" href="#edupage_api.Edupage.get_timetable_changes">get_timetable_changes</a></code></li>
 <li><code><a title="edupage_api.Edupage.get_user_id" href="#edupage_api.Edupage.get_user_id">get_user_id</a></code></li>
+<li><code><a title="edupage_api.Edupage.gsec_hash" href="#edupage_api.Edupage.gsec_hash">gsec_hash</a></code></li>
 <li><code><a title="edupage_api.Edupage.is_logged_in" href="#edupage_api.Edupage.is_logged_in">is_logged_in</a></code></li>
 <li><code><a title="edupage_api.Edupage.login" href="#edupage_api.Edupage.login">login</a></code></li>
 <li><code><a title="edupage_api.Edupage.login_auto" href="#edupage_api.Edupage.login_auto">login_auto</a></code></li>

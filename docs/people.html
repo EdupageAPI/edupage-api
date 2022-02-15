@@ -61,7 +61,7 @@ class EduAccount:
 
     @staticmethod
     def recognize_account_type(person_data: dict) -&gt; EduAccountType:
-        if person_data.get(&#34;number_in_class&#34;) is not None:
+        if person_data.get(&#34;numberinclass&#34;) is not None:
             return EduAccountType.STUDENT
         elif person_data.get(&#34;classroomid&#34;) is not None:
             return EduAccountType.TEACHER
@@ -216,7 +216,7 @@ class People(Module):
 
     @staticmethod
     def recognize_account_type(person_data: dict) -&gt; EduAccountType:
-        if person_data.get(&#34;number_in_class&#34;) is not None:
+        if person_data.get(&#34;numberinclass&#34;) is not None:
             return EduAccountType.STUDENT
         elif person_data.get(&#34;classroomid&#34;) is not None:
             return EduAccountType.TEACHER
@@ -327,7 +327,7 @@ def parse(person_data: dict, person_id: int, edupage: EdupageModule) -&gt; Optio
 </summary>
 <pre><code class="python">@staticmethod
 def recognize_account_type(person_data: dict) -&gt; EduAccountType:
-    if person_data.get(&#34;number_in_class&#34;) is not None:
+    if person_data.get(&#34;numberinclass&#34;) is not None:
         return EduAccountType.STUDENT
     elif person_data.get(&#34;classroomid&#34;) is not None:
         return EduAccountType.TEACHER

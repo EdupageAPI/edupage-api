@@ -43,8 +43,19 @@ class Login(Module):
         self.edupage.data = json.loads(json_string)
         self.edupage.is_logged_in = True
 
-    &#34;&#34;&#34;Login with portal.edupage.org. if this doesn&#39;t work, please use `Login.login`&#34;&#34;&#34;
+        self.edupage.gsec_hash = data.split(&#34;ASC.gsechash=\&#34;&#34;)[1].split(&#34;\&#34;&#34;)[0]
+
     def login_auto(self, username: str, password: str):
+        &#34;&#34;&#34;Login using https://portal.edupage.org. If this doesn&#39;t work, please use `Login.login`.
+
+        Args:
+            username (str): Your username.
+            password (str): Your password.
+
+        Raises:
+            BadCredentialsException: Your credentials are invalid.
+        &#34;&#34;&#34;
+
         parameters = {
             &#34;meno&#34;: username,
             &#34;heslo&#34;: password,
@@ -62,8 +73,18 @@ class Login(Module):
         self.__parse_login_data(data)
         self.edupage.subdomain = data.split(&#34;--&gt;&#34;)[0].split(&#34; &#34;)[-1]
 
-    &#34;&#34;&#34;Login while specifying the subdomain to log into.&#34;&#34;&#34;
     def login(self, username: str, password: str, subdomain: str):
+        &#34;&#34;&#34;Login while specifying the subdomain to log into.
+
+        Args:
+            username (str): Your username.
+            password (str): Your password.
+            subdomain (str): Subdomain of your school (https://{subdomain}.edupage.org).
+
+        Raises:
+            BadCredentialsException: Your credentials are invalid.
+        &#34;&#34;&#34;
+
         request_url = f&#34;https://{subdomain}.edupage.org/login/index.php&#34;
 
         csrf_response = self.edupage.session.get(request_url).content.decode()
@@ -117,8 +138,19 @@ class Login(Module):
         self.edupage.data = json.loads(json_string)
         self.edupage.is_logged_in = True
 
-    &#34;&#34;&#34;Login with portal.edupage.org. if this doesn&#39;t work, please use `Login.login`&#34;&#34;&#34;
+        self.edupage.gsec_hash = data.split(&#34;ASC.gsechash=\&#34;&#34;)[1].split(&#34;\&#34;&#34;)[0]
+
     def login_auto(self, username: str, password: str):
+        &#34;&#34;&#34;Login using https://portal.edupage.org. If this doesn&#39;t work, please use `Login.login`.
+
+        Args:
+            username (str): Your username.
+            password (str): Your password.
+
+        Raises:
+            BadCredentialsException: Your credentials are invalid.
+        &#34;&#34;&#34;
+
         parameters = {
             &#34;meno&#34;: username,
             &#34;heslo&#34;: password,
@@ -136,8 +168,18 @@ class Login(Module):
         self.__parse_login_data(data)
         self.edupage.subdomain = data.split(&#34;--&gt;&#34;)[0].split(&#34; &#34;)[-1]
 
-    &#34;&#34;&#34;Login while specifying the subdomain to log into.&#34;&#34;&#34;
     def login(self, username: str, password: str, subdomain: str):
+        &#34;&#34;&#34;Login while specifying the subdomain to log into.
+
+        Args:
+            username (str): Your username.
+            password (str): Your password.
+            subdomain (str): Subdomain of your school (https://{subdomain}.edupage.org).
+
+        Raises:
+            BadCredentialsException: Your credentials are invalid.
+        &#34;&#34;&#34;
+
         request_url = f&#34;https://{subdomain}.edupage.org/login/index.php&#34;
 
         csrf_response = self.edupage.session.get(request_url).content.decode()
@@ -170,12 +212,37 @@ class Login(Module):
 <span>def <span class="ident">login</span></span>(<span>self, username: str, password: str, subdomain: str)</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Login while specifying the subdomain to log into.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>username</code></strong> :&ensp;<code>str</code></dt>
+<dd>Your username.</dd>
+<dt><strong><code>password</code></strong> :&ensp;<code>str</code></dt>
+<dd>Your password.</dd>
+<dt><strong><code>subdomain</code></strong> :&ensp;<code>str</code></dt>
+<dd>Subdomain of your school (<a href="https://{subdomain}.edupage.org">https://{subdomain}.edupage.org</a>).</dd>
+</dl>
+<h2 id="raises">Raises</h2>
+<dl>
+<dt><code>BadCredentialsException</code></dt>
+<dd>Your credentials are invalid.</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def login(self, username: str, password: str, subdomain: str):
+    &#34;&#34;&#34;Login while specifying the subdomain to log into.
+
+    Args:
+        username (str): Your username.
+        password (str): Your password.
+        subdomain (str): Subdomain of your school (https://{subdomain}.edupage.org).
+
+    Raises:
+        BadCredentialsException: Your credentials are invalid.
+    &#34;&#34;&#34;
+
     request_url = f&#34;https://{subdomain}.edupage.org/login/index.php&#34;
 
     csrf_response = self.edupage.session.get(request_url).content.decode()
@@ -203,12 +270,34 @@ class Login(Module):
 <span>def <span class="ident">login_auto</span></span>(<span>self, username: str, password: str)</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Login using <a href="https://portal.edupage.org.">https://portal.edupage.org.</a> If this doesn't work, please use <code><a title="edupage_api.login.Login.login" href="#edupage_api.login.Login.login">Login.login()</a></code>.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>username</code></strong> :&ensp;<code>str</code></dt>
+<dd>Your username.</dd>
+<dt><strong><code>password</code></strong> :&ensp;<code>str</code></dt>
+<dd>Your password.</dd>
+</dl>
+<h2 id="raises">Raises</h2>
+<dl>
+<dt><code>BadCredentialsException</code></dt>
+<dd>Your credentials are invalid.</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def login_auto(self, username: str, password: str):
+    &#34;&#34;&#34;Login using https://portal.edupage.org. If this doesn&#39;t work, please use `Login.login`.
+
+    Args:
+        username (str): Your username.
+        password (str): Your password.
+
+    Raises:
+        BadCredentialsException: Your credentials are invalid.
+    &#34;&#34;&#34;
+
     parameters = {
         &#34;meno&#34;: username,
         &#34;heslo&#34;: password,

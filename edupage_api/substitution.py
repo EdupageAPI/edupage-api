@@ -111,23 +111,20 @@ class Substitution(Module):
             action = None
             if "<div class=\"row change\">" in lesson_n:
                 action = Action.CHANGE
-
                 lesson_n = lesson_n.replace("<div class=\"row change\">", "")
-                if "-" in lesson_n:
-                    lesson_from, lesson_to = lesson_n.split(" - ")
-
-                    lesson_n = (int(lesson_from), int(lesson_to))
-                else:
-                    lesson_n = int(lesson_n)
             elif "<div class=\"row remove\">" in lesson_n:
                 action = Action.DELETION
                 lesson_n = (lesson_n.replace("<div class=\"row remove\">", "")
                                     .replace("(", "")
                                     .replace(")", ""))
-                lesson_n = int(lesson_n)
             elif "<div class=\"row add\">" in lesson_n:
                 action = Action.ADDITION
                 lesson_n = lesson_n.replace("<div class=\"row add\">", "")
+
+            if "-" in lesson_n:
+                lesson_from, lesson_to = lesson_n.split(" - ")
+                lesson_n = (int(lesson_from), int(lesson_to))
+            else:
                 lesson_n = int(lesson_n)
 
             lesson_change = TimetableChange(change_class, lesson_n, action)

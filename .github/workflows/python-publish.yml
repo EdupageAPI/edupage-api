@@ -40,8 +40,7 @@ jobs:
           message: "Regenerate documentation"
 
           pathspec_error_handling: ignore
-
-          push: true
+          push: origin master
 
       - name: Build and publish
         env:

@@ -174,13 +174,13 @@ class Edupage(EdupageModule):
             list[EduTeacher]: List of the missing teachers for `date`.
         """
         return Substitution(self).get_missing_teachers(date)
-    
+
     def get_timetable_changes(self, date: date) -> list[TimetableChange]:
         """Get the changes in the timetable for a given date.
 
         Args:
             date (datetime.date): The date you want to get this information for.
-        
+
         Returns:
             list[TimetableChange]: List of changes in the timetable
         """

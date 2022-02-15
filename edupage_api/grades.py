@@ -60,8 +60,7 @@ class Grades(Module):
             details = grade_details.get(event_id_str)
             title = details.get("p_meno")
 
-            grade_n = grade.get("data")
-            grade_n_int = int("".join(filter(str.isdigit, grade_n)))
+            grade_n = ModuleHelper.parse_int(grade.get("data"))
 
             date_str = grade.get("datum")
             date = datetime.strptime(date_str, "%Y-%m-%d %H:%M:%S")
@@ -98,7 +97,7 @@ class Grades(Module):
             except:
                 verbal = True
 
-            grade = EduGrade(event_id, title, grade_n_int, date, subject_id,
+            grade = EduGrade(event_id, title, grade_n, date, subject_id,
                              subject_name, teacher, max_points, importance, verbal, percent)
             output.append(grade)
 

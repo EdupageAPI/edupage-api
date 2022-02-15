@@ -32,6 +32,10 @@ class ModuleHelper:
         if val.isdigit():
             return int(val)
 
+    @staticmethod
+    def parse_int(val: str) -> int:
+        return int("".join(filter(str.isdigit, val)))
+
     """
     If any argument of this function is none, it throws MissingDataException
     """

@@ -85,7 +85,6 @@ class Substitution(Module):
 
         changes = [
             (x.replace("</div>", "")
-              .replace("<div class=\"rows\">", "")
               .replace("<div class=\"period\">", "")
               .replace("<span class=\"print-font-resizable\">", "")
               .replace("<div class=\"info\">", ""))
@@ -93,24 +92,30 @@ class Substitution(Module):
         ]
 
         lesson_changes = []
-        for change in changes:
-            change_class, lesson_n, teacher, *_ = change.split("</span>")
+        for class_changes in changes:
+            class_changes_data = class_changes.split("</span><div class=\"rows\">")
+            change_class = class_changes_data[0]
 
-            action = None
-            if "<div class=\"row change\">" in lesson_n:
-                action = Action.CHANGE
-            elif "<div class=\"row remove\">" in lesson_n:
-                action = Action.DELETION
-            elif "<div class=\"row add\">" in lesson_n:
-                action = Action.ADDITION
+            class_changes_rows = class_changes_data[1].split("<div class=\"row ")[1:]
 
-            if "-" in lesson_n:
-                lesson_from, lesson_to = lesson_n.split(" - ")
-                lesson_n = (ModuleHelper.parse_int(lesson_from), ModuleHelper.parse_int(lesson_to))
-            else:
-                lesson_n = ModuleHelper.parse_int(lesson_n)
+            for change in class_changes_rows:
+                change = change.replace("\">", "</span>")
+                action, lesson_n, *_ = change.split("</span>")
 
-            lesson_change = TimetableChange(change_class, lesson_n, action)
-            lesson_changes.append(lesson_change)
+                if action == "change":
+                    action = Action.CHANGE
+                elif action == "remove":
+                    action = Action.DELETION
+                elif action == "add":
+                    action = Action.ADDITION
+
+                if "-" in lesson_n:
+                    lesson_from, lesson_to = lesson_n.split(" - ")
+                    lesson_n = (ModuleHelper.parse_int(lesson_from), ModuleHelper.parse_int(lesson_to))
+                else:
+                    lesson_n = ModuleHelper.parse_int(lesson_n)
+
+                lesson_change = TimetableChange(change_class, lesson_n, action)
+                lesson_changes.append(lesson_change)
 
         return lesson_changes

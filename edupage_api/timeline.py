@@ -1,3 +1,6 @@
+# For postponed evaluation of annotations
+from __future__ import annotations
+
 import json
 from datetime import datetime
 from enum import Enum
@@ -5,7 +8,7 @@ from typing import Optional
 
 from edupage_api.dbi import DbiHelper
 from edupage_api.module import Module, ModuleHelper
-from edupage_api.people import EduAccount, Gender
+from edupage_api.people import EduAccount
 
 
 # data.dbi.event_types
@@ -127,8 +130,8 @@ class EventType(Enum):
     H_TIMETABLE = "h_timetable"
 
     @staticmethod
-    def parse(string: str) -> Optional[Gender]:
-        return ModuleHelper.parse_enum(string, EventType)
+    def parse(event_type_str: str) -> Optional[EventType]:
+        return ModuleHelper.parse_enum(event_type_str, EventType)
 
 
 class TimelineEvent:

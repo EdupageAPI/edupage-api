@@ -1,8 +1,8 @@
-from enum import Enum
 import json
-
 from datetime import date
+from enum import Enum
 from typing import Optional, Union
+
 from edupage_api.exceptions import ExpiredSessionException, InvalidTeacherException
 from edupage_api.module import Module, ModuleHelper
 from edupage_api.people import EduTeacher, People
@@ -111,7 +111,8 @@ class Substitution(Module):
 
                 if "-" in lesson_n:
                     lesson_from, lesson_to = lesson_n.split(" - ")
-                    lesson_n = (ModuleHelper.parse_int(lesson_from), ModuleHelper.parse_int(lesson_to))
+                    lesson_n = (ModuleHelper.parse_int(lesson_from),
+                                ModuleHelper.parse_int(lesson_to))
                 else:
                     lesson_n = ModuleHelper.parse_int(lesson_n)
 

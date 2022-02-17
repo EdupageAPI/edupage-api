@@ -1,3 +1,6 @@
+# For postponed evaluation of annotations
+from __future__ import annotations
+
 import json
 from datetime import date
 from enum import Enum
@@ -14,7 +17,7 @@ class Action(Enum):
     DELETION = "remove"
 
     @staticmethod
-    def parse(string: str) -> Optional[Enum]:
+    def parse(string: str) -> Optional[Action]:
         return ModuleHelper.parse_enum(string, Action)
 
 

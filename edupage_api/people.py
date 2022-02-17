@@ -1,4 +1,5 @@
-from __future__ import annotations # for postponed evaluation of annotations
+# For postponed evaluation of annotations
+from __future__ import annotations
 
 from datetime import datetime
 from enum import Enum

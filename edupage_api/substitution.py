@@ -15,9 +15,10 @@ class Action(enum.Enum):
 
 
 class TimetableChange:
-    def __init__(self, change_class: str, lesson_n: int, action: Union[Action, tuple[int, int]]):
+    def __init__(self, change_class: str, lesson_n: int, title: str, action: Union[Action, tuple[int, int]]):
         self.change_class = change_class
         self.lesson_n = lesson_n
+        self.title = title
         self.action = action
 
 
@@ -100,7 +101,7 @@ class Substitution(Module):
 
             for change in class_changes_rows:
                 change = change.replace("\">", "</span>")
-                action, lesson_n, *_ = change.split("</span>")
+                action, lesson_n, title = change.split("</span>")[:-1]
 
                 if action == "change":
                     action = Action.CHANGE
@@ -115,7 +116,7 @@ class Substitution(Module):
                 else:
                     lesson_n = ModuleHelper.parse_int(lesson_n)
 
-                lesson_change = TimetableChange(change_class, lesson_n, action)
+                lesson_change = TimetableChange(change_class, lesson_n, title, action)
                 lesson_changes.append(lesson_change)
 
         return lesson_changes

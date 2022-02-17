@@ -1,17 +1,21 @@
-import enum
+from enum import Enum
 import json
 
 from datetime import date
-from typing import Union
+from typing import Optional, Union
 from edupage_api.exceptions import ExpiredSessionException, InvalidTeacherException
 from edupage_api.module import Module, ModuleHelper
 from edupage_api.people import EduTeacher, People
 
 
-class Action(enum.Enum):
-    DELETION = enum.auto()
-    CHANGE = enum.auto()
-    ADDITION = enum.auto()
+class Action(Enum):
+    ADDITION = "add"
+    CHANGE = "change"
+    DELETION = "remove"
+
+    @staticmethod
+    def parse(string: str) -> Optional[Enum]:
+        return ModuleHelper.parse_enum(string, Action)
 
 
 class TimetableChange:
@@ -103,12 +107,7 @@ class Substitution(Module):
                 change = change.replace("\">", "</span>")
                 action, lesson_n, title = change.split("</span>")[:-1]
 
-                if action == "change":
-                    action = Action.CHANGE
-                elif action == "remove":
-                    action = Action.DELETION
-                elif action == "add":
-                    action = Action.ADDITION
+                action = Action.parse(action)
 
                 if "-" in lesson_n:
                     lesson_from, lesson_to = lesson_n.split(" - ")

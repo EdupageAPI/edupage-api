@@ -54,7 +54,8 @@ class Substitution(Module):
         all_teachers = People(self.edupage).get_teachers()
 
         missing_teachers = [
-            t.strip()
+            (t.strip()
+              .split("  (")[0])
             for t in missing_teachers.split(", ")
         ]
 

@@ -110,6 +110,9 @@ class Substitution(Module):
                 change = change.replace("\">", "</span>")
                 action, lesson_n, title = change.split("</span>")[:-1]
 
+                if "<img src=" in title:
+                    title = title.split(">")[1]
+
                 action = Action.parse(action)
 
                 if "-" in lesson_n:

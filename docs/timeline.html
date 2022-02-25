@@ -26,14 +26,17 @@
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">import json
+<pre><code class="python"># For postponed evaluation of annotations
+from __future__ import annotations
+
+import json
 from datetime import datetime
 from enum import Enum
 from typing import Optional
 
 from edupage_api.dbi import DbiHelper
 from edupage_api.module import Module, ModuleHelper
-from edupage_api.people import EduAccount, Gender
+from edupage_api.people import EduAccount
 
 
 # data.dbi.event_types
@@ -155,8 +158,8 @@ class EventType(Enum):
     H_TIMETABLE = &#34;h_timetable&#34;
 
     @staticmethod
-    def parse(string: str) -&gt; Optional[Gender]:
-        return ModuleHelper.parse_enum(string, EventType)
+    def parse(event_type_str: str) -&gt; Optional[EventType]:
+        return ModuleHelper.parse_enum(event_type_str, EventType)
 
 
 class TimelineEvent:
@@ -381,8 +384,8 @@ class TimelineEvents(Module):
     H_TIMETABLE = &#34;h_timetable&#34;
 
     @staticmethod
-    def parse(string: str) -&gt; Optional[Gender]:
-        return ModuleHelper.parse_enum(string, EventType)</code></pre>
+    def parse(event_type_str: str) -&gt; Optional[EventType]:
+        return ModuleHelper.parse_enum(event_type_str, EventType)</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
@@ -674,7 +677,7 @@ class TimelineEvents(Module):
 <h3>Static methods</h3>
 <dl>
 <dt id="edupage_api.timeline.EventType.parse"><code class="name flex">
-<span>def <span class="ident">parse</span></span>(<span>string: str) ‑> Optional[<a title="edupage_api.people.Gender" href="people.html#edupage_api.people.Gender">Gender</a>]</span>
+<span>def <span class="ident">parse</span></span>(<span>event_type_str: str) ‑> Optional[<a title="edupage_api.timeline.EventType" href="#edupage_api.timeline.EventType">EventType</a>]</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
@@ -683,15 +686,15 @@ class TimelineEvents(Module):
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">@staticmethod
-def parse(string: str) -&gt; Optional[Gender]:
-    return ModuleHelper.parse_enum(string, EventType)</code></pre>
+def parse(event_type_str: str) -&gt; Optional[EventType]:
+    return ModuleHelper.parse_enum(event_type_str, EventType)</code></pre>
 </details>
 </dd>
 </dl>
 </dd>
 <dt id="edupage_api.timeline.TimelineEvent"><code class="flex name class">
 <span>class <span class="ident">TimelineEvent</span></span>
-<span>(</span><span>event_id: int, timestamp: datetime.datetime, text: str, author: <a title="edupage_api.people.EduAccount" href="people.html#edupage_api.people.EduAccount">EduAccount</a>, recipient: <a title="edupage_api.people.EduAccount" href="people.html#edupage_api.people.EduAccount">EduAccount</a>, event_type: <a title="edupage_api.timeline.EventType" href="#edupage_api.timeline.EventType">EventType</a>, additional_data: dict)</span>
+<span>(</span><span>event_id: int, timestamp: datetime, text: str, author: EduAccount, recipient: EduAccount, event_type: <a title="edupage_api.timeline.EventType" href="#edupage_api.timeline.EventType">EventType</a>, additional_data: dict)</span>
 </code></dt>
 <dd>
 <div class="desc"></div>

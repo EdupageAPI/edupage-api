@@ -62,7 +62,10 @@ class ModuleHelper:
 
     @staticmethod
     def parse_int(val: str) -&gt; int:
-        return int(&#34;&#34;.join(filter(str.isdigit, val)))
+        try:
+            return int(&#34;&#34;.join(filter(str.isdigit, val)))
+        except ValueError:
+            return None
 
     &#34;&#34;&#34;
     If any argument of this function is none, it throws MissingDataException
@@ -236,7 +239,10 @@ class ModuleHelper:
 
     @staticmethod
     def parse_int(val: str) -&gt; int:
-        return int(&#34;&#34;.join(filter(str.isdigit, val)))
+        try:
+            return int(&#34;&#34;.join(filter(str.isdigit, val)))
+        except ValueError:
+            return None
 
     &#34;&#34;&#34;
     If any argument of this function is none, it throws MissingDataException
@@ -430,7 +436,10 @@ def parse_enum(string: str, enum_type: Enum):
 </summary>
 <pre><code class="python">@staticmethod
 def parse_int(val: str) -&gt; int:
-    return int(&#34;&#34;.join(filter(str.isdigit, val)))</code></pre>
+    try:
+        return int(&#34;&#34;.join(filter(str.isdigit, val)))
+    except ValueError:
+        return None</code></pre>
 </details>
 </dd>
 <dt id="edupage_api.module.ModuleHelper.return_first_not_null"><code class="name flex">

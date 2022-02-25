@@ -26,26 +26,34 @@
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">import enum
-import json
+<pre><code class="python"># For postponed evaluation of annotations
+from __future__ import annotations
 
+import json
 from datetime import date
-from typing import Union
+from enum import Enum
+from typing import Optional, Union
+
 from edupage_api.exceptions import ExpiredSessionException, InvalidTeacherException
 from edupage_api.module import Module, ModuleHelper
 from edupage_api.people import EduTeacher, People
 
 
-class Action(enum.Enum):
-    DELETION = enum.auto()
-    CHANGE = enum.auto()
-    ADDITION = enum.auto()
+class Action(Enum):
+    ADDITION = &#34;add&#34;
+    CHANGE = &#34;change&#34;
+    DELETION = &#34;remove&#34;
+
+    @staticmethod
+    def parse(string: str) -&gt; Optional[Action]:
+        return ModuleHelper.parse_enum(string, Action)
 
 
 class TimetableChange:
-    def __init__(self, change_class: str, lesson_n: int, action: Union[Action, tuple[int, int]]):
+    def __init__(self, change_class: str, lesson_n: int, title: str, action: Union[Action, tuple[int, int]]):
         self.change_class = change_class
         self.lesson_n = lesson_n
+        self.title = title
         self.action = action
 
 
@@ -82,7 +90,8 @@ class Substitution(Module):
         all_teachers = People(self.edupage).get_teachers()
 
         missing_teachers = [
-            t.strip()
+            (t.strip()
+              .split(&#34;  (&#34;)[0])
             for t in missing_teachers.split(&#34;, &#34;)
         ]
 
@@ -112,7 +121,6 @@ class Substitution(Module):
 
         changes = [
             (x.replace(&#34;&lt;/div&gt;&#34;, &#34;&#34;)
-              .replace(&#34;&lt;div class=\&#34;rows\&#34;&gt;&#34;, &#34;&#34;)
               .replace(&#34;&lt;div class=\&#34;period\&#34;&gt;&#34;, &#34;&#34;)
               .replace(&#34;&lt;span class=\&#34;print-font-resizable\&#34;&gt;&#34;, &#34;&#34;)
               .replace(&#34;&lt;div class=\&#34;info\&#34;&gt;&#34;, &#34;&#34;))
@@ -120,25 +128,30 @@ class Substitution(Module):
         ]
 
         lesson_changes = []
-        for change in changes:
-            change_class, lesson_n, teacher, *_ = change.split(&#34;&lt;/span&gt;&#34;)
+        for class_changes in changes:
+            class_changes_data = class_changes.split(&#34;&lt;/span&gt;&lt;div class=\&#34;rows\&#34;&gt;&#34;)
+            change_class = class_changes_data[0]
 
-            action = None
-            if &#34;&lt;div class=\&#34;row change\&#34;&gt;&#34; in lesson_n:
-                action = Action.CHANGE
-            elif &#34;&lt;div class=\&#34;row remove\&#34;&gt;&#34; in lesson_n:
-                action = Action.DELETION
-            elif &#34;&lt;div class=\&#34;row add\&#34;&gt;&#34; in lesson_n:
-                action = Action.ADDITION
+            class_changes_rows = class_changes_data[1].split(&#34;&lt;div class=\&#34;row &#34;)[1:]
 
-            if &#34;-&#34; in lesson_n:
-                lesson_from, lesson_to = lesson_n.split(&#34; - &#34;)
-                lesson_n = (ModuleHelper.parse_int(lesson_from), ModuleHelper.parse_int(lesson_to))
-            else:
-                lesson_n = ModuleHelper.parse_int(lesson_n)
+            for change in class_changes_rows:
+                change = change.replace(&#34;\&#34;&gt;&#34;, &#34;&lt;/span&gt;&#34;)
+                action, lesson_n, title = change.split(&#34;&lt;/span&gt;&#34;)[:-1]
 
-            lesson_change = TimetableChange(change_class, lesson_n, action)
-            lesson_changes.append(lesson_change)
+                if &#34;&lt;img src=&#34; in title:
+                    title = title.split(&#34;&gt;&#34;)[1]
+
+                action = Action.parse(action)
+
+                if &#34;-&#34; in lesson_n:
+                    lesson_from, lesson_to = lesson_n.split(&#34; - &#34;)
+                    lesson_n = (ModuleHelper.parse_int(lesson_from),
+                                ModuleHelper.parse_int(lesson_to))
+                else:
+                    lesson_n = ModuleHelper.parse_int(lesson_n)
+
+                lesson_change = TimetableChange(change_class, lesson_n, title, action)
+                lesson_changes.append(lesson_change)
 
         return lesson_changes</code></pre>
 </details>
@@ -162,10 +175,14 @@ class Substitution(Module):
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">class Action(enum.Enum):
-    DELETION = enum.auto()
-    CHANGE = enum.auto()
-    ADDITION = enum.auto()</code></pre>
+<pre><code class="python">class Action(Enum):
+    ADDITION = &#34;add&#34;
+    CHANGE = &#34;change&#34;
+    DELETION = &#34;remove&#34;
+
+    @staticmethod
+    def parse(string: str) -&gt; Optional[Action]:
+        return ModuleHelper.parse_enum(string, Action)</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
@@ -184,6 +201,23 @@ class Substitution(Module):
 <dt id="edupage_api.substitution.Action.DELETION"><code class="name">var <span class="ident">DELETION</span></code></dt>
 <dd>
 <div class="desc"></div>
+</dd>
+</dl>
+<h3>Static methods</h3>
+<dl>
+<dt id="edupage_api.substitution.Action.parse"><code class="name flex">
+<span>def <span class="ident">parse</span></span>(<span>string: str) ‑> Optional[<a title="edupage_api.substitution.Action" href="#edupage_api.substitution.Action">Action</a>]</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def parse(string: str) -&gt; Optional[Action]:
+    return ModuleHelper.parse_enum(string, Action)</code></pre>
+</details>
 </dd>
 </dl>
 </dd>
@@ -230,7 +264,8 @@ class Substitution(Module):
         all_teachers = People(self.edupage).get_teachers()
 
         missing_teachers = [
-            t.strip()
+            (t.strip()
+              .split(&#34;  (&#34;)[0])
             for t in missing_teachers.split(&#34;, &#34;)
         ]
 
@@ -260,7 +295,6 @@ class Substitution(Module):
 
         changes = [
             (x.replace(&#34;&lt;/div&gt;&#34;, &#34;&#34;)
-              .replace(&#34;&lt;div class=\&#34;rows\&#34;&gt;&#34;, &#34;&#34;)
               .replace(&#34;&lt;div class=\&#34;period\&#34;&gt;&#34;, &#34;&#34;)
               .replace(&#34;&lt;span class=\&#34;print-font-resizable\&#34;&gt;&#34;, &#34;&#34;)
               .replace(&#34;&lt;div class=\&#34;info\&#34;&gt;&#34;, &#34;&#34;))
@@ -268,25 +302,30 @@ class Substitution(Module):
         ]
 
         lesson_changes = []
-        for change in changes:
-            change_class, lesson_n, teacher, *_ = change.split(&#34;&lt;/span&gt;&#34;)
+        for class_changes in changes:
+            class_changes_data = class_changes.split(&#34;&lt;/span&gt;&lt;div class=\&#34;rows\&#34;&gt;&#34;)
+            change_class = class_changes_data[0]
 
-            action = None
-            if &#34;&lt;div class=\&#34;row change\&#34;&gt;&#34; in lesson_n:
-                action = Action.CHANGE
-            elif &#34;&lt;div class=\&#34;row remove\&#34;&gt;&#34; in lesson_n:
-                action = Action.DELETION
-            elif &#34;&lt;div class=\&#34;row add\&#34;&gt;&#34; in lesson_n:
-                action = Action.ADDITION
+            class_changes_rows = class_changes_data[1].split(&#34;&lt;div class=\&#34;row &#34;)[1:]
 
-            if &#34;-&#34; in lesson_n:
-                lesson_from, lesson_to = lesson_n.split(&#34; - &#34;)
-                lesson_n = (ModuleHelper.parse_int(lesson_from), ModuleHelper.parse_int(lesson_to))
-            else:
-                lesson_n = ModuleHelper.parse_int(lesson_n)
+            for change in class_changes_rows:
+                change = change.replace(&#34;\&#34;&gt;&#34;, &#34;&lt;/span&gt;&#34;)
+                action, lesson_n, title = change.split(&#34;&lt;/span&gt;&#34;)[:-1]
 
-            lesson_change = TimetableChange(change_class, lesson_n, action)
-            lesson_changes.append(lesson_change)
+                if &#34;&lt;img src=&#34; in title:
+                    title = title.split(&#34;&gt;&#34;)[1]
+
+                action = Action.parse(action)
+
+                if &#34;-&#34; in lesson_n:
+                    lesson_from, lesson_to = lesson_n.split(&#34; - &#34;)
+                    lesson_n = (ModuleHelper.parse_int(lesson_from),
+                                ModuleHelper.parse_int(lesson_to))
+                else:
+                    lesson_n = ModuleHelper.parse_int(lesson_n)
+
+                lesson_change = TimetableChange(change_class, lesson_n, title, action)
+                lesson_changes.append(lesson_change)
 
         return lesson_changes</code></pre>
 </details>
@@ -297,7 +336,7 @@ class Substitution(Module):
 <h3>Methods</h3>
 <dl>
 <dt id="edupage_api.substitution.Substitution.get_missing_teachers"><code class="name flex">
-<span>def <span class="ident">get_missing_teachers</span></span>(<span>self, date: datetime.date) ‑> list[<a title="edupage_api.people.EduTeacher" href="people.html#edupage_api.people.EduTeacher">EduTeacher</a>]</span>
+<span>def <span class="ident">get_missing_teachers</span></span>(<span>self, date: date) ‑> list[<a title="edupage_api.people.EduTeacher" href="people.html#edupage_api.people.EduTeacher">EduTeacher</a>]</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
@@ -316,7 +355,8 @@ def get_missing_teachers(self, date: date) -&gt; list[EduTeacher]:
     all_teachers = People(self.edupage).get_teachers()
 
     missing_teachers = [
-        t.strip()
+        (t.strip()
+          .split(&#34;  (&#34;)[0])
         for t in missing_teachers.split(&#34;, &#34;)
     ]
 
@@ -333,7 +373,7 @@ def get_missing_teachers(self, date: date) -&gt; list[EduTeacher]:
 </details>
 </dd>
 <dt id="edupage_api.substitution.Substitution.get_timetable_changes"><code class="name flex">
-<span>def <span class="ident">get_timetable_changes</span></span>(<span>self, date: datetime.date) ‑> list[<a title="edupage_api.substitution.TimetableChange" href="#edupage_api.substitution.TimetableChange">TimetableChange</a>]</span>
+<span>def <span class="ident">get_timetable_changes</span></span>(<span>self, date: date) ‑> list[<a title="edupage_api.substitution.TimetableChange" href="#edupage_api.substitution.TimetableChange">TimetableChange</a>]</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
@@ -356,7 +396,6 @@ def get_timetable_changes(self, date: date) -&gt; list[TimetableChange]:
 
     changes = [
         (x.replace(&#34;&lt;/div&gt;&#34;, &#34;&#34;)
-          .replace(&#34;&lt;div class=\&#34;rows\&#34;&gt;&#34;, &#34;&#34;)
           .replace(&#34;&lt;div class=\&#34;period\&#34;&gt;&#34;, &#34;&#34;)
           .replace(&#34;&lt;span class=\&#34;print-font-resizable\&#34;&gt;&#34;, &#34;&#34;)
           .replace(&#34;&lt;div class=\&#34;info\&#34;&gt;&#34;, &#34;&#34;))
@@ -364,25 +403,30 @@ def get_timetable_changes(self, date: date) -&gt; list[TimetableChange]:
     ]
 
     lesson_changes = []
-    for change in changes:
-        change_class, lesson_n, teacher, *_ = change.split(&#34;&lt;/span&gt;&#34;)
+    for class_changes in changes:
+        class_changes_data = class_changes.split(&#34;&lt;/span&gt;&lt;div class=\&#34;rows\&#34;&gt;&#34;)
+        change_class = class_changes_data[0]
 
-        action = None
-        if &#34;&lt;div class=\&#34;row change\&#34;&gt;&#34; in lesson_n:
-            action = Action.CHANGE
-        elif &#34;&lt;div class=\&#34;row remove\&#34;&gt;&#34; in lesson_n:
-            action = Action.DELETION
-        elif &#34;&lt;div class=\&#34;row add\&#34;&gt;&#34; in lesson_n:
-            action = Action.ADDITION
+        class_changes_rows = class_changes_data[1].split(&#34;&lt;div class=\&#34;row &#34;)[1:]
 
-        if &#34;-&#34; in lesson_n:
-            lesson_from, lesson_to = lesson_n.split(&#34; - &#34;)
-            lesson_n = (ModuleHelper.parse_int(lesson_from), ModuleHelper.parse_int(lesson_to))
-        else:
-            lesson_n = ModuleHelper.parse_int(lesson_n)
+        for change in class_changes_rows:
+            change = change.replace(&#34;\&#34;&gt;&#34;, &#34;&lt;/span&gt;&#34;)
+            action, lesson_n, title = change.split(&#34;&lt;/span&gt;&#34;)[:-1]
 
-        lesson_change = TimetableChange(change_class, lesson_n, action)
-        lesson_changes.append(lesson_change)
+            if &#34;&lt;img src=&#34; in title:
+                title = title.split(&#34;&gt;&#34;)[1]
+
+            action = Action.parse(action)
+
+            if &#34;-&#34; in lesson_n:
+                lesson_from, lesson_to = lesson_n.split(&#34; - &#34;)
+                lesson_n = (ModuleHelper.parse_int(lesson_from),
+                            ModuleHelper.parse_int(lesson_to))
+            else:
+                lesson_n = ModuleHelper.parse_int(lesson_n)
+
+            lesson_change = TimetableChange(change_class, lesson_n, title, action)
+            lesson_changes.append(lesson_change)
 
     return lesson_changes</code></pre>
 </details>
@@ -391,7 +435,7 @@ def get_timetable_changes(self, date: date) -&gt; list[TimetableChange]:
 </dd>
 <dt id="edupage_api.substitution.TimetableChange"><code class="flex name class">
 <span>class <span class="ident">TimetableChange</span></span>
-<span>(</span><span>change_class: str, lesson_n: int, action: Union[<a title="edupage_api.substitution.Action" href="#edupage_api.substitution.Action">Action</a>, tuple[int, int]])</span>
+<span>(</span><span>change_class: str, lesson_n: int, title: str, action: Union[<a title="edupage_api.substitution.Action" href="#edupage_api.substitution.Action">Action</a>, tuple[int, int]])</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
@@ -400,9 +444,10 @@ def get_timetable_changes(self, date: date) -&gt; list[TimetableChange]:
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">class TimetableChange:
-    def __init__(self, change_class: str, lesson_n: int, action: Union[Action, tuple[int, int]]):
+    def __init__(self, change_class: str, lesson_n: int, title: str, action: Union[Action, tuple[int, int]]):
         self.change_class = change_class
         self.lesson_n = lesson_n
+        self.title = title
         self.action = action</code></pre>
 </details>
 </dd>
@@ -428,6 +473,7 @@ def get_timetable_changes(self, date: date) -&gt; list[TimetableChange]:
 <li><code><a title="edupage_api.substitution.Action.ADDITION" href="#edupage_api.substitution.Action.ADDITION">ADDITION</a></code></li>
 <li><code><a title="edupage_api.substitution.Action.CHANGE" href="#edupage_api.substitution.Action.CHANGE">CHANGE</a></code></li>
 <li><code><a title="edupage_api.substitution.Action.DELETION" href="#edupage_api.substitution.Action.DELETION">DELETION</a></code></li>
+<li><code><a title="edupage_api.substitution.Action.parse" href="#edupage_api.substitution.Action.parse">parse</a></code></li>
 </ul>
 </li>
 <li>

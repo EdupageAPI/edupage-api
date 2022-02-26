@@ -74,6 +74,7 @@ class ForeignTimetables(Module):
         
         return timetable_data.get("r").get("ttitems")
 
+    @ModuleHelper.logged_in
     def get_timetable_for_person(self, id: int, date: datetime) -> List[LessonSkeleton]:
         timetable_data = self.__get_timetable_data(id, date)
 

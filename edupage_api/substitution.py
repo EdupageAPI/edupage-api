@@ -79,12 +79,15 @@ class Substitution(Module):
         return missing_teachers
 
     @ModuleHelper.logged_in
-    def get_timetable_changes(self, date: date) -> list[TimetableChange]:
+    def get_timetable_changes(self, date: date) -> Optional[list[TimetableChange]]:
         html = self.__get_substitution_data(date)
 
         class_delim = ("</div><div class=\"section print-nobreak\">"
                        "<div class=\"header\"><span class=\"print-font-resizable\">")
         changes_by_class_dirty = html.split(class_delim)[1:]
+
+        if not changes_by_class_dirty:
+            return None
 
         footer_delim = ("<div style=\"text-align:center;font-size:12px\">"
                         "<a href=\"https://www.asctimetables.com\" target=\"_blank\">"

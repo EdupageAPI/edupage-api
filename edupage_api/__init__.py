@@ -8,6 +8,7 @@ from requests import Response
 
 from edupage_api.cloud import Cloud, EduCloudFile
 from edupage_api.custom_request import CustomRequest
+from edupage_api.foreign_timetables import ForeignTimetables
 from edupage_api.grades import EduGrade, Grades
 from edupage_api.login import Login
 from edupage_api.lunches import Lunch, Lunches
@@ -185,3 +186,4 @@ class Edupage(EdupageModule):
             list[TimetableChange]: List of changes in the timetable
         """
         return Substitution(self).get_timetable_changes(date)
+    

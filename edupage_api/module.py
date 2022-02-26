@@ -28,11 +28,6 @@ class ModuleHelper:
     # Helper Functions
 
     @staticmethod
-    def int_or_none(val: str) -> Optional[int]:
-        if val.isdigit():
-            return int(val)
-
-    @staticmethod
     def parse_int(val: str) -> Optional[int]:
         try:
             return int("".join(filter(str.isdigit, val)))

@@ -46,11 +46,11 @@ class EduAccount:
         account_type = EduAccount.recognize_account_type(person_data)
 
         if account_type == EduAccountType.STUDENT:
-            class_id = ModuleHelper.int_or_none(person_data.get("classid"))
+            class_id = ModuleHelper.parse_int(person_data.get("classid"))
             name = DbiHelper(edupage).fetch_student_name(person_id)
             gender = Gender.parse(person_data.get("gender"))
             student_since = ModuleHelper.strptime_or_none(person_data.get("datefrom"), "%Y-%m-%d")
-            number_in_class = ModuleHelper.int_or_none(person_data.get("numberinclass"))
+            number_in_class = ModuleHelper.parse_int(person_data.get("numberinclass"))
 
             ModuleHelper.assert_none(name)
 
@@ -58,7 +58,7 @@ class EduAccount:
         elif account_type == EduAccountType.TEACHER:
             classroom_id = person_data.get("classroomid")
             classroom_name = DbiHelper(edupage).fetch_classroom_number(
-                classroom_id) if ModuleHelper.int_or_none(classroom_id) else ""
+                classroom_id) if ModuleHelper.parse_int(classroom_id) else ""
 
             name = DbiHelper(edupage).fetch_teacher_name(person_id)
 

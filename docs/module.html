@@ -30,7 +30,7 @@
 from datetime import datetime
 from enum import Enum
 from functools import wraps
-from typing import Union
+from typing import Optional
 
 import requests
 
@@ -56,12 +56,7 @@ class ModuleHelper:
     # Helper Functions
 
     @staticmethod
-    def int_or_none(val: str) -&gt; Union[int, None]:
-        if val.isdigit():
-            return int(val)
-
-    @staticmethod
-    def parse_int(val: str) -&gt; int:
+    def parse_int(val: str) -&gt; Optional[int]:
         try:
             return int(&#34;&#34;.join(filter(str.isdigit, val)))
         except ValueError:
@@ -105,7 +100,7 @@ class ModuleHelper:
         return output
 
     @staticmethod
-    def strptime_or_none(date_string: str, format: str) -&gt; Union[datetime, None]:
+    def strptime_or_none(date_string: str, format: str) -&gt; Optional[datetime]:
         try:
             return datetime.strptime(date_string, format)
         except ValueError:
@@ -210,6 +205,7 @@ class ModuleHelper:
 <li><a title="edupage_api.cloud.Cloud" href="cloud.html#edupage_api.cloud.Cloud">Cloud</a></li>
 <li><a title="edupage_api.custom_request.CustomRequest" href="custom_request.html#edupage_api.custom_request.CustomRequest">CustomRequest</a></li>
 <li><a title="edupage_api.dbi.DbiHelper" href="dbi.html#edupage_api.dbi.DbiHelper">DbiHelper</a></li>
+<li><a title="edupage_api.foreign_timetables.ForeignTimetables" href="foreign_timetables.html#edupage_api.foreign_timetables.ForeignTimetables">ForeignTimetables</a></li>
 <li><a title="edupage_api.grades.Grades" href="grades.html#edupage_api.grades.Grades">Grades</a></li>
 <li><a title="edupage_api.login.Login" href="login.html#edupage_api.login.Login">Login</a></li>
 <li><a title="edupage_api.lunches.Lunches" href="lunches.html#edupage_api.lunches.Lunches">Lunches</a></li>
@@ -233,12 +229,7 @@ class ModuleHelper:
     # Helper Functions
 
     @staticmethod
-    def int_or_none(val: str) -&gt; Union[int, None]:
-        if val.isdigit():
-            return int(val)
-
-    @staticmethod
-    def parse_int(val: str) -&gt; int:
+    def parse_int(val: str) -&gt; Optional[int]:
         try:
             return int(&#34;&#34;.join(filter(str.isdigit, val)))
         except ValueError:
@@ -282,7 +273,7 @@ class ModuleHelper:
         return output
 
     @staticmethod
-    def strptime_or_none(date_string: str, format: str) -&gt; Union[datetime, None]:
+    def strptime_or_none(date_string: str, format: str) -&gt; Optional[datetime]:
         try:
             return datetime.strptime(date_string, format)
         except ValueError:
@@ -351,21 +342,6 @@ def encode_form_data(data: dict) -&gt; str:
     return output</code></pre>
 </details>
 </dd>
-<dt id="edupage_api.module.ModuleHelper.int_or_none"><code class="name flex">
-<span>def <span class="ident">int_or_none</span></span>(<span>val: str) ‑> Optional[int]</span>
-</code></dt>
-<dd>
-<div class="desc"></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">@staticmethod
-def int_or_none(val: str) -&gt; Union[int, None]:
-    if val.isdigit():
-        return int(val)</code></pre>
-</details>
-</dd>
 <dt id="edupage_api.module.ModuleHelper.logged_in"><code class="name flex">
 <span>def <span class="ident">logged_in</span></span>(<span>method)</span>
 </code></dt>
@@ -426,7 +402,7 @@ def parse_enum(string: str, enum_type: Enum):
 </details>
 </dd>
 <dt id="edupage_api.module.ModuleHelper.parse_int"><code class="name flex">
-<span>def <span class="ident">parse_int</span></span>(<span>val: str) ‑> int</span>
+<span>def <span class="ident">parse_int</span></span>(<span>val: str) ‑> Optional[int]</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
@@ -435,7 +411,7 @@ def parse_enum(string: str, enum_type: Enum):
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">@staticmethod
-def parse_int(val: str) -&gt; int:
+def parse_int(val: str) -&gt; Optional[int]:
     try:
         return int(&#34;&#34;.join(filter(str.isdigit, val)))
     except ValueError:
@@ -468,7 +444,7 @@ def return_first_not_null(*args):
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">@staticmethod
-def strptime_or_none(date_string: str, format: str) -&gt; Union[datetime, None]:
+def strptime_or_none(date_string: str, format: str) -&gt; Optional[datetime]:
     try:
         return datetime.strptime(date_string, format)
     except ValueError:
@@ -525,7 +501,6 @@ def urlencode(string: str) -&gt; str:
 <ul class="">
 <li><code><a title="edupage_api.module.ModuleHelper.assert_none" href="#edupage_api.module.ModuleHelper.assert_none">assert_none</a></code></li>
 <li><code><a title="edupage_api.module.ModuleHelper.encode_form_data" href="#edupage_api.module.ModuleHelper.encode_form_data">encode_form_data</a></code></li>
-<li><code><a title="edupage_api.module.ModuleHelper.int_or_none" href="#edupage_api.module.ModuleHelper.int_or_none">int_or_none</a></code></li>
 <li><code><a title="edupage_api.module.ModuleHelper.logged_in" href="#edupage_api.module.ModuleHelper.logged_in">logged_in</a></code></li>
 <li><code><a title="edupage_api.module.ModuleHelper.online_lesson" href="#edupage_api.module.ModuleHelper.online_lesson">online_lesson</a></code></li>
 <li><code><a title="edupage_api.module.ModuleHelper.parse_enum" href="#edupage_api.module.ModuleHelper.parse_enum">parse_enum</a></code></li>

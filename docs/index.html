@@ -36,6 +36,7 @@ from requests import Response
 
 from edupage_api.cloud import Cloud, EduCloudFile
 from edupage_api.custom_request import CustomRequest
+from edupage_api.foreign_timetables import ForeignTimetables, LessonSkeleton
 from edupage_api.grades import EduGrade, Grades
 from edupage_api.login import Login
 from edupage_api.lunches import Lunch, Lunches
@@ -212,7 +213,44 @@ class Edupage(EdupageModule):
         Returns:
             list[TimetableChange]: List of changes in the timetable
         &#34;&#34;&#34;
-        return Substitution(self).get_timetable_changes(date)</code></pre>
+        return Substitution(self).get_timetable_changes(date)
+    
+    def get_school_year(self) -&gt; int:
+        &#34;&#34;&#34;Returns the current school year.
+
+        Returns:
+            int: the starting year of the current school year
+        &#34;&#34;&#34;
+        return ForeignTimetables(self).get_school_year()
+    
+    def get_foreign_timetable(self, id: int) -&gt; list[LessonSkeleton]:
+        &#34;&#34;&#34;Get someone else&#39;s timetable for this week.
+
+        Args:
+            id (int): the `person_id` of the person whoose timetable you want
+        
+        Returns:
+            list[LessonSkeleton]: lessons (in order) that this person has for this week
+        
+        Note:
+            This returns the whole timetable (lessons from 1 week, NOT 1 day!)
+        &#34;&#34;&#34;
+        return ForeignTimetables(self).get_timetable_for_person(id, datetime.now())
+    
+    def get_foreign_timetable_for_week(self, id: int, date: datetime) -&gt; list[LessonSkeleton]:
+        &#34;&#34;&#34;Get someone else&#39;s timetable for the week `date` is in.
+
+        Args:
+            id (int): the `person_id` of the person whoose timetable you want
+            date (datetime.date): a date from the week from which you want this timetable
+        
+        Returns:
+            list[LessonSkeleton]: lessons (in order) that this person has for `date`&#39;s week
+        
+        Note:
+            This returns the whole timetable (lessons from 1 week, NOT 1 day!)
+        &#34;&#34;&#34;
+        return ForeignTimetables(self).get_timetable_for_person(id, date) </code></pre>
 </details>
 </section>
 <section>
@@ -231,6 +269,10 @@ class Edupage(EdupageModule):
 <div class="desc"></div>
 </dd>
 <dt><code class="name"><a title="edupage_api.exceptions" href="exceptions.html">edupage_api.exceptions</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt><code class="name"><a title="edupage_api.foreign_timetables" href="foreign_timetables.html">edupage_api.foreign_timetables</a></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
@@ -465,7 +507,44 @@ Defaults to <code>5</code>.</dd>
         Returns:
             list[TimetableChange]: List of changes in the timetable
         &#34;&#34;&#34;
-        return Substitution(self).get_timetable_changes(date)</code></pre>
+        return Substitution(self).get_timetable_changes(date)
+    
+    def get_school_year(self) -&gt; int:
+        &#34;&#34;&#34;Returns the current school year.
+
+        Returns:
+            int: the starting year of the current school year
+        &#34;&#34;&#34;
+        return ForeignTimetables(self).get_school_year()
+    
+    def get_foreign_timetable(self, id: int) -&gt; list[LessonSkeleton]:
+        &#34;&#34;&#34;Get someone else&#39;s timetable for this week.
+
+        Args:
+            id (int): the `person_id` of the person whoose timetable you want
+        
+        Returns:
+            list[LessonSkeleton]: lessons (in order) that this person has for this week
+        
+        Note:
+            This returns the whole timetable (lessons from 1 week, NOT 1 day!)
+        &#34;&#34;&#34;
+        return ForeignTimetables(self).get_timetable_for_person(id, datetime.now())
+    
+    def get_foreign_timetable_for_week(self, id: int, date: datetime) -&gt; list[LessonSkeleton]:
+        &#34;&#34;&#34;Get someone else&#39;s timetable for the week `date` is in.
+
+        Args:
+            id (int): the `person_id` of the person whoose timetable you want
+            date (datetime.date): a date from the week from which you want this timetable
+        
+        Returns:
+            list[LessonSkeleton]: lessons (in order) that this person has for `date`&#39;s week
+        
+        Note:
+            This returns the whole timetable (lessons from 1 week, NOT 1 day!)
+        &#34;&#34;&#34;
+        return ForeignTimetables(self).get_timetable_for_person(id, date) </code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
@@ -567,6 +646,81 @@ Defaults to <code>5</code>.</dd>
     &#34;&#34;&#34;
 
     return CustomRequest(self).custom_request(url, method, data, headers)</code></pre>
+</details>
+</dd>
+<dt id="edupage_api.Edupage.get_foreign_timetable"><code class="name flex">
+<span>def <span class="ident">get_foreign_timetable</span></span>(<span>self, id: int) ‑> list[<a title="edupage_api.foreign_timetables.LessonSkeleton" href="foreign_timetables.html#edupage_api.foreign_timetables.LessonSkeleton">LessonSkeleton</a>]</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Get someone else's timetable for this week.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>id</code></strong> :&ensp;<code>int</code></dt>
+<dd>the <code>person_id</code> of the person whoose timetable you want</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>list[LessonSkeleton]</code></dt>
+<dd>lessons (in order) that this person has for this week</dd>
+</dl>
+<h2 id="note">Note</h2>
+<p>This returns the whole timetable (lessons from 1 week, NOT 1 day!)</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_foreign_timetable(self, id: int) -&gt; list[LessonSkeleton]:
+    &#34;&#34;&#34;Get someone else&#39;s timetable for this week.
+
+    Args:
+        id (int): the `person_id` of the person whoose timetable you want
+    
+    Returns:
+        list[LessonSkeleton]: lessons (in order) that this person has for this week
+    
+    Note:
+        This returns the whole timetable (lessons from 1 week, NOT 1 day!)
+    &#34;&#34;&#34;
+    return ForeignTimetables(self).get_timetable_for_person(id, datetime.now())</code></pre>
+</details>
+</dd>
+<dt id="edupage_api.Edupage.get_foreign_timetable_for_week"><code class="name flex">
+<span>def <span class="ident">get_foreign_timetable_for_week</span></span>(<span>self, id: int, date: datetime.datetime) ‑> list[<a title="edupage_api.foreign_timetables.LessonSkeleton" href="foreign_timetables.html#edupage_api.foreign_timetables.LessonSkeleton">LessonSkeleton</a>]</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Get someone else's timetable for the week <code>date</code> is in.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>id</code></strong> :&ensp;<code>int</code></dt>
+<dd>the <code>person_id</code> of the person whoose timetable you want</dd>
+<dt><strong><code>date</code></strong> :&ensp;<code>datetime.date</code></dt>
+<dd>a date from the week from which you want this timetable</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>list[LessonSkeleton]</code></dt>
+<dd>lessons (in order) that this person has for <code>date</code>'s week</dd>
+</dl>
+<h2 id="note">Note</h2>
+<p>This returns the whole timetable (lessons from 1 week, NOT 1 day!)</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_foreign_timetable_for_week(self, id: int, date: datetime) -&gt; list[LessonSkeleton]:
+    &#34;&#34;&#34;Get someone else&#39;s timetable for the week `date` is in.
+
+    Args:
+        id (int): the `person_id` of the person whoose timetable you want
+        date (datetime.date): a date from the week from which you want this timetable
+    
+    Returns:
+        list[LessonSkeleton]: lessons (in order) that this person has for `date`&#39;s week
+    
+    Note:
+        This returns the whole timetable (lessons from 1 week, NOT 1 day!)
+    &#34;&#34;&#34;
+    return ForeignTimetables(self).get_timetable_for_person(id, date) </code></pre>
 </details>
 </dd>
 <dt id="edupage_api.Edupage.get_grades"><code class="name flex">
@@ -678,6 +832,29 @@ Defaults to <code>5</code>.</dd>
     &#34;&#34;&#34;
 
     return TimelineEvents(self).get_notifications()</code></pre>
+</details>
+</dd>
+<dt id="edupage_api.Edupage.get_school_year"><code class="name flex">
+<span>def <span class="ident">get_school_year</span></span>(<span>self) ‑> int</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns the current school year.</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>int</code></dt>
+<dd>the starting year of the current school year</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_school_year(self) -&gt; int:
+    &#34;&#34;&#34;Returns the current school year.
+
+    Returns:
+        int: the starting year of the current school year
+    &#34;&#34;&#34;
+    return ForeignTimetables(self).get_school_year()</code></pre>
 </details>
 </dd>
 <dt id="edupage_api.Edupage.get_students"><code class="name flex">
@@ -916,6 +1093,7 @@ Defaults to <code>5</code>.</dd>
 <li><code><a title="edupage_api.custom_request" href="custom_request.html">edupage_api.custom_request</a></code></li>
 <li><code><a title="edupage_api.dbi" href="dbi.html">edupage_api.dbi</a></code></li>
 <li><code><a title="edupage_api.exceptions" href="exceptions.html">edupage_api.exceptions</a></code></li>
+<li><code><a title="edupage_api.foreign_timetables" href="foreign_timetables.html">edupage_api.foreign_timetables</a></code></li>
 <li><code><a title="edupage_api.grades" href="grades.html">edupage_api.grades</a></code></li>
 <li><code><a title="edupage_api.login" href="login.html">edupage_api.login</a></code></li>
 <li><code><a title="edupage_api.lunches" href="lunches.html">edupage_api.lunches</a></code></li>
@@ -936,10 +1114,13 @@ Defaults to <code>5</code>.</dd>
 <li><code><a title="edupage_api.Edupage.cloud_upload" href="#edupage_api.Edupage.cloud_upload">cloud_upload</a></code></li>
 <li><code><a title="edupage_api.Edupage.custom_request" href="#edupage_api.Edupage.custom_request">custom_request</a></code></li>
 <li><code><a title="edupage_api.Edupage.data" href="#edupage_api.Edupage.data">data</a></code></li>
+<li><code><a title="edupage_api.Edupage.get_foreign_timetable" href="#edupage_api.Edupage.get_foreign_timetable">get_foreign_timetable</a></code></li>
+<li><code><a title="edupage_api.Edupage.get_foreign_timetable_for_week" href="#edupage_api.Edupage.get_foreign_timetable_for_week">get_foreign_timetable_for_week</a></code></li>
 <li><code><a title="edupage_api.Edupage.get_grades" href="#edupage_api.Edupage.get_grades">get_grades</a></code></li>
 <li><code><a title="edupage_api.Edupage.get_lunches" href="#edupage_api.Edupage.get_lunches">get_lunches</a></code></li>
 <li><code><a title="edupage_api.Edupage.get_missing_teachers" href="#edupage_api.Edupage.get_missing_teachers">get_missing_teachers</a></code></li>
 <li><code><a title="edupage_api.Edupage.get_notifications" href="#edupage_api.Edupage.get_notifications">get_notifications</a></code></li>
+<li><code><a title="edupage_api.Edupage.get_school_year" href="#edupage_api.Edupage.get_school_year">get_school_year</a></code></li>
 <li><code><a title="edupage_api.Edupage.get_students" href="#edupage_api.Edupage.get_students">get_students</a></code></li>
 <li><code><a title="edupage_api.Edupage.get_teachers" href="#edupage_api.Edupage.get_teachers">get_teachers</a></code></li>
 <li><code><a title="edupage_api.Edupage.get_timetable" href="#edupage_api.Edupage.get_timetable">get_timetable</a></code></li>

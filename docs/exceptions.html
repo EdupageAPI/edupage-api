@@ -63,6 +63,9 @@ class ExpiredSessionException(Exception):
 
 
 class InvalidTeacherException(Exception):
+    pass
+
+class RequestError(Exception):
     pass</code></pre>
 </details>
 </section>
@@ -265,6 +268,25 @@ class InvalidTeacherException(Exception):
 <li>builtins.BaseException</li>
 </ul>
 </dd>
+<dt id="edupage_api.exceptions.RequestError"><code class="flex name class">
+<span>class <span class="ident">RequestError</span></span>
+<span>(</span><span>*args, **kwargs)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Common base class for all non-exit exceptions.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class RequestError(Exception):
+    pass</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>builtins.Exception</li>
+<li>builtins.BaseException</li>
+</ul>
+</dd>
 </dl>
 </section>
 </article>
@@ -310,6 +332,9 @@ class InvalidTeacherException(Exception):
 </li>
 <li>
 <h4><code><a title="edupage_api.exceptions.NotLoggedInException" href="#edupage_api.exceptions.NotLoggedInException">NotLoggedInException</a></code></h4>
+</li>
+<li>
+<h4><code><a title="edupage_api.exceptions.RequestError" href="#edupage_api.exceptions.RequestError">RequestError</a></code></h4>
 </li>
 </ul>
 </li>

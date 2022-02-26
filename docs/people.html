@@ -74,11 +74,11 @@ class EduAccount:
         account_type = EduAccount.recognize_account_type(person_data)
 
         if account_type == EduAccountType.STUDENT:
-            class_id = ModuleHelper.int_or_none(person_data.get(&#34;classid&#34;))
+            class_id = ModuleHelper.parse_int(person_data.get(&#34;classid&#34;))
             name = DbiHelper(edupage).fetch_student_name(person_id)
             gender = Gender.parse(person_data.get(&#34;gender&#34;))
             student_since = ModuleHelper.strptime_or_none(person_data.get(&#34;datefrom&#34;), &#34;%Y-%m-%d&#34;)
-            number_in_class = ModuleHelper.int_or_none(person_data.get(&#34;numberinclass&#34;))
+            number_in_class = ModuleHelper.parse_int(person_data.get(&#34;numberinclass&#34;))
 
             ModuleHelper.assert_none(name)
 
@@ -86,7 +86,7 @@ class EduAccount:
         elif account_type == EduAccountType.TEACHER:
             classroom_id = person_data.get(&#34;classroomid&#34;)
             classroom_name = DbiHelper(edupage).fetch_classroom_number(
-                classroom_id) if ModuleHelper.int_or_none(classroom_id) else &#34;&#34;
+                classroom_id) if ModuleHelper.parse_int(classroom_id) else &#34;&#34;
 
             name = DbiHelper(edupage).fetch_teacher_name(person_id)
 
@@ -229,11 +229,11 @@ class People(Module):
         account_type = EduAccount.recognize_account_type(person_data)
 
         if account_type == EduAccountType.STUDENT:
-            class_id = ModuleHelper.int_or_none(person_data.get(&#34;classid&#34;))
+            class_id = ModuleHelper.parse_int(person_data.get(&#34;classid&#34;))
             name = DbiHelper(edupage).fetch_student_name(person_id)
             gender = Gender.parse(person_data.get(&#34;gender&#34;))
             student_since = ModuleHelper.strptime_or_none(person_data.get(&#34;datefrom&#34;), &#34;%Y-%m-%d&#34;)
-            number_in_class = ModuleHelper.int_or_none(person_data.get(&#34;numberinclass&#34;))
+            number_in_class = ModuleHelper.parse_int(person_data.get(&#34;numberinclass&#34;))
 
             ModuleHelper.assert_none(name)
 
@@ -241,7 +241,7 @@ class People(Module):
         elif account_type == EduAccountType.TEACHER:
             classroom_id = person_data.get(&#34;classroomid&#34;)
             classroom_name = DbiHelper(edupage).fetch_classroom_number(
-                classroom_id) if ModuleHelper.int_or_none(classroom_id) else &#34;&#34;
+                classroom_id) if ModuleHelper.parse_int(classroom_id) else &#34;&#34;
 
             name = DbiHelper(edupage).fetch_teacher_name(person_id)
 
@@ -285,11 +285,11 @@ def parse(person_data: dict, person_id: int, edupage: EdupageModule) -&gt; Optio
     account_type = EduAccount.recognize_account_type(person_data)
 
     if account_type == EduAccountType.STUDENT:
-        class_id = ModuleHelper.int_or_none(person_data.get(&#34;classid&#34;))
+        class_id = ModuleHelper.parse_int(person_data.get(&#34;classid&#34;))
         name = DbiHelper(edupage).fetch_student_name(person_id)
         gender = Gender.parse(person_data.get(&#34;gender&#34;))
         student_since = ModuleHelper.strptime_or_none(person_data.get(&#34;datefrom&#34;), &#34;%Y-%m-%d&#34;)
-        number_in_class = ModuleHelper.int_or_none(person_data.get(&#34;numberinclass&#34;))
+        number_in_class = ModuleHelper.parse_int(person_data.get(&#34;numberinclass&#34;))
 
         ModuleHelper.assert_none(name)
 
@@ -297,7 +297,7 @@ def parse(person_data: dict, person_id: int, edupage: EdupageModule) -&gt; Optio
     elif account_type == EduAccountType.TEACHER:
         classroom_id = person_data.get(&#34;classroomid&#34;)
         classroom_name = DbiHelper(edupage).fetch_classroom_number(
-            classroom_id) if ModuleHelper.int_or_none(classroom_id) else &#34;&#34;
+            classroom_id) if ModuleHelper.parse_int(classroom_id) else &#34;&#34;
 
         name = DbiHelper(edupage).fetch_teacher_name(person_id)
 

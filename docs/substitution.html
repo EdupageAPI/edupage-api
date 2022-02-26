@@ -80,10 +80,13 @@ class Substitution(Module):
         return response.get(&#34;r&#34;)
 
     @ModuleHelper.logged_in
-    def get_missing_teachers(self, date: date) -&gt; list[EduTeacher]:
+    def get_missing_teachers(self, date: date) -&gt; Optional[list[EduTeacher]]:
         html = self.__get_substitution_data(date)
         missing_teachers_string = (html.split(&#34;&lt;span class=\&#34;print-font-resizable\&#34;&gt;&#34;)[1]
                                        .split(&#34;&lt;/span&gt;&#34;)[0])
+
+        if not missing_teachers_string:
+            return None
 
         _title, missing_teachers = missing_teachers_string.split(&#34;: &#34;)
 
@@ -107,12 +110,15 @@ class Substitution(Module):
         return missing_teachers
 
     @ModuleHelper.logged_in
-    def get_timetable_changes(self, date: date) -&gt; list[TimetableChange]:
+    def get_timetable_changes(self, date: date) -&gt; Optional[list[TimetableChange]]:
         html = self.__get_substitution_data(date)
 
         class_delim = (&#34;&lt;/div&gt;&lt;div class=\&#34;section print-nobreak\&#34;&gt;&#34;
                        &#34;&lt;div class=\&#34;header\&#34;&gt;&lt;span class=\&#34;print-font-resizable\&#34;&gt;&#34;)
         changes_by_class_dirty = html.split(class_delim)[1:]
+
+        if not changes_by_class_dirty:
+            return None
 
         footer_delim = (&#34;&lt;div style=\&#34;text-align:center;font-size:12px\&#34;&gt;&#34;
                         &#34;&lt;a href=\&#34;https://www.asctimetables.com\&#34; target=\&#34;_blank\&#34;&gt;&#34;
@@ -254,10 +260,13 @@ def parse(string: str) -&gt; Optional[Action]:
         return response.get(&#34;r&#34;)
 
     @ModuleHelper.logged_in
-    def get_missing_teachers(self, date: date) -&gt; list[EduTeacher]:
+    def get_missing_teachers(self, date: date) -&gt; Optional[list[EduTeacher]]:
         html = self.__get_substitution_data(date)
         missing_teachers_string = (html.split(&#34;&lt;span class=\&#34;print-font-resizable\&#34;&gt;&#34;)[1]
                                        .split(&#34;&lt;/span&gt;&#34;)[0])
+
+        if not missing_teachers_string:
+            return None
 
         _title, missing_teachers = missing_teachers_string.split(&#34;: &#34;)
 
@@ -281,12 +290,15 @@ def parse(string: str) -&gt; Optional[Action]:
         return missing_teachers
 
     @ModuleHelper.logged_in
-    def get_timetable_changes(self, date: date) -&gt; list[TimetableChange]:
+    def get_timetable_changes(self, date: date) -&gt; Optional[list[TimetableChange]]:
         html = self.__get_substitution_data(date)
 
         class_delim = (&#34;&lt;/div&gt;&lt;div class=\&#34;section print-nobreak\&#34;&gt;&#34;
                        &#34;&lt;div class=\&#34;header\&#34;&gt;&lt;span class=\&#34;print-font-resizable\&#34;&gt;&#34;)
         changes_by_class_dirty = html.split(class_delim)[1:]
+
+        if not changes_by_class_dirty:
+            return None
 
         footer_delim = (&#34;&lt;div style=\&#34;text-align:center;font-size:12px\&#34;&gt;&#34;
                         &#34;&lt;a href=\&#34;https://www.asctimetables.com\&#34; target=\&#34;_blank\&#34;&gt;&#34;
@@ -336,7 +348,7 @@ def parse(string: str) -&gt; Optional[Action]:
 <h3>Methods</h3>
 <dl>
 <dt id="edupage_api.substitution.Substitution.get_missing_teachers"><code class="name flex">
-<span>def <span class="ident">get_missing_teachers</span></span>(<span>self, date: date) ‑> list[<a title="edupage_api.people.EduTeacher" href="people.html#edupage_api.people.EduTeacher">EduTeacher</a>]</span>
+<span>def <span class="ident">get_missing_teachers</span></span>(<span>self, date: date) ‑> Optional[list[<a title="edupage_api.people.EduTeacher" href="people.html#edupage_api.people.EduTeacher">EduTeacher</a>]]</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
@@ -345,10 +357,13 @@ def parse(string: str) -&gt; Optional[Action]:
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">@ModuleHelper.logged_in
-def get_missing_teachers(self, date: date) -&gt; list[EduTeacher]:
+def get_missing_teachers(self, date: date) -&gt; Optional[list[EduTeacher]]:
     html = self.__get_substitution_data(date)
     missing_teachers_string = (html.split(&#34;&lt;span class=\&#34;print-font-resizable\&#34;&gt;&#34;)[1]
                                    .split(&#34;&lt;/span&gt;&#34;)[0])
+
+    if not missing_teachers_string:
+        return None
 
     _title, missing_teachers = missing_teachers_string.split(&#34;: &#34;)
 
@@ -373,7 +388,7 @@ def get_missing_teachers(self, date: date) -&gt; list[EduTeacher]:
 </details>
 </dd>
 <dt id="edupage_api.substitution.Substitution.get_timetable_changes"><code class="name flex">
-<span>def <span class="ident">get_timetable_changes</span></span>(<span>self, date: date) ‑> list[<a title="edupage_api.substitution.TimetableChange" href="#edupage_api.substitution.TimetableChange">TimetableChange</a>]</span>
+<span>def <span class="ident">get_timetable_changes</span></span>(<span>self, date: date) ‑> Optional[list[<a title="edupage_api.substitution.TimetableChange" href="#edupage_api.substitution.TimetableChange">TimetableChange</a>]]</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
@@ -382,12 +397,15 @@ def get_missing_teachers(self, date: date) -&gt; list[EduTeacher]:
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">@ModuleHelper.logged_in
-def get_timetable_changes(self, date: date) -&gt; list[TimetableChange]:
+def get_timetable_changes(self, date: date) -&gt; Optional[list[TimetableChange]]:
     html = self.__get_substitution_data(date)
 
     class_delim = (&#34;&lt;/div&gt;&lt;div class=\&#34;section print-nobreak\&#34;&gt;&#34;
                    &#34;&lt;div class=\&#34;header\&#34;&gt;&lt;span class=\&#34;print-font-resizable\&#34;&gt;&#34;)
     changes_by_class_dirty = html.split(class_delim)[1:]
+
+    if not changes_by_class_dirty:
+        return None
 
     footer_delim = (&#34;&lt;div style=\&#34;text-align:center;font-size:12px\&#34;&gt;&#34;
                     &#34;&lt;a href=\&#34;https://www.asctimetables.com\&#34; target=\&#34;_blank\&#34;&gt;&#34;

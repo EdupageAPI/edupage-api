@@ -28,7 +28,7 @@
 </summary>
 <pre><code class="python">import json
 from datetime import datetime
-from typing import List, Optional, Union
+from typing import List, Optional
 
 from edupage_api.dbi import DbiHelper
 from edupage_api.exceptions import MissingDataException
@@ -127,7 +127,7 @@ class Timetables(Module):
 
         return dp
 
-    def get_timetable(self, date: datetime) -&gt; Union[Timetable, None]:
+    def get_timetable(self, date: datetime) -&gt; Optional[Timetable]:
         dp = self.__get_dp()
 
         dates = dp.get(&#34;dates&#34;)
@@ -458,7 +458,7 @@ def sign_into_lesson(self, edupage: EdupageModule):
 
         return dp
 
-    def get_timetable(self, date: datetime) -&gt; Union[Timetable, None]:
+    def get_timetable(self, date: datetime) -&gt; Optional[Timetable]:
         dp = self.__get_dp()
 
         dates = dp.get(&#34;dates&#34;)
@@ -535,7 +535,7 @@ def sign_into_lesson(self, edupage: EdupageModule):
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def get_timetable(self, date: datetime) -&gt; Union[Timetable, None]:
+<pre><code class="python">def get_timetable(self, date: datetime) -&gt; Optional[Timetable]:
     dp = self.__get_dp()
 
     dates = dp.get(&#34;dates&#34;)

@@ -86,6 +86,12 @@ class DbiHelper(Module):
     def fetch_teacher_list(self) -&gt; Optional[list]:
         return self.__get_item_group(&#34;teachers&#34;)
 
+    def fetch_subject_list(self) -&gt; Optional[list]:
+        return self.__get_item_group(&#34;subjects&#34;)
+    
+    def fetch_classroom_list(self) -&gt; Optional[list]:
+        return self.__get_item_group(&#34;classrooms&#34;)
+    
     def fetch_teacher_data(self, teacher_id: int) -&gt; Optional[dict]:
         return self.__get_item_with_id(&#34;teachers&#34;, teacher_id)
 
@@ -124,7 +130,8 @@ class DbiHelper(Module):
         student_data = self.fetch_student_data_by_name(name)
         parent_data = self.fetch_parent_data_by_name(name)
 
-        return ModuleHelper.return_first_not_null(teacher_data, student_data, parent_data)</code></pre>
+        return ModuleHelper.return_first_not_null(teacher_data, student_data, parent_data)
+    </code></pre>
 </details>
 </section>
 <section>
@@ -201,6 +208,12 @@ class DbiHelper(Module):
     def fetch_teacher_list(self) -&gt; Optional[list]:
         return self.__get_item_group(&#34;teachers&#34;)
 
+    def fetch_subject_list(self) -&gt; Optional[list]:
+        return self.__get_item_group(&#34;subjects&#34;)
+    
+    def fetch_classroom_list(self) -&gt; Optional[list]:
+        return self.__get_item_group(&#34;classrooms&#34;)
+    
     def fetch_teacher_data(self, teacher_id: int) -&gt; Optional[dict]:
         return self.__get_item_with_id(&#34;teachers&#34;, teacher_id)
 
@@ -260,6 +273,19 @@ class DbiHelper(Module):
     class_item = self.__get_item_with_id(&#34;classes&#34;, class_id)
     if class_item is not None:
         return class_item.get(&#34;short&#34;)</code></pre>
+</details>
+</dd>
+<dt id="edupage_api.dbi.DbiHelper.fetch_classroom_list"><code class="name flex">
+<span>def <span class="ident">fetch_classroom_list</span></span>(<span>self) ‑> Optional[list]</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def fetch_classroom_list(self) -&gt; Optional[list]:
+    return self.__get_item_group(&#34;classrooms&#34;)</code></pre>
 </details>
 </dd>
 <dt id="edupage_api.dbi.DbiHelper.fetch_classroom_number"><code class="name flex">
@@ -373,6 +399,19 @@ class DbiHelper(Module):
         return self.__get_full_name(student_item)</code></pre>
 </details>
 </dd>
+<dt id="edupage_api.dbi.DbiHelper.fetch_subject_list"><code class="name flex">
+<span>def <span class="ident">fetch_subject_list</span></span>(<span>self) ‑> Optional[list]</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def fetch_subject_list(self) -&gt; Optional[list]:
+    return self.__get_item_group(&#34;subjects&#34;)</code></pre>
+</details>
+</dd>
 <dt id="edupage_api.dbi.DbiHelper.fetch_subject_name"><code class="name flex">
 <span>def <span class="ident">fetch_subject_name</span></span>(<span>self, subject_id: int) ‑> Optional[str]</span>
 </code></dt>
@@ -470,6 +509,7 @@ class DbiHelper(Module):
 <h4><code><a title="edupage_api.dbi.DbiHelper" href="#edupage_api.dbi.DbiHelper">DbiHelper</a></code></h4>
 <ul class="">
 <li><code><a title="edupage_api.dbi.DbiHelper.fetch_class_name" href="#edupage_api.dbi.DbiHelper.fetch_class_name">fetch_class_name</a></code></li>
+<li><code><a title="edupage_api.dbi.DbiHelper.fetch_classroom_list" href="#edupage_api.dbi.DbiHelper.fetch_classroom_list">fetch_classroom_list</a></code></li>
 <li><code><a title="edupage_api.dbi.DbiHelper.fetch_classroom_number" href="#edupage_api.dbi.DbiHelper.fetch_classroom_number">fetch_classroom_number</a></code></li>
 <li><code><a title="edupage_api.dbi.DbiHelper.fetch_parent_data_by_name" href="#edupage_api.dbi.DbiHelper.fetch_parent_data_by_name">fetch_parent_data_by_name</a></code></li>
 <li><code><a title="edupage_api.dbi.DbiHelper.fetch_person_data_by_name" href="#edupage_api.dbi.DbiHelper.fetch_person_data_by_name">fetch_person_data_by_name</a></code></li>
@@ -477,6 +517,7 @@ class DbiHelper(Module):
 <li><code><a title="edupage_api.dbi.DbiHelper.fetch_student_data_by_name" href="#edupage_api.dbi.DbiHelper.fetch_student_data_by_name">fetch_student_data_by_name</a></code></li>
 <li><code><a title="edupage_api.dbi.DbiHelper.fetch_student_list" href="#edupage_api.dbi.DbiHelper.fetch_student_list">fetch_student_list</a></code></li>
 <li><code><a title="edupage_api.dbi.DbiHelper.fetch_student_name" href="#edupage_api.dbi.DbiHelper.fetch_student_name">fetch_student_name</a></code></li>
+<li><code><a title="edupage_api.dbi.DbiHelper.fetch_subject_list" href="#edupage_api.dbi.DbiHelper.fetch_subject_list">fetch_subject_list</a></code></li>
 <li><code><a title="edupage_api.dbi.DbiHelper.fetch_subject_name" href="#edupage_api.dbi.DbiHelper.fetch_subject_name">fetch_subject_name</a></code></li>
 <li><code><a title="edupage_api.dbi.DbiHelper.fetch_teacher_data" href="#edupage_api.dbi.DbiHelper.fetch_teacher_data">fetch_teacher_data</a></code></li>
 <li><code><a title="edupage_api.dbi.DbiHelper.fetch_teacher_data_by_name" href="#edupage_api.dbi.DbiHelper.fetch_teacher_data_by_name">fetch_teacher_data_by_name</a></code></li>

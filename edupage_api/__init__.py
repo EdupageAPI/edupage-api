@@ -8,7 +8,7 @@ from requests import Response
 
 from edupage_api.cloud import Cloud, EduCloudFile
 from edupage_api.custom_request import CustomRequest
-from edupage_api.foreign_timetables import ForeignTimetables
+from edupage_api.foreign_timetables import ForeignTimetables, LessonSkeleton
 from edupage_api.grades import EduGrade, Grades
 from edupage_api.login import Login
 from edupage_api.lunches import Lunch, Lunches
@@ -187,3 +187,11 @@ class Edupage(EdupageModule):
         """
         return Substitution(self).get_timetable_changes(date)
     
+    def get_school_year(self) -> int:
+        return ForeignTimetables(self).get_school_year()
+    
+    def get_foreign_timetable(self, id: int) -> list[LessonSkeleton]:
+        return ForeignTimetables(self).get_timetable_for_person(id, datetime.now())
+    
+    def get_foreign_timetable_for_date(self, id: int, date: datetime) -> list[LessonSkeleton]:
+        return ForeignTimetables(self).get_timetable_for_person(id, date) 

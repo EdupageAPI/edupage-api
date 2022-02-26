@@ -58,6 +58,12 @@ class DbiHelper(Module):
     def fetch_teacher_list(self) -> Optional[list]:
         return self.__get_item_group("teachers")
 
+    def fetch_subject_list(self) -> Optional[list]:
+        return self.__get_item_group("subjects")
+    
+    def fetch_classroom_list(self) -> Optional[list]:
+        return self.__get_item_group("classrooms")
+    
     def fetch_teacher_data(self, teacher_id: int) -> Optional[dict]:
         return self.__get_item_with_id("teachers", teacher_id)
 
@@ -97,3 +103,4 @@ class DbiHelper(Module):
         parent_data = self.fetch_parent_data_by_name(name)
 
         return ModuleHelper.return_first_not_null(teacher_data, student_data, parent_data)
+    

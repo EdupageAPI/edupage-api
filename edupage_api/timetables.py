@@ -1,6 +1,6 @@
 import json
 from datetime import datetime
-from typing import List, Optional, Union
+from typing import List, Optional
 
 from edupage_api.dbi import DbiHelper
 from edupage_api.exceptions import MissingDataException
@@ -99,7 +99,7 @@ class Timetables(Module):
 
         return dp
 
-    def get_timetable(self, date: datetime) -> Union[Timetable, None]:
+    def get_timetable(self, date: datetime) -> Optional[Timetable]:
         dp = self.__get_dp()
 
         dates = dp.get("dates")

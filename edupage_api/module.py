@@ -2,7 +2,7 @@ import urllib.parse
 from datetime import datetime
 from enum import Enum
 from functools import wraps
-from typing import Union
+from typing import Optional
 
 import requests
 
@@ -28,12 +28,12 @@ class ModuleHelper:
     # Helper Functions
 
     @staticmethod
-    def int_or_none(val: str) -> Union[int, None]:
+    def int_or_none(val: str) -> Optional[int]:
         if val.isdigit():
             return int(val)
 
     @staticmethod
-    def parse_int(val: str) -> int:
+    def parse_int(val: str) -> Optional[int]:
         try:
             return int("".join(filter(str.isdigit, val)))
         except ValueError:
@@ -77,7 +77,7 @@ class ModuleHelper:
         return output
 
     @staticmethod
-    def strptime_or_none(date_string: str, format: str) -> Union[datetime, None]:
+    def strptime_or_none(date_string: str, format: str) -> Optional[datetime]:
         try:
             return datetime.strptime(date_string, format)
         except ValueError:

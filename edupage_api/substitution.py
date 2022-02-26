@@ -52,10 +52,13 @@ class Substitution(Module):
         return response.get("r")
 
     @ModuleHelper.logged_in
-    def get_missing_teachers(self, date: date) -> list[EduTeacher]:
+    def get_missing_teachers(self, date: date) -> Optional[list[EduTeacher]]:
         html = self.__get_substitution_data(date)
         missing_teachers_string = (html.split("<span class=\"print-font-resizable\">")[1]
                                        .split("</span>")[0])
+
+        if not missing_teachers_string:
+            return None
 
         _title, missing_teachers = missing_teachers_string.split(": ")
 

@@ -36,7 +36,7 @@ class ForeignTimetables(Module):
 
         return dp.get("year")
 
-    def __get_timetable_data(self, id: int, date: datetime):
+    def __get_timetable_data(self, id: int, table: str, date: datetime):
         this_monday = self.__get_this_week_weekday(date, 0)
         this_sunday = self.__get_this_week_weekday(date, 6)
 
@@ -47,7 +47,7 @@ class ForeignTimetables(Module):
                     "year": self.get_school_year(),
                     "datefrom": this_monday.strftime("%Y-%m-%d"),
                     "dateto": this_sunday.strftime("%Y-%m-%d"),
-                    "table": "teachers",
+                    "table": table,
                     "id": str(id),
                     "showColors": True,
                     "showIgroupsInClasses": True,
@@ -77,8 +77,6 @@ class ForeignTimetables(Module):
 
     @ ModuleHelper.logged_in
     def get_timetable_for_person(self, id: int, date: datetime) -> List[LessonSkeleton]:
-        timetable_data = self.__get_timetable_data(id, date)
-
         all_teachers = People(self.edupage).get_teachers()
         students = People(self.edupage).get_students()
 
@@ -98,6 +96,23 @@ class ForeignTimetables(Module):
 
         def classroom_by_id(id: int):
             return DbiHelper(self.edupage).fetch_classroom_number(id)
+
+        table = None
+        try:
+            teacher_by_id(id)
+            table = "teachers"
+        except:
+            try:
+                student_by_id(id)
+                table = "students"
+            except:
+                if classroom_by_id(id):
+                    table = "classrooms"
+
+        if not table:
+            raise MissingDataException(f"Teacher, student or class with id {id} doesn't exist!")
+
+        timetable_data = self.__get_timetable_data(id, table, date)
 
         skeletons = []
         for skeleton in timetable_data:

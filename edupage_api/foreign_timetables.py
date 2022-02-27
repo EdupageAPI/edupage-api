@@ -65,7 +65,7 @@ class ForeignTimetables(Module):
         timetable_data = json.loads(timetable_data)
 
         timetable_data_response = timetable_data.get("r")
-        timetable_data_error = timetable_data.get("e")
+        timetable_data_error = timetable_data_response.get("error")
 
         if timetable_data_response is None:
             raise MissingDataException("The server returned an incorrect response.")

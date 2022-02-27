@@ -37,8 +37,8 @@ class ForeignTimetables(Module):
         return dp.get("year")
 
     def __get_timetable_data(self, id: int, date: datetime):
-        this_monday = self.__get_this_week_weekday(datetime.now(), 0)
-        this_sunday = self.__get_this_week_weekday(datetime.now(), 6)
+        this_monday = self.__get_this_week_weekday(date, 0)
+        this_sunday = self.__get_this_week_weekday(date, 6)
 
         request_data = {
             "__args": [

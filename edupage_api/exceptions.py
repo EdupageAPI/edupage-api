@@ -37,6 +37,6 @@ class ExpiredSessionException(Exception):
 class InvalidTeacherException(Exception):
     pass
 
+
 class RequestError(Exception):
     pass
-

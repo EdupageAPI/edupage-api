@@ -186,7 +186,7 @@ class Edupage(EdupageModule):
             list[TimetableChange]: List of changes in the timetable
         """
         return Substitution(self).get_timetable_changes(date)
-    
+
     def get_school_year(self) -> int:
         """Returns the current school year.
 
@@ -194,18 +194,18 @@ class Edupage(EdupageModule):
             int: the starting year of the current school year
         """
         return ForeignTimetables(self).get_school_year()
-    
+
     def get_foreign_timetable(self, id: int, date: datetime) -> list[LessonSkeleton]:
         """Get someone else's timetable for the week `date` is in.
 
         Args:
             id (int): the `person_id` of the person whoose timetable you want
             date (datetime.date): a date from the week from which you want this timetable
-        
+
         Returns:
             list[LessonSkeleton]: lessons (in order) that this person has for `date`'s week
-        
+
         Note:
             This returns the whole timetable (lessons from 1 week, NOT 1 day!)
         """
-        return ForeignTimetables(self).get_timetable_for_person(id, date) 
+        return ForeignTimetables(self).get_timetable_for_person(id, date)

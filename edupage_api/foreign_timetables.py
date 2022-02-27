@@ -83,7 +83,7 @@ class ForeignTimetables(Module):
 
         def teacher_by_id(id: int):
             filtered = list(filter(lambda x: x.person_id == id, all_teachers))
-            if len(filtered) == 0:
+            if not filtered:
                 raise MissingDataException(f"Teacher with id {id} doesn't exist!")
 
             return filtered[0]

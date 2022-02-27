@@ -71,7 +71,7 @@ class ForeignTimetables(Module):
             raise MissingDataException("The server returned an incorrect response.")
 
         if timetable_data_error is not None:
-            raise RequestError("Edupage returned an error response!")
+            raise RequestError(f"Edupage returned an error response: {timetable_data_error}")
 
         return timetable_data_response.get("ttitems")
 

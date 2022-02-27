@@ -1,10 +1,10 @@
-from datetime import date, datetime, time, timedelta
-
 import json
+from datetime import datetime, time, timedelta
 from typing import List, Optional
+
 from edupage_api.dbi import DbiHelper
 from edupage_api.exceptions import MissingDataException, RequestError
-from edupage_api.module import EdupageModule, Module, ModuleHelper
+from edupage_api.module import Module, ModuleHelper
 from edupage_api.people import EduTeacher, People
 
 

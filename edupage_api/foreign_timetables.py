@@ -64,13 +64,16 @@ class ForeignTimetables(Module):
         timetable_data = self.edupage.session.post(request_url, json=request_data).content.decode()
         timetable_data = json.loads(timetable_data)
 
-        if timetable_data.get("r") is None:
+        timetable_data_response = timetable_data.get("r")
+        timetable_data_error = timetable_data.get("e")
+
+        if timetable_data_response is None:
             raise MissingDataException("The server returned an incorrect response.")
 
-        if timetable_data.get("e") is not None:
+        if timetable_data_error is not None:
             raise RequestError("Edupage returned an error response!")
 
-        return timetable_data.get("r").get("ttitems")
+        return timetable_data_response.get("ttitems")
 
     @ ModuleHelper.logged_in
     def get_timetable_for_person(self, id: int, date: datetime) -> List[LessonSkeleton]:

@@ -195,21 +195,7 @@ class Edupage(EdupageModule):
         """
         return ForeignTimetables(self).get_school_year()
     
-    def get_foreign_timetable(self, id: int) -> list[LessonSkeleton]:
-        """Get someone else's timetable for this week.
-
-        Args:
-            id (int): the `person_id` of the person whoose timetable you want
-        
-        Returns:
-            list[LessonSkeleton]: lessons (in order) that this person has for this week
-        
-        Note:
-            This returns the whole timetable (lessons from 1 week, NOT 1 day!)
-        """
-        return ForeignTimetables(self).get_timetable_for_person(id, datetime.now())
-    
-    def get_foreign_timetable_for_week(self, id: int, date: datetime) -> list[LessonSkeleton]:
+    def get_foreign_timetable(self, id: int, date: datetime) -> list[LessonSkeleton]:
         """Get someone else's timetable for the week `date` is in.
 
         Args:

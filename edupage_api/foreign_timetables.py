@@ -26,15 +26,7 @@ class LessonSkeleton:
 
 class ForeignTimetables(Module):
     def __get_this_week_weekday(self, date: datetime, n: int) -> datetime:
-        current_day = date
-
-        if n < current_day.weekday():
-            while current_day.weekday() != n:
-                current_day = current_day - timedelta(days=1)
-        else:
-            while current_day.weekday() != n:
-                current_day = current_day + timedelta(days=1)
-        return current_day
+        return date - timedelta(days=(date.weekday() - n))
 
     def get_school_year(self):
         dp = self.edupage.data.get("dp")

@@ -38,12 +38,12 @@ class Lesson:
         post_data = {
             "__args": [
                 None,
-                {
-                    "click": True,
-                    "date": today.strftime("%Y-%m-%d"),
-                    "ol_url": self.online_lesson_link,
-                    "subjectid": self.subject_id
-                }
+                    {
+                        "click": True,
+                        "date": today.strftime("%Y-%m-%d"),
+                        "ol_url": self.online_lesson_link,
+                        "subjectid": self.subject_id
+                    }
             ],
             "__gsh": gse_hash
         }

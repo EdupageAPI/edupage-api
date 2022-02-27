@@ -35,10 +35,13 @@ class Substitution(Module):
                "?__func=getSubstViewerDayDataHtml")
 
         data = {
-            "__args": [None, {
-                "date": date.strftime("%Y-%m-%d"),
-                "mode": "classes"
-            }],
+            "__args": [
+                None,
+                {
+                    "date": date.strftime("%Y-%m-%d"),
+                    "mode": "classes"
+                }
+            ],
             "__gsh": self.edupage.gsec_hash
         }
 

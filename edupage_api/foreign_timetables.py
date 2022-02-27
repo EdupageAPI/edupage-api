@@ -48,20 +48,23 @@ class ForeignTimetables(Module):
         this_monday = self.__get_this_week_weekday(datetime.now(), 0)
         this_sunday = self.__get_this_week_weekday(datetime.now(), 6)
 
-        request_data = {"__args":
-                        [None,
-                         {
-                             "year": self.get_school_year(),
-                             "datefrom": this_monday.strftime("%Y-%m-%d"),
-                             "dateto": this_sunday.strftime("%Y-%m-%d"),
-                             "table": "teachers",
-                             "id": str(id),
-                             "showColors": True,
-                             "showIgroupsInClasses": True,
-                             "showOrig": True,
-                             "log_module": "CurrentTTView"
-                         }], "__gsh": self.edupage.gsec_hash
-                        }
+        request_data = {
+            "__args": [
+                None,
+                {
+                    "year": self.get_school_year(),
+                    "datefrom": this_monday.strftime("%Y-%m-%d"),
+                    "dateto": this_sunday.strftime("%Y-%m-%d"),
+                    "table": "teachers",
+                    "id": str(id),
+                    "showColors": True,
+                    "showIgroupsInClasses": True,
+                    "showOrig": True,
+                    "log_module": "CurrentTTView"
+                }
+            ],
+            "__gsh": self.edupage.gsec_hash
+        }
 
         request_url = (f"https://{self.edupage.subdomain}.edupage.org/"
                        "timetable/server/currenttt.js?__func=curentttGetData")

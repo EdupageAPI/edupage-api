@@ -80,11 +80,19 @@ class ForeignTimetables(Module):
         timetable_data = self.__get_timetable_data(id, date)
 
         all_teachers = People(self.edupage).get_teachers()
+        students = People(self.edupage).get_students()
 
         def teacher_by_id(id: int):
             filtered = list(filter(lambda x: x.person_id == id, all_teachers))
             if not filtered:
                 raise MissingDataException(f"Teacher with id {id} doesn't exist!")
+
+            return filtered[0]
+
+        def student_by_id(id: int):
+            filtered = list(filter(lambda x: x.person_id == id, students))
+            if not filtered:
+                raise MissingDataException(f"Student with id {id} doesn't exist!")
 
             return filtered[0]
 

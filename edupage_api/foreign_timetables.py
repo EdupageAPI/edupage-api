@@ -64,11 +64,11 @@ class ForeignTimetables(Module):
         timetable_data = self.edupage.session.post(request_url, json=request_data).content.decode()
         timetable_data = json.loads(timetable_data)
 
-        if timetable_data.get("e") is not None:
-            raise RequestError("Edupage returned an error response!")
-
         if timetable_data.get("r") is None:
             raise MissingDataException("The server returned an incorrect response.")
+
+        if timetable_data.get("e") is not None:
+            raise RequestError("Edupage returned an error response!")
 
         return timetable_data.get("r").get("ttitems")
 

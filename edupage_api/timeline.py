@@ -1,10 +1,11 @@
 # For postponed evaluation of annotations
 from __future__ import annotations
 
+from dataclasses import dataclass
 import json
 from datetime import datetime
 from enum import Enum
-from typing import Optional
+from typing import Optional, Union
 
 from edupage_api.dbi import DbiHelper
 from edupage_api.module import Module, ModuleHelper
@@ -134,18 +135,15 @@ class EventType(Enum):
         return ModuleHelper.parse_enum(event_type_str, EventType)
 
 
+@dataclass
 class TimelineEvent:
-    def __init__(self, event_id: int, timestamp: datetime, text: str,
-                 author: EduAccount, recipient: EduAccount, event_type: EventType,
-                 additional_data: dict):
-        self.event_id = event_id
-        self.timestamp = timestamp
-        self.text = text
-        self.author = author
-        self.recipient = recipient
-        self.event_type = event_type
-        self.additional_data = additional_data
-
+    event_id: int
+    timestamp: datetime
+    text: str
+    author: Union[EduAccount, str]
+    recipient: Union[EduAccount, str]
+    event_type: EventType
+    additional_data: dict
 
 class TimelineEvents(Module):
     @ModuleHelper.logged_in

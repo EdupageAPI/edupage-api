@@ -1,29 +1,25 @@
 import json
 from datetime import datetime
+from dataclasses import dataclass
 
 from edupage_api.dbi import DbiHelper
 from edupage_api.exceptions import FailedToParseGradeDataError
 from edupage_api.module import Module, ModuleHelper
 from edupage_api.people import EduTeacher
 
-
+@dataclass
 class EduGrade:
-    def __init__(self, event_id: int, title: str, grade_n: int,
-                 date: datetime, subject_id: int, subject_name: str,
-                 teacher: EduTeacher, max_points: float, importance: float,
-                 verbal: True, percent: float):
-        self.event_id = event_id
-        self.title = title
-        self.grade_n = grade_n
-        self.date = date
-        self.subject_id = subject_id
-        self.subject_name = subject_name
-        self.teacher = teacher
-        self.max_points = max_points
-        self.importance = importance
-        self.verbal = verbal
-        self.percent = percent
-
+    event_id: int
+    title: str
+    grade_n: int
+    date: datetime
+    subject_id: int
+    subject_name: str
+    teacher: EduTeacher
+    max_points: float
+    importance: float
+    verbal: bool
+    percent: float
 
 class Grades(Module):
     def __parse_grade_data(self, data: str) -> dict:

@@ -4,6 +4,7 @@ from __future__ import annotations
 from datetime import datetime
 from enum import Enum
 from typing import Optional
+from dataclasses import dataclass
 
 from edupage_api.dbi import DbiHelper
 from edupage_api.module import EdupageModule, Module, ModuleHelper
@@ -23,14 +24,13 @@ class EduAccountType(Enum):
     TEACHER = "Teacher"
     PARENT = "Rodic"
 
-
+@dataclass
 class EduAccount:
-    def __init__(self, person_id: int, name: str, gender: Gender, in_school_since: datetime, account_type: EduAccountType):
-        self.person_id = person_id
-        self.name = name
-        self.gender = gender
-        self.in_school_since = in_school_since
-        self.account_type = account_type
+    person_id: int
+    name: str
+    gender: Gender
+    in_school_since: datetime
+    account_type: EduAccountType
 
     @staticmethod
     def recognize_account_type(person_data: dict) -> EduAccountType:
@@ -81,6 +81,7 @@ class EduAccount:
         return f"{self.account_type.value}-{self.person_id}"
 
 
+@dataclass
 class EduStudent(EduAccount):
     def __init__(self, person_id: int, name: str, gender: Gender, in_school_since: datetime,
                  class_id: int, number_in_class: int):
@@ -89,12 +90,12 @@ class EduStudent(EduAccount):
         self.class_id = class_id
         self.number_in_class = number_in_class
 
-
+@dataclass
 class EduParent(EduAccount):
     def __init__(self, person_id: int, name: str, gender: Gender, in_school_since: datetime):
         super().__init__(person_id, name, gender, in_school_since, EduAccountType.PARENT)
 
-
+@dataclass
 class EduTeacher(EduAccount):
     def __init__(self, person_id: int, name: str, gender: Gender, in_school_since: datetime,
                  classroom_name: str, teacher_to: datetime):

@@ -1,3 +1,4 @@
+from dataclasses import dataclass
 import json
 from datetime import datetime
 from typing import List, Optional
@@ -8,17 +9,15 @@ from edupage_api.module import EdupageModule, Module, ModuleHelper
 from edupage_api.people import EduTeacher, People
 
 
+@dataclass
 class Lesson:
-    def __init__(self, teachers: List[EduTeacher], classrooms: List[str],
-                 start_of_lesson: datetime, end_of_lesson: datetime,
-                 online_lesson_link: Optional[str], subject_id: int, name: str):
-        self.teachers = teachers
-        self.classrooms = classrooms
-        self.start_of_lesson = start_of_lesson
-        self.end_of_lesson = end_of_lesson
-        self.online_lesson_link = online_lesson_link
-        self.subject_id = subject_id
-        self.name = name
+    teachers: List[EduTeacher]
+    classrooms: List[str]
+    start_of_lesson: datetime
+    end_of_lesson: datetime
+    online_lesson_link: Optional[str]
+    subject_id: int
+    name: str
 
     def is_online_lesson(self) -> bool:
         return self.online_lesson_link is None
@@ -51,10 +50,9 @@ class Lesson:
         response = edupage.session.post(request_url, json=post_data)
         return json.loads(response.content.decode()).get("reload") is not None
 
-
+@dataclass
 class Timetable:
-    def __init__(self, lessons: List[Lesson]):
-        self.lessons = lessons
+    lessons: List[Lesson]
 
     def __iter__(self):
         return iter(self.lessons)

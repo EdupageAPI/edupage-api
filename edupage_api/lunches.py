@@ -1,25 +1,24 @@
 import json
 from datetime import datetime
+from optparse import Option
 from typing import List, Optional
+from dataclasses import dataclass
 
 from edupage_api.exceptions import (FailedToChangeLunchError,
                                     FailedToRateException,
                                     NotLoggedInException)
 from edupage_api.module import EdupageModule, Module, ModuleHelper
 
-
+@dataclass
 class Rating:
-    def __init__(self, mysql_date, boarder_id,
-                 quality_average, quantity_average,
-                 quality_ratings, quantity_ratings):
-        self.quality_ratings = quality_ratings
-        self.quality_average = quality_average
+    __date: str
+    __boarder_id: str
 
-        self.quantity_ratings = quantity_ratings
-        self.quantity_average = quantity_average
+    quality_average: float
+    quality_average: float
 
-        self.__date = mysql_date
-        self.__boarder_id = boarder_id
+    quantity_average: float
+    quantity_ratings: float
 
     def rate(self, edupage: EdupageModule, quantity: int, quality: int):
         if not edupage.is_logged_in:
@@ -43,31 +42,25 @@ class Rating:
         if error is None or error != "":
             raise FailedToRateException()
 
-
+@dataclass
 class Menu:
-    def __init__(self, name: str, allergens: str, weight: str, number: str, rating: Optional[Rating]):
-        self.name = name
-        self.allergens = allergens
-        self.weight = weight
-        self.number = number
-        self.rating = rating
+    name: str
+    allergens: str
+    weight: str
+    number: str
+    rating: Optional[Rating]
 
 
 class Lunch:
-    def __init__(self, served_from: Optional[datetime], served_to: Optional[datetime],
-                 amount_of_foods: int, chooseable_menus: list[str],
-                 can_be_changed_until: datetime, title: str,
-                 menus: List[Menu], date: datetime,
-                 boarder_id: str):
-        self.date = date
-        self.served_from = served_from
-        self.served_to = served_to
-        self.amount_of_foods = amount_of_foods
-        self.chooseable_menus = chooseable_menus
-        self.can_be_changed_until = can_be_changed_until
-        self.title = title
-        self.menus = menus
-        self.__boarder_id = boarder_id
+    served_from: Optional[datetime]
+    served_to: Optional[datetime]
+    amount_of_foods: int
+    chooseable_menus: list[str]
+    can_be_changed_until: datetime
+    title: str
+    menus: List[Menu]
+    date: datetime
+    __boarder_id: str
 
     def __iter__(self):
         return iter(self.menus)

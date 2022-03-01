@@ -1,3 +1,4 @@
+from dataclasses import dataclass
 import json
 from datetime import datetime, time, timedelta
 from typing import List, Optional
@@ -8,20 +9,18 @@ from edupage_api.module import Module, ModuleHelper
 from edupage_api.people import EduTeacher, People
 
 
+@dataclass
 class LessonSkeleton:
-    def __init__(self, weekday: int, start_time: time, end_time: time,
-                 subject_id: Optional[int], subject_name: Optional[str], classes: List[int],
-                 groups: List[str], classrooms: List[str], duration: int, teachers: List[EduTeacher]):
-        self.weekday = weekday
-        self.start_time = start_time
-        self.end_time = end_time
-        self.subject_id = subject_id
-        self.classes = classes
-        self.groups = groups
-        self.classrooms = classrooms
-        self.duration = duration
-        self.teachers = teachers
-        self.subject_name = subject_name
+    weekday: int
+    start_time: time
+    end_time: time
+    subject_id: Optional[int]
+    subject_name: Optional[str]
+    classes: List[int]
+    groups: List[str]
+    classrooms: List[str]
+    duration: int
+    teachers: List[EduTeacher]
 
 
 class ForeignTimetables(Module):

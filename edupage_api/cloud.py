@@ -1,17 +1,17 @@
 import json
 from io import TextIOWrapper
+from dataclasses import dataclass
 
 from edupage_api.exceptions import FailedToUploadFileException
 from edupage_api.module import EdupageModule, Module, ModuleHelper
 
-
+@dataclass
 class EduCloudFile:
-    def __init__(self, cloud_id: str, extension: str, file_type: str, file: str, name: str):
-        self.cloud_id = cloud_id
-        self.extension = extension
-        self.type = file_type
-        self.file = file
-        self.name = name
+    cloud_id: str
+    extension: str
+    file_type: str
+    file: str
+    name: str
 
     def get_url(self, edupage: EdupageModule):
         """Get url of given `EduCloudFile`.
@@ -43,7 +43,6 @@ class EduCloudFile:
             data.get("file"),
             data.get("name")
         )
-
 
 class Cloud(Module):
     @ModuleHelper.logged_in

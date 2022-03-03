@@ -1,22 +1,23 @@
 import json
 from datetime import datetime
 from dataclasses import dataclass
+from typing import Optional
 
 from edupage_api.dbi import DbiHelper
 from edupage_api.exceptions import FailedToParseGradeDataError
 from edupage_api.module import Module, ModuleHelper
-from edupage_api.people import EduTeacher
+from edupage_api.people import EduAccount, EduTeacher
 
 @dataclass
 class EduGrade:
     event_id: int
     title: str
-    grade_n: int
+    grade_n: Optional[int]
     date: datetime
     subject_id: int
-    subject_name: str
-    teacher: EduTeacher
-    max_points: float
+    subject_name: Optional[str]
+    teacher: Optional[EduTeacher]
+    max_points: Optional[float]
     importance: float
     verbal: bool
     percent: float

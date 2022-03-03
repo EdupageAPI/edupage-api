@@ -1,7 +1,7 @@
 import functools
 from datetime import date, datetime
 from io import TextIOWrapper
-from typing import Optional
+from typing import Optional, Union
 
 import requests
 from requests import Response
@@ -77,7 +77,7 @@ class Edupage(EdupageModule):
 
         return People(self).get_teachers()
 
-    def send_message(self, recipients: Optional[list[EduAccount]], body: str):
+    def send_message(self, recipients: Union[list[EduAccount], EduAccount], body: str):
         """Send message.
 
         Args:

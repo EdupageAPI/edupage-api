@@ -119,12 +119,12 @@ class ForeignTimetables(Module):
             date = datetime.strptime(date_str, "%Y-%m-%d")
 
             start_time_str = skeleton.get("starttime")
-            start_time = datetime.strptime(start_time_str, "%H:%M")
-            start_time = time(start_time.hour, start_time.minute)
+            start_time_dt = datetime.strptime(start_time_str, "%H:%M")
+            start_time = time(start_time_dt.hour, start_time_dt.minute)
 
             end_time_str = skeleton.get("endtime")
-            end_time = datetime.strptime(end_time_str, "%H:%M")
-            end_time = time(end_time.hour, end_time.minute)
+            end_time_dt = datetime.strptime(end_time_str, "%H:%M")
+            end_time = time(end_time_dt.hour, end_time_dt.minute)
 
             subject_id_str = skeleton.get("subjectid")
             subject_id = int(subject_id_str) if subject_id_str.isdigit() else None

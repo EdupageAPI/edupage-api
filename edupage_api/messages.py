@@ -9,7 +9,7 @@ class Messages(Module):
         recipient_string = ""
 
         if isinstance(recipients, list):
-            for i, recipient in recipients:
+            for i, recipient in enumerate(recipients):
                 recipient_string += f"{recipient.get_id()}"
                 if i == len(recipients) - 1:
                     recipient_string += ";"

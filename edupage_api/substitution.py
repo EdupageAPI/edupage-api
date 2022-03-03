@@ -5,6 +5,7 @@ import json
 from datetime import date
 from enum import Enum
 from typing import Optional, Union
+from dataclasses import dataclass
 
 from edupage_api.exceptions import ExpiredSessionException, InvalidTeacherException
 from edupage_api.module import Module, ModuleHelper
@@ -20,13 +21,12 @@ class Action(Enum):
     def parse(string: str) -> Optional[Action]:
         return ModuleHelper.parse_enum(string, Action)
 
-
+@dataclass
 class TimetableChange:
-    def __init__(self, change_class: str, lesson_n: int, title: str, action: Union[Action, tuple[int, int]]):
-        self.change_class = change_class
-        self.lesson_n = lesson_n
-        self.title = title
-        self.action = action
+    change_class: str
+    lesson_n: int
+    title: str
+    action: Union[Action, tuple[int, int]]
 
 
 class Substitution(Module):

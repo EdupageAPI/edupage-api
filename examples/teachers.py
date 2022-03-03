@@ -1,4 +1,3 @@
-from datetime import datetime
 from edupage_api import Edupage
 from edupage_api.people import EduTeacher
 

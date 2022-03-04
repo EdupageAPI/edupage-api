@@ -209,3 +209,4 @@ class Edupage(EdupageModule):
             This returns the whole timetable (lessons from 1 week, NOT 1 day!)
         """
         return ForeignTimetables(self).get_timetable_for_person(id, date)
+        

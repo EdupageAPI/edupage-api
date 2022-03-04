@@ -78,6 +78,7 @@ class Grades(Module):
 
                 teacher = EduTeacher.parse(teacher_data, teacher_id, self.edupage)
 
+            # this does not work! (sometimes the max points are in p_vaha)
             max_points = details.get("p_vaha_body")
             max_points = int(max_points) if max_points is not None else None
 

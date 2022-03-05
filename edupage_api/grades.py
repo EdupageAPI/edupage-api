@@ -51,15 +51,18 @@ class Grades(Module):
 
         output = []
         for grade in grades:
+            # ID
             event_id_str = grade.get("udalostid")
             if not event_id_str:
                 continue
 
             event_id = int(event_id_str)
 
+            # Title
             details = grade_details.get(event_id_str)
             title = details.get("p_meno")
 
+            # Grade
             grade_raw = grade.get("data").split(" (", 1)
             grade_n = float(grade_raw[0])
             try:
@@ -67,9 +70,11 @@ class Grades(Module):
             except IndexError:
                 comment = None
 
+            # Date
             date_str = grade.get("datum")
             date = datetime.strptime(date_str, "%Y-%m-%d %H:%M:%S")
 
+            # Subject ID and name
             subject_id_str = details.get("PredmetID")
             if subject_id_str is None or subject_id_str == "vsetky":
                 continue
@@ -77,6 +82,7 @@ class Grades(Module):
             subject_id = int(subject_id_str)
             subject_name = DbiHelper(self.edupage).fetch_subject_name(subject_id)
 
+            # Teacher
             teacher_id_str = details.get("UcitelID")
             if teacher_id_str is None:
                 teacher = None
@@ -86,13 +92,16 @@ class Grades(Module):
 
                 teacher = EduTeacher.parse(teacher_data, teacher_id, self.edupage)
 
+            # Maximal points
             # this does not work! (sometimes the max points are in p_vaha)
             max_points = details.get("p_vaha_body")
             max_points = int(max_points) if max_points is not None else None
 
+            # Importance
             importance = details.get("p_vaha")
             importance = float(importance) / 20
 
+            # Verbal and percents
             try:
                 verbal = False
 

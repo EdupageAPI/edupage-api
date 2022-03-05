@@ -19,8 +19,8 @@ for subject in grades_by_subject:
         
         print(f"    {grade.title} -> ", end="")
 
-        if grade.percent:
-            print(f"{grade.percent}%")
+        if grade.max_points != 100:
+            print(f"{grade.grade_n}/{grade.max_points}")
         else:
-            print(f"{grade.grade_n} points")
+            print(f"{grade.percent}%")
     print("----------------")

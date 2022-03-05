@@ -24,6 +24,7 @@ class EduAccountType(Enum):
     TEACHER = "Teacher"
     PARENT = "Rodic"
 
+
 @dataclass
 class EduAccount:
     person_id: int
@@ -90,10 +91,12 @@ class EduStudent(EduAccount):
         self.class_id = class_id
         self.number_in_class = number_in_class
 
+
 @dataclass
 class EduParent(EduAccount):
     def __init__(self, person_id: int, name: str, gender: Gender, in_school_since: datetime):
         super().__init__(person_id, name, gender, in_school_since, EduAccountType.PARENT)
+
 
 @dataclass
 class EduTeacher(EduAccount):

@@ -145,6 +145,7 @@ class TimelineEvent:
     event_type: EventType
     additional_data: dict
 
+
 class TimelineEvents(Module):
     @ModuleHelper.logged_in
     def get_notifications(self):

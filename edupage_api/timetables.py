@@ -50,6 +50,7 @@ class Lesson:
         response = edupage.session.post(request_url, json=post_data)
         return json.loads(response.content.decode()).get("reload") is not None
 
+
 @dataclass
 class Timetable:
     lessons: List[Lesson]

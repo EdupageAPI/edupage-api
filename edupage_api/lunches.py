@@ -8,6 +8,7 @@ from edupage_api.exceptions import (FailedToChangeLunchError,
                                     NotLoggedInException)
 from edupage_api.module import EdupageModule, Module, ModuleHelper
 
+
 @dataclass
 class Rating:
     __date: str
@@ -40,6 +41,7 @@ class Rating:
         error = parsed_response.get("error")
         if error is None or error != "":
             raise FailedToRateException()
+
 
 @dataclass
 class Menu:

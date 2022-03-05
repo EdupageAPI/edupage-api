@@ -22,6 +22,7 @@ class Action(Enum):
     def parse(string: str) -> Optional[Action]:
         return ModuleHelper.parse_enum(string, Action)
 
+
 @dataclass
 class TimetableChange:
     change_class: str

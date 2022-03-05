@@ -5,6 +5,7 @@ from io import TextIOWrapper
 from edupage_api.exceptions import FailedToUploadFileException
 from edupage_api.module import EdupageModule, Module, ModuleHelper
 
+
 @dataclass
 class EduCloudFile:
     cloud_id: str
@@ -43,6 +44,7 @@ class EduCloudFile:
             data.get("file"),
             data.get("name")
         )
+
 
 class Cloud(Module):
     @ModuleHelper.logged_in

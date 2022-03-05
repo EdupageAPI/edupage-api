@@ -8,6 +8,7 @@ from edupage_api.exceptions import FailedToParseGradeDataError
 from edupage_api.module import Module, ModuleHelper
 from edupage_api.people import EduTeacher
 
+
 @dataclass
 class EduGrade:
     event_id: int
@@ -22,6 +23,7 @@ class EduGrade:
     importance: float
     verbal: bool
     percent: float
+
 
 class Grades(Module):
     def __parse_grade_data(self, data: str) -> dict:

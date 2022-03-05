@@ -61,7 +61,7 @@ class Grades(Module):
             title = details.get("p_meno")
 
             grade_raw = grade.get("data").split(" (", 1)
-            grade_n = int(grade_raw[0])
+            grade_n = float(grade_raw[0])
             try:
                 comment = grade_raw[1].rsplit(")", 1)[0]
             except IndexError:

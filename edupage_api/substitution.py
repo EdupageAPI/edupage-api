@@ -2,12 +2,13 @@
 from __future__ import annotations
 
 import json
+from dataclasses import dataclass
 from datetime import date
 from enum import Enum
 from typing import Optional, Union
-from dataclasses import dataclass
 
-from edupage_api.exceptions import ExpiredSessionException, InvalidTeacherException
+from edupage_api.exceptions import (ExpiredSessionException,
+                                    InvalidTeacherException)
 from edupage_api.module import Module, ModuleHelper
 from edupage_api.people import EduTeacher, People
 

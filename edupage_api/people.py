@@ -1,10 +1,10 @@
 # For postponed evaluation of annotations
 from __future__ import annotations
 
+from dataclasses import dataclass
 from datetime import datetime
 from enum import Enum
 from typing import Optional
-from dataclasses import dataclass
 
 from edupage_api.dbi import DbiHelper
 from edupage_api.module import EdupageModule, Module, ModuleHelper

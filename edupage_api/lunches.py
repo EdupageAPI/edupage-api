@@ -1,8 +1,7 @@
 import json
-from datetime import datetime
-from optparse import Option
-from typing import List, Optional
 from dataclasses import dataclass
+from datetime import datetime
+from typing import List, Optional
 
 from edupage_api.exceptions import (FailedToChangeLunchError,
                                     FailedToRateException,

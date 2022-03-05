@@ -113,6 +113,8 @@ class Grades(Module):
 
                 if max_points:
                     percent = round(float(grade_n) / float(max_points) * 100, 2)
+                elif max_points == 0:
+                    percent = float("inf")
                 else:
                     percent = None
             except:

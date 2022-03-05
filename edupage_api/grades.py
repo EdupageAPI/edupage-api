@@ -83,7 +83,7 @@ class Grades(Module):
             max_points = int(max_points) if max_points is not None else None
 
             importance = details.get("p_vaha")
-            importance = 0 if float(importance) == 0 else 20 / float(importance)
+            importance = float(importance) / 20
 
             try:
                 verbal = False

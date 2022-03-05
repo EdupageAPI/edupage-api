@@ -13,6 +13,7 @@ class EduGrade:
     event_id: int
     title: str
     grade_n: Optional[int]
+    comment: Optional[str]
     date: datetime
     subject_id: int
     subject_name: Optional[str]
@@ -57,7 +58,12 @@ class Grades(Module):
             details = grade_details.get(event_id_str)
             title = details.get("p_meno")
 
-            grade_n = ModuleHelper.parse_int(grade.get("data"))
+            grade_raw = grade.get("data").split(" (", 1)
+            grade_n = int(grade_raw[0])
+            try:
+                comment = grade_raw[1].rsplit(")", 1)[0]
+            except IndexError:
+                comment = None
 
             date_str = grade.get("datum")
             date = datetime.strptime(date_str, "%Y-%m-%d %H:%M:%S")
@@ -95,7 +101,7 @@ class Grades(Module):
             except:
                 verbal = True
 
-            grade = EduGrade(event_id, title, grade_n, date, subject_id,
+            grade = EduGrade(event_id, title, grade_n, comment, date, subject_id,
                              subject_name, teacher, max_points, importance, verbal, percent)
             output.append(grade)
 

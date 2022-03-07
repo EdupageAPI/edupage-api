@@ -1,6 +1,4 @@
-import functools
 from datetime import date, datetime
-from http.cookiejar import CookieJar
 from io import TextIOWrapper
 from typing import Optional, Union
 

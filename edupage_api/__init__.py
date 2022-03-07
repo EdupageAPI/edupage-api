@@ -1,10 +1,10 @@
 import functools
 from datetime import date, datetime
+from http.cookiejar import CookieJar
 from io import TextIOWrapper
 from typing import Optional, Union
 
-import requests
-from requests import Response
+import httpx
 
 from edupage_api.cloud import Cloud, EduCloudFile
 from edupage_api.custom_request import CustomRequest
@@ -35,10 +35,9 @@ class Edupage(EdupageModule):
         self.subdomain = None
         self.gsec_hash = None
 
-        self.session = requests.session()
-        self.session.request = functools.partial(self.session.request, timeout=request_timeout)
+        self.session = httpx.AsyncClient(follow_redirects=True, timeout=request_timeout)
 
-    def login(self, username: str, password: str, subdomain: str):
+    async def login(self, username: str, password: str, subdomain: str):
         """Login while specifying the subdomain to log into.
 
         Args:
@@ -47,9 +46,12 @@ class Edupage(EdupageModule):
             subdomain (str): Subdomain of your school (https://{subdomain}.edupage.org).
         """
 
-        Login(self).login(username, password, subdomain)
+        await Login(self).login(username, password, subdomain)
+    
+    async def close(self):
+        await self.session.aclose()
 
-    def login_auto(self, username: str, password: str):
+    async def login_auto(self, username: str, password: str):
         """Login using https://portal.edupage.org. If this doesn't work, please use `Edupage.login`.
 
         Args:
@@ -57,7 +59,7 @@ class Edupage(EdupageModule):
             password (str): Your password.
         """
 
-        Login(self).login_auto(username, password)
+        await Login(self).login_auto(username, password)
 
     def get_students(self) -> Optional[list[EduStudent]]:
         """Get list of all students in your class.
@@ -77,7 +79,7 @@ class Edupage(EdupageModule):
 
         return People(self).get_teachers()
 
-    def send_message(self, recipients: Union[list[EduAccount], EduAccount], body: str):
+    async def send_message(self, recipients: Union[list[EduAccount], EduAccount], body: str):
         """Send message.
 
         Args:
@@ -85,7 +87,7 @@ class Edupage(EdupageModule):
             body (str): Body of your message.
         """
 
-        Messages(self).send_message(recipients, body)
+        await Messages(self).send_message(recipients, body)
 
     def get_timetable(self, date: datetime) -> Optional[Timetable]:
         """Get timetable.
@@ -99,7 +101,7 @@ class Edupage(EdupageModule):
 
         return Timetables(self).get_timetable(date)
 
-    def get_lunches(self, date: datetime) -> Optional[Lunch]:
+    async def get_lunches(self, date: datetime) -> Optional[Lunch]:
         """Get lunches.
 
         Args:
@@ -109,7 +111,7 @@ class Edupage(EdupageModule):
             Optional[Lunch]: Lunch object for entered date.
         """
 
-        return Lunches(self).get_lunch(date)
+        return await Lunches(self).get_lunch(date)
 
     def get_notifications(self) -> list[TimelineEvent]:
         """Get list of all available notifications.
@@ -120,7 +122,7 @@ class Edupage(EdupageModule):
 
         return TimelineEvents(self).get_notifications()
 
-    def cloud_upload(self, fd: TextIOWrapper) -> EduCloudFile:
+    async def cloud_upload(self, fd: TextIOWrapper) -> EduCloudFile:
         """Upload file to EduPage cloud.
 
         Args:
@@ -130,16 +132,16 @@ class Edupage(EdupageModule):
             EduCloudFile: Object of uploaded file.
         """
 
-        return Cloud(self).upload_file(fd)
+        return await Cloud(self).upload_file(fd)
 
-    def get_grades(self) -> list[EduGrade]:
+    async def get_grades(self) -> list[EduGrade]:
         """Get list of all available grades.
 
         Returns:
             list[EduGrade]: List of `EduGrade`s.
         """
 
-        return Grades(self).get_grades()
+        return await Grades(self).get_grades()
 
     def get_user_id(self) -> str:
         """Get your EduPage user ID.
@@ -150,7 +152,7 @@ class Edupage(EdupageModule):
 
         return self.data.get("userid")
 
-    def custom_request(self, url: str, method: str, data: str = "", headers: dict = {}) -> Response:
+    async def custom_request(self, url: str, method: str, data: str = "", headers: dict = {}) -> httpx.Response:
         """Send custom request to EduPage.
 
         Args:
@@ -163,9 +165,9 @@ class Edupage(EdupageModule):
             Response: Response.
         """
 
-        return CustomRequest(self).custom_request(url, method, data, headers)
+        return await CustomRequest(self).custom_request(url, method, data, headers)
 
-    def get_missing_teachers(self, date: date) -> list[EduTeacher]:
+    async def get_missing_teachers(self, date: date) -> list[EduTeacher]:
         """Get missing teachers for a given date.
 
         Args:
@@ -174,9 +176,9 @@ class Edupage(EdupageModule):
         Returns:
             list[EduTeacher]: List of the missing teachers for `date`.
         """
-        return Substitution(self).get_missing_teachers(date)
+        return await Substitution(self).get_missing_teachers(date)
 
-    def get_timetable_changes(self, date: date) -> list[TimetableChange]:
+    async def get_timetable_changes(self, date: date) -> list[TimetableChange]:
         """Get the changes in the timetable for a given date.
 
         Args:
@@ -185,7 +187,7 @@ class Edupage(EdupageModule):
         Returns:
             list[TimetableChange]: List of changes in the timetable
         """
-        return Substitution(self).get_timetable_changes(date)
+        return await Substitution(self).get_timetable_changes(date)
 
     def get_school_year(self) -> int:
         """Returns the current school year.
@@ -195,7 +197,7 @@ class Edupage(EdupageModule):
         """
         return ForeignTimetables(self).get_school_year()
 
-    def get_foreign_timetable(self, id: int, date: datetime) -> list[LessonSkeleton]:
+    async def get_foreign_timetable(self, id: int, date: datetime) -> list[LessonSkeleton]:
         """Get someone else's timetable for the week `date` is in.
 
         Args:
@@ -208,5 +210,5 @@ class Edupage(EdupageModule):
         Note:
             This returns the whole timetable (lessons from 1 week, NOT 1 day!)
         """
-        return ForeignTimetables(self).get_timetable_for_person(id, date)
+        return await ForeignTimetables(self).get_timetable_for_person(id, date)
         

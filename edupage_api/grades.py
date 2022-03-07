@@ -32,10 +32,10 @@ class Grades(Module):
 
         return json.loads(json_string)
 
-    def __get_grade_data(self):
+    async def __get_grade_data(self):
         request_url = f"https://{self.edupage.subdomain}.edupage.org/znamky/"
 
-        response = self.edupage.session.get(request_url).content.decode()
+        response = (await self.edupage.session.get(request_url)).content.decode()
 
         try:
             return self.__parse_grade_data(response)
@@ -43,8 +43,8 @@ class Grades(Module):
             raise FailedToParseGradeDataError("Failed to parse JSON")
 
     @ModuleHelper.logged_in
-    def get_grades(self) -> list[EduGrade]:
-        grade_data = self.__get_grade_data()
+    async def get_grades(self) -> list[EduGrade]:
+        grade_data = await self.__get_grade_data()
 
         grades = grade_data.get("vsetkyZnamky")
         grade_details = grade_data.get("vsetkyUdalosti").get("edupage")

@@ -23,7 +23,7 @@ class Lesson:
         return self.online_lesson_link is None
 
     @ModuleHelper.online_lesson
-    def sign_into_lesson(self, edupage: EdupageModule):
+    async def sign_into_lesson(self, edupage: EdupageModule):
         request_url = f"https://{edupage.subdomain}.edupage.org/dashboard/eb.php"
 
         response = edupage.session.get(request_url)
@@ -47,7 +47,7 @@ class Lesson:
             "__gsh": gse_hash
         }
 
-        response = edupage.session.post(request_url, json=post_data)
+        response = await edupage.session.post(request_url, json=post_data)
         return json.loads(response.content.decode()).get("reload") is not None
 
 

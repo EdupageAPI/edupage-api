@@ -4,7 +4,7 @@ from enum import Enum
 from functools import wraps
 from typing import Optional
 
-import requests
+import httpx
 
 from edupage_api.exceptions import (MissingDataException,
                                     NotAnOnlineLessonError,
@@ -13,7 +13,7 @@ from edupage_api.exceptions import (MissingDataException,
 
 class EdupageModule:
     subdomain: str
-    session: requests.Session
+    session: httpx.AsyncClient
     data: dict
     is_logged_in: bool
     gsec_hash: str

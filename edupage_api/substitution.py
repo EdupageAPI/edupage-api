@@ -32,7 +32,7 @@ class TimetableChange:
 
 
 class Substitution(Module):
-    def __get_substitution_data(self, date: date) -> str:
+    async def __get_substitution_data(self, date: date) -> str:
         url = (f"https://{self.edupage.subdomain}.edupage.org/substitution/server/viewer.js"
                "?__func=getSubstViewerDayDataHtml")
 
@@ -47,7 +47,7 @@ class Substitution(Module):
             "__gsh": self.edupage.gsec_hash
         }
 
-        response = self.edupage.session.post(url, json=data).content.decode()
+        response = (await self.edupage.session.post(url, json=data)).content.decode()
         response = json.loads(response)
 
         if response.get("reload"):
@@ -57,8 +57,8 @@ class Substitution(Module):
         return response.get("r")
 
     @ModuleHelper.logged_in
-    def get_missing_teachers(self, date: date) -> Optional[list[EduTeacher]]:
-        html = self.__get_substitution_data(date)
+    async def get_missing_teachers(self, date: date) -> Optional[list[EduTeacher]]:
+        html = await self.__get_substitution_data(date)
         missing_teachers_string = (html.split("<span class=\"print-font-resizable\">")[1]
                                        .split("</span>")[0])
 
@@ -87,8 +87,8 @@ class Substitution(Module):
         return missing_teachers
 
     @ModuleHelper.logged_in
-    def get_timetable_changes(self, date: date) -> Optional[list[TimetableChange]]:
-        html = self.__get_substitution_data(date)
+    async def get_timetable_changes(self, date: date) -> Optional[list[TimetableChange]]:
+        html = await self.__get_substitution_data(date)
 
         class_delim = ("</div><div class=\"section print-nobreak\">"
                        "<div class=\"header\"><span class=\"print-font-resizable\">")

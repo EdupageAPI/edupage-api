@@ -35,7 +35,7 @@ class ForeignTimetables(Module):
 
         return dp.get("year")
 
-    def __get_timetable_data(self, id: int, table: str, date: datetime):
+    async def __get_timetable_data(self, id: int, table: str, date: datetime):
         this_monday = self.__get_this_week_weekday(date, 0)
         this_sunday = self.__get_this_week_weekday(date, 6)
 
@@ -60,7 +60,7 @@ class ForeignTimetables(Module):
         request_url = (f"https://{self.edupage.subdomain}.edupage.org/"
                        "timetable/server/currenttt.js?__func=curentttGetData")
 
-        timetable_data = self.edupage.session.post(request_url, json=request_data).content.decode()
+        timetable_data = await (self.edupage.session.post(request_url, json=request_data)).content.decode()
         timetable_data = json.loads(timetable_data)
 
         timetable_data_response = timetable_data.get("r")
@@ -74,8 +74,8 @@ class ForeignTimetables(Module):
 
         return timetable_data_response.get("ttitems")
 
-    @ ModuleHelper.logged_in
-    def get_timetable_for_person(self, id: int, date: datetime) -> List[LessonSkeleton]:
+    @ModuleHelper.logged_in
+    async def get_timetable_for_person(self, id: int, date: datetime) -> List[LessonSkeleton]:
         all_teachers = People(self.edupage).get_teachers()
         students = People(self.edupage).get_students()
 
@@ -111,7 +111,7 @@ class ForeignTimetables(Module):
         if not table:
             raise MissingDataException(f"Teacher, student or class with id {id} doesn't exist!")
 
-        timetable_data = self.__get_timetable_data(id, table, date)
+        timetable_data = await self.__get_timetable_data(id, table, date)
 
         skeletons = []
         for skeleton in timetable_data:

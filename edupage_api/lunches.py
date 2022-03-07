@@ -20,7 +20,7 @@ class Rating:
     quantity_average: float
     quantity_ratings: float
 
-    def rate(self, edupage: EdupageModule, quantity: int, quality: int):
+    async def rate(self, edupage: EdupageModule, quantity: int, quality: int):
         if not edupage.is_logged_in:
             raise NotLoggedInException()
 
@@ -35,7 +35,7 @@ class Rating:
             "mnozstvo": str(quantity)
         }
 
-        response = edupage.session.post(request_url, data=data)
+        response = await edupage.session.post(request_url, data=data)
         parsed_response = json.loads(response.content.decode())
 
         error = parsed_response.get("error")
@@ -66,7 +66,7 @@ class Lunch:
     def __iter__(self):
         return iter(self.menus)
 
-    def __make_choice(self, edupage: EdupageModule, choice_str: str):
+    async def __make_choice(self, edupage: EdupageModule, choice_str: str):
         request_url = f"https://{edupage.subdomain}.edupage.org/menu/"
 
         boarder_menu = {
@@ -84,27 +84,27 @@ class Lunch:
             "jedlaStravnika": json.dumps(boarder_menu)
         }
 
-        response = edupage.session.post(request_url, data=data).content.decode()
+        response = (await edupage.session.post(request_url, data=data)).content.decode()
 
         if json.loads(response).get("error") != "":
             raise FailedToChangeLunchError()
 
-    def choose(self, edupage: EdupageModule, number: int):
+    async def choose(self, edupage: EdupageModule, number: int):
         letters = "ABCDEFGH"
         letter = letters[number - 1]
 
-        self.__make_choice(edupage, letter)
+        await self.__make_choice(edupage, letter)
 
-    def sign_off(self, edupage: EdupageModule):
-        self.__make_choice(edupage, "AX")
+    async def sign_off(self, edupage: EdupageModule):
+        await self.__make_choice(edupage, "AX")
 
 
 class Lunches(Module):
     @ModuleHelper.logged_in
-    def get_lunch(self, date: datetime):
+    async def get_lunch(self, date: datetime):
         date_strftime = date.strftime("%Y%m%d")
         request_url = f"https://{self.edupage.subdomain}.edupage.org/menu/?date={date_strftime}"
-        response = self.edupage.session.get(request_url).content.decode()
+        response = (await self.edupage.session.get(request_url)).content.decode()
 
         boarder_id = response.split("var stravnikid = \"")[1].split("\"")[0]
         lunch_data = json.loads(response.split("var novyListok = ")[1].split(";")[0])

@@ -5,7 +5,7 @@ from edupage_api.people import EduAccount
 
 
 class Messages(Module):
-    def send_message(self, recipients: Union[list[EduAccount], EduAccount], body: str):
+    async def send_message(self, recipients: Union[list[EduAccount], EduAccount], body: str):
         recipient_string = ""
 
         if isinstance(recipients, list):
@@ -29,5 +29,5 @@ class Messages(Module):
         )
 
         request_url = f"https://{self.edupage.subdomain}.edupage.org/timeline"
-        self.edupage.session.post(request_url, params=params,
+        await self.edupage.session.post(request_url, params=params,
                                   data=ModuleHelper.encode_form_data(data))

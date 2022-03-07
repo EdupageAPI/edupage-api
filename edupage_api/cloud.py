@@ -48,7 +48,7 @@ class EduCloudFile:
 
 class Cloud(Module):
     @ModuleHelper.logged_in
-    def upload_file(self, fd: TextIOWrapper) -> EduCloudFile:
+    async def upload_file(self, fd: TextIOWrapper) -> EduCloudFile:
         """Upload file to EduPage cloud.
 
         The file will be hosted forever (and for free) on EduPage's servers. The file is tied to
@@ -81,7 +81,7 @@ class Cloud(Module):
 
         files = {"att": fd}
 
-        response = self.edupage.session.post(request_url, files=files).content.decode()
+        response = await (self.edupage.session.post(request_url, files=files)).content.decode()
 
         try:
             response_json = json.loads(response)

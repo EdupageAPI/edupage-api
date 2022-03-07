@@ -17,7 +17,7 @@ class Login(Module):
 
         self.edupage.gsec_hash = data.split("ASC.gsechash=\"")[1].split("\"")[0]
 
-    def login_auto(self, username: str, password: str):
+    async def login_auto(self, username: str, password: str):
         """Login using https://portal.edupage.org. If this doesn't work, please use `Login.login`.
 
         Args:
@@ -35,9 +35,9 @@ class Login(Module):
         }
 
         request_url = "https://portal.edupage.org/index.php?jwid=jw2&module=login"
-        response = self.edupage.session.post(request_url, params=parameters)
+        response = await self.edupage.session.post(request_url, params=parameters)
 
-        if "wrongPassword" in response.url:
+        if "wrongPassword" in response.url.query.decode():
             raise BadCredentialsException()
 
         data = response.content.decode()
@@ -45,7 +45,7 @@ class Login(Module):
         self.__parse_login_data(data)
         self.edupage.subdomain = data.split("-->")[0].split(" ")[-1]
 
-    def login(self, username: str, password: str, subdomain: str):
+    async def login(self, username: str, password: str, subdomain: str):
         """Login while specifying the subdomain to log into.
 
         Args:
@@ -59,8 +59,9 @@ class Login(Module):
 
         request_url = f"https://{subdomain}.edupage.org/login/index.php"
 
-        csrf_response = self.edupage.session.get(request_url).content.decode()
-
+        response = await self.edupage.session.get(request_url)
+        
+        csrf_response = response.text
         csrf_token = csrf_response.split("name=\"csrfauth\" value=\"")[1].split("\"")[0]
 
         parameters = {
@@ -71,10 +72,9 @@ class Login(Module):
 
         request_url = f"https://{subdomain}.edupage.org/login/edubarLogin.php"
 
-        response = self.edupage.session.post(request_url, parameters)
-
-        if "bad=1" in response.url:
+        response = await self.edupage.session.post(request_url, data=parameters)
+        if "bad=1" in response.url.query.decode():
             raise BadCredentialsException()
 
-        self.__parse_login_data(response.content.decode())
+        self.__parse_login_data(response.text)
         self.edupage.subdomain = subdomain

@@ -16,7 +16,7 @@ for grade in grades:
 for subject in grades_by_subject:
     print(f"{subject}:")
     for grade in grades_by_subject[subject]:
-        
+
         print(f"    {grade.title} -> ", end="")
 
         if grade.max_points != 100:

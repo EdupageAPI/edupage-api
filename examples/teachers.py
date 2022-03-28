@@ -6,14 +6,15 @@ edupage.login_auto("Username (or e-mail)", "Password")
 
 teachers = edupage.get_teachers()
 
+
 def print_teacher_info(teacher: EduTeacher):
     print(f"{teacher.name} is in your school since {teacher.in_school_since}")
+
 
 oldest_teacher = teachers[0]
 for teacher in teachers:
     if not teacher.in_school_since:
         continue
-
 
     if teacher.in_school_since < oldest_teacher.in_school_since:
         oldest_teacher = teacher

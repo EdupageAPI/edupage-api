@@ -16,5 +16,5 @@ print("Teachers missing:", end=" ")
 for i, teacher in enumerate(missing_teachers):
     if i != 0:
         print(", ", end="")
-    
+
     print(f"{teacher.name}", end="")

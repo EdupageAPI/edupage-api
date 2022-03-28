@@ -27,19 +27,20 @@
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">import json
+from dataclasses import dataclass
 from io import TextIOWrapper
 
 from edupage_api.exceptions import FailedToUploadFileException
 from edupage_api.module import EdupageModule, Module, ModuleHelper
 
 
+@dataclass
 class EduCloudFile:
-    def __init__(self, cloud_id: str, extension: str, file_type: str, file: str, name: str):
-        self.cloud_id = cloud_id
-        self.extension = extension
-        self.type = file_type
-        self.file = file
-        self.name = name
+    cloud_id: str
+    extension: str
+    file_type: str
+    file: str
+    name: str
 
     def get_url(self, edupage: EdupageModule):
         &#34;&#34;&#34;Get url of given `EduCloudFile`.
@@ -282,18 +283,18 @@ def upload_file(self, fd: TextIOWrapper) -&gt; EduCloudFile:
 <span>(</span><span>cloud_id: str, extension: str, file_type: str, file: str, name: str)</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>EduCloudFile(cloud_id: str, extension: str, file_type: str, file: str, name: str)</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">class EduCloudFile:
-    def __init__(self, cloud_id: str, extension: str, file_type: str, file: str, name: str):
-        self.cloud_id = cloud_id
-        self.extension = extension
-        self.type = file_type
-        self.file = file
-        self.name = name
+<pre><code class="python">@dataclass
+class EduCloudFile:
+    cloud_id: str
+    extension: str
+    file_type: str
+    file: str
+    name: str
 
     def get_url(self, edupage: EdupageModule):
         &#34;&#34;&#34;Get url of given `EduCloudFile`.
@@ -326,6 +327,29 @@ def upload_file(self, fd: TextIOWrapper) -&gt; EduCloudFile:
             data.get(&#34;name&#34;)
         )</code></pre>
 </details>
+<h3>Class variables</h3>
+<dl>
+<dt id="edupage_api.cloud.EduCloudFile.cloud_id"><code class="name">var <span class="ident">cloud_id</span> : str</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.cloud.EduCloudFile.extension"><code class="name">var <span class="ident">extension</span> : str</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.cloud.EduCloudFile.file"><code class="name">var <span class="ident">file</span> : str</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.cloud.EduCloudFile.file_type"><code class="name">var <span class="ident">file_type</span> : str</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.cloud.EduCloudFile.name"><code class="name">var <span class="ident">name</span> : str</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
 <h3>Static methods</h3>
 <dl>
 <dt id="edupage_api.cloud.EduCloudFile.parse"><code class="name flex">
@@ -428,8 +452,13 @@ def parse(data: dict):
 </li>
 <li>
 <h4><code><a title="edupage_api.cloud.EduCloudFile" href="#edupage_api.cloud.EduCloudFile">EduCloudFile</a></code></h4>
-<ul class="">
+<ul class="two-column">
+<li><code><a title="edupage_api.cloud.EduCloudFile.cloud_id" href="#edupage_api.cloud.EduCloudFile.cloud_id">cloud_id</a></code></li>
+<li><code><a title="edupage_api.cloud.EduCloudFile.extension" href="#edupage_api.cloud.EduCloudFile.extension">extension</a></code></li>
+<li><code><a title="edupage_api.cloud.EduCloudFile.file" href="#edupage_api.cloud.EduCloudFile.file">file</a></code></li>
+<li><code><a title="edupage_api.cloud.EduCloudFile.file_type" href="#edupage_api.cloud.EduCloudFile.file_type">file_type</a></code></li>
 <li><code><a title="edupage_api.cloud.EduCloudFile.get_url" href="#edupage_api.cloud.EduCloudFile.get_url">get_url</a></code></li>
+<li><code><a title="edupage_api.cloud.EduCloudFile.name" href="#edupage_api.cloud.EduCloudFile.name">name</a></code></li>
 <li><code><a title="edupage_api.cloud.EduCloudFile.parse" href="#edupage_api.cloud.EduCloudFile.parse">parse</a></code></li>
 </ul>
 </li>

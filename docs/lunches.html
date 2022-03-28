@@ -27,6 +27,7 @@
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">import json
+from dataclasses import dataclass
 from datetime import datetime
 from typing import List, Optional
 
@@ -36,18 +37,16 @@ from edupage_api.exceptions import (FailedToChangeLunchError,
 from edupage_api.module import EdupageModule, Module, ModuleHelper
 
 
+@dataclass
 class Rating:
-    def __init__(self, mysql_date, boarder_id,
-                 quality_average, quantity_average,
-                 quality_ratings, quantity_ratings):
-        self.quality_ratings = quality_ratings
-        self.quality_average = quality_average
+    __date: str
+    __boarder_id: str
 
-        self.quantity_ratings = quantity_ratings
-        self.quantity_average = quantity_average
+    quality_average: float
+    quality_average: float
 
-        self.__date = mysql_date
-        self.__boarder_id = boarder_id
+    quantity_average: float
+    quantity_ratings: float
 
     def rate(self, edupage: EdupageModule, quantity: int, quality: int):
         if not edupage.is_logged_in:
@@ -72,30 +71,25 @@ class Rating:
             raise FailedToRateException()
 
 
+@dataclass
 class Menu:
-    def __init__(self, name: str, allergens: str, weight: str, number: str, rating: Optional[Rating]):
-        self.name = name
-        self.allergens = allergens
-        self.weight = weight
-        self.number = number
-        self.rating = rating
+    name: str
+    allergens: str
+    weight: str
+    number: str
+    rating: Optional[Rating]
 
 
 class Lunch:
-    def __init__(self, served_from: Optional[datetime], served_to: Optional[datetime],
-                 amount_of_foods: int, chooseable_menus: list[str],
-                 can_be_changed_until: datetime, title: str,
-                 menus: List[Menu], date: datetime,
-                 boarder_id: str):
-        self.date = date
-        self.served_from = served_from
-        self.served_to = served_to
-        self.amount_of_foods = amount_of_foods
-        self.chooseable_menus = chooseable_menus
-        self.can_be_changed_until = can_be_changed_until
-        self.title = title
-        self.menus = menus
-        self.__boarder_id = boarder_id
+    served_from: Optional[datetime]
+    served_to: Optional[datetime]
+    amount_of_foods: int
+    chooseable_menus: list[str]
+    can_be_changed_until: datetime
+    title: str
+    menus: List[Menu]
+    date: datetime
+    __boarder_id: str
 
     def __iter__(self):
         return iter(self.menus)
@@ -219,7 +213,6 @@ class Lunches(Module):
 <dl>
 <dt id="edupage_api.lunches.Lunch"><code class="flex name class">
 <span>class <span class="ident">Lunch</span></span>
-<span>(</span><span>served_from: Optional[datetime.datetime], served_to: Optional[datetime.datetime], amount_of_foods: int, chooseable_menus: list[str], can_be_changed_until: datetime.datetime, title: str, menus: List[<a title="edupage_api.lunches.Menu" href="#edupage_api.lunches.Menu">Menu</a>], date: datetime.datetime, boarder_id: str)</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
@@ -228,20 +221,15 @@ class Lunches(Module):
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">class Lunch:
-    def __init__(self, served_from: Optional[datetime], served_to: Optional[datetime],
-                 amount_of_foods: int, chooseable_menus: list[str],
-                 can_be_changed_until: datetime, title: str,
-                 menus: List[Menu], date: datetime,
-                 boarder_id: str):
-        self.date = date
-        self.served_from = served_from
-        self.served_to = served_to
-        self.amount_of_foods = amount_of_foods
-        self.chooseable_menus = chooseable_menus
-        self.can_be_changed_until = can_be_changed_until
-        self.title = title
-        self.menus = menus
-        self.__boarder_id = boarder_id
+    served_from: Optional[datetime]
+    served_to: Optional[datetime]
+    amount_of_foods: int
+    chooseable_menus: list[str]
+    can_be_changed_until: datetime
+    title: str
+    menus: List[Menu]
+    date: datetime
+    __boarder_id: str
 
     def __iter__(self):
         return iter(self.menus)
@@ -278,6 +266,41 @@ class Lunches(Module):
     def sign_off(self, edupage: EdupageModule):
         self.__make_choice(edupage, &#34;AX&#34;)</code></pre>
 </details>
+<h3>Class variables</h3>
+<dl>
+<dt id="edupage_api.lunches.Lunch.amount_of_foods"><code class="name">var <span class="ident">amount_of_foods</span> : int</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.lunches.Lunch.can_be_changed_until"><code class="name">var <span class="ident">can_be_changed_until</span> : datetime.datetime</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.lunches.Lunch.chooseable_menus"><code class="name">var <span class="ident">chooseable_menus</span> : list[str]</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.lunches.Lunch.date"><code class="name">var <span class="ident">date</span> : datetime.datetime</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.lunches.Lunch.menus"><code class="name">var <span class="ident">menus</span> : List[<a title="edupage_api.lunches.Menu" href="#edupage_api.lunches.Menu">Menu</a>]</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.lunches.Lunch.served_from"><code class="name">var <span class="ident">served_from</span> : Optional[datetime.datetime]</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.lunches.Lunch.served_to"><code class="name">var <span class="ident">served_to</span> : Optional[datetime.datetime]</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.lunches.Lunch.title"><code class="name">var <span class="ident">title</span> : str</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
 <h3>Methods</h3>
 <dl>
 <dt id="edupage_api.lunches.Lunch.choose"><code class="name flex">
@@ -491,42 +514,63 @@ def get_lunch(self, date: datetime):
 <span>(</span><span>name: str, allergens: str, weight: str, number: str, rating: Optional[<a title="edupage_api.lunches.Rating" href="#edupage_api.lunches.Rating">Rating</a>])</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Menu(name: str, allergens: str, weight: str, number: str, rating: Optional[edupage_api.lunches.Rating])</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">class Menu:
-    def __init__(self, name: str, allergens: str, weight: str, number: str, rating: Optional[Rating]):
-        self.name = name
-        self.allergens = allergens
-        self.weight = weight
-        self.number = number
-        self.rating = rating</code></pre>
+<pre><code class="python">@dataclass
+class Menu:
+    name: str
+    allergens: str
+    weight: str
+    number: str
+    rating: Optional[Rating]</code></pre>
 </details>
+<h3>Class variables</h3>
+<dl>
+<dt id="edupage_api.lunches.Menu.allergens"><code class="name">var <span class="ident">allergens</span> : str</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.lunches.Menu.name"><code class="name">var <span class="ident">name</span> : str</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.lunches.Menu.number"><code class="name">var <span class="ident">number</span> : str</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.lunches.Menu.rating"><code class="name">var <span class="ident">rating</span> : Optional[<a title="edupage_api.lunches.Rating" href="#edupage_api.lunches.Rating">Rating</a>]</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.lunches.Menu.weight"><code class="name">var <span class="ident">weight</span> : str</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
 </dd>
 <dt id="edupage_api.lunches.Rating"><code class="flex name class">
 <span>class <span class="ident">Rating</span></span>
-<span>(</span><span>mysql_date, boarder_id, quality_average, quantity_average, quality_ratings, quantity_ratings)</span>
+<span>(</span><span>_Rating__date: str, _Rating__boarder_id: str, quality_average: float, quantity_average: float, quantity_ratings: float)</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Rating(_Rating__date: str, _Rating__boarder_id: str, quality_average: float, quantity_average: float, quantity_ratings: float)</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">class Rating:
-    def __init__(self, mysql_date, boarder_id,
-                 quality_average, quantity_average,
-                 quality_ratings, quantity_ratings):
-        self.quality_ratings = quality_ratings
-        self.quality_average = quality_average
+<pre><code class="python">@dataclass
+class Rating:
+    __date: str
+    __boarder_id: str
 
-        self.quantity_ratings = quantity_ratings
-        self.quantity_average = quantity_average
+    quality_average: float
+    quality_average: float
 
-        self.__date = mysql_date
-        self.__boarder_id = boarder_id
+    quantity_average: float
+    quantity_ratings: float
 
     def rate(self, edupage: EdupageModule, quantity: int, quality: int):
         if not edupage.is_logged_in:
@@ -550,6 +594,21 @@ def get_lunch(self, date: datetime):
         if error is None or error != &#34;&#34;:
             raise FailedToRateException()</code></pre>
 </details>
+<h3>Class variables</h3>
+<dl>
+<dt id="edupage_api.lunches.Rating.quality_average"><code class="name">var <span class="ident">quality_average</span> : float</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.lunches.Rating.quantity_average"><code class="name">var <span class="ident">quantity_average</span> : float</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.lunches.Rating.quantity_ratings"><code class="name">var <span class="ident">quantity_ratings</span> : float</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
 <h3>Methods</h3>
 <dl>
 <dt id="edupage_api.lunches.Rating.rate"><code class="name flex">
@@ -605,8 +664,16 @@ def get_lunch(self, date: datetime):
 <li>
 <h4><code><a title="edupage_api.lunches.Lunch" href="#edupage_api.lunches.Lunch">Lunch</a></code></h4>
 <ul class="">
+<li><code><a title="edupage_api.lunches.Lunch.amount_of_foods" href="#edupage_api.lunches.Lunch.amount_of_foods">amount_of_foods</a></code></li>
+<li><code><a title="edupage_api.lunches.Lunch.can_be_changed_until" href="#edupage_api.lunches.Lunch.can_be_changed_until">can_be_changed_until</a></code></li>
 <li><code><a title="edupage_api.lunches.Lunch.choose" href="#edupage_api.lunches.Lunch.choose">choose</a></code></li>
+<li><code><a title="edupage_api.lunches.Lunch.chooseable_menus" href="#edupage_api.lunches.Lunch.chooseable_menus">chooseable_menus</a></code></li>
+<li><code><a title="edupage_api.lunches.Lunch.date" href="#edupage_api.lunches.Lunch.date">date</a></code></li>
+<li><code><a title="edupage_api.lunches.Lunch.menus" href="#edupage_api.lunches.Lunch.menus">menus</a></code></li>
+<li><code><a title="edupage_api.lunches.Lunch.served_from" href="#edupage_api.lunches.Lunch.served_from">served_from</a></code></li>
+<li><code><a title="edupage_api.lunches.Lunch.served_to" href="#edupage_api.lunches.Lunch.served_to">served_to</a></code></li>
 <li><code><a title="edupage_api.lunches.Lunch.sign_off" href="#edupage_api.lunches.Lunch.sign_off">sign_off</a></code></li>
+<li><code><a title="edupage_api.lunches.Lunch.title" href="#edupage_api.lunches.Lunch.title">title</a></code></li>
 </ul>
 </li>
 <li>
@@ -617,10 +684,20 @@ def get_lunch(self, date: datetime):
 </li>
 <li>
 <h4><code><a title="edupage_api.lunches.Menu" href="#edupage_api.lunches.Menu">Menu</a></code></h4>
+<ul class="">
+<li><code><a title="edupage_api.lunches.Menu.allergens" href="#edupage_api.lunches.Menu.allergens">allergens</a></code></li>
+<li><code><a title="edupage_api.lunches.Menu.name" href="#edupage_api.lunches.Menu.name">name</a></code></li>
+<li><code><a title="edupage_api.lunches.Menu.number" href="#edupage_api.lunches.Menu.number">number</a></code></li>
+<li><code><a title="edupage_api.lunches.Menu.rating" href="#edupage_api.lunches.Menu.rating">rating</a></code></li>
+<li><code><a title="edupage_api.lunches.Menu.weight" href="#edupage_api.lunches.Menu.weight">weight</a></code></li>
+</ul>
 </li>
 <li>
 <h4><code><a title="edupage_api.lunches.Rating" href="#edupage_api.lunches.Rating">Rating</a></code></h4>
 <ul class="">
+<li><code><a title="edupage_api.lunches.Rating.quality_average" href="#edupage_api.lunches.Rating.quality_average">quality_average</a></code></li>
+<li><code><a title="edupage_api.lunches.Rating.quantity_average" href="#edupage_api.lunches.Rating.quantity_average">quantity_average</a></code></li>
+<li><code><a title="edupage_api.lunches.Rating.quantity_ratings" href="#edupage_api.lunches.Rating.quantity_ratings">quantity_ratings</a></code></li>
 <li><code><a title="edupage_api.lunches.Rating.rate" href="#edupage_api.lunches.Rating.rate">rate</a></code></li>
 </ul>
 </li>

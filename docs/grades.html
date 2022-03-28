@@ -27,7 +27,9 @@
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">import json
+from dataclasses import dataclass
 from datetime import datetime
+from typing import Optional
 
 from edupage_api.dbi import DbiHelper
 from edupage_api.exceptions import FailedToParseGradeDataError
@@ -35,22 +37,20 @@ from edupage_api.module import Module, ModuleHelper
 from edupage_api.people import EduTeacher
 
 
+@dataclass
 class EduGrade:
-    def __init__(self, event_id: int, title: str, grade_n: int,
-                 date: datetime, subject_id: int, subject_name: str,
-                 teacher: EduTeacher, max_points: float, importance: float,
-                 verbal: True, percent: float):
-        self.event_id = event_id
-        self.title = title
-        self.grade_n = grade_n
-        self.date = date
-        self.subject_id = subject_id
-        self.subject_name = subject_name
-        self.teacher = teacher
-        self.max_points = max_points
-        self.importance = importance
-        self.verbal = verbal
-        self.percent = percent
+    event_id: int
+    title: str
+    grade_n: Optional[int]
+    comment: Optional[str]
+    date: datetime
+    subject_id: int
+    subject_name: Optional[str]
+    teacher: Optional[EduTeacher]
+    max_points: Optional[float]
+    importance: float
+    verbal: bool
+    percent: float
 
 
 class Grades(Module):
@@ -79,20 +79,30 @@ class Grades(Module):
 
         output = []
         for grade in grades:
+            # ID
             event_id_str = grade.get(&#34;udalostid&#34;)
             if not event_id_str:
                 continue
 
             event_id = int(event_id_str)
 
+            # Title
             details = grade_details.get(event_id_str)
             title = details.get(&#34;p_meno&#34;)
 
-            grade_n = ModuleHelper.parse_int(grade.get(&#34;data&#34;))
+            # Grade
+            grade_raw = grade.get(&#34;data&#34;).split(&#34; (&#34;, 1)
+            grade_n = float(grade_raw[0])
+            try:
+                comment = grade_raw[1].rsplit(&#34;)&#34;, 1)[0]
+            except IndexError:
+                comment = None
 
+            # Date
             date_str = grade.get(&#34;datum&#34;)
             date = datetime.strptime(date_str, &#34;%Y-%m-%d %H:%M:%S&#34;)
 
+            # Subject ID and name
             subject_id_str = details.get(&#34;PredmetID&#34;)
             if subject_id_str is None or subject_id_str == &#34;vsetky&#34;:
                 continue
@@ -100,6 +110,7 @@ class Grades(Module):
             subject_id = int(subject_id_str)
             subject_name = DbiHelper(self.edupage).fetch_subject_name(subject_id)
 
+            # Teacher
             teacher_id_str = details.get(&#34;UcitelID&#34;)
             if teacher_id_str is None:
                 teacher = None
@@ -109,23 +120,35 @@ class Grades(Module):
 
                 teacher = EduTeacher.parse(teacher_data, teacher_id, self.edupage)
 
-            max_points = details.get(&#34;p_vaha_body&#34;)
-            max_points = int(max_points) if max_points is not None else None
+            # Maximal points and importance
+            grade_type = details.get(&#34;p_typ_udalosti&#34;)
+            if grade_type == &#34;1&#34;:
+                # Normal grade (1 – 5)
+                max_points = None
+                importance = float(details.get(&#34;p_vaha&#34;)) / 20
+            elif grade_type == &#34;2&#34;:
+                # Points grade (in points – e.g. 0 – 20 points)
+                max_points = int(details.get(&#34;p_vaha&#34;))
+                importance = None
+            elif grade_type == &#34;3&#34;:
+                # Percental grade (0 – 100 %)
+                max_points = int(details.get(&#34;p_vaha_body&#34;))
+                importance = float(details.get(&#34;p_vaha&#34;)) / 20
 
-            importance = details.get(&#34;p_vaha&#34;)
-            importance = 0 if float(importance) == 0 else 20 / float(importance)
-
+            # Verbal and percents
             try:
                 verbal = False
 
                 if max_points:
                     percent = round(float(grade_n) / float(max_points) * 100, 2)
+                elif max_points == 0:
+                    percent = float(&#34;inf&#34;)
                 else:
                     percent = None
             except:
                 verbal = True
 
-            grade = EduGrade(event_id, title, grade_n, date, subject_id,
+            grade = EduGrade(event_id, title, grade_n, comment, date, subject_id,
                              subject_name, teacher, max_points, importance, verbal, percent)
             output.append(grade)
 
@@ -143,31 +166,80 @@ class Grades(Module):
 <dl>
 <dt id="edupage_api.grades.EduGrade"><code class="flex name class">
 <span>class <span class="ident">EduGrade</span></span>
-<span>(</span><span>event_id: int, title: str, grade_n: int, date: datetime.datetime, subject_id: int, subject_name: str, teacher: <a title="edupage_api.people.EduTeacher" href="people.html#edupage_api.people.EduTeacher">EduTeacher</a>, max_points: float, importance: float, verbal: True, percent: float)</span>
+<span>(</span><span>event_id: int, title: str, grade_n: Optional[int], comment: Optional[str], date: datetime.datetime, subject_id: int, subject_name: Optional[str], teacher: Optional[<a title="edupage_api.people.EduTeacher" href="people.html#edupage_api.people.EduTeacher">EduTeacher</a>], max_points: Optional[float], importance: float, verbal: bool, percent: float)</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>EduGrade(event_id: int, title: str, grade_n: Optional[int], comment: Optional[str], date: datetime.datetime, subject_id: int, subject_name: Optional[str], teacher: Optional[edupage_api.people.EduTeacher], max_points: Optional[float], importance: float, verbal: bool, percent: float)</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">class EduGrade:
-    def __init__(self, event_id: int, title: str, grade_n: int,
-                 date: datetime, subject_id: int, subject_name: str,
-                 teacher: EduTeacher, max_points: float, importance: float,
-                 verbal: True, percent: float):
-        self.event_id = event_id
-        self.title = title
-        self.grade_n = grade_n
-        self.date = date
-        self.subject_id = subject_id
-        self.subject_name = subject_name
-        self.teacher = teacher
-        self.max_points = max_points
-        self.importance = importance
-        self.verbal = verbal
-        self.percent = percent</code></pre>
+<pre><code class="python">@dataclass
+class EduGrade:
+    event_id: int
+    title: str
+    grade_n: Optional[int]
+    comment: Optional[str]
+    date: datetime
+    subject_id: int
+    subject_name: Optional[str]
+    teacher: Optional[EduTeacher]
+    max_points: Optional[float]
+    importance: float
+    verbal: bool
+    percent: float</code></pre>
 </details>
+<h3>Class variables</h3>
+<dl>
+<dt id="edupage_api.grades.EduGrade.comment"><code class="name">var <span class="ident">comment</span> : Optional[str]</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.grades.EduGrade.date"><code class="name">var <span class="ident">date</span> : datetime.datetime</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.grades.EduGrade.event_id"><code class="name">var <span class="ident">event_id</span> : int</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.grades.EduGrade.grade_n"><code class="name">var <span class="ident">grade_n</span> : Optional[int]</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.grades.EduGrade.importance"><code class="name">var <span class="ident">importance</span> : float</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.grades.EduGrade.max_points"><code class="name">var <span class="ident">max_points</span> : Optional[float]</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.grades.EduGrade.percent"><code class="name">var <span class="ident">percent</span> : float</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.grades.EduGrade.subject_id"><code class="name">var <span class="ident">subject_id</span> : int</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.grades.EduGrade.subject_name"><code class="name">var <span class="ident">subject_name</span> : Optional[str]</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.grades.EduGrade.teacher"><code class="name">var <span class="ident">teacher</span> : Optional[<a title="edupage_api.people.EduTeacher" href="people.html#edupage_api.people.EduTeacher">EduTeacher</a>]</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.grades.EduGrade.title"><code class="name">var <span class="ident">title</span> : str</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.grades.EduGrade.verbal"><code class="name">var <span class="ident">verbal</span> : bool</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
 </dd>
 <dt id="edupage_api.grades.Grades"><code class="flex name class">
 <span>class <span class="ident">Grades</span></span>
@@ -205,20 +277,30 @@ class Grades(Module):
 
         output = []
         for grade in grades:
+            # ID
             event_id_str = grade.get(&#34;udalostid&#34;)
             if not event_id_str:
                 continue
 
             event_id = int(event_id_str)
 
+            # Title
             details = grade_details.get(event_id_str)
             title = details.get(&#34;p_meno&#34;)
 
-            grade_n = ModuleHelper.parse_int(grade.get(&#34;data&#34;))
+            # Grade
+            grade_raw = grade.get(&#34;data&#34;).split(&#34; (&#34;, 1)
+            grade_n = float(grade_raw[0])
+            try:
+                comment = grade_raw[1].rsplit(&#34;)&#34;, 1)[0]
+            except IndexError:
+                comment = None
 
+            # Date
             date_str = grade.get(&#34;datum&#34;)
             date = datetime.strptime(date_str, &#34;%Y-%m-%d %H:%M:%S&#34;)
 
+            # Subject ID and name
             subject_id_str = details.get(&#34;PredmetID&#34;)
             if subject_id_str is None or subject_id_str == &#34;vsetky&#34;:
                 continue
@@ -226,6 +308,7 @@ class Grades(Module):
             subject_id = int(subject_id_str)
             subject_name = DbiHelper(self.edupage).fetch_subject_name(subject_id)
 
+            # Teacher
             teacher_id_str = details.get(&#34;UcitelID&#34;)
             if teacher_id_str is None:
                 teacher = None
@@ -235,23 +318,35 @@ class Grades(Module):
 
                 teacher = EduTeacher.parse(teacher_data, teacher_id, self.edupage)
 
-            max_points = details.get(&#34;p_vaha_body&#34;)
-            max_points = int(max_points) if max_points is not None else None
+            # Maximal points and importance
+            grade_type = details.get(&#34;p_typ_udalosti&#34;)
+            if grade_type == &#34;1&#34;:
+                # Normal grade (1 – 5)
+                max_points = None
+                importance = float(details.get(&#34;p_vaha&#34;)) / 20
+            elif grade_type == &#34;2&#34;:
+                # Points grade (in points – e.g. 0 – 20 points)
+                max_points = int(details.get(&#34;p_vaha&#34;))
+                importance = None
+            elif grade_type == &#34;3&#34;:
+                # Percental grade (0 – 100 %)
+                max_points = int(details.get(&#34;p_vaha_body&#34;))
+                importance = float(details.get(&#34;p_vaha&#34;)) / 20
 
-            importance = details.get(&#34;p_vaha&#34;)
-            importance = 0 if float(importance) == 0 else 20 / float(importance)
-
+            # Verbal and percents
             try:
                 verbal = False
 
                 if max_points:
                     percent = round(float(grade_n) / float(max_points) * 100, 2)
+                elif max_points == 0:
+                    percent = float(&#34;inf&#34;)
                 else:
                     percent = None
             except:
                 verbal = True
 
-            grade = EduGrade(event_id, title, grade_n, date, subject_id,
+            grade = EduGrade(event_id, title, grade_n, comment, date, subject_id,
                              subject_name, teacher, max_points, importance, verbal, percent)
             output.append(grade)
 
@@ -281,20 +376,30 @@ def get_grades(self) -&gt; list[EduGrade]:
 
     output = []
     for grade in grades:
+        # ID
         event_id_str = grade.get(&#34;udalostid&#34;)
         if not event_id_str:
             continue
 
         event_id = int(event_id_str)
 
+        # Title
         details = grade_details.get(event_id_str)
         title = details.get(&#34;p_meno&#34;)
 
-        grade_n = ModuleHelper.parse_int(grade.get(&#34;data&#34;))
+        # Grade
+        grade_raw = grade.get(&#34;data&#34;).split(&#34; (&#34;, 1)
+        grade_n = float(grade_raw[0])
+        try:
+            comment = grade_raw[1].rsplit(&#34;)&#34;, 1)[0]
+        except IndexError:
+            comment = None
 
+        # Date
         date_str = grade.get(&#34;datum&#34;)
         date = datetime.strptime(date_str, &#34;%Y-%m-%d %H:%M:%S&#34;)
 
+        # Subject ID and name
         subject_id_str = details.get(&#34;PredmetID&#34;)
         if subject_id_str is None or subject_id_str == &#34;vsetky&#34;:
             continue
@@ -302,6 +407,7 @@ def get_grades(self) -&gt; list[EduGrade]:
         subject_id = int(subject_id_str)
         subject_name = DbiHelper(self.edupage).fetch_subject_name(subject_id)
 
+        # Teacher
         teacher_id_str = details.get(&#34;UcitelID&#34;)
         if teacher_id_str is None:
             teacher = None
@@ -311,23 +417,35 @@ def get_grades(self) -&gt; list[EduGrade]:
 
             teacher = EduTeacher.parse(teacher_data, teacher_id, self.edupage)
 
-        max_points = details.get(&#34;p_vaha_body&#34;)
-        max_points = int(max_points) if max_points is not None else None
+        # Maximal points and importance
+        grade_type = details.get(&#34;p_typ_udalosti&#34;)
+        if grade_type == &#34;1&#34;:
+            # Normal grade (1 – 5)
+            max_points = None
+            importance = float(details.get(&#34;p_vaha&#34;)) / 20
+        elif grade_type == &#34;2&#34;:
+            # Points grade (in points – e.g. 0 – 20 points)
+            max_points = int(details.get(&#34;p_vaha&#34;))
+            importance = None
+        elif grade_type == &#34;3&#34;:
+            # Percental grade (0 – 100 %)
+            max_points = int(details.get(&#34;p_vaha_body&#34;))
+            importance = float(details.get(&#34;p_vaha&#34;)) / 20
 
-        importance = details.get(&#34;p_vaha&#34;)
-        importance = 0 if float(importance) == 0 else 20 / float(importance)
-
+        # Verbal and percents
         try:
             verbal = False
 
             if max_points:
                 percent = round(float(grade_n) / float(max_points) * 100, 2)
+            elif max_points == 0:
+                percent = float(&#34;inf&#34;)
             else:
                 percent = None
         except:
             verbal = True
 
-        grade = EduGrade(event_id, title, grade_n, date, subject_id,
+        grade = EduGrade(event_id, title, grade_n, comment, date, subject_id,
                          subject_name, teacher, max_points, importance, verbal, percent)
         output.append(grade)
 
@@ -354,6 +472,20 @@ def get_grades(self) -&gt; list[EduGrade]:
 <ul>
 <li>
 <h4><code><a title="edupage_api.grades.EduGrade" href="#edupage_api.grades.EduGrade">EduGrade</a></code></h4>
+<ul class="two-column">
+<li><code><a title="edupage_api.grades.EduGrade.comment" href="#edupage_api.grades.EduGrade.comment">comment</a></code></li>
+<li><code><a title="edupage_api.grades.EduGrade.date" href="#edupage_api.grades.EduGrade.date">date</a></code></li>
+<li><code><a title="edupage_api.grades.EduGrade.event_id" href="#edupage_api.grades.EduGrade.event_id">event_id</a></code></li>
+<li><code><a title="edupage_api.grades.EduGrade.grade_n" href="#edupage_api.grades.EduGrade.grade_n">grade_n</a></code></li>
+<li><code><a title="edupage_api.grades.EduGrade.importance" href="#edupage_api.grades.EduGrade.importance">importance</a></code></li>
+<li><code><a title="edupage_api.grades.EduGrade.max_points" href="#edupage_api.grades.EduGrade.max_points">max_points</a></code></li>
+<li><code><a title="edupage_api.grades.EduGrade.percent" href="#edupage_api.grades.EduGrade.percent">percent</a></code></li>
+<li><code><a title="edupage_api.grades.EduGrade.subject_id" href="#edupage_api.grades.EduGrade.subject_id">subject_id</a></code></li>
+<li><code><a title="edupage_api.grades.EduGrade.subject_name" href="#edupage_api.grades.EduGrade.subject_name">subject_name</a></code></li>
+<li><code><a title="edupage_api.grades.EduGrade.teacher" href="#edupage_api.grades.EduGrade.teacher">teacher</a></code></li>
+<li><code><a title="edupage_api.grades.EduGrade.title" href="#edupage_api.grades.EduGrade.title">title</a></code></li>
+<li><code><a title="edupage_api.grades.EduGrade.verbal" href="#edupage_api.grades.EduGrade.verbal">verbal</a></code></li>
+</ul>
 </li>
 <li>
 <h4><code><a title="edupage_api.grades.Grades" href="#edupage_api.grades.Grades">Grades</a></code></h4>

@@ -30,9 +30,10 @@
 from __future__ import annotations
 
 import json
+from dataclasses import dataclass
 from datetime import datetime
 from enum import Enum
-from typing import Optional
+from typing import Optional, Union
 
 from edupage_api.dbi import DbiHelper
 from edupage_api.module import Module, ModuleHelper
@@ -162,17 +163,15 @@ class EventType(Enum):
         return ModuleHelper.parse_enum(event_type_str, EventType)
 
 
+@dataclass
 class TimelineEvent:
-    def __init__(self, event_id: int, timestamp: datetime, text: str,
-                 author: EduAccount, recipient: EduAccount, event_type: EventType,
-                 additional_data: dict):
-        self.event_id = event_id
-        self.timestamp = timestamp
-        self.text = text
-        self.author = author
-        self.recipient = recipient
-        self.event_type = event_type
-        self.additional_data = additional_data
+    event_id: int
+    timestamp: datetime
+    text: str
+    author: Union[EduAccount, str]
+    recipient: Union[EduAccount, str]
+    event_type: EventType
+    additional_data: dict
 
 
 class TimelineEvents(Module):
@@ -694,26 +693,55 @@ def parse(event_type_str: str) -&gt; Optional[EventType]:
 </dd>
 <dt id="edupage_api.timeline.TimelineEvent"><code class="flex name class">
 <span>class <span class="ident">TimelineEvent</span></span>
-<span>(</span><span>event_id: int, timestamp: datetime, text: str, author: EduAccount, recipient: EduAccount, event_type: <a title="edupage_api.timeline.EventType" href="#edupage_api.timeline.EventType">EventType</a>, additional_data: dict)</span>
+<span>(</span><span>event_id: int, timestamp: datetime, text: str, author: Union[EduAccount, str], recipient: Union[EduAccount, str], event_type: <a title="edupage_api.timeline.EventType" href="#edupage_api.timeline.EventType">EventType</a>, additional_data: dict)</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>TimelineEvent(event_id: 'int', timestamp: 'datetime', text: 'str', author: 'Union[EduAccount, str]', recipient: 'Union[EduAccount, str]', event_type: 'EventType', additional_data: 'dict')</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">class TimelineEvent:
-    def __init__(self, event_id: int, timestamp: datetime, text: str,
-                 author: EduAccount, recipient: EduAccount, event_type: EventType,
-                 additional_data: dict):
-        self.event_id = event_id
-        self.timestamp = timestamp
-        self.text = text
-        self.author = author
-        self.recipient = recipient
-        self.event_type = event_type
-        self.additional_data = additional_data</code></pre>
+<pre><code class="python">@dataclass
+class TimelineEvent:
+    event_id: int
+    timestamp: datetime
+    text: str
+    author: Union[EduAccount, str]
+    recipient: Union[EduAccount, str]
+    event_type: EventType
+    additional_data: dict</code></pre>
 </details>
+<h3>Class variables</h3>
+<dl>
+<dt id="edupage_api.timeline.TimelineEvent.additional_data"><code class="name">var <span class="ident">additional_data</span> : dict</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.timeline.TimelineEvent.author"><code class="name">var <span class="ident">author</span> : Union[<a title="edupage_api.people.EduAccount" href="people.html#edupage_api.people.EduAccount">EduAccount</a>, str]</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.timeline.TimelineEvent.event_id"><code class="name">var <span class="ident">event_id</span> : int</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.timeline.TimelineEvent.event_type"><code class="name">var <span class="ident">event_type</span> : <a title="edupage_api.timeline.EventType" href="#edupage_api.timeline.EventType">EventType</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.timeline.TimelineEvent.recipient"><code class="name">var <span class="ident">recipient</span> : Union[<a title="edupage_api.people.EduAccount" href="people.html#edupage_api.people.EduAccount">EduAccount</a>, str]</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.timeline.TimelineEvent.text"><code class="name">var <span class="ident">text</span> : str</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.timeline.TimelineEvent.timestamp"><code class="name">var <span class="ident">timestamp</span> : datetime.datetime</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
 </dd>
 <dt id="edupage_api.timeline.TimelineEvents"><code class="flex name class">
 <span>class <span class="ident">TimelineEvents</span></span>
@@ -978,6 +1006,15 @@ def get_notifications(self):
 </li>
 <li>
 <h4><code><a title="edupage_api.timeline.TimelineEvent" href="#edupage_api.timeline.TimelineEvent">TimelineEvent</a></code></h4>
+<ul class="two-column">
+<li><code><a title="edupage_api.timeline.TimelineEvent.additional_data" href="#edupage_api.timeline.TimelineEvent.additional_data">additional_data</a></code></li>
+<li><code><a title="edupage_api.timeline.TimelineEvent.author" href="#edupage_api.timeline.TimelineEvent.author">author</a></code></li>
+<li><code><a title="edupage_api.timeline.TimelineEvent.event_id" href="#edupage_api.timeline.TimelineEvent.event_id">event_id</a></code></li>
+<li><code><a title="edupage_api.timeline.TimelineEvent.event_type" href="#edupage_api.timeline.TimelineEvent.event_type">event_type</a></code></li>
+<li><code><a title="edupage_api.timeline.TimelineEvent.recipient" href="#edupage_api.timeline.TimelineEvent.recipient">recipient</a></code></li>
+<li><code><a title="edupage_api.timeline.TimelineEvent.text" href="#edupage_api.timeline.TimelineEvent.text">text</a></code></li>
+<li><code><a title="edupage_api.timeline.TimelineEvent.timestamp" href="#edupage_api.timeline.TimelineEvent.timestamp">timestamp</a></code></li>
+</ul>
 </li>
 <li>
 <h4><code><a title="edupage_api.timeline.TimelineEvents" href="#edupage_api.timeline.TimelineEvents">TimelineEvents</a></code></h4>

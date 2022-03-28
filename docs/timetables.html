@@ -27,6 +27,7 @@
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">import json
+from dataclasses import dataclass
 from datetime import datetime
 from typing import List, Optional
 
@@ -36,17 +37,15 @@ from edupage_api.module import EdupageModule, Module, ModuleHelper
 from edupage_api.people import EduTeacher, People
 
 
+@dataclass
 class Lesson:
-    def __init__(self, teachers: List[EduTeacher], classrooms: List[str],
-                 start_of_lesson: datetime, end_of_lesson: datetime,
-                 online_lesson_link: Optional[str], subject_id: int, name: str):
-        self.teachers = teachers
-        self.classrooms = classrooms
-        self.start_of_lesson = start_of_lesson
-        self.end_of_lesson = end_of_lesson
-        self.online_lesson_link = online_lesson_link
-        self.subject_id = subject_id
-        self.name = name
+    teachers: List[EduTeacher]
+    classrooms: List[str]
+    start_of_lesson: datetime
+    end_of_lesson: datetime
+    online_lesson_link: Optional[str]
+    subject_id: int
+    name: str
 
     def is_online_lesson(self) -&gt; bool:
         return self.online_lesson_link is None
@@ -66,12 +65,12 @@ class Lesson:
         post_data = {
             &#34;__args&#34;: [
                 None,
-                {
-                    &#34;click&#34;: True,
-                    &#34;date&#34;: today.strftime(&#34;%Y-%m-%d&#34;),
-                    &#34;ol_url&#34;: self.online_lesson_link,
-                    &#34;subjectid&#34;: self.subject_id
-                }
+                    {
+                        &#34;click&#34;: True,
+                        &#34;date&#34;: today.strftime(&#34;%Y-%m-%d&#34;),
+                        &#34;ol_url&#34;: self.online_lesson_link,
+                        &#34;subjectid&#34;: self.subject_id
+                    }
             ],
             &#34;__gsh&#34;: gse_hash
         }
@@ -80,9 +79,9 @@ class Lesson:
         return json.loads(response.content.decode()).get(&#34;reload&#34;) is not None
 
 
+@dataclass
 class Timetable:
-    def __init__(self, lessons: List[Lesson]):
-        self.lessons = lessons
+    lessons: List[Lesson]
 
     def __iter__(self):
         return iter(self.lessons)
@@ -204,22 +203,20 @@ class Timetables(Module):
 <span>(</span><span>teachers: List[<a title="edupage_api.people.EduTeacher" href="people.html#edupage_api.people.EduTeacher">EduTeacher</a>], classrooms: List[str], start_of_lesson: datetime.datetime, end_of_lesson: datetime.datetime, online_lesson_link: Optional[str], subject_id: int, name: str)</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Lesson(teachers: List[edupage_api.people.EduTeacher], classrooms: List[str], start_of_lesson: datetime.datetime, end_of_lesson: datetime.datetime, online_lesson_link: Optional[str], subject_id: int, name: str)</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">class Lesson:
-    def __init__(self, teachers: List[EduTeacher], classrooms: List[str],
-                 start_of_lesson: datetime, end_of_lesson: datetime,
-                 online_lesson_link: Optional[str], subject_id: int, name: str):
-        self.teachers = teachers
-        self.classrooms = classrooms
-        self.start_of_lesson = start_of_lesson
-        self.end_of_lesson = end_of_lesson
-        self.online_lesson_link = online_lesson_link
-        self.subject_id = subject_id
-        self.name = name
+<pre><code class="python">@dataclass
+class Lesson:
+    teachers: List[EduTeacher]
+    classrooms: List[str]
+    start_of_lesson: datetime
+    end_of_lesson: datetime
+    online_lesson_link: Optional[str]
+    subject_id: int
+    name: str
 
     def is_online_lesson(self) -&gt; bool:
         return self.online_lesson_link is None
@@ -239,12 +236,12 @@ class Timetables(Module):
         post_data = {
             &#34;__args&#34;: [
                 None,
-                {
-                    &#34;click&#34;: True,
-                    &#34;date&#34;: today.strftime(&#34;%Y-%m-%d&#34;),
-                    &#34;ol_url&#34;: self.online_lesson_link,
-                    &#34;subjectid&#34;: self.subject_id
-                }
+                    {
+                        &#34;click&#34;: True,
+                        &#34;date&#34;: today.strftime(&#34;%Y-%m-%d&#34;),
+                        &#34;ol_url&#34;: self.online_lesson_link,
+                        &#34;subjectid&#34;: self.subject_id
+                    }
             ],
             &#34;__gsh&#34;: gse_hash
         }
@@ -252,6 +249,37 @@ class Timetables(Module):
         response = edupage.session.post(request_url, json=post_data)
         return json.loads(response.content.decode()).get(&#34;reload&#34;) is not None</code></pre>
 </details>
+<h3>Class variables</h3>
+<dl>
+<dt id="edupage_api.timetables.Lesson.classrooms"><code class="name">var <span class="ident">classrooms</span> : List[str]</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.timetables.Lesson.end_of_lesson"><code class="name">var <span class="ident">end_of_lesson</span> : datetime.datetime</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.timetables.Lesson.name"><code class="name">var <span class="ident">name</span> : str</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.timetables.Lesson.online_lesson_link"><code class="name">var <span class="ident">online_lesson_link</span> : Optional[str]</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.timetables.Lesson.start_of_lesson"><code class="name">var <span class="ident">start_of_lesson</span> : datetime.datetime</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.timetables.Lesson.subject_id"><code class="name">var <span class="ident">subject_id</span> : int</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.timetables.Lesson.teachers"><code class="name">var <span class="ident">teachers</span> : List[<a title="edupage_api.people.EduTeacher" href="people.html#edupage_api.people.EduTeacher">EduTeacher</a>]</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
 <h3>Methods</h3>
 <dl>
 <dt id="edupage_api.timetables.Lesson.is_online_lesson"><code class="name flex">
@@ -291,12 +319,12 @@ def sign_into_lesson(self, edupage: EdupageModule):
     post_data = {
         &#34;__args&#34;: [
             None,
-            {
-                &#34;click&#34;: True,
-                &#34;date&#34;: today.strftime(&#34;%Y-%m-%d&#34;),
-                &#34;ol_url&#34;: self.online_lesson_link,
-                &#34;subjectid&#34;: self.subject_id
-            }
+                {
+                    &#34;click&#34;: True,
+                    &#34;date&#34;: today.strftime(&#34;%Y-%m-%d&#34;),
+                    &#34;ol_url&#34;: self.online_lesson_link,
+                    &#34;subjectid&#34;: self.subject_id
+                }
         ],
         &#34;__gsh&#34;: gse_hash
     }
@@ -312,14 +340,14 @@ def sign_into_lesson(self, edupage: EdupageModule):
 <span>(</span><span>lessons: List[<a title="edupage_api.timetables.Lesson" href="#edupage_api.timetables.Lesson">Lesson</a>])</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Timetable(lessons: List[edupage_api.timetables.Lesson])</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">class Timetable:
-    def __init__(self, lessons: List[Lesson]):
-        self.lessons = lessons
+<pre><code class="python">@dataclass
+class Timetable:
+    lessons: List[Lesson]
 
     def __iter__(self):
         return iter(self.lessons)
@@ -355,6 +383,13 @@ def sign_into_lesson(self, edupage: EdupageModule):
         if len(self.lessons) &gt; 0:
             return self.lessons[-1]</code></pre>
 </details>
+<h3>Class variables</h3>
+<dl>
+<dt id="edupage_api.timetables.Timetable.lessons"><code class="name">var <span class="ident">lessons</span> : List[<a title="edupage_api.timetables.Lesson" href="#edupage_api.timetables.Lesson">Lesson</a>]</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
 <h3>Methods</h3>
 <dl>
 <dt id="edupage_api.timetables.Timetable.get_first_lesson"><code class="name flex">
@@ -618,9 +653,16 @@ def sign_into_lesson(self, edupage: EdupageModule):
 <ul>
 <li>
 <h4><code><a title="edupage_api.timetables.Lesson" href="#edupage_api.timetables.Lesson">Lesson</a></code></h4>
-<ul class="">
+<ul class="two-column">
+<li><code><a title="edupage_api.timetables.Lesson.classrooms" href="#edupage_api.timetables.Lesson.classrooms">classrooms</a></code></li>
+<li><code><a title="edupage_api.timetables.Lesson.end_of_lesson" href="#edupage_api.timetables.Lesson.end_of_lesson">end_of_lesson</a></code></li>
 <li><code><a title="edupage_api.timetables.Lesson.is_online_lesson" href="#edupage_api.timetables.Lesson.is_online_lesson">is_online_lesson</a></code></li>
+<li><code><a title="edupage_api.timetables.Lesson.name" href="#edupage_api.timetables.Lesson.name">name</a></code></li>
+<li><code><a title="edupage_api.timetables.Lesson.online_lesson_link" href="#edupage_api.timetables.Lesson.online_lesson_link">online_lesson_link</a></code></li>
 <li><code><a title="edupage_api.timetables.Lesson.sign_into_lesson" href="#edupage_api.timetables.Lesson.sign_into_lesson">sign_into_lesson</a></code></li>
+<li><code><a title="edupage_api.timetables.Lesson.start_of_lesson" href="#edupage_api.timetables.Lesson.start_of_lesson">start_of_lesson</a></code></li>
+<li><code><a title="edupage_api.timetables.Lesson.subject_id" href="#edupage_api.timetables.Lesson.subject_id">subject_id</a></code></li>
+<li><code><a title="edupage_api.timetables.Lesson.teachers" href="#edupage_api.timetables.Lesson.teachers">teachers</a></code></li>
 </ul>
 </li>
 <li>
@@ -631,6 +673,7 @@ def sign_into_lesson(self, edupage: EdupageModule):
 <li><code><a title="edupage_api.timetables.Timetable.get_lesson_at_time" href="#edupage_api.timetables.Timetable.get_lesson_at_time">get_lesson_at_time</a></code></li>
 <li><code><a title="edupage_api.timetables.Timetable.get_next_lesson_at_time" href="#edupage_api.timetables.Timetable.get_next_lesson_at_time">get_next_lesson_at_time</a></code></li>
 <li><code><a title="edupage_api.timetables.Timetable.get_next_online_lesson_at_time" href="#edupage_api.timetables.Timetable.get_next_online_lesson_at_time">get_next_online_lesson_at_time</a></code></li>
+<li><code><a title="edupage_api.timetables.Timetable.lessons" href="#edupage_api.timetables.Timetable.lessons">lessons</a></code></li>
 </ul>
 </li>
 <li>

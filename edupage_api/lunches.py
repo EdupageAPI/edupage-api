@@ -52,6 +52,7 @@ class Menu:
     rating: Optional[Rating]
 
 
+@dataclass
 class Lunch:
     served_from: Optional[datetime]
     served_to: Optional[datetime]

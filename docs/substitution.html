@@ -30,11 +30,13 @@
 from __future__ import annotations
 
 import json
+from dataclasses import dataclass
 from datetime import date
 from enum import Enum
 from typing import Optional, Union
 
-from edupage_api.exceptions import ExpiredSessionException, InvalidTeacherException
+from edupage_api.exceptions import (ExpiredSessionException,
+                                    InvalidTeacherException)
 from edupage_api.module import Module, ModuleHelper
 from edupage_api.people import EduTeacher, People
 
@@ -49,12 +51,12 @@ class Action(Enum):
         return ModuleHelper.parse_enum(string, Action)
 
 
+@dataclass
 class TimetableChange:
-    def __init__(self, change_class: str, lesson_n: int, title: str, action: Union[Action, tuple[int, int]]):
-        self.change_class = change_class
-        self.lesson_n = lesson_n
-        self.title = title
-        self.action = action
+    change_class: str
+    lesson_n: int
+    title: str
+    action: Union[Action, tuple[int, int]]
 
 
 class Substitution(Module):
@@ -63,10 +65,13 @@ class Substitution(Module):
                &#34;?__func=getSubstViewerDayDataHtml&#34;)
 
         data = {
-            &#34;__args&#34;: [None, {
-                &#34;date&#34;: date.strftime(&#34;%Y-%m-%d&#34;),
-                &#34;mode&#34;: &#34;classes&#34;
-            }],
+            &#34;__args&#34;: [
+                None,
+                {
+                    &#34;date&#34;: date.strftime(&#34;%Y-%m-%d&#34;),
+                    &#34;mode&#34;: &#34;classes&#34;
+                }
+            ],
             &#34;__gsh&#34;: self.edupage.gsec_hash
         }
 
@@ -243,10 +248,13 @@ def parse(string: str) -&gt; Optional[Action]:
                &#34;?__func=getSubstViewerDayDataHtml&#34;)
 
         data = {
-            &#34;__args&#34;: [None, {
-                &#34;date&#34;: date.strftime(&#34;%Y-%m-%d&#34;),
-                &#34;mode&#34;: &#34;classes&#34;
-            }],
+            &#34;__args&#34;: [
+                None,
+                {
+                    &#34;date&#34;: date.strftime(&#34;%Y-%m-%d&#34;),
+                    &#34;mode&#34;: &#34;classes&#34;
+                }
+            ],
             &#34;__gsh&#34;: self.edupage.gsec_hash
         }
 
@@ -456,18 +464,37 @@ def get_timetable_changes(self, date: date) -&gt; Optional[list[TimetableChange]
 <span>(</span><span>change_class: str, lesson_n: int, title: str, action: Union[<a title="edupage_api.substitution.Action" href="#edupage_api.substitution.Action">Action</a>, tuple[int, int]])</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>TimetableChange(change_class: 'str', lesson_n: 'int', title: 'str', action: 'Union[Action, tuple[int, int]]')</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">class TimetableChange:
-    def __init__(self, change_class: str, lesson_n: int, title: str, action: Union[Action, tuple[int, int]]):
-        self.change_class = change_class
-        self.lesson_n = lesson_n
-        self.title = title
-        self.action = action</code></pre>
+<pre><code class="python">@dataclass
+class TimetableChange:
+    change_class: str
+    lesson_n: int
+    title: str
+    action: Union[Action, tuple[int, int]]</code></pre>
 </details>
+<h3>Class variables</h3>
+<dl>
+<dt id="edupage_api.substitution.TimetableChange.action"><code class="name">var <span class="ident">action</span> : Union[<a title="edupage_api.substitution.Action" href="#edupage_api.substitution.Action">Action</a>, tuple[int, int]]</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.substitution.TimetableChange.change_class"><code class="name">var <span class="ident">change_class</span> : str</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.substitution.TimetableChange.lesson_n"><code class="name">var <span class="ident">lesson_n</span> : int</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.substitution.TimetableChange.title"><code class="name">var <span class="ident">title</span> : str</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
 </dd>
 </dl>
 </section>
@@ -503,6 +530,12 @@ def get_timetable_changes(self, date: date) -&gt; Optional[list[TimetableChange]
 </li>
 <li>
 <h4><code><a title="edupage_api.substitution.TimetableChange" href="#edupage_api.substitution.TimetableChange">TimetableChange</a></code></h4>
+<ul class="">
+<li><code><a title="edupage_api.substitution.TimetableChange.action" href="#edupage_api.substitution.TimetableChange.action">action</a></code></li>
+<li><code><a title="edupage_api.substitution.TimetableChange.change_class" href="#edupage_api.substitution.TimetableChange.change_class">change_class</a></code></li>
+<li><code><a title="edupage_api.substitution.TimetableChange.lesson_n" href="#edupage_api.substitution.TimetableChange.lesson_n">lesson_n</a></code></li>
+<li><code><a title="edupage_api.substitution.TimetableChange.title" href="#edupage_api.substitution.TimetableChange.title">title</a></code></li>
+</ul>
 </li>
 </ul>
 </li>

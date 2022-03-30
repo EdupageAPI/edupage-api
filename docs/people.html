@@ -29,6 +29,8 @@
 <pre><code class="python"># For postponed evaluation of annotations
 from __future__ import annotations
 
+import json
+from dataclasses import dataclass
 from datetime import datetime
 from enum import Enum
 from typing import Optional
@@ -52,13 +54,13 @@ class EduAccountType(Enum):
     PARENT = &#34;Rodic&#34;
 
 
+@dataclass
 class EduAccount:
-    def __init__(self, person_id: int, name: str, gender: Gender, in_school_since: datetime, account_type: EduAccountType):
-        self.person_id = person_id
-        self.name = name
-        self.gender = gender
-        self.in_school_since = in_school_since
-        self.account_type = account_type
+    person_id: int
+    name: str
+    gender: Gender
+    in_school_since: datetime
+    account_type: EduAccountType
 
     @staticmethod
     def recognize_account_type(person_data: dict) -&gt; EduAccountType:
@@ -109,6 +111,7 @@ class EduAccount:
         return f&#34;{self.account_type.value}-{self.person_id}&#34;
 
 
+@dataclass
 class EduStudent(EduAccount):
     def __init__(self, person_id: int, name: str, gender: Gender, in_school_since: datetime,
                  class_id: int, number_in_class: int):
@@ -118,11 +121,20 @@ class EduStudent(EduAccount):
         self.number_in_class = number_in_class
 
 
+@dataclass
+class EduStudentSkeleton():
+    person_id: int
+    name_short: str
+    class_id: int
+
+
+@dataclass
 class EduParent(EduAccount):
     def __init__(self, person_id: int, name: str, gender: Gender, in_school_since: datetime):
         super().__init__(person_id, name, gender, in_school_since, EduAccountType.PARENT)
 
 
+@dataclass
 class EduTeacher(EduAccount):
     def __init__(self, person_id: int, name: str, gender: Gender, in_school_since: datetime,
                  classroom_name: str, teacher_to: datetime):
@@ -148,6 +160,38 @@ class People(Module):
             student_data = students.get(student_id_str)
 
             student = EduAccount.parse(student_data, student_id, self.edupage)
+            result.append(student)
+
+        return result
+
+    @ModuleHelper.logged_in
+    def get_all_students(self) -&gt; Optional[list[EduStudent]]:
+        request_url = f&#34;https://{self.edupage.subdomain}.edupage.org/rpr/server/maindbi.js?__func=mainDBIAccessor&#34;
+        data = {
+            &#34;__args&#34;: [
+                None,
+                self.edupage.get_school_year(),
+                {},
+                {
+                    &#34;op&#34;: &#34;fetch&#34;,
+                    &#34;needed_part&#34;: {
+                        &#34;students&#34;: [&#34;id&#34;, &#34;classid&#34;, &#34;short&#34;],
+                    }
+                }
+            ],
+            &#34;__gsh&#34;: self.edupage.gsec_hash
+        }
+
+        response = self.edupage.session.post(request_url, json=data).content.decode()
+        students = json.loads(response).get(&#34;r&#34;).get(&#34;tables&#34;)[0].get(&#34;data_rows&#34;)
+
+        result = []
+        for student in students:
+            student_id = int(student[&#34;id&#34;])
+            student_class_id = int(student[&#34;classid&#34;])
+            student_name_short = student[&#34;short&#34;]
+
+            student = EduStudentSkeleton(student_id, student_name_short, student_class_id)
             result.append(student)
 
         return result
@@ -202,18 +246,18 @@ class People(Module):
 <span>(</span><span>person_id: int, name: str, gender: <a title="edupage_api.people.Gender" href="#edupage_api.people.Gender">Gender</a>, in_school_since: datetime, account_type: <a title="edupage_api.people.EduAccountType" href="#edupage_api.people.EduAccountType">EduAccountType</a>)</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>EduAccount(person_id: 'int', name: 'str', gender: 'Gender', in_school_since: 'datetime', account_type: 'EduAccountType')</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">class EduAccount:
-    def __init__(self, person_id: int, name: str, gender: Gender, in_school_since: datetime, account_type: EduAccountType):
-        self.person_id = person_id
-        self.name = name
-        self.gender = gender
-        self.in_school_since = in_school_since
-        self.account_type = account_type
+<pre><code class="python">@dataclass
+class EduAccount:
+    person_id: int
+    name: str
+    gender: Gender
+    in_school_since: datetime
+    account_type: EduAccountType
 
     @staticmethod
     def recognize_account_type(person_data: dict) -&gt; EduAccountType:
@@ -269,6 +313,29 @@ class People(Module):
 <li><a title="edupage_api.people.EduStudent" href="#edupage_api.people.EduStudent">EduStudent</a></li>
 <li><a title="edupage_api.people.EduTeacher" href="#edupage_api.people.EduTeacher">EduTeacher</a></li>
 </ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="edupage_api.people.EduAccount.account_type"><code class="name">var <span class="ident">account_type</span> : <a title="edupage_api.people.EduAccountType" href="#edupage_api.people.EduAccountType">EduAccountType</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.people.EduAccount.gender"><code class="name">var <span class="ident">gender</span> : <a title="edupage_api.people.Gender" href="#edupage_api.people.Gender">Gender</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.people.EduAccount.in_school_since"><code class="name">var <span class="ident">in_school_since</span> : datetime.datetime</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.people.EduAccount.name"><code class="name">var <span class="ident">name</span> : str</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.people.EduAccount.person_id"><code class="name">var <span class="ident">person_id</span> : int</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
 <h3>Static methods</h3>
 <dl>
 <dt id="edupage_api.people.EduAccount.parse"><code class="name flex">
@@ -394,12 +461,13 @@ def recognize_account_type(person_data: dict) -&gt; EduAccountType:
 <span>(</span><span>person_id: int, name: str, gender: <a title="edupage_api.people.Gender" href="#edupage_api.people.Gender">Gender</a>, in_school_since: datetime)</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>EduParent(person_id: 'int', name: 'str', gender: 'Gender', in_school_since: 'datetime')</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">class EduParent(EduAccount):
+<pre><code class="python">@dataclass
+class EduParent(EduAccount):
     def __init__(self, person_id: int, name: str, gender: Gender, in_school_since: datetime):
         super().__init__(person_id, name, gender, in_school_since, EduAccountType.PARENT)</code></pre>
 </details>
@@ -407,18 +475,42 @@ def recognize_account_type(person_data: dict) -&gt; EduAccountType:
 <ul class="hlist">
 <li><a title="edupage_api.people.EduAccount" href="#edupage_api.people.EduAccount">EduAccount</a></li>
 </ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="edupage_api.people.EduParent.account_type"><code class="name">var <span class="ident">account_type</span> : <a title="edupage_api.people.EduAccountType" href="#edupage_api.people.EduAccountType">EduAccountType</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.people.EduParent.gender"><code class="name">var <span class="ident">gender</span> : <a title="edupage_api.people.Gender" href="#edupage_api.people.Gender">Gender</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.people.EduParent.in_school_since"><code class="name">var <span class="ident">in_school_since</span> : datetime.datetime</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.people.EduParent.name"><code class="name">var <span class="ident">name</span> : str</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.people.EduParent.person_id"><code class="name">var <span class="ident">person_id</span> : int</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
 </dd>
 <dt id="edupage_api.people.EduStudent"><code class="flex name class">
 <span>class <span class="ident">EduStudent</span></span>
 <span>(</span><span>person_id: int, name: str, gender: <a title="edupage_api.people.Gender" href="#edupage_api.people.Gender">Gender</a>, in_school_since: datetime, class_id: int, number_in_class: int)</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>EduStudent(person_id: 'int', name: 'str', gender: 'Gender', in_school_since: 'datetime', class_id: 'int', number_in_class: 'int')</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">class EduStudent(EduAccount):
+<pre><code class="python">@dataclass
+class EduStudent(EduAccount):
     def __init__(self, person_id: int, name: str, gender: Gender, in_school_since: datetime,
                  class_id: int, number_in_class: int):
         super().__init__(person_id, name, gender, in_school_since, EduAccountType.STUDENT)
@@ -430,18 +522,74 @@ def recognize_account_type(person_data: dict) -&gt; EduAccountType:
 <ul class="hlist">
 <li><a title="edupage_api.people.EduAccount" href="#edupage_api.people.EduAccount">EduAccount</a></li>
 </ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="edupage_api.people.EduStudent.account_type"><code class="name">var <span class="ident">account_type</span> : <a title="edupage_api.people.EduAccountType" href="#edupage_api.people.EduAccountType">EduAccountType</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.people.EduStudent.gender"><code class="name">var <span class="ident">gender</span> : <a title="edupage_api.people.Gender" href="#edupage_api.people.Gender">Gender</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.people.EduStudent.in_school_since"><code class="name">var <span class="ident">in_school_since</span> : datetime.datetime</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.people.EduStudent.name"><code class="name">var <span class="ident">name</span> : str</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.people.EduStudent.person_id"><code class="name">var <span class="ident">person_id</span> : int</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+</dd>
+<dt id="edupage_api.people.EduStudentSkeleton"><code class="flex name class">
+<span>class <span class="ident">EduStudentSkeleton</span></span>
+<span>(</span><span>person_id: int, name_short: str, class_id: int)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>EduStudentSkeleton(person_id: 'int', name_short: 'str', class_id: 'int')</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@dataclass
+class EduStudentSkeleton():
+    person_id: int
+    name_short: str
+    class_id: int</code></pre>
+</details>
+<h3>Class variables</h3>
+<dl>
+<dt id="edupage_api.people.EduStudentSkeleton.class_id"><code class="name">var <span class="ident">class_id</span> : int</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.people.EduStudentSkeleton.name_short"><code class="name">var <span class="ident">name_short</span> : str</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.people.EduStudentSkeleton.person_id"><code class="name">var <span class="ident">person_id</span> : int</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
 </dd>
 <dt id="edupage_api.people.EduTeacher"><code class="flex name class">
 <span>class <span class="ident">EduTeacher</span></span>
 <span>(</span><span>person_id: int, name: str, gender: <a title="edupage_api.people.Gender" href="#edupage_api.people.Gender">Gender</a>, in_school_since: datetime, classroom_name: str, teacher_to: datetime)</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>EduTeacher(person_id: 'int', name: 'str', gender: 'Gender', in_school_since: 'datetime', classroom_name: 'str', teacher_to: 'datetime')</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">class EduTeacher(EduAccount):
+<pre><code class="python">@dataclass
+class EduTeacher(EduAccount):
     def __init__(self, person_id: int, name: str, gender: Gender, in_school_since: datetime,
                  classroom_name: str, teacher_to: datetime):
         super().__init__(person_id, name, gender, in_school_since, EduAccountType.TEACHER)
@@ -453,6 +601,29 @@ def recognize_account_type(person_data: dict) -&gt; EduAccountType:
 <ul class="hlist">
 <li><a title="edupage_api.people.EduAccount" href="#edupage_api.people.EduAccount">EduAccount</a></li>
 </ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="edupage_api.people.EduTeacher.account_type"><code class="name">var <span class="ident">account_type</span> : <a title="edupage_api.people.EduAccountType" href="#edupage_api.people.EduAccountType">EduAccountType</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.people.EduTeacher.gender"><code class="name">var <span class="ident">gender</span> : <a title="edupage_api.people.Gender" href="#edupage_api.people.Gender">Gender</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.people.EduTeacher.in_school_since"><code class="name">var <span class="ident">in_school_since</span> : datetime.datetime</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.people.EduTeacher.name"><code class="name">var <span class="ident">name</span> : str</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.people.EduTeacher.person_id"><code class="name">var <span class="ident">person_id</span> : int</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
 </dd>
 <dt id="edupage_api.people.Gender"><code class="flex name class">
 <span>class <span class="ident">Gender</span></span>
@@ -536,6 +707,38 @@ def parse(gender_str: str) -&gt; Optional[Gender]:
         return result
 
     @ModuleHelper.logged_in
+    def get_all_students(self) -&gt; Optional[list[EduStudent]]:
+        request_url = f&#34;https://{self.edupage.subdomain}.edupage.org/rpr/server/maindbi.js?__func=mainDBIAccessor&#34;
+        data = {
+            &#34;__args&#34;: [
+                None,
+                self.edupage.get_school_year(),
+                {},
+                {
+                    &#34;op&#34;: &#34;fetch&#34;,
+                    &#34;needed_part&#34;: {
+                        &#34;students&#34;: [&#34;id&#34;, &#34;classid&#34;, &#34;short&#34;],
+                    }
+                }
+            ],
+            &#34;__gsh&#34;: self.edupage.gsec_hash
+        }
+
+        response = self.edupage.session.post(request_url, json=data).content.decode()
+        students = json.loads(response).get(&#34;r&#34;).get(&#34;tables&#34;)[0].get(&#34;data_rows&#34;)
+
+        result = []
+        for student in students:
+            student_id = int(student[&#34;id&#34;])
+            student_class_id = int(student[&#34;classid&#34;])
+            student_name_short = student[&#34;short&#34;]
+
+            student = EduStudentSkeleton(student_id, student_name_short, student_class_id)
+            result.append(student)
+
+        return result
+
+    @ModuleHelper.logged_in
     def get_teacher(self, teacher_id: int) -&gt; Optional[EduTeacher]:
         teacher_data = DbiHelper(self.edupage).fetch_teacher_data(teacher_id)
         if teacher_data is None:
@@ -576,6 +779,48 @@ def parse(gender_str: str) -&gt; Optional[Gender]:
 </ul>
 <h3>Methods</h3>
 <dl>
+<dt id="edupage_api.people.People.get_all_students"><code class="name flex">
+<span>def <span class="ident">get_all_students</span></span>(<span>self) ‑> Optional[list[<a title="edupage_api.people.EduStudent" href="#edupage_api.people.EduStudent">EduStudent</a>]]</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@ModuleHelper.logged_in
+def get_all_students(self) -&gt; Optional[list[EduStudent]]:
+    request_url = f&#34;https://{self.edupage.subdomain}.edupage.org/rpr/server/maindbi.js?__func=mainDBIAccessor&#34;
+    data = {
+        &#34;__args&#34;: [
+            None,
+            self.edupage.get_school_year(),
+            {},
+            {
+                &#34;op&#34;: &#34;fetch&#34;,
+                &#34;needed_part&#34;: {
+                    &#34;students&#34;: [&#34;id&#34;, &#34;classid&#34;, &#34;short&#34;],
+                }
+            }
+        ],
+        &#34;__gsh&#34;: self.edupage.gsec_hash
+    }
+
+    response = self.edupage.session.post(request_url, json=data).content.decode()
+    students = json.loads(response).get(&#34;r&#34;).get(&#34;tables&#34;)[0].get(&#34;data_rows&#34;)
+
+    result = []
+    for student in students:
+        student_id = int(student[&#34;id&#34;])
+        student_class_id = int(student[&#34;classid&#34;])
+        student_name_short = student[&#34;short&#34;]
+
+        student = EduStudentSkeleton(student_id, student_name_short, student_class_id)
+        result.append(student)
+
+    return result</code></pre>
+</details>
+</dd>
 <dt id="edupage_api.people.People.get_student"><code class="name flex">
 <span>def <span class="ident">get_student</span></span>(<span>self, student_id: int) ‑> Optional[<a title="edupage_api.people.EduStudent" href="#edupage_api.people.EduStudent">EduStudent</a>]</span>
 </code></dt>
@@ -691,8 +936,13 @@ def get_teachers(self) -&gt; Optional[list]:
 <li>
 <h4><code><a title="edupage_api.people.EduAccount" href="#edupage_api.people.EduAccount">EduAccount</a></code></h4>
 <ul class="">
+<li><code><a title="edupage_api.people.EduAccount.account_type" href="#edupage_api.people.EduAccount.account_type">account_type</a></code></li>
+<li><code><a title="edupage_api.people.EduAccount.gender" href="#edupage_api.people.EduAccount.gender">gender</a></code></li>
 <li><code><a title="edupage_api.people.EduAccount.get_id" href="#edupage_api.people.EduAccount.get_id">get_id</a></code></li>
+<li><code><a title="edupage_api.people.EduAccount.in_school_since" href="#edupage_api.people.EduAccount.in_school_since">in_school_since</a></code></li>
+<li><code><a title="edupage_api.people.EduAccount.name" href="#edupage_api.people.EduAccount.name">name</a></code></li>
 <li><code><a title="edupage_api.people.EduAccount.parse" href="#edupage_api.people.EduAccount.parse">parse</a></code></li>
+<li><code><a title="edupage_api.people.EduAccount.person_id" href="#edupage_api.people.EduAccount.person_id">person_id</a></code></li>
 <li><code><a title="edupage_api.people.EduAccount.recognize_account_type" href="#edupage_api.people.EduAccount.recognize_account_type">recognize_account_type</a></code></li>
 </ul>
 </li>
@@ -706,12 +956,41 @@ def get_teachers(self) -&gt; Optional[list]:
 </li>
 <li>
 <h4><code><a title="edupage_api.people.EduParent" href="#edupage_api.people.EduParent">EduParent</a></code></h4>
+<ul class="">
+<li><code><a title="edupage_api.people.EduParent.account_type" href="#edupage_api.people.EduParent.account_type">account_type</a></code></li>
+<li><code><a title="edupage_api.people.EduParent.gender" href="#edupage_api.people.EduParent.gender">gender</a></code></li>
+<li><code><a title="edupage_api.people.EduParent.in_school_since" href="#edupage_api.people.EduParent.in_school_since">in_school_since</a></code></li>
+<li><code><a title="edupage_api.people.EduParent.name" href="#edupage_api.people.EduParent.name">name</a></code></li>
+<li><code><a title="edupage_api.people.EduParent.person_id" href="#edupage_api.people.EduParent.person_id">person_id</a></code></li>
+</ul>
 </li>
 <li>
 <h4><code><a title="edupage_api.people.EduStudent" href="#edupage_api.people.EduStudent">EduStudent</a></code></h4>
+<ul class="">
+<li><code><a title="edupage_api.people.EduStudent.account_type" href="#edupage_api.people.EduStudent.account_type">account_type</a></code></li>
+<li><code><a title="edupage_api.people.EduStudent.gender" href="#edupage_api.people.EduStudent.gender">gender</a></code></li>
+<li><code><a title="edupage_api.people.EduStudent.in_school_since" href="#edupage_api.people.EduStudent.in_school_since">in_school_since</a></code></li>
+<li><code><a title="edupage_api.people.EduStudent.name" href="#edupage_api.people.EduStudent.name">name</a></code></li>
+<li><code><a title="edupage_api.people.EduStudent.person_id" href="#edupage_api.people.EduStudent.person_id">person_id</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="edupage_api.people.EduStudentSkeleton" href="#edupage_api.people.EduStudentSkeleton">EduStudentSkeleton</a></code></h4>
+<ul class="">
+<li><code><a title="edupage_api.people.EduStudentSkeleton.class_id" href="#edupage_api.people.EduStudentSkeleton.class_id">class_id</a></code></li>
+<li><code><a title="edupage_api.people.EduStudentSkeleton.name_short" href="#edupage_api.people.EduStudentSkeleton.name_short">name_short</a></code></li>
+<li><code><a title="edupage_api.people.EduStudentSkeleton.person_id" href="#edupage_api.people.EduStudentSkeleton.person_id">person_id</a></code></li>
+</ul>
 </li>
 <li>
 <h4><code><a title="edupage_api.people.EduTeacher" href="#edupage_api.people.EduTeacher">EduTeacher</a></code></h4>
+<ul class="">
+<li><code><a title="edupage_api.people.EduTeacher.account_type" href="#edupage_api.people.EduTeacher.account_type">account_type</a></code></li>
+<li><code><a title="edupage_api.people.EduTeacher.gender" href="#edupage_api.people.EduTeacher.gender">gender</a></code></li>
+<li><code><a title="edupage_api.people.EduTeacher.in_school_since" href="#edupage_api.people.EduTeacher.in_school_since">in_school_since</a></code></li>
+<li><code><a title="edupage_api.people.EduTeacher.name" href="#edupage_api.people.EduTeacher.name">name</a></code></li>
+<li><code><a title="edupage_api.people.EduTeacher.person_id" href="#edupage_api.people.EduTeacher.person_id">person_id</a></code></li>
+</ul>
 </li>
 <li>
 <h4><code><a title="edupage_api.people.Gender" href="#edupage_api.people.Gender">Gender</a></code></h4>
@@ -724,6 +1003,7 @@ def get_teachers(self) -&gt; Optional[list]:
 <li>
 <h4><code><a title="edupage_api.people.People" href="#edupage_api.people.People">People</a></code></h4>
 <ul class="">
+<li><code><a title="edupage_api.people.People.get_all_students" href="#edupage_api.people.People.get_all_students">get_all_students</a></code></li>
 <li><code><a title="edupage_api.people.People.get_student" href="#edupage_api.people.People.get_student">get_student</a></code></li>
 <li><code><a title="edupage_api.people.People.get_students" href="#edupage_api.people.People.get_students">get_students</a></code></li>
 <li><code><a title="edupage_api.people.People.get_teacher" href="#edupage_api.people.People.get_teacher">get_teacher</a></code></li>

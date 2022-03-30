@@ -1,6 +1,7 @@
 # For postponed evaluation of annotations
 from __future__ import annotations
 
+import json
 from dataclasses import dataclass
 from datetime import datetime
 from enum import Enum
@@ -93,6 +94,13 @@ class EduStudent(EduAccount):
 
 
 @dataclass
+class EduStudentSkeleton():
+    person_id: int
+    name_short: str
+    class_id: int
+
+
+@dataclass
 class EduParent(EduAccount):
     def __init__(self, person_id: int, name: str, gender: Gender, in_school_since: datetime):
         super().__init__(person_id, name, gender, in_school_since, EduAccountType.PARENT)
@@ -124,6 +132,38 @@ class People(Module):
             student_data = students.get(student_id_str)
 
             student = EduAccount.parse(student_data, student_id, self.edupage)
+            result.append(student)
+
+        return result
+
+    @ModuleHelper.logged_in
+    def get_all_students(self) -> Optional[list[EduStudent]]:
+        request_url = f"https://{self.edupage.subdomain}.edupage.org/rpr/server/maindbi.js?__func=mainDBIAccessor"
+        data = {
+            "__args": [
+                None,
+                self.edupage.get_school_year(),
+                {},
+                {
+                    "op": "fetch",
+                    "needed_part": {
+                        "students": ["id", "classid", "short"],
+                    }
+                }
+            ],
+            "__gsh": self.edupage.gsec_hash
+        }
+
+        response = self.edupage.session.post(request_url, json=data).content.decode()
+        students = json.loads(response).get("r").get("tables")[0].get("data_rows")
+
+        result = []
+        for student in students:
+            student_id = int(student["id"])
+            student_class_id = int(student["classid"])
+            student_name_short = student["short"]
+
+            student = EduStudentSkeleton(student_id, student_name_short, student_class_id)
             result.append(student)
 
         return result

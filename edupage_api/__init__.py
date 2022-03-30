@@ -14,7 +14,7 @@ from edupage_api.login import Login
 from edupage_api.lunches import Lunch, Lunches
 from edupage_api.messages import Messages
 from edupage_api.module import EdupageModule
-from edupage_api.people import EduAccount, EduStudent, EduTeacher, People
+from edupage_api.people import EduAccount, EduStudent, EduTeacher, People, EduStudentSkeleton
 from edupage_api.substitution import Substitution, TimetableChange
 from edupage_api.timeline import TimelineEvent, TimelineEvents
 from edupage_api.timetables import Timetable, Timetables
@@ -67,6 +67,15 @@ class Edupage(EdupageModule):
         """
 
         return People(self).get_students()
+
+    def get_all_students(self) -> Optional[list[EduStudentSkeleton]]:
+        """Get list of all students in your school.
+
+        Returns:
+            Optional[list[EduStudent]]: List of `EduStudent`s.
+        """
+
+        return People(self).get_all_students()
 
     def get_teachers(self) -> Optional[list[EduTeacher]]:
         """Get list of all teachers in your school.
@@ -209,4 +218,3 @@ class Edupage(EdupageModule):
             This returns the whole timetable (lessons from 1 week, NOT 1 day!)
         """
         return ForeignTimetables(self).get_timetable_for_person(id, date)
-        

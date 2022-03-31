@@ -100,7 +100,7 @@ class Edupage(EdupageModule):
         &#34;&#34;&#34;Get list of all students in your school.
 
         Returns:
-            Optional[list[EduStudent]]: List of `EduStudent`s.
+            Optional[list[EduStudentSkeleton]]: List of `EduStudentSkeleton`s.
         &#34;&#34;&#34;
 
         return People(self).get_all_students()
@@ -389,7 +389,7 @@ Defaults to <code>5</code>.</dd>
         &#34;&#34;&#34;Get list of all students in your school.
 
         Returns:
-            Optional[list[EduStudent]]: List of `EduStudent`s.
+            Optional[list[EduStudentSkeleton]]: List of `EduStudentSkeleton`s.
         &#34;&#34;&#34;
 
         return People(self).get_all_students()
@@ -645,8 +645,8 @@ Defaults to <code>5</code>.</dd>
 <div class="desc"><p>Get list of all students in your school.</p>
 <h2 id="returns">Returns</h2>
 <dl>
-<dt><code>Optional[list[EduStudent]]</code></dt>
-<dd>List of <code>EduStudent</code>s.</dd>
+<dt><code>Optional[list[EduStudentSkeleton]]</code></dt>
+<dd>List of <code>EduStudentSkeleton</code>s.</dd>
 </dl></div>
 <details class="source">
 <summary>
@@ -656,7 +656,7 @@ Defaults to <code>5</code>.</dd>
     &#34;&#34;&#34;Get list of all students in your school.
 
     Returns:
-        Optional[list[EduStudent]]: List of `EduStudent`s.
+        Optional[list[EduStudentSkeleton]]: List of `EduStudentSkeleton`s.
     &#34;&#34;&#34;
 
     return People(self).get_all_students()</code></pre>

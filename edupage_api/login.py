@@ -36,11 +36,10 @@ class Login(Module):
 
         request_url = "https://portal.edupage.org/index.php?jwid=jw2&module=login"
         response = self.edupage.session.post(request_url, params=parameters)
-
-        if "wrongPassword" in response.url:
-            raise BadCredentialsException()
-
         data = response.content.decode()
+
+        if "wrongPassword" in response.url or "errorbox" in data:
+            raise BadCredentialsException()
 
         self.__parse_login_data(data)
         self.edupage.subdomain = data.split("-->")[0].split(" ")[-1]

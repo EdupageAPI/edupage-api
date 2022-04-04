@@ -15,6 +15,7 @@ from edupage_api.lunches import Lunch, Lunches
 from edupage_api.messages import Messages
 from edupage_api.module import EdupageModule
 from edupage_api.people import EduAccount, EduStudent, EduTeacher, People, EduStudentSkeleton
+from edupage_api.ringing import RingingTime, RingingTimes
 from edupage_api.substitution import Substitution, TimetableChange
 from edupage_api.timeline import TimelineEvent, TimelineEvents
 from edupage_api.timetables import Timetable, Timetables
@@ -218,3 +219,15 @@ class Edupage(EdupageModule):
             This returns the whole timetable (lessons from 1 week, NOT 1 day!)
         """
         return ForeignTimetables(self).get_timetable_for_person(id, date)
+    
+    def get_next_ringing_time(self, date_time: datetime) -> RingingTime:
+        """Get the next lesson's ringing time.
+
+        Args:
+            date_time (datetime.datetime)
+        
+        Returns:
+            RingingTime: the type (break or lesson) and time of the next ringing
+        """
+
+        return RingingTimes(self).get_next_ringing_time(date_time)

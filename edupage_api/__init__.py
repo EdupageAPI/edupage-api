@@ -73,7 +73,7 @@ class Edupage(EdupageModule):
         """Get list of all students in your school.
 
         Returns:
-            Optional[list[EduStudent]]: List of `EduStudent`s.
+            Optional[list[EduStudentSkeleton]]: List of `EduStudentSkeleton`s.
         """
 
         return People(self).get_all_students()

@@ -221,10 +221,10 @@ class Edupage(EdupageModule):
         return ForeignTimetables(self).get_timetable_for_person(id, date)
 
     def get_next_ringing_time(self, date_time: datetime) -> RingingTime:
-        """Get the next lesson's ringing time.
+        """Get the next lesson's ringing time for given `date_time`.
 
         Args:
-            date_time (datetime.datetime)
+            date_time (datetime.datetime): The (date)time you want to get this information for.
 
         Returns:
             RingingTime: the type (break or lesson) and time of the next ringing

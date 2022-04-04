@@ -30,8 +30,10 @@ class RingingTimes(Module):
     @staticmethod
     def __get_next_workday(date_time: datetime):
         if date_time.date().weekday() == 5:
+            date_time = RingingTimes.__set_hours_and_minutes(date_time, 0, 0)
             return date_time + timedelta(days=2)
         elif date_time.date().weekday() == 6:
+            date_time = RingingTimes.__set_hours_and_minutes(date_time, 0, 0)
             return date_time + timedelta(days=1)
         else:
             return date_time

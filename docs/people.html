@@ -39,7 +39,7 @@ from edupage_api.dbi import DbiHelper
 from edupage_api.module import EdupageModule, Module, ModuleHelper
 
 
-class Gender(Enum):
+class Gender(str, Enum):
     MALE = &#34;M&#34;
     FEMALE = &#34;F&#34;
 
@@ -48,7 +48,7 @@ class Gender(Enum):
         return ModuleHelper.parse_enum(gender_str, Gender)
 
 
-class EduAccountType(Enum):
+class EduAccountType(str, Enum):
     STUDENT = &#34;Student&#34;
     TEACHER = &#34;Teacher&#34;
     PARENT = &#34;Rodic&#34;
@@ -431,13 +431,14 @@ def recognize_account_type(person_data: dict) -&gt; EduAccountType:
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">class EduAccountType(Enum):
+<pre><code class="python">class EduAccountType(str, Enum):
     STUDENT = &#34;Student&#34;
     TEACHER = &#34;Teacher&#34;
     PARENT = &#34;Rodic&#34;</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
+<li>builtins.str</li>
 <li>enum.Enum</li>
 </ul>
 <h3>Class variables</h3>
@@ -635,7 +636,7 @@ class EduTeacher(EduAccount):
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">class Gender(Enum):
+<pre><code class="python">class Gender(str, Enum):
     MALE = &#34;M&#34;
     FEMALE = &#34;F&#34;
 
@@ -645,6 +646,7 @@ class EduTeacher(EduAccount):
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
+<li>builtins.str</li>
 <li>enum.Enum</li>
 </ul>
 <h3>Class variables</h3>

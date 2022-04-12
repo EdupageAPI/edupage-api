@@ -41,7 +41,7 @@ from edupage_api.people import EduAccount
 
 
 # data.dbi.event_types
-class EventType(Enum):
+class EventType(str, Enum):
     # Messages
     MESSAGE = &#34;sprava&#34;
     NEWS = &#34;news&#34;
@@ -265,7 +265,7 @@ class TimelineEvents(Module):
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">class EventType(Enum):
+<pre><code class="python">class EventType(str, Enum):
     # Messages
     MESSAGE = &#34;sprava&#34;
     NEWS = &#34;news&#34;
@@ -388,6 +388,7 @@ class TimelineEvents(Module):
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
+<li>builtins.str</li>
 <li>enum.Enum</li>
 </ul>
 <h3>Class variables</h3>

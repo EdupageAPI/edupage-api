@@ -41,7 +41,7 @@ from edupage_api.module import Module, ModuleHelper
 from edupage_api.people import EduTeacher, People
 
 
-class Action(Enum):
+class Action(str, Enum):
     ADDITION = &#34;add&#34;
     CHANGE = &#34;change&#34;
     DELETION = &#34;remove&#34;
@@ -186,7 +186,7 @@ class Substitution(Module):
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">class Action(Enum):
+<pre><code class="python">class Action(str, Enum):
     ADDITION = &#34;add&#34;
     CHANGE = &#34;change&#34;
     DELETION = &#34;remove&#34;
@@ -197,6 +197,7 @@ class Substitution(Module):
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
+<li>builtins.str</li>
 <li>enum.Enum</li>
 </ul>
 <h3>Class variables</h3>

@@ -4,7 +4,7 @@ from enum import Enum, auto
 
 from edupage_api.module import Module, ModuleHelper
 
-class RingingType(Enum, str):
+class RingingType(str, Enum):
     BREAK = "BREAK"
     LESSON = "LESSON"
 

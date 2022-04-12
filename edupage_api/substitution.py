@@ -13,7 +13,7 @@ from edupage_api.module import Module, ModuleHelper
 from edupage_api.people import EduTeacher, People
 
 
-class Action(Enum, str):
+class Action(str, Enum):
     ADDITION = "add"
     CHANGE = "change"
     DELETION = "remove"

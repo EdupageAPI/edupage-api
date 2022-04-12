@@ -11,7 +11,7 @@ from edupage_api.dbi import DbiHelper
 from edupage_api.module import EdupageModule, Module, ModuleHelper
 
 
-class Gender(Enum, str):
+class Gender(str, Enum):
     MALE = "M"
     FEMALE = "F"
 
@@ -20,7 +20,7 @@ class Gender(Enum, str):
         return ModuleHelper.parse_enum(gender_str, Gender)
 
 
-class EduAccountType(Enum, str):
+class EduAccountType(str, Enum):
     STUDENT = "Student"
     TEACHER = "Teacher"
     PARENT = "Rodic"

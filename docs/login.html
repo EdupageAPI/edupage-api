@@ -64,11 +64,10 @@ class Login(Module):
 
         request_url = &#34;https://portal.edupage.org/index.php?jwid=jw2&amp;module=login&#34;
         response = self.edupage.session.post(request_url, params=parameters)
-
-        if &#34;wrongPassword&#34; in response.url:
-            raise BadCredentialsException()
-
         data = response.content.decode()
+
+        if &#34;wrongPassword&#34; in response.url or &#34;errorbox&#34; in data:
+            raise BadCredentialsException()
 
         self.__parse_login_data(data)
         self.edupage.subdomain = data.split(&#34;--&gt;&#34;)[0].split(&#34; &#34;)[-1]
@@ -159,11 +158,10 @@ class Login(Module):
 
         request_url = &#34;https://portal.edupage.org/index.php?jwid=jw2&amp;module=login&#34;
         response = self.edupage.session.post(request_url, params=parameters)
-
-        if &#34;wrongPassword&#34; in response.url:
-            raise BadCredentialsException()
-
         data = response.content.decode()
+
+        if &#34;wrongPassword&#34; in response.url or &#34;errorbox&#34; in data:
+            raise BadCredentialsException()
 
         self.__parse_login_data(data)
         self.edupage.subdomain = data.split(&#34;--&gt;&#34;)[0].split(&#34; &#34;)[-1]
@@ -306,11 +304,10 @@ class Login(Module):
 
     request_url = &#34;https://portal.edupage.org/index.php?jwid=jw2&amp;module=login&#34;
     response = self.edupage.session.post(request_url, params=parameters)
-
-    if &#34;wrongPassword&#34; in response.url:
-        raise BadCredentialsException()
-
     data = response.content.decode()
+
+    if &#34;wrongPassword&#34; in response.url or &#34;errorbox&#34; in data:
+        raise BadCredentialsException()
 
     self.__parse_login_data(data)
     self.edupage.subdomain = data.split(&#34;--&gt;&#34;)[0].split(&#34; &#34;)[-1]</code></pre>

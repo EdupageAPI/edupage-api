@@ -13,7 +13,7 @@ from edupage_api.people import EduAccount
 
 
 # data.dbi.event_types
-class EventType(Enum):
+class EventType(Enum, str):
     # Messages
     MESSAGE = "sprava"
     NEWS = "news"

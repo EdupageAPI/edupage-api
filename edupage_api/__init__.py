@@ -193,7 +193,7 @@ class Edupage(EdupageModule):
             date (datetime.date): The date you want to get this information for.
 
         Returns:
-            list[TimetableChange]: List of changes in the timetable
+            list[TimetableChange]: List of changes in the timetable.
         """
         return Substitution(self).get_timetable_changes(date)
 
@@ -201,7 +201,7 @@ class Edupage(EdupageModule):
         """Returns the current school year.
 
         Returns:
-            int: the starting year of the current school year
+            int: The starting year of the current school year.
         """
         return ForeignTimetables(self).get_school_year()
 
@@ -209,25 +209,24 @@ class Edupage(EdupageModule):
         """Get someone else's timetable for the week `date` is in.
 
         Args:
-            id (int): the `person_id` of the person whoose timetable you want
-            date (datetime.date): a date from the week from which you want this timetable
+            id (int): The `person_id` of the person whoose timetable you want.
+            date (datetime.date): A date from the week from which you want this timetable.
 
         Returns:
-            list[LessonSkeleton]: lessons (in order) that this person has for `date`'s week
+            list[LessonSkeleton]: Lessons (in order) that this person has for `date`'s week.
 
         Note:
-            This returns the whole timetable (lessons from 1 week, NOT 1 day!)
+            This returns the whole timetable (lessons from 1 week, NOT 1 day)!
         """
         return ForeignTimetables(self).get_timetable_for_person(id, date)
-    
+
     def get_next_ringing_time(self, date_time: datetime) -> RingingTime:
-        """Get the next lesson's ringing time.
+        """Get the next lesson's ringing time for given `date_time`.
 
         Args:
-            date_time (datetime.datetime)
-        
-        Returns:
-            RingingTime: the type (break or lesson) and time of the next ringing
-        """
+            date_time (datetime.datetime): The (date)time you want to get this information for.
 
+        Returns:
+            RingingTime: The type (break or lesson) and time of the next ringing.
+        """
         return RingingTimes(self).get_next_ringing_time(date_time)

@@ -32,10 +32,11 @@ from datetime import datetime
 from typing import List, Optional
 
 from edupage_api.exceptions import (FailedToChangeLunchError,
-                                    FailedToRateException,
+                                    FailedToRateException, InvalidLunchData,
                                     NotLoggedInException)
 from edupage_api.module import EdupageModule, Module, ModuleHelper
 
+from pprint import pprint
 
 @dataclass
 class Rating:
@@ -135,15 +136,24 @@ class Lunches(Module):
         request_url = f&#34;https://{self.edupage.subdomain}.edupage.org/menu/?date={date_strftime}&#34;
         response = self.edupage.session.get(request_url).content.decode()
 
-        boarder_id = response.split(&#34;var stravnikid = \&#34;&#34;)[1].split(&#34;\&#34;&#34;)[0]
-        lunch_data = json.loads(response.split(&#34;var novyListok = &#34;)[1].split(&#34;;&#34;)[0])
+        lunch_data = json.loads(response.split(&#34;edupageData : &#34;)[1].split(&#34;,\r\n&#34;)[0])
+        lunches_data = lunch_data.get(self.edupage.subdomain)
 
-        lunch = lunch_data.get(date.strftime(&#34;%Y-%m-%d&#34;))
+        try:
+            boarder_id = lunches_data.get(&#34;novyListok&#34;).get(&#34;addInfo&#34;).get(&#34;stravnikid&#34;)
+        except AttributeError as e:
+            raise InvalidLunchData(f&#34;Missing boarder id: {e}&#34;)
+
+
+        lunch = lunches_data.get(&#34;novyListok&#34;).get(date.strftime(&#34;%Y-%m-%d&#34;))
 
         if lunch is None:
             return None
 
         lunch = lunch.get(&#34;2&#34;)
+
+        if lunch.get(&#34;isCooking&#34;) == False:
+            return &#34;Not cooking&#34;
 
         served_from_str = lunch.get(&#34;vydaj_od&#34;)
         served_to_str = lunch.get(&#34;vydaj_do&#34;)
@@ -354,15 +364,24 @@ class Lunch:
         request_url = f&#34;https://{self.edupage.subdomain}.edupage.org/menu/?date={date_strftime}&#34;
         response = self.edupage.session.get(request_url).content.decode()
 
-        boarder_id = response.split(&#34;var stravnikid = \&#34;&#34;)[1].split(&#34;\&#34;&#34;)[0]
-        lunch_data = json.loads(response.split(&#34;var novyListok = &#34;)[1].split(&#34;;&#34;)[0])
+        lunch_data = json.loads(response.split(&#34;edupageData : &#34;)[1].split(&#34;,\r\n&#34;)[0])
+        lunches_data = lunch_data.get(self.edupage.subdomain)
 
-        lunch = lunch_data.get(date.strftime(&#34;%Y-%m-%d&#34;))
+        try:
+            boarder_id = lunches_data.get(&#34;novyListok&#34;).get(&#34;addInfo&#34;).get(&#34;stravnikid&#34;)
+        except AttributeError as e:
+            raise InvalidLunchData(f&#34;Missing boarder id: {e}&#34;)
+
+
+        lunch = lunches_data.get(&#34;novyListok&#34;).get(date.strftime(&#34;%Y-%m-%d&#34;))
 
         if lunch is None:
             return None
 
         lunch = lunch.get(&#34;2&#34;)
+
+        if lunch.get(&#34;isCooking&#34;) == False:
+            return &#34;Not cooking&#34;
 
         served_from_str = lunch.get(&#34;vydaj_od&#34;)
         served_to_str = lunch.get(&#34;vydaj_do&#34;)
@@ -442,15 +461,24 @@ def get_lunch(self, date: datetime):
     request_url = f&#34;https://{self.edupage.subdomain}.edupage.org/menu/?date={date_strftime}&#34;
     response = self.edupage.session.get(request_url).content.decode()
 
-    boarder_id = response.split(&#34;var stravnikid = \&#34;&#34;)[1].split(&#34;\&#34;&#34;)[0]
-    lunch_data = json.loads(response.split(&#34;var novyListok = &#34;)[1].split(&#34;;&#34;)[0])
+    lunch_data = json.loads(response.split(&#34;edupageData : &#34;)[1].split(&#34;,\r\n&#34;)[0])
+    lunches_data = lunch_data.get(self.edupage.subdomain)
 
-    lunch = lunch_data.get(date.strftime(&#34;%Y-%m-%d&#34;))
+    try:
+        boarder_id = lunches_data.get(&#34;novyListok&#34;).get(&#34;addInfo&#34;).get(&#34;stravnikid&#34;)
+    except AttributeError as e:
+        raise InvalidLunchData(f&#34;Missing boarder id: {e}&#34;)
+
+
+    lunch = lunches_data.get(&#34;novyListok&#34;).get(date.strftime(&#34;%Y-%m-%d&#34;))
 
     if lunch is None:
         return None
 
     lunch = lunch.get(&#34;2&#34;)
+
+    if lunch.get(&#34;isCooking&#34;) == False:
+        return &#34;Not cooking&#34;
 
     served_from_str = lunch.get(&#34;vydaj_od&#34;)
     served_to_str = lunch.get(&#34;vydaj_do&#34;)

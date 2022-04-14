@@ -32,10 +32,9 @@ from enum import Enum, auto
 
 from edupage_api.module import Module, ModuleHelper
 
-
-class RingingType(Enum):
-    BREAK = auto()
-    LESSON = auto()
+class RingingType(str, Enum):
+    BREAK = &#34;BREAK&#34;
+    LESSON = &#34;LESSON&#34;
 
 
 @dataclass
@@ -232,12 +231,13 @@ def get_next_ringing_time(self, date_time: datetime) -&gt; RingingTime:
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">class RingingType(Enum):
-    BREAK = auto()
-    LESSON = auto()</code></pre>
+<pre><code class="python">class RingingType(str, Enum):
+    BREAK = &#34;BREAK&#34;
+    LESSON = &#34;LESSON&#34;</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
+<li>builtins.str</li>
 <li>enum.Enum</li>
 </ul>
 <h3>Class variables</h3>

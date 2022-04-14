@@ -4,10 +4,11 @@ from datetime import datetime
 from typing import List, Optional
 
 from edupage_api.exceptions import (FailedToChangeLunchError,
-                                    FailedToRateException,
+                                    FailedToRateException, InvalidLunchData,
                                     NotLoggedInException)
 from edupage_api.module import EdupageModule, Module, ModuleHelper
 
+from pprint import pprint
 
 @dataclass
 class Rating:
@@ -107,15 +108,24 @@ class Lunches(Module):
         request_url = f"https://{self.edupage.subdomain}.edupage.org/menu/?date={date_strftime}"
         response = self.edupage.session.get(request_url).content.decode()
 
-        boarder_id = response.split("var stravnikid = \"")[1].split("\"")[0]
-        lunch_data = json.loads(response.split("var novyListok = ")[1].split(";")[0])
+        lunch_data = json.loads(response.split("edupageData : ")[1].split(",\r\n")[0])
+        lunches_data = lunch_data.get(self.edupage.subdomain)
 
-        lunch = lunch_data.get(date.strftime("%Y-%m-%d"))
+        try:
+            boarder_id = lunches_data.get("novyListok").get("addInfo").get("stravnikid")
+        except AttributeError as e:
+            raise InvalidLunchData(f"Missing boarder id: {e}")
+
+
+        lunch = lunches_data.get("novyListok").get(date.strftime("%Y-%m-%d"))
 
         if lunch is None:
             return None
 
         lunch = lunch.get("2")
+
+        if lunch.get("isCooking") == False:
+            return "Not cooking"
 
         served_from_str = lunch.get("vydaj_od")
         served_to_str = lunch.get("vydaj_do")

@@ -40,3 +40,6 @@ class InvalidTeacherException(Exception):
 
 class RequestError(Exception):
     pass
+
+class InvalidLunchData(Exception):
+    pass

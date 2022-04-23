@@ -14,7 +14,8 @@ from edupage_api.login import Login
 from edupage_api.lunches import Lunch, Lunches
 from edupage_api.messages import Messages
 from edupage_api.module import EdupageModule
-from edupage_api.people import EduAccount, EduStudent, EduTeacher, People, EduStudentSkeleton
+from edupage_api.people import (EduAccount, EduStudent, EduStudentSkeleton,
+                                EduTeacher, People)
 from edupage_api.ringing import RingingTime, RingingTimes
 from edupage_api.substitution import Substitution, TimetableChange
 from edupage_api.timeline import TimelineEvent, TimelineEvents

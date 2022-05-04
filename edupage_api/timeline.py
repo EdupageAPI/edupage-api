@@ -16,6 +16,7 @@ from edupage_api.people import EduAccount
 class EventType(str, Enum):
     # Messages
     MESSAGE = "sprava"
+    POLL = "anketa"
     NEWS = "news"
 
     # ****************************************

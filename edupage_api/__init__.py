@@ -233,7 +233,7 @@ class Edupage(EdupageModule):
         return RingingTimes(self).get_next_ringing_time(date_time)
     
     @classmethod
-    def from_session_id(cls, sessiond_id: str, subdomain: str):
+    def from_session_id(cls, session_id: str, subdomain: str):
         """Create an edupage instance with a session id and subdomain.
 
         Args:
@@ -245,7 +245,7 @@ class Edupage(EdupageModule):
         """
         instance = cls()
 
-        Login(instance).reload_data(subdomain, sessiond_id)
+        Login(instance).reload_data(subdomain, session_id)
 
         return instance
         

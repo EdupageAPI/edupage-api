@@ -1,7 +1,7 @@
 import json
 from typing import Union
 
-from requests import JSONDecodeError
+from json import JSONDecodeError
 
 from edupage_api.exceptions import BadCredentialsException
 from edupage_api.module import Module

@@ -1,6 +1,4 @@
 import json
-from typing import Union
-
 from json import JSONDecodeError
 
 from edupage_api.exceptions import BadCredentialsException

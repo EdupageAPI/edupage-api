@@ -8,7 +8,6 @@ from edupage_api.exceptions import (FailedToChangeLunchError,
                                     NotLoggedInException)
 from edupage_api.module import EdupageModule, Module, ModuleHelper
 
-from pprint import pprint
 
 @dataclass
 class Rating:

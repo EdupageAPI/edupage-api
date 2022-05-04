@@ -1,8 +1,9 @@
-from datetime import datetime, timedelta, time
 from dataclasses import dataclass
-from enum import Enum, auto
+from datetime import datetime, time, timedelta
+from enum import Enum
 
 from edupage_api.module import Module, ModuleHelper
+
 
 class RingingType(str, Enum):
     BREAK = "BREAK"

@@ -67,6 +67,9 @@ class InvalidTeacherException(Exception):
 
 
 class RequestError(Exception):
+    pass
+
+class InvalidLunchData(Exception):
     pass</code></pre>
 </details>
 </section>
@@ -185,6 +188,25 @@ class RequestError(Exception):
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">class FailedToUploadFileException(Exception):
+    pass</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>builtins.Exception</li>
+<li>builtins.BaseException</li>
+</ul>
+</dd>
+<dt id="edupage_api.exceptions.InvalidLunchData"><code class="flex name class">
+<span>class <span class="ident">InvalidLunchData</span></span>
+<span>(</span><span>*args, **kwargs)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Common base class for all non-exit exceptions.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class InvalidLunchData(Exception):
     pass</code></pre>
 </details>
 <h3>Ancestors</h3>
@@ -321,6 +343,9 @@ class RequestError(Exception):
 </li>
 <li>
 <h4><code><a title="edupage_api.exceptions.FailedToUploadFileException" href="#edupage_api.exceptions.FailedToUploadFileException">FailedToUploadFileException</a></code></h4>
+</li>
+<li>
+<h4><code><a title="edupage_api.exceptions.InvalidLunchData" href="#edupage_api.exceptions.InvalidLunchData">InvalidLunchData</a></code></h4>
 </li>
 <li>
 <h4><code><a title="edupage_api.exceptions.InvalidTeacherException" href="#edupage_api.exceptions.InvalidTeacherException">InvalidTeacherException</a></code></h4>

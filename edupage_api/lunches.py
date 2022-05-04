@@ -115,7 +115,6 @@ class Lunches(Module):
         except AttributeError as e:
             raise InvalidLunchData(f"Missing boarder id: {e}")
 
-
         lunch = lunches_data.get("novyListok").get(date.strftime("%Y-%m-%d"))
 
         if lunch is None:

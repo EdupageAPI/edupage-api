@@ -78,10 +78,10 @@ class Login(Module):
 
         self.__parse_login_data(response.content.decode())
         self.edupage.subdomain = subdomain
-    
+
     def reload_data(self, subdomain: str, session_id: str):
         request_url = f"https://{subdomain}.edupage.org/user"
-        
+
         self.edupage.session.cookies.set("PHPSESSID", session_id)
 
         response = self.edupage.session.get(request_url)

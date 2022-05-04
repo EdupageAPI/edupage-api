@@ -231,7 +231,7 @@ class Edupage(EdupageModule):
             RingingTime: The type (break or lesson) and time of the next ringing.
         """
         return RingingTimes(self).get_next_ringing_time(date_time)
-    
+
     @classmethod
     def from_session_id(cls, session_id: str, subdomain: str):
         """Create an edupage instance with a session id and subdomain.
@@ -239,7 +239,7 @@ class Edupage(EdupageModule):
         Args:
             session_id (str): The "PHPSESSID" cookie
             subdomain (str): Subdomain of the school which `cookie` is from
-        
+
         Returns:
             Edupage: A new edupage instance
         """
@@ -248,4 +248,3 @@ class Edupage(EdupageModule):
         Login(instance).reload_data(subdomain, session_id)
 
         return instance
-        

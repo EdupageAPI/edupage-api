@@ -94,7 +94,7 @@ class EduStudent(EduAccount):
 
 
 @dataclass
-class EduStudentSkeleton():
+class EduStudentSkeleton:
     person_id: int
     name_short: str
     class_id: int

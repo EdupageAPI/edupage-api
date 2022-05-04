@@ -74,7 +74,7 @@ class ForeignTimetables(Module):
 
         return timetable_data_response.get("ttitems")
 
-    @ ModuleHelper.logged_in
+    @ModuleHelper.logged_in
     def get_timetable_for_person(self, id: int, date: datetime) -> List[LessonSkeleton]:
         all_teachers = People(self.edupage).get_teachers()
         students = People(self.edupage).get_students()

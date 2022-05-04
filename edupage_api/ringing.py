@@ -46,13 +46,17 @@ class RingingTimes(Module):
         for ringing_time in ringing_times:
             start_time = RingingTimes.__parse_time(ringing_time.get("starttime"))
             if date_time.time() < start_time:
-                date_time = RingingTimes.__set_hours_and_minutes(date_time, start_time.hour, start_time.minute)
+                date_time = RingingTimes.__set_hours_and_minutes(
+                    date_time, start_time.hour, start_time.minute
+                )
 
                 return RingingTime(RingingType.LESSON, date_time)
 
             end_time = RingingTimes.__parse_time(ringing_time.get("endtime"))
             if date_time.time() < end_time:
-                date_time = RingingTimes.__set_hours_and_minutes(date_time, end_time.hour, end_time.minute)
+                date_time = RingingTimes.__set_hours_and_minutes(
+                    date_time, end_time.hour, end_time.minute
+                )
 
                 return RingingTime(RingingType.BREAK, date_time)
 

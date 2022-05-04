@@ -27,6 +27,9 @@
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">import json
+from typing import Union
+
+from requests import JSONDecodeError
 
 from edupage_api.exceptions import BadCredentialsException
 from edupage_api.module import Module
@@ -104,7 +107,20 @@ class Login(Module):
             raise BadCredentialsException()
 
         self.__parse_login_data(response.content.decode())
-        self.edupage.subdomain = subdomain</code></pre>
+        self.edupage.subdomain = subdomain
+    
+    def reload_data(self, subdomain: str, session_id: str):
+        request_url = f&#34;https://{subdomain}.edupage.org/user&#34;
+        
+        self.edupage.session.cookies.set(&#34;PHPSESSID&#34;, session_id)
+
+        response = self.edupage.session.get(request_url)
+
+        try:
+            self.__parse_login_data(response.content.decode())
+            self.edupage.subdomain = subdomain
+        except (TypeError, JSONDecodeError) as e:
+            raise BadCredentialsException(f&#34;Invalid session id: {e}&#34;)</code></pre>
 </details>
 </section>
 <section>
@@ -198,7 +214,20 @@ class Login(Module):
             raise BadCredentialsException()
 
         self.__parse_login_data(response.content.decode())
-        self.edupage.subdomain = subdomain</code></pre>
+        self.edupage.subdomain = subdomain
+    
+    def reload_data(self, subdomain: str, session_id: str):
+        request_url = f&#34;https://{subdomain}.edupage.org/user&#34;
+        
+        self.edupage.session.cookies.set(&#34;PHPSESSID&#34;, session_id)
+
+        response = self.edupage.session.get(request_url)
+
+        try:
+            self.__parse_login_data(response.content.decode())
+            self.edupage.subdomain = subdomain
+        except (TypeError, JSONDecodeError) as e:
+            raise BadCredentialsException(f&#34;Invalid session id: {e}&#34;)</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
@@ -313,6 +342,29 @@ class Login(Module):
     self.edupage.subdomain = data.split(&#34;--&gt;&#34;)[0].split(&#34; &#34;)[-1]</code></pre>
 </details>
 </dd>
+<dt id="edupage_api.login.Login.reload_data"><code class="name flex">
+<span>def <span class="ident">reload_data</span></span>(<span>self, subdomain: str, session_id: str)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def reload_data(self, subdomain: str, session_id: str):
+    request_url = f&#34;https://{subdomain}.edupage.org/user&#34;
+    
+    self.edupage.session.cookies.set(&#34;PHPSESSID&#34;, session_id)
+
+    response = self.edupage.session.get(request_url)
+
+    try:
+        self.__parse_login_data(response.content.decode())
+        self.edupage.subdomain = subdomain
+    except (TypeError, JSONDecodeError) as e:
+        raise BadCredentialsException(f&#34;Invalid session id: {e}&#34;)</code></pre>
+</details>
+</dd>
 </dl>
 </dd>
 </dl>
@@ -336,6 +388,7 @@ class Login(Module):
 <ul class="">
 <li><code><a title="edupage_api.login.Login.login" href="#edupage_api.login.Login.login">login</a></code></li>
 <li><code><a title="edupage_api.login.Login.login_auto" href="#edupage_api.login.Login.login_auto">login_auto</a></code></li>
+<li><code><a title="edupage_api.login.Login.reload_data" href="#edupage_api.login.Login.reload_data">reload_data</a></code></li>
 </ul>
 </li>
 </ul>

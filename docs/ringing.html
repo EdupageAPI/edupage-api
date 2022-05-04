@@ -26,11 +26,12 @@
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">from datetime import datetime, timedelta, time
-from dataclasses import dataclass
-from enum import Enum, auto
+<pre><code class="python">from dataclasses import dataclass
+from datetime import datetime, time, timedelta
+from enum import Enum
 
 from edupage_api.module import Module, ModuleHelper
+
 
 class RingingType(str, Enum):
     BREAK = &#34;BREAK&#34;

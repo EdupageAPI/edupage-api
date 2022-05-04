@@ -44,6 +44,7 @@ from edupage_api.people import EduAccount
 class EventType(str, Enum):
     # Messages
     MESSAGE = &#34;sprava&#34;
+    POLL = &#34;anketa&#34;
     NEWS = &#34;news&#34;
 
     # ****************************************
@@ -268,6 +269,7 @@ class TimelineEvents(Module):
 <pre><code class="python">class EventType(str, Enum):
     # Messages
     MESSAGE = &#34;sprava&#34;
+    POLL = &#34;anketa&#34;
     NEWS = &#34;news&#34;
 
     # ****************************************
@@ -598,6 +600,10 @@ class TimelineEvents(Module):
 <div class="desc"></div>
 </dd>
 <dt id="edupage_api.timeline.EventType.PARENTS_EVENING"><code class="name">var <span class="ident">PARENTS_EVENING</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.timeline.EventType.POLL"><code class="name">var <span class="ident">POLL</span></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
@@ -984,6 +990,7 @@ def get_notifications(self):
 <li><code><a title="edupage_api.timeline.EventType.OTHER" href="#edupage_api.timeline.EventType.OTHER">OTHER</a></code></li>
 <li><code><a title="edupage_api.timeline.EventType.PAPER" href="#edupage_api.timeline.EventType.PAPER">PAPER</a></code></li>
 <li><code><a title="edupage_api.timeline.EventType.PARENTS_EVENING" href="#edupage_api.timeline.EventType.PARENTS_EVENING">PARENTS_EVENING</a></code></li>
+<li><code><a title="edupage_api.timeline.EventType.POLL" href="#edupage_api.timeline.EventType.POLL">POLL</a></code></li>
 <li><code><a title="edupage_api.timeline.EventType.PROCESS" href="#edupage_api.timeline.EventType.PROCESS">PROCESS</a></code></li>
 <li><code><a title="edupage_api.timeline.EventType.PROJECT" href="#edupage_api.timeline.EventType.PROJECT">PROJECT</a></code></li>
 <li><code><a title="edupage_api.timeline.EventType.PROJECT_EXAM" href="#edupage_api.timeline.EventType.PROJECT_EXAM">PROJECT_EXAM</a></code></li>

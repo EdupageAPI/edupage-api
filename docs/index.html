@@ -42,7 +42,8 @@ from edupage_api.login import Login
 from edupage_api.lunches import Lunch, Lunches
 from edupage_api.messages import Messages
 from edupage_api.module import EdupageModule
-from edupage_api.people import EduAccount, EduStudent, EduTeacher, People, EduStudentSkeleton
+from edupage_api.people import (EduAccount, EduStudent, EduStudentSkeleton,
+                                EduTeacher, People)
 from edupage_api.ringing import RingingTime, RingingTimes
 from edupage_api.substitution import Substitution, TimetableChange
 from edupage_api.timeline import TimelineEvent, TimelineEvents
@@ -257,7 +258,25 @@ class Edupage(EdupageModule):
         Returns:
             RingingTime: The type (break or lesson) and time of the next ringing.
         &#34;&#34;&#34;
-        return RingingTimes(self).get_next_ringing_time(date_time)</code></pre>
+        return RingingTimes(self).get_next_ringing_time(date_time)
+    
+    @classmethod
+    def from_session_id(cls, sessiond_id: str, subdomain: str):
+        &#34;&#34;&#34;Create an edupage instance with a session id and subdomain.
+
+        Args:
+            session_id (str): The &#34;PHPSESSID&#34; cookie
+            subdomain (str): Subdomain of the school which `cookie` is from
+        
+        Returns:
+            Edupage: A new edupage instance
+        &#34;&#34;&#34;
+        instance = cls()
+
+        Login(instance).reload_data(subdomain, sessiond_id)
+
+        return instance
+        </code></pre>
 </details>
 </section>
 <section>
@@ -561,7 +580,24 @@ Defaults to <code>5</code>.</dd>
         Returns:
             RingingTime: The type (break or lesson) and time of the next ringing.
         &#34;&#34;&#34;
-        return RingingTimes(self).get_next_ringing_time(date_time)</code></pre>
+        return RingingTimes(self).get_next_ringing_time(date_time)
+    
+    @classmethod
+    def from_session_id(cls, sessiond_id: str, subdomain: str):
+        &#34;&#34;&#34;Create an edupage instance with a session id and subdomain.
+
+        Args:
+            session_id (str): The &#34;PHPSESSID&#34; cookie
+            subdomain (str): Subdomain of the school which `cookie` is from
+        
+        Returns:
+            Edupage: A new edupage instance
+        &#34;&#34;&#34;
+        instance = cls()
+
+        Login(instance).reload_data(subdomain, sessiond_id)
+
+        return instance</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
@@ -588,6 +624,48 @@ Defaults to <code>5</code>.</dd>
 <dt id="edupage_api.Edupage.subdomain"><code class="name">var <span class="ident">subdomain</span> : str</code></dt>
 <dd>
 <div class="desc"></div>
+</dd>
+</dl>
+<h3>Static methods</h3>
+<dl>
+<dt id="edupage_api.Edupage.from_session_id"><code class="name flex">
+<span>def <span class="ident">from_session_id</span></span>(<span>sessiond_id: str, subdomain: str)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Create an edupage instance with a session id and subdomain.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>session_id</code></strong> :&ensp;<code>str</code></dt>
+<dd>The "PHPSESSID" cookie</dd>
+<dt><strong><code>subdomain</code></strong> :&ensp;<code>str</code></dt>
+<dd>Subdomain of the school which <code>cookie</code> is from</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code><a title="edupage_api.Edupage" href="#edupage_api.Edupage">Edupage</a></code></dt>
+<dd>A new edupage instance</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@classmethod
+def from_session_id(cls, sessiond_id: str, subdomain: str):
+    &#34;&#34;&#34;Create an edupage instance with a session id and subdomain.
+
+    Args:
+        session_id (str): The &#34;PHPSESSID&#34; cookie
+        subdomain (str): Subdomain of the school which `cookie` is from
+    
+    Returns:
+        Edupage: A new edupage instance
+    &#34;&#34;&#34;
+    instance = cls()
+
+    Login(instance).reload_data(subdomain, sessiond_id)
+
+    return instance</code></pre>
+</details>
 </dd>
 </dl>
 <h3>Methods</h3>
@@ -1151,6 +1229,7 @@ Defaults to <code>5</code>.</dd>
 <li><code><a title="edupage_api.Edupage.cloud_upload" href="#edupage_api.Edupage.cloud_upload">cloud_upload</a></code></li>
 <li><code><a title="edupage_api.Edupage.custom_request" href="#edupage_api.Edupage.custom_request">custom_request</a></code></li>
 <li><code><a title="edupage_api.Edupage.data" href="#edupage_api.Edupage.data">data</a></code></li>
+<li><code><a title="edupage_api.Edupage.from_session_id" href="#edupage_api.Edupage.from_session_id">from_session_id</a></code></li>
 <li><code><a title="edupage_api.Edupage.get_all_students" href="#edupage_api.Edupage.get_all_students">get_all_students</a></code></li>
 <li><code><a title="edupage_api.Edupage.get_foreign_timetable" href="#edupage_api.Edupage.get_foreign_timetable">get_foreign_timetable</a></code></li>
 <li><code><a title="edupage_api.Edupage.get_grades" href="#edupage_api.Edupage.get_grades">get_grades</a></code></li>

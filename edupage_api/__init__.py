@@ -18,6 +18,7 @@ from edupage_api.people import (EduAccount, EduStudent, EduStudentSkeleton,
                                 EduTeacher, People)
 from edupage_api.ringing import RingingTime, RingingTimes
 from edupage_api.substitution import Substitution, TimetableChange
+from edupage_api.teacher.edupage import TeacherEdupage
 from edupage_api.timeline import TimelineEvent, TimelineEvents
 from edupage_api.timetables import Timetable, Timetables
 
@@ -50,6 +51,7 @@ class Edupage(EdupageModule):
         """
 
         Login(self).login(username, password, subdomain)
+        self.teacher = TeacherEdupage(self)
 
     def login_auto(self, username: str, password: str):
         """Login using https://portal.edupage.org. If this doesn't work, please use `Edupage.login`.
@@ -60,6 +62,7 @@ class Edupage(EdupageModule):
         """
 
         Login(self).login_auto(username, password)
+        self.teacher = TeacherEdupage(self)
 
     def get_students(self) -> Optional[list[EduStudent]]:
         """Get list of all students in your class.

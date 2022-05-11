@@ -159,8 +159,9 @@ class People(Module):
 
         result = []
         for student in students:
+    
             student_id = int(student["id"])
-            student_class_id = int(student["classid"])
+            student_class_id = int(student["classid"]) if student["classid"] else None
             student_name_short = student["short"]
 
             student = EduStudentSkeleton(student_id, student_name_short, student_class_id)

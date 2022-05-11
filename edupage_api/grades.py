@@ -1,7 +1,7 @@
 import json
 from dataclasses import dataclass
 from datetime import datetime
-from typing import Optional
+from typing import Optional, Union
 
 from edupage_api.dbi import DbiHelper
 from edupage_api.exceptions import FailedToParseGradeDataError
@@ -13,7 +13,7 @@ from edupage_api.people import EduTeacher
 class EduGrade:
     event_id: int
     title: str
-    grade_n: Optional[int]
+    grade_n: Optional[Union[int, float, str]]
     comment: Optional[str]
     date: datetime
     subject_id: int
@@ -62,14 +62,6 @@ class Grades(Module):
             details = grade_details.get(event_id_str)
             title = details.get("p_meno")
 
-            # Grade
-            grade_raw = grade.get("data").split(" (", 1)
-            grade_n = float(grade_raw[0])
-            try:
-                comment = grade_raw[1].rsplit(")", 1)[0]
-            except IndexError:
-                comment = None
-
             # Date
             date_str = grade.get("datum")
             date = datetime.strptime(date_str, "%Y-%m-%d %H:%M:%S")
@@ -89,8 +81,12 @@ class Grades(Module):
             else:
                 teacher_id = int(teacher_id_str)
                 teacher_data = DbiHelper(self.edupage).fetch_teacher_data(teacher_id)
+                
+                if teacher_data is None:
+                    teacher = None
+                else:
+                    teacher = EduTeacher.parse(teacher_data, teacher_id, self.edupage)
 
-                teacher = EduTeacher.parse(teacher_data, teacher_id, self.edupage)
 
             # Maximal points and importance
             grade_type = details.get("p_typ_udalosti")
@@ -106,6 +102,19 @@ class Grades(Module):
                 # Percental grade (0 – 100 %)
                 max_points = int(details.get("p_vaha_body"))
                 importance = float(details.get("p_vaha")) / 20
+
+             # Grade
+            grade_raw = grade.get("data").split(" (", 1)
+            if grade_raw[0].isdigit():
+                grade_n = float(grade_raw[0])
+            else:
+                grade_n = grade_raw[0]
+
+            try:
+                comment = grade_raw[1].rsplit(")", 1)[0]
+            except IndexError:
+                comment = None
+
 
             # Verbal and percents
             try:

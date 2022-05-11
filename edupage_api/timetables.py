@@ -114,7 +114,7 @@ class Timetables(Module):
             if len(header) == 0:
                 continue
 
-            subject_id = int(subject.get("subjectid"))
+            subject_id = int(subject.get("subjectid")) if subject.get("subjectid") else None
             if subject_id:
                 subject_name = DbiHelper(self.edupage).fetch_subject_name(subject_id)
             else:
@@ -149,9 +149,18 @@ class Timetables(Module):
 
             ModuleHelper.assert_none(start_of_lesson_str, end_of_lesson_str)
 
-            start_of_lesson = datetime.strptime(start_of_lesson_str, "%H:%M")
-            end_of_lesson = datetime.strptime(end_of_lesson_str, "%H:%M")
+            now = datetime.now()
 
+            try:
+                start_of_lesson = datetime.strptime(start_of_lesson_str, "%H:%M")
+            except ValueError:
+                start_of_lesson = datetime(hour=0, minute=0, day=now.day, month=now.month, year=now.year)
+            
+            try:
+                end_of_lesson = datetime.strptime(end_of_lesson_str, "%H:%M") 
+            except ValueError:
+                end_of_lesson = datetime(hour=0, minute=0, day=now.day, month=now.month, year=now.year)
+            
             online_lesson_link = subject.get("ol_url")
 
             lesson = Lesson(teachers, classrooms, start_of_lesson, end_of_lesson,

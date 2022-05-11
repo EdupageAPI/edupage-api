@@ -1,7 +1,7 @@
 import json
 from dataclasses import dataclass
 from datetime import datetime
-from typing import Optional
+from typing import Optional, Union
 
 from edupage_api.dbi import DbiHelper
 from edupage_api.exceptions import FailedToParseGradeDataError
@@ -13,7 +13,7 @@ from edupage_api.people import EduTeacher
 class EduGrade:
     event_id: int
     title: str
-    grade_n: Optional[int]
+    grade_n: Optional[Union[int, float, str]]
     comment: Optional[str]
     date: datetime
     subject_id: int

@@ -1,7 +1,6 @@
 import json
 from dataclasses import dataclass
 from datetime import datetime
-from tkinter import N
 from typing import Optional
 
 from edupage_api.dbi import DbiHelper

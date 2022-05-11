@@ -81,12 +81,11 @@ class Grades(Module):
             else:
                 teacher_id = int(teacher_id_str)
                 teacher_data = DbiHelper(self.edupage).fetch_teacher_data(teacher_id)
-                
+
                 if teacher_data is None:
                     teacher = None
                 else:
                     teacher = EduTeacher.parse(teacher_data, teacher_id, self.edupage)
-
 
             # Maximal points and importance
             grade_type = details.get("p_typ_udalosti")
@@ -114,7 +113,6 @@ class Grades(Module):
                 comment = grade_raw[1].rsplit(")", 1)[0]
             except IndexError:
                 comment = None
-
 
             # Verbal and percents
             try:

@@ -159,7 +159,6 @@ class People(Module):
 
         result = []
         for student in students:
-    
             student_id = int(student["id"])
             student_class_id = int(student["classid"]) if student["classid"] else None
             student_name_short = student["short"]

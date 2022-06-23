@@ -132,7 +132,6 @@ class EventType(str, Enum):
     H_TIMETABLE = "h_timetable"
     H_USERPHOTO = "h_userphoto"
 
-
     @staticmethod
     def parse(event_type_str: str) -> Optional[EventType]:
         return ModuleHelper.parse_enum(event_type_str, EventType)

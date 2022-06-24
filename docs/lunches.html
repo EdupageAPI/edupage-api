@@ -143,7 +143,6 @@ class Lunches(Module):
         except AttributeError as e:
             raise InvalidLunchData(f&#34;Missing boarder id: {e}&#34;)
 
-
         lunch = lunches_data.get(&#34;novyListok&#34;).get(date.strftime(&#34;%Y-%m-%d&#34;))
 
         if lunch is None:
@@ -371,7 +370,6 @@ class Lunch:
         except AttributeError as e:
             raise InvalidLunchData(f&#34;Missing boarder id: {e}&#34;)
 
-
         lunch = lunches_data.get(&#34;novyListok&#34;).get(date.strftime(&#34;%Y-%m-%d&#34;))
 
         if lunch is None:
@@ -467,7 +465,6 @@ def get_lunch(self, date: datetime):
         boarder_id = lunches_data.get(&#34;novyListok&#34;).get(&#34;addInfo&#34;).get(&#34;stravnikid&#34;)
     except AttributeError as e:
         raise InvalidLunchData(f&#34;Missing boarder id: {e}&#34;)
-
 
     lunch = lunches_data.get(&#34;novyListok&#34;).get(date.strftime(&#34;%Y-%m-%d&#34;))
 

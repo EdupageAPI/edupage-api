@@ -122,7 +122,7 @@ class EduStudent(EduAccount):
 
 
 @dataclass
-class EduStudentSkeleton():
+class EduStudentSkeleton:
     person_id: int
     name_short: str
     class_id: int
@@ -188,7 +188,7 @@ class People(Module):
         result = []
         for student in students:
             student_id = int(student[&#34;id&#34;])
-            student_class_id = int(student[&#34;classid&#34;])
+            student_class_id = int(student[&#34;classid&#34;]) if student[&#34;classid&#34;] else None
             student_name_short = student[&#34;short&#34;]
 
             student = EduStudentSkeleton(student_id, student_name_short, student_class_id)
@@ -558,7 +558,7 @@ class EduStudent(EduAccount):
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">@dataclass
-class EduStudentSkeleton():
+class EduStudentSkeleton:
     person_id: int
     name_short: str
     class_id: int</code></pre>
@@ -732,7 +732,7 @@ def parse(gender_str: str) -&gt; Optional[Gender]:
         result = []
         for student in students:
             student_id = int(student[&#34;id&#34;])
-            student_class_id = int(student[&#34;classid&#34;])
+            student_class_id = int(student[&#34;classid&#34;]) if student[&#34;classid&#34;] else None
             student_name_short = student[&#34;short&#34;]
 
             student = EduStudentSkeleton(student_id, student_name_short, student_class_id)
@@ -814,7 +814,7 @@ def get_all_students(self) -&gt; Optional[list[EduStudent]]:
     result = []
     for student in students:
         student_id = int(student[&#34;id&#34;])
-        student_class_id = int(student[&#34;classid&#34;])
+        student_class_id = int(student[&#34;classid&#34;]) if student[&#34;classid&#34;] else None
         student_name_short = student[&#34;short&#34;]
 
         student = EduStudentSkeleton(student_id, student_name_short, student_class_id)

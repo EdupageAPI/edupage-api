@@ -102,7 +102,7 @@ class ForeignTimetables(Module):
 
         return timetable_data_response.get(&#34;ttitems&#34;)
 
-    @ ModuleHelper.logged_in
+    @ModuleHelper.logged_in
     def get_timetable_for_person(self, id: int, date: datetime) -&gt; List[LessonSkeleton]:
         all_teachers = People(self.edupage).get_teachers()
         students = People(self.edupage).get_students()
@@ -246,7 +246,7 @@ class ForeignTimetables(Module):
 
         return timetable_data_response.get(&#34;ttitems&#34;)
 
-    @ ModuleHelper.logged_in
+    @ModuleHelper.logged_in
     def get_timetable_for_person(self, id: int, date: datetime) -&gt; List[LessonSkeleton]:
         all_teachers = People(self.edupage).get_teachers()
         students = People(self.edupage).get_students()
@@ -352,7 +352,7 @@ class ForeignTimetables(Module):
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">@ ModuleHelper.logged_in
+<pre><code class="python">@ModuleHelper.logged_in
 def get_timetable_for_person(self, id: int, date: datetime) -&gt; List[LessonSkeleton]:
     all_teachers = People(self.edupage).get_teachers()
     students = People(self.edupage).get_students()

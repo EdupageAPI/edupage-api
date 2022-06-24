@@ -138,6 +138,7 @@ class EventType(str, Enum):
     ALBUM = &#34;album&#34;
 
     # Other
+    BEE = &#34;vcelicka&#34;
     OTHER = &#34;other&#34;
 
     # Helper
@@ -158,6 +159,7 @@ class EventType(str, Enum):
     H_SETTINGS = &#34;h_settings&#34;
     H_SUBSTITUTION = &#34;h_substitution&#34;
     H_TIMETABLE = &#34;h_timetable&#34;
+    H_USERPHOTO = &#34;h_userphoto&#34;
 
     @staticmethod
     def parse(event_type_str: str) -&gt; Optional[EventType]:
@@ -363,6 +365,7 @@ class TimelineEvents(Module):
     ALBUM = &#34;album&#34;
 
     # Other
+    BEE = &#34;vcelicka&#34;
     OTHER = &#34;other&#34;
 
     # Helper
@@ -383,6 +386,7 @@ class TimelineEvents(Module):
     H_SETTINGS = &#34;h_settings&#34;
     H_SUBSTITUTION = &#34;h_substitution&#34;
     H_TIMETABLE = &#34;h_timetable&#34;
+    H_USERPHOTO = &#34;h_userphoto&#34;
 
     @staticmethod
     def parse(event_type_str: str) -&gt; Optional[EventType]:
@@ -400,6 +404,10 @@ class TimelineEvents(Module):
 <div class="desc"></div>
 </dd>
 <dt id="edupage_api.timeline.EventType.ARRIVAL_TO_SCHOOL"><code class="name">var <span class="ident">ARRIVAL_TO_SCHOOL</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.timeline.EventType.BEE"><code class="name">var <span class="ident">BEE</span></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
@@ -568,6 +576,10 @@ class TimelineEvents(Module):
 <div class="desc"></div>
 </dd>
 <dt id="edupage_api.timeline.EventType.H_TIMETABLE"><code class="name">var <span class="ident">H_TIMETABLE</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.timeline.EventType.H_USERPHOTO"><code class="name">var <span class="ident">H_USERPHOTO</span></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
@@ -940,6 +952,7 @@ def get_notifications(self):
 <ul class="">
 <li><code><a title="edupage_api.timeline.EventType.ALBUM" href="#edupage_api.timeline.EventType.ALBUM">ALBUM</a></code></li>
 <li><code><a title="edupage_api.timeline.EventType.ARRIVAL_TO_SCHOOL" href="#edupage_api.timeline.EventType.ARRIVAL_TO_SCHOOL">ARRIVAL_TO_SCHOOL</a></code></li>
+<li><code><a title="edupage_api.timeline.EventType.BEE" href="#edupage_api.timeline.EventType.BEE">BEE</a></code></li>
 <li><code><a title="edupage_api.timeline.EventType.BIG_EXAM" href="#edupage_api.timeline.EventType.BIG_EXAM">BIG_EXAM</a></code></li>
 <li><code><a title="edupage_api.timeline.EventType.BOOKED_ROOM" href="#edupage_api.timeline.EventType.BOOKED_ROOM">BOOKED_ROOM</a></code></li>
 <li><code><a title="edupage_api.timeline.EventType.CHANGE_ROOM" href="#edupage_api.timeline.EventType.CHANGE_ROOM">CHANGE_ROOM</a></code></li>
@@ -982,6 +995,7 @@ def get_notifications(self):
 <li><code><a title="edupage_api.timeline.EventType.H_SETTINGS" href="#edupage_api.timeline.EventType.H_SETTINGS">H_SETTINGS</a></code></li>
 <li><code><a title="edupage_api.timeline.EventType.H_SUBSTITUTION" href="#edupage_api.timeline.EventType.H_SUBSTITUTION">H_SUBSTITUTION</a></code></li>
 <li><code><a title="edupage_api.timeline.EventType.H_TIMETABLE" href="#edupage_api.timeline.EventType.H_TIMETABLE">H_TIMETABLE</a></code></li>
+<li><code><a title="edupage_api.timeline.EventType.H_USERPHOTO" href="#edupage_api.timeline.EventType.H_USERPHOTO">H_USERPHOTO</a></code></li>
 <li><code><a title="edupage_api.timeline.EventType.LESSON" href="#edupage_api.timeline.EventType.LESSON">LESSON</a></code></li>
 <li><code><a title="edupage_api.timeline.EventType.MESSAGE" href="#edupage_api.timeline.EventType.MESSAGE">MESSAGE</a></code></li>
 <li><code><a title="edupage_api.timeline.EventType.NEWS" href="#edupage_api.timeline.EventType.NEWS">NEWS</a></code></li>

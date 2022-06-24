@@ -259,24 +259,23 @@ class Edupage(EdupageModule):
             RingingTime: The type (break or lesson) and time of the next ringing.
         &#34;&#34;&#34;
         return RingingTimes(self).get_next_ringing_time(date_time)
-    
+
     @classmethod
-    def from_session_id(cls, sessiond_id: str, subdomain: str):
+    def from_session_id(cls, session_id: str, subdomain: str):
         &#34;&#34;&#34;Create an edupage instance with a session id and subdomain.
 
         Args:
             session_id (str): The &#34;PHPSESSID&#34; cookie
             subdomain (str): Subdomain of the school which `cookie` is from
-        
+
         Returns:
             Edupage: A new edupage instance
         &#34;&#34;&#34;
         instance = cls()
 
-        Login(instance).reload_data(subdomain, sessiond_id)
+        Login(instance).reload_data(subdomain, session_id)
 
-        return instance
-        </code></pre>
+        return instance</code></pre>
 </details>
 </section>
 <section>
@@ -581,21 +580,21 @@ Defaults to <code>5</code>.</dd>
             RingingTime: The type (break or lesson) and time of the next ringing.
         &#34;&#34;&#34;
         return RingingTimes(self).get_next_ringing_time(date_time)
-    
+
     @classmethod
-    def from_session_id(cls, sessiond_id: str, subdomain: str):
+    def from_session_id(cls, session_id: str, subdomain: str):
         &#34;&#34;&#34;Create an edupage instance with a session id and subdomain.
 
         Args:
             session_id (str): The &#34;PHPSESSID&#34; cookie
             subdomain (str): Subdomain of the school which `cookie` is from
-        
+
         Returns:
             Edupage: A new edupage instance
         &#34;&#34;&#34;
         instance = cls()
 
-        Login(instance).reload_data(subdomain, sessiond_id)
+        Login(instance).reload_data(subdomain, session_id)
 
         return instance</code></pre>
 </details>
@@ -629,7 +628,7 @@ Defaults to <code>5</code>.</dd>
 <h3>Static methods</h3>
 <dl>
 <dt id="edupage_api.Edupage.from_session_id"><code class="name flex">
-<span>def <span class="ident">from_session_id</span></span>(<span>sessiond_id: str, subdomain: str)</span>
+<span>def <span class="ident">from_session_id</span></span>(<span>session_id: str, subdomain: str)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Create an edupage instance with a session id and subdomain.</p>
@@ -650,19 +649,19 @@ Defaults to <code>5</code>.</dd>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">@classmethod
-def from_session_id(cls, sessiond_id: str, subdomain: str):
+def from_session_id(cls, session_id: str, subdomain: str):
     &#34;&#34;&#34;Create an edupage instance with a session id and subdomain.
 
     Args:
         session_id (str): The &#34;PHPSESSID&#34; cookie
         subdomain (str): Subdomain of the school which `cookie` is from
-    
+
     Returns:
         Edupage: A new edupage instance
     &#34;&#34;&#34;
     instance = cls()
 
-    Login(instance).reload_data(subdomain, sessiond_id)
+    Login(instance).reload_data(subdomain, session_id)
 
     return instance</code></pre>
 </details>

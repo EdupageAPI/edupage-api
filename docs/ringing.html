@@ -74,13 +74,17 @@ class RingingTimes(Module):
         for ringing_time in ringing_times:
             start_time = RingingTimes.__parse_time(ringing_time.get(&#34;starttime&#34;))
             if date_time.time() &lt; start_time:
-                date_time = RingingTimes.__set_hours_and_minutes(date_time, start_time.hour, start_time.minute)
+                date_time = RingingTimes.__set_hours_and_minutes(
+                    date_time, start_time.hour, start_time.minute
+                )
 
                 return RingingTime(RingingType.LESSON, date_time)
 
             end_time = RingingTimes.__parse_time(ringing_time.get(&#34;endtime&#34;))
             if date_time.time() &lt; end_time:
-                date_time = RingingTimes.__set_hours_and_minutes(date_time, end_time.hour, end_time.minute)
+                date_time = RingingTimes.__set_hours_and_minutes(
+                    date_time, end_time.hour, end_time.minute
+                )
 
                 return RingingTime(RingingType.BREAK, date_time)
 
@@ -166,13 +170,17 @@ class RingingTime:
         for ringing_time in ringing_times:
             start_time = RingingTimes.__parse_time(ringing_time.get(&#34;starttime&#34;))
             if date_time.time() &lt; start_time:
-                date_time = RingingTimes.__set_hours_and_minutes(date_time, start_time.hour, start_time.minute)
+                date_time = RingingTimes.__set_hours_and_minutes(
+                    date_time, start_time.hour, start_time.minute
+                )
 
                 return RingingTime(RingingType.LESSON, date_time)
 
             end_time = RingingTimes.__parse_time(ringing_time.get(&#34;endtime&#34;))
             if date_time.time() &lt; end_time:
-                date_time = RingingTimes.__set_hours_and_minutes(date_time, end_time.hour, end_time.minute)
+                date_time = RingingTimes.__set_hours_and_minutes(
+                    date_time, end_time.hour, end_time.minute
+                )
 
                 return RingingTime(RingingType.BREAK, date_time)
 
@@ -204,13 +212,17 @@ def get_next_ringing_time(self, date_time: datetime) -&gt; RingingTime:
     for ringing_time in ringing_times:
         start_time = RingingTimes.__parse_time(ringing_time.get(&#34;starttime&#34;))
         if date_time.time() &lt; start_time:
-            date_time = RingingTimes.__set_hours_and_minutes(date_time, start_time.hour, start_time.minute)
+            date_time = RingingTimes.__set_hours_and_minutes(
+                date_time, start_time.hour, start_time.minute
+            )
 
             return RingingTime(RingingType.LESSON, date_time)
 
         end_time = RingingTimes.__parse_time(ringing_time.get(&#34;endtime&#34;))
         if date_time.time() &lt; end_time:
-            date_time = RingingTimes.__set_hours_and_minutes(date_time, end_time.hour, end_time.minute)
+            date_time = RingingTimes.__set_hours_and_minutes(
+                date_time, end_time.hour, end_time.minute
+            )
 
             return RingingTime(RingingType.BREAK, date_time)
 

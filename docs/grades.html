@@ -29,7 +29,7 @@
 <pre><code class="python">import json
 from dataclasses import dataclass
 from datetime import datetime
-from typing import Optional
+from typing import Optional, Union
 
 from edupage_api.dbi import DbiHelper
 from edupage_api.exceptions import FailedToParseGradeDataError
@@ -41,7 +41,7 @@ from edupage_api.people import EduTeacher
 class EduGrade:
     event_id: int
     title: str
-    grade_n: Optional[int]
+    grade_n: Optional[Union[int, float, str]]
     comment: Optional[str]
     date: datetime
     subject_id: int
@@ -90,14 +90,6 @@ class Grades(Module):
             details = grade_details.get(event_id_str)
             title = details.get(&#34;p_meno&#34;)
 
-            # Grade
-            grade_raw = grade.get(&#34;data&#34;).split(&#34; (&#34;, 1)
-            grade_n = float(grade_raw[0])
-            try:
-                comment = grade_raw[1].rsplit(&#34;)&#34;, 1)[0]
-            except IndexError:
-                comment = None
-
             # Date
             date_str = grade.get(&#34;datum&#34;)
             date = datetime.strptime(date_str, &#34;%Y-%m-%d %H:%M:%S&#34;)
@@ -118,7 +110,10 @@ class Grades(Module):
                 teacher_id = int(teacher_id_str)
                 teacher_data = DbiHelper(self.edupage).fetch_teacher_data(teacher_id)
 
-                teacher = EduTeacher.parse(teacher_data, teacher_id, self.edupage)
+                if teacher_data is None:
+                    teacher = None
+                else:
+                    teacher = EduTeacher.parse(teacher_data, teacher_id, self.edupage)
 
             # Maximal points and importance
             grade_type = details.get(&#34;p_typ_udalosti&#34;)
@@ -134,6 +129,18 @@ class Grades(Module):
                 # Percental grade (0 – 100 %)
                 max_points = int(details.get(&#34;p_vaha_body&#34;))
                 importance = float(details.get(&#34;p_vaha&#34;)) / 20
+
+             # Grade
+            grade_raw = grade.get(&#34;data&#34;).split(&#34; (&#34;, 1)
+            if grade_raw[0].isdigit():
+                grade_n = float(grade_raw[0])
+            else:
+                grade_n = grade_raw[0]
+
+            try:
+                comment = grade_raw[1].rsplit(&#34;)&#34;, 1)[0]
+            except IndexError:
+                comment = None
 
             # Verbal and percents
             try:
@@ -166,10 +173,10 @@ class Grades(Module):
 <dl>
 <dt id="edupage_api.grades.EduGrade"><code class="flex name class">
 <span>class <span class="ident">EduGrade</span></span>
-<span>(</span><span>event_id: int, title: str, grade_n: Optional[int], comment: Optional[str], date: datetime.datetime, subject_id: int, subject_name: Optional[str], teacher: Optional[<a title="edupage_api.people.EduTeacher" href="people.html#edupage_api.people.EduTeacher">EduTeacher</a>], max_points: Optional[float], importance: float, verbal: bool, percent: float)</span>
+<span>(</span><span>event_id: int, title: str, grade_n: Union[int, float, str, ForwardRef(None)], comment: Optional[str], date: datetime.datetime, subject_id: int, subject_name: Optional[str], teacher: Optional[<a title="edupage_api.people.EduTeacher" href="people.html#edupage_api.people.EduTeacher">EduTeacher</a>], max_points: Optional[float], importance: float, verbal: bool, percent: float)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>EduGrade(event_id: int, title: str, grade_n: Optional[int], comment: Optional[str], date: datetime.datetime, subject_id: int, subject_name: Optional[str], teacher: Optional[edupage_api.people.EduTeacher], max_points: Optional[float], importance: float, verbal: bool, percent: float)</p></div>
+<div class="desc"><p>EduGrade(event_id: int, title: str, grade_n: Union[int, float, str, NoneType], comment: Optional[str], date: datetime.datetime, subject_id: int, subject_name: Optional[str], teacher: Optional[edupage_api.people.EduTeacher], max_points: Optional[float], importance: float, verbal: bool, percent: float)</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -178,7 +185,7 @@ class Grades(Module):
 class EduGrade:
     event_id: int
     title: str
-    grade_n: Optional[int]
+    grade_n: Optional[Union[int, float, str]]
     comment: Optional[str]
     date: datetime
     subject_id: int
@@ -203,7 +210,7 @@ class EduGrade:
 <dd>
 <div class="desc"></div>
 </dd>
-<dt id="edupage_api.grades.EduGrade.grade_n"><code class="name">var <span class="ident">grade_n</span> : Optional[int]</code></dt>
+<dt id="edupage_api.grades.EduGrade.grade_n"><code class="name">var <span class="ident">grade_n</span> : Union[int, float, str, ForwardRef(None)]</code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
@@ -288,14 +295,6 @@ class EduGrade:
             details = grade_details.get(event_id_str)
             title = details.get(&#34;p_meno&#34;)
 
-            # Grade
-            grade_raw = grade.get(&#34;data&#34;).split(&#34; (&#34;, 1)
-            grade_n = float(grade_raw[0])
-            try:
-                comment = grade_raw[1].rsplit(&#34;)&#34;, 1)[0]
-            except IndexError:
-                comment = None
-
             # Date
             date_str = grade.get(&#34;datum&#34;)
             date = datetime.strptime(date_str, &#34;%Y-%m-%d %H:%M:%S&#34;)
@@ -316,7 +315,10 @@ class EduGrade:
                 teacher_id = int(teacher_id_str)
                 teacher_data = DbiHelper(self.edupage).fetch_teacher_data(teacher_id)
 
-                teacher = EduTeacher.parse(teacher_data, teacher_id, self.edupage)
+                if teacher_data is None:
+                    teacher = None
+                else:
+                    teacher = EduTeacher.parse(teacher_data, teacher_id, self.edupage)
 
             # Maximal points and importance
             grade_type = details.get(&#34;p_typ_udalosti&#34;)
@@ -332,6 +334,18 @@ class EduGrade:
                 # Percental grade (0 – 100 %)
                 max_points = int(details.get(&#34;p_vaha_body&#34;))
                 importance = float(details.get(&#34;p_vaha&#34;)) / 20
+
+             # Grade
+            grade_raw = grade.get(&#34;data&#34;).split(&#34; (&#34;, 1)
+            if grade_raw[0].isdigit():
+                grade_n = float(grade_raw[0])
+            else:
+                grade_n = grade_raw[0]
+
+            try:
+                comment = grade_raw[1].rsplit(&#34;)&#34;, 1)[0]
+            except IndexError:
+                comment = None
 
             # Verbal and percents
             try:
@@ -387,14 +401,6 @@ def get_grades(self) -&gt; list[EduGrade]:
         details = grade_details.get(event_id_str)
         title = details.get(&#34;p_meno&#34;)
 
-        # Grade
-        grade_raw = grade.get(&#34;data&#34;).split(&#34; (&#34;, 1)
-        grade_n = float(grade_raw[0])
-        try:
-            comment = grade_raw[1].rsplit(&#34;)&#34;, 1)[0]
-        except IndexError:
-            comment = None
-
         # Date
         date_str = grade.get(&#34;datum&#34;)
         date = datetime.strptime(date_str, &#34;%Y-%m-%d %H:%M:%S&#34;)
@@ -415,7 +421,10 @@ def get_grades(self) -&gt; list[EduGrade]:
             teacher_id = int(teacher_id_str)
             teacher_data = DbiHelper(self.edupage).fetch_teacher_data(teacher_id)
 
-            teacher = EduTeacher.parse(teacher_data, teacher_id, self.edupage)
+            if teacher_data is None:
+                teacher = None
+            else:
+                teacher = EduTeacher.parse(teacher_data, teacher_id, self.edupage)
 
         # Maximal points and importance
         grade_type = details.get(&#34;p_typ_udalosti&#34;)
@@ -431,6 +440,18 @@ def get_grades(self) -&gt; list[EduGrade]:
             # Percental grade (0 – 100 %)
             max_points = int(details.get(&#34;p_vaha_body&#34;))
             importance = float(details.get(&#34;p_vaha&#34;)) / 20
+
+         # Grade
+        grade_raw = grade.get(&#34;data&#34;).split(&#34; (&#34;, 1)
+        if grade_raw[0].isdigit():
+            grade_n = float(grade_raw[0])
+        else:
+            grade_n = grade_raw[0]
+
+        try:
+            comment = grade_raw[1].rsplit(&#34;)&#34;, 1)[0]
+        except IndexError:
+            comment = None
 
         # Verbal and percents
         try:

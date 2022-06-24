@@ -142,7 +142,7 @@ class Timetables(Module):
             if len(header) == 0:
                 continue
 
-            subject_id = int(subject.get(&#34;subjectid&#34;))
+            subject_id = int(subject.get(&#34;subjectid&#34;)) if subject.get(&#34;subjectid&#34;) else None
             if subject_id:
                 subject_name = DbiHelper(self.edupage).fetch_subject_name(subject_id)
             else:
@@ -177,8 +177,19 @@ class Timetables(Module):
 
             ModuleHelper.assert_none(start_of_lesson_str, end_of_lesson_str)
 
-            start_of_lesson = datetime.strptime(start_of_lesson_str, &#34;%H:%M&#34;)
-            end_of_lesson = datetime.strptime(end_of_lesson_str, &#34;%H:%M&#34;)
+            now = datetime.now()
+
+            try:
+                start_of_lesson = datetime.strptime(start_of_lesson_str, &#34;%H:%M&#34;)
+            except ValueError:
+                start_of_lesson = datetime(hour=0, minute=0, day=now.day,
+                                           month=now.month, year=now.year)
+
+            try:
+                end_of_lesson = datetime.strptime(end_of_lesson_str, &#34;%H:%M&#34;)
+            except ValueError:
+                end_of_lesson = datetime(hour=0, minute=0, day=now.day,
+                                         month=now.month, year=now.year)
 
             online_lesson_link = subject.get(&#34;ol_url&#34;)
 
@@ -509,7 +520,7 @@ class Timetable:
             if len(header) == 0:
                 continue
 
-            subject_id = int(subject.get(&#34;subjectid&#34;))
+            subject_id = int(subject.get(&#34;subjectid&#34;)) if subject.get(&#34;subjectid&#34;) else None
             if subject_id:
                 subject_name = DbiHelper(self.edupage).fetch_subject_name(subject_id)
             else:
@@ -544,8 +555,19 @@ class Timetable:
 
             ModuleHelper.assert_none(start_of_lesson_str, end_of_lesson_str)
 
-            start_of_lesson = datetime.strptime(start_of_lesson_str, &#34;%H:%M&#34;)
-            end_of_lesson = datetime.strptime(end_of_lesson_str, &#34;%H:%M&#34;)
+            now = datetime.now()
+
+            try:
+                start_of_lesson = datetime.strptime(start_of_lesson_str, &#34;%H:%M&#34;)
+            except ValueError:
+                start_of_lesson = datetime(hour=0, minute=0, day=now.day,
+                                           month=now.month, year=now.year)
+
+            try:
+                end_of_lesson = datetime.strptime(end_of_lesson_str, &#34;%H:%M&#34;)
+            except ValueError:
+                end_of_lesson = datetime(hour=0, minute=0, day=now.day,
+                                         month=now.month, year=now.year)
 
             online_lesson_link = subject.get(&#34;ol_url&#34;)
 
@@ -586,7 +608,7 @@ class Timetable:
         if len(header) == 0:
             continue
 
-        subject_id = int(subject.get(&#34;subjectid&#34;))
+        subject_id = int(subject.get(&#34;subjectid&#34;)) if subject.get(&#34;subjectid&#34;) else None
         if subject_id:
             subject_name = DbiHelper(self.edupage).fetch_subject_name(subject_id)
         else:
@@ -621,8 +643,19 @@ class Timetable:
 
         ModuleHelper.assert_none(start_of_lesson_str, end_of_lesson_str)
 
-        start_of_lesson = datetime.strptime(start_of_lesson_str, &#34;%H:%M&#34;)
-        end_of_lesson = datetime.strptime(end_of_lesson_str, &#34;%H:%M&#34;)
+        now = datetime.now()
+
+        try:
+            start_of_lesson = datetime.strptime(start_of_lesson_str, &#34;%H:%M&#34;)
+        except ValueError:
+            start_of_lesson = datetime(hour=0, minute=0, day=now.day,
+                                       month=now.month, year=now.year)
+
+        try:
+            end_of_lesson = datetime.strptime(end_of_lesson_str, &#34;%H:%M&#34;)
+        except ValueError:
+            end_of_lesson = datetime(hour=0, minute=0, day=now.day,
+                                     month=now.month, year=now.year)
 
         online_lesson_link = subject.get(&#34;ol_url&#34;)
 

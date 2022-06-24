@@ -27,9 +27,7 @@
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">import json
-from typing import Union
-
-from requests import JSONDecodeError
+from json import JSONDecodeError
 
 from edupage_api.exceptions import BadCredentialsException
 from edupage_api.module import Module
@@ -108,10 +106,10 @@ class Login(Module):
 
         self.__parse_login_data(response.content.decode())
         self.edupage.subdomain = subdomain
-    
+
     def reload_data(self, subdomain: str, session_id: str):
         request_url = f&#34;https://{subdomain}.edupage.org/user&#34;
-        
+
         self.edupage.session.cookies.set(&#34;PHPSESSID&#34;, session_id)
 
         response = self.edupage.session.get(request_url)
@@ -215,10 +213,10 @@ class Login(Module):
 
         self.__parse_login_data(response.content.decode())
         self.edupage.subdomain = subdomain
-    
+
     def reload_data(self, subdomain: str, session_id: str):
         request_url = f&#34;https://{subdomain}.edupage.org/user&#34;
-        
+
         self.edupage.session.cookies.set(&#34;PHPSESSID&#34;, session_id)
 
         response = self.edupage.session.get(request_url)
@@ -353,7 +351,7 @@ class Login(Module):
 </summary>
 <pre><code class="python">def reload_data(self, subdomain: str, session_id: str):
     request_url = f&#34;https://{subdomain}.edupage.org/user&#34;
-    
+
     self.edupage.session.cookies.set(&#34;PHPSESSID&#34;, session_id)
 
     response = self.edupage.session.get(request_url)

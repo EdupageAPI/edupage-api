@@ -130,6 +130,7 @@ class EventType(str, Enum):
     H_SETTINGS = "h_settings"
     H_SUBSTITUTION = "h_substitution"
     H_TIMETABLE = "h_timetable"
+    H_USERPHOTO = "h_userphoto"
 
     @staticmethod
     def parse(event_type_str: str) -> Optional[EventType]:

@@ -110,6 +110,7 @@ class EventType(str, Enum):
     ALBUM = "album"
 
     # Other
+    BEE = "vcelicka"
     OTHER = "other"
 
     # Helper

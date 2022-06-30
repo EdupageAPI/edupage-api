@@ -234,14 +234,14 @@ class Edupage(EdupageModule):
 
     @classmethod
     def from_session_id(cls, session_id: str, subdomain: str):
-        """Create an edupage instance with a session id and subdomain.
+        """Create an `Edupage` instance with a session id and subdomain.
 
         Args:
-            session_id (str): The "PHPSESSID" cookie
-            subdomain (str): Subdomain of the school which `cookie` is from
+            session_id (str): The `PHPSESSID` cookie.
+            subdomain (str): Subdomain of the school which cookie is from.
 
         Returns:
-            Edupage: A new edupage instance
+            Edupage: A new `Edupage` instance.
         """
         instance = cls()
 

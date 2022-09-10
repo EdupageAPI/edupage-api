@@ -126,6 +126,7 @@ class EventType(str, Enum):
     H_FINANCES = "h_financie"
     H_GRADES = "h_znamky"
     H_HOMEWORK = "h_homework"
+    H_IGROUPS = "h_igroups"
     H_PROCESS = "h_process"
     H_PROCESSTYPES = "h_processtypes"
     H_SETTINGS = "h_settings"

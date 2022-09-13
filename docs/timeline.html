@@ -154,6 +154,7 @@ class EventType(str, Enum):
     H_FINANCES = &#34;h_financie&#34;
     H_GRADES = &#34;h_znamky&#34;
     H_HOMEWORK = &#34;h_homework&#34;
+    H_IGROUPS = &#34;h_igroups&#34;
     H_PROCESS = &#34;h_process&#34;
     H_PROCESSTYPES = &#34;h_processtypes&#34;
     H_SETTINGS = &#34;h_settings&#34;
@@ -196,9 +197,6 @@ class TimelineEvents(Module):
             if not event_id_str:
                 continue
             event_type = EventType.parse(event_type_str)
-
-            if event_type is None:
-                print(event_type_str)
 
             event_timestamp = datetime.strptime(event.get(&#34;timestamp&#34;), &#34;%Y-%m-%d %H:%M:%S&#34;)
             text = event.get(&#34;text&#34;)
@@ -381,6 +379,7 @@ class TimelineEvents(Module):
     H_FINANCES = &#34;h_financie&#34;
     H_GRADES = &#34;h_znamky&#34;
     H_HOMEWORK = &#34;h_homework&#34;
+    H_IGROUPS = &#34;h_igroups&#34;
     H_PROCESS = &#34;h_process&#34;
     H_PROCESSTYPES = &#34;h_processtypes&#34;
     H_SETTINGS = &#34;h_settings&#34;
@@ -556,6 +555,10 @@ class TimelineEvents(Module):
 <div class="desc"></div>
 </dd>
 <dt id="edupage_api.timeline.EventType.H_HOMEWORK"><code class="name">var <span class="ident">H_HOMEWORK</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.timeline.EventType.H_IGROUPS"><code class="name">var <span class="ident">H_IGROUPS</span></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
@@ -792,9 +795,6 @@ class TimelineEvent:
                 continue
             event_type = EventType.parse(event_type_str)
 
-            if event_type is None:
-                print(event_type_str)
-
             event_timestamp = datetime.strptime(event.get(&#34;timestamp&#34;), &#34;%Y-%m-%d %H:%M:%S&#34;)
             text = event.get(&#34;text&#34;)
 
@@ -876,9 +876,6 @@ def get_notifications(self):
         if not event_id_str:
             continue
         event_type = EventType.parse(event_type_str)
-
-        if event_type is None:
-            print(event_type_str)
 
         event_timestamp = datetime.strptime(event.get(&#34;timestamp&#34;), &#34;%Y-%m-%d %H:%M:%S&#34;)
         text = event.get(&#34;text&#34;)
@@ -990,6 +987,7 @@ def get_notifications(self):
 <li><code><a title="edupage_api.timeline.EventType.H_FINANCES" href="#edupage_api.timeline.EventType.H_FINANCES">H_FINANCES</a></code></li>
 <li><code><a title="edupage_api.timeline.EventType.H_GRADES" href="#edupage_api.timeline.EventType.H_GRADES">H_GRADES</a></code></li>
 <li><code><a title="edupage_api.timeline.EventType.H_HOMEWORK" href="#edupage_api.timeline.EventType.H_HOMEWORK">H_HOMEWORK</a></code></li>
+<li><code><a title="edupage_api.timeline.EventType.H_IGROUPS" href="#edupage_api.timeline.EventType.H_IGROUPS">H_IGROUPS</a></code></li>
 <li><code><a title="edupage_api.timeline.EventType.H_PROCESS" href="#edupage_api.timeline.EventType.H_PROCESS">H_PROCESS</a></code></li>
 <li><code><a title="edupage_api.timeline.EventType.H_PROCESSTYPES" href="#edupage_api.timeline.EventType.H_PROCESSTYPES">H_PROCESSTYPES</a></code></li>
 <li><code><a title="edupage_api.timeline.EventType.H_SETTINGS" href="#edupage_api.timeline.EventType.H_SETTINGS">H_SETTINGS</a></code></li>

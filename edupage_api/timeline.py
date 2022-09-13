@@ -170,9 +170,6 @@ class TimelineEvents(Module):
                 continue
             event_type = EventType.parse(event_type_str)
 
-            if event_type is None:
-                print(event_type_str)
-
             event_timestamp = datetime.strptime(event.get("timestamp"), "%Y-%m-%d %H:%M:%S")
             text = event.get("text")
 

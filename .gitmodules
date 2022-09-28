@@ -1,0 +1,3 @@
+[submodule "examples/edupage-rest"]
+	path = examples/edupage-rest
+	url = https://github.com/ivanhrabcak/edupage-rest

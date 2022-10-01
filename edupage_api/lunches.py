@@ -15,7 +15,7 @@ class Rating:
     __boarder_id: str
 
     quality_average: float
-    quality_average: float
+    quality_ratings: float
 
     quantity_average: float
     quantity_ratings: float
@@ -154,7 +154,7 @@ class Lunches(Module):
             name = food.get("nazov")
             allergens = food.get("alergenyStr")
             weight = food.get("hmotnostiStr")
-            number = food.get("menuStr")
+            number = food.get("menusStr")
             rating = None
 
             if number is not None:

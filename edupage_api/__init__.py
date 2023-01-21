@@ -88,15 +88,18 @@ class Edupage(EdupageModule):
 
         return People(self).get_teachers()
 
-    def send_message(self, recipients: Union[list[EduAccount], EduAccount], body: str):
+    def send_message(self, recipients: Union[list[EduAccount], EduAccount], body: str) -> int:
         """Send message.
 
         Args:
             recipients (Optional[list[EduAccount]]): Recipients of your message (list of `EduAccount`s).
             body (str): Body of your message.
+        
+        Returns:
+            int: The timeline id of the new message.
         """
 
-        Messages(self).send_message(recipients, body)
+        return Messages(self).send_message(recipients, body)
 
     def get_timetable(self, date: datetime) -> Optional[Timetable]:
         """Get timetable.

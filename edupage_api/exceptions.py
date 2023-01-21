@@ -44,3 +44,9 @@ class RequestError(Exception):
 
 class InvalidLunchData(Exception):
     pass
+
+class Base64DecodeError(Exception):
+    pass
+
+class InvalidRecipientsExceiption(Exception):
+    pass

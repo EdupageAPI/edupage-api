@@ -68,11 +68,11 @@ class Substitution(Module):
 
         all_teachers = People(self.edupage).get_teachers()
 
-        missing_teachers = [
+        missing_teachers = [item for sublist in [
             (t.strip()
-              .split("  (")[0])
+              .split("  (")[0]).split(" + ")
             for t in missing_teachers.split(", ")
-        ]
+        ] for item in sublist]
 
         try:
             missing_teachers = [

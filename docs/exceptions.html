@@ -71,6 +71,12 @@ class RequestError(Exception):
 
 
 class InvalidLunchData(Exception):
+    pass
+
+class Base64DecodeError(Exception):
+    pass
+
+class InvalidRecipientsExceiption(Exception):
     pass</code></pre>
 </details>
 </section>
@@ -94,6 +100,25 @@ class InvalidLunchData(Exception):
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">class BadCredentialsException(Exception):
+    pass</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>builtins.Exception</li>
+<li>builtins.BaseException</li>
+</ul>
+</dd>
+<dt id="edupage_api.exceptions.Base64DecodeError"><code class="flex name class">
+<span>class <span class="ident">Base64DecodeError</span></span>
+<span>(</span><span>*args, **kwargs)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Common base class for all non-exit exceptions.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Base64DecodeError(Exception):
     pass</code></pre>
 </details>
 <h3>Ancestors</h3>
@@ -208,6 +233,25 @@ class InvalidLunchData(Exception):
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">class InvalidLunchData(Exception):
+    pass</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>builtins.Exception</li>
+<li>builtins.BaseException</li>
+</ul>
+</dd>
+<dt id="edupage_api.exceptions.InvalidRecipientsExceiption"><code class="flex name class">
+<span>class <span class="ident">InvalidRecipientsExceiption</span></span>
+<span>(</span><span>*args, **kwargs)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Common base class for all non-exit exceptions.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class InvalidRecipientsExceiption(Exception):
     pass</code></pre>
 </details>
 <h3>Ancestors</h3>
@@ -331,6 +375,9 @@ class InvalidLunchData(Exception):
 <h4><code><a title="edupage_api.exceptions.BadCredentialsException" href="#edupage_api.exceptions.BadCredentialsException">BadCredentialsException</a></code></h4>
 </li>
 <li>
+<h4><code><a title="edupage_api.exceptions.Base64DecodeError" href="#edupage_api.exceptions.Base64DecodeError">Base64DecodeError</a></code></h4>
+</li>
+<li>
 <h4><code><a title="edupage_api.exceptions.ExpiredSessionException" href="#edupage_api.exceptions.ExpiredSessionException">ExpiredSessionException</a></code></h4>
 </li>
 <li>
@@ -347,6 +394,9 @@ class InvalidLunchData(Exception):
 </li>
 <li>
 <h4><code><a title="edupage_api.exceptions.InvalidLunchData" href="#edupage_api.exceptions.InvalidLunchData">InvalidLunchData</a></code></h4>
+</li>
+<li>
+<h4><code><a title="edupage_api.exceptions.InvalidRecipientsExceiption" href="#edupage_api.exceptions.InvalidRecipientsExceiption">InvalidRecipientsExceiption</a></code></h4>
 </li>
 <li>
 <h4><code><a title="edupage_api.exceptions.InvalidTeacherException" href="#edupage_api.exceptions.InvalidTeacherException">InvalidTeacherException</a></code></h4>

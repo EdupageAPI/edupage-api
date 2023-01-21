@@ -116,15 +116,18 @@ class Edupage(EdupageModule):
 
         return People(self).get_teachers()
 
-    def send_message(self, recipients: Union[list[EduAccount], EduAccount], body: str):
+    def send_message(self, recipients: Union[list[EduAccount], EduAccount], body: str) -&gt; int:
         &#34;&#34;&#34;Send message.
 
         Args:
             recipients (Optional[list[EduAccount]]): Recipients of your message (list of `EduAccount`s).
             body (str): Body of your message.
+        
+        Returns:
+            int: The timeline id of the new message.
         &#34;&#34;&#34;
 
-        Messages(self).send_message(recipients, body)
+        return Messages(self).send_message(recipients, body)
 
     def get_timetable(self, date: datetime) -&gt; Optional[Timetable]:
         &#34;&#34;&#34;Get timetable.
@@ -285,6 +288,10 @@ class Edupage(EdupageModule):
 <dd>
 <div class="desc"></div>
 </dd>
+<dt><code class="name"><a title="edupage_api.compression" href="compression.html">edupage_api.compression</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
 <dt><code class="name"><a title="edupage_api.custom_request" href="custom_request.html">edupage_api.custom_request</a></code></dt>
 <dd>
 <div class="desc"></div>
@@ -437,15 +444,18 @@ Defaults to <code>5</code>.</dd>
 
         return People(self).get_teachers()
 
-    def send_message(self, recipients: Union[list[EduAccount], EduAccount], body: str):
+    def send_message(self, recipients: Union[list[EduAccount], EduAccount], body: str) -&gt; int:
         &#34;&#34;&#34;Send message.
 
         Args:
             recipients (Optional[list[EduAccount]]): Recipients of your message (list of `EduAccount`s).
             body (str): Body of your message.
+        
+        Returns:
+            int: The timeline id of the new message.
         &#34;&#34;&#34;
 
-        Messages(self).send_message(recipients, body)
+        return Messages(self).send_message(recipients, body)
 
     def get_timetable(self, date: datetime) -&gt; Optional[Timetable]:
         &#34;&#34;&#34;Get timetable.
@@ -1163,7 +1173,7 @@ def from_session_id(cls, session_id: str, subdomain: str):
 </details>
 </dd>
 <dt id="edupage_api.Edupage.send_message"><code class="name flex">
-<span>def <span class="ident">send_message</span></span>(<span>self, recipients: Union[list[<a title="edupage_api.people.EduAccount" href="people.html#edupage_api.people.EduAccount">EduAccount</a>], <a title="edupage_api.people.EduAccount" href="people.html#edupage_api.people.EduAccount">EduAccount</a>], body: str)</span>
+<span>def <span class="ident">send_message</span></span>(<span>self, recipients: Union[list[<a title="edupage_api.people.EduAccount" href="people.html#edupage_api.people.EduAccount">EduAccount</a>], <a title="edupage_api.people.EduAccount" href="people.html#edupage_api.people.EduAccount">EduAccount</a>], body: str) ‑> int</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Send message.</p>
@@ -1173,20 +1183,28 @@ def from_session_id(cls, session_id: str, subdomain: str):
 <dd>Recipients of your message (list of <code>EduAccount</code>s).</dd>
 <dt><strong><code>body</code></strong> :&ensp;<code>str</code></dt>
 <dd>Body of your message.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>int</code></dt>
+<dd>The timeline id of the new message.</dd>
 </dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def send_message(self, recipients: Union[list[EduAccount], EduAccount], body: str):
+<pre><code class="python">def send_message(self, recipients: Union[list[EduAccount], EduAccount], body: str) -&gt; int:
     &#34;&#34;&#34;Send message.
 
     Args:
         recipients (Optional[list[EduAccount]]): Recipients of your message (list of `EduAccount`s).
         body (str): Body of your message.
+    
+    Returns:
+        int: The timeline id of the new message.
     &#34;&#34;&#34;
 
-    Messages(self).send_message(recipients, body)</code></pre>
+    return Messages(self).send_message(recipients, body)</code></pre>
 </details>
 </dd>
 </dl>
@@ -1203,6 +1221,7 @@ def from_session_id(cls, session_id: str, subdomain: str):
 <li><h3><a href="#header-submodules">Sub-modules</a></h3>
 <ul>
 <li><code><a title="edupage_api.cloud" href="cloud.html">edupage_api.cloud</a></code></li>
+<li><code><a title="edupage_api.compression" href="compression.html">edupage_api.compression</a></code></li>
 <li><code><a title="edupage_api.custom_request" href="custom_request.html">edupage_api.custom_request</a></code></li>
 <li><code><a title="edupage_api.dbi" href="dbi.html">edupage_api.dbi</a></code></li>
 <li><code><a title="edupage_api.exceptions" href="exceptions.html">edupage_api.exceptions</a></code></li>

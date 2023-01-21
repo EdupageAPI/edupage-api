@@ -27,38 +27,54 @@
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">from typing import Union
+import json
 
-from edupage_api.module import Module, ModuleHelper
+from edupage_api.exceptions import InvalidRecipientsExceiption, RequestError
+from edupage_api.module import Module
 from edupage_api.people import EduAccount
-
+from edupage_api.compression import RequestData
 
 class Messages(Module):
-    def send_message(self, recipients: Union[list[EduAccount], EduAccount], body: str):
+    def send_message(self, recipients: Union[list[EduAccount], EduAccount, list[str]], body: str) -&gt; int:
         recipient_string = &#34;&#34;
 
         if isinstance(recipients, list):
-            for i, recipient in enumerate(recipients):
-                recipient_string += f&#34;{recipient.get_id()}&#34;
-                if i == len(recipients) - 1:
-                    recipient_string += &#34;;&#34;
+            if len(recipients) == 0:
+                raise InvalidRecipientsExceiption(&#34;The recipients parameter is empty!&#34;)
+
+            if type(recipients[0]) == EduAccount:
+                recipient_string = &#34;;&#34;.join([r.get_id() for r in recipients])
+            else:
+                recipient_string = &#34;;&#34;.join(recipients)
         else:
             recipient_string = recipients.get_id()
 
-        data = {
-            &#34;receipt&#34;: &#34;0&#34;,
+        data = RequestData.encode_request_body({
             &#34;selectedUser&#34;: recipient_string,
             &#34;text&#34;: body,
+            &#34;attachements&#34;: &#34;{}&#34;,
+            &#34;receipt&#34;: &#34;0&#34;,
             &#34;typ&#34;: &#34;sprava&#34;,
-            &#34;attachments&#34;: &#34;{}&#34;
+        })
+
+        headers = {
+            &#34;Content-Type&#34;: &#34;application/x-www-form-urlencoded&#34;
         }
 
-        params = (
-            (&#34;akcia&#34;, &#34;createItem&#34;),
-        )
+        request_url = f&#34;https://{self.edupage.subdomain}.edupage.org/timeline/?=&amp;akcia=createItem&amp;eqav=1&amp;maxEqav=7&#34;
+        response = self.edupage.session.post(request_url, data=data, headers=headers)
 
-        request_url = f&#34;https://{self.edupage.subdomain}.edupage.org/timeline&#34;
-        self.edupage.session.post(request_url, params=params,
-                                  data=ModuleHelper.encode_form_data(data))</code></pre>
+        response_text = RequestData.decode_response(response.text)
+        if response_text == &#34;0&#34;:
+            raise RequestError(&#34;Edupage returned an error response&#34;)
+        
+        response = json.loads(response_text)
+        
+        changes = response.get(&#34;changes&#34;)
+        if changes == [] or changes is None:
+            raise RequestError(&#34;Failed to send message (edupage returned an empty &#39;changes&#39; array)&#34;)
+        
+        return int(changes[0].get(&#34;timelineid&#34;))</code></pre>
 </details>
 </section>
 <section>
@@ -81,32 +97,46 @@ class Messages(Module):
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">class Messages(Module):
-    def send_message(self, recipients: Union[list[EduAccount], EduAccount], body: str):
+    def send_message(self, recipients: Union[list[EduAccount], EduAccount, list[str]], body: str) -&gt; int:
         recipient_string = &#34;&#34;
 
         if isinstance(recipients, list):
-            for i, recipient in enumerate(recipients):
-                recipient_string += f&#34;{recipient.get_id()}&#34;
-                if i == len(recipients) - 1:
-                    recipient_string += &#34;;&#34;
+            if len(recipients) == 0:
+                raise InvalidRecipientsExceiption(&#34;The recipients parameter is empty!&#34;)
+
+            if type(recipients[0]) == EduAccount:
+                recipient_string = &#34;;&#34;.join([r.get_id() for r in recipients])
+            else:
+                recipient_string = &#34;;&#34;.join(recipients)
         else:
             recipient_string = recipients.get_id()
 
-        data = {
-            &#34;receipt&#34;: &#34;0&#34;,
+        data = RequestData.encode_request_body({
             &#34;selectedUser&#34;: recipient_string,
             &#34;text&#34;: body,
+            &#34;attachements&#34;: &#34;{}&#34;,
+            &#34;receipt&#34;: &#34;0&#34;,
             &#34;typ&#34;: &#34;sprava&#34;,
-            &#34;attachments&#34;: &#34;{}&#34;
+        })
+
+        headers = {
+            &#34;Content-Type&#34;: &#34;application/x-www-form-urlencoded&#34;
         }
 
-        params = (
-            (&#34;akcia&#34;, &#34;createItem&#34;),
-        )
+        request_url = f&#34;https://{self.edupage.subdomain}.edupage.org/timeline/?=&amp;akcia=createItem&amp;eqav=1&amp;maxEqav=7&#34;
+        response = self.edupage.session.post(request_url, data=data, headers=headers)
 
-        request_url = f&#34;https://{self.edupage.subdomain}.edupage.org/timeline&#34;
-        self.edupage.session.post(request_url, params=params,
-                                  data=ModuleHelper.encode_form_data(data))</code></pre>
+        response_text = RequestData.decode_response(response.text)
+        if response_text == &#34;0&#34;:
+            raise RequestError(&#34;Edupage returned an error response&#34;)
+        
+        response = json.loads(response_text)
+        
+        changes = response.get(&#34;changes&#34;)
+        if changes == [] or changes is None:
+            raise RequestError(&#34;Failed to send message (edupage returned an empty &#39;changes&#39; array)&#34;)
+        
+        return int(changes[0].get(&#34;timelineid&#34;))</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
@@ -115,7 +145,7 @@ class Messages(Module):
 <h3>Methods</h3>
 <dl>
 <dt id="edupage_api.messages.Messages.send_message"><code class="name flex">
-<span>def <span class="ident">send_message</span></span>(<span>self, recipients: Union[list[<a title="edupage_api.people.EduAccount" href="people.html#edupage_api.people.EduAccount">EduAccount</a>], <a title="edupage_api.people.EduAccount" href="people.html#edupage_api.people.EduAccount">EduAccount</a>], body: str)</span>
+<span>def <span class="ident">send_message</span></span>(<span>self, recipients: Union[list[<a title="edupage_api.people.EduAccount" href="people.html#edupage_api.people.EduAccount">EduAccount</a>], <a title="edupage_api.people.EduAccount" href="people.html#edupage_api.people.EduAccount">EduAccount</a>, list[str]], body: str) ‑> int</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
@@ -123,32 +153,46 @@ class Messages(Module):
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def send_message(self, recipients: Union[list[EduAccount], EduAccount], body: str):
+<pre><code class="python">def send_message(self, recipients: Union[list[EduAccount], EduAccount, list[str]], body: str) -&gt; int:
     recipient_string = &#34;&#34;
 
     if isinstance(recipients, list):
-        for i, recipient in enumerate(recipients):
-            recipient_string += f&#34;{recipient.get_id()}&#34;
-            if i == len(recipients) - 1:
-                recipient_string += &#34;;&#34;
+        if len(recipients) == 0:
+            raise InvalidRecipientsExceiption(&#34;The recipients parameter is empty!&#34;)
+
+        if type(recipients[0]) == EduAccount:
+            recipient_string = &#34;;&#34;.join([r.get_id() for r in recipients])
+        else:
+            recipient_string = &#34;;&#34;.join(recipients)
     else:
         recipient_string = recipients.get_id()
 
-    data = {
-        &#34;receipt&#34;: &#34;0&#34;,
+    data = RequestData.encode_request_body({
         &#34;selectedUser&#34;: recipient_string,
         &#34;text&#34;: body,
+        &#34;attachements&#34;: &#34;{}&#34;,
+        &#34;receipt&#34;: &#34;0&#34;,
         &#34;typ&#34;: &#34;sprava&#34;,
-        &#34;attachments&#34;: &#34;{}&#34;
+    })
+
+    headers = {
+        &#34;Content-Type&#34;: &#34;application/x-www-form-urlencoded&#34;
     }
 
-    params = (
-        (&#34;akcia&#34;, &#34;createItem&#34;),
-    )
+    request_url = f&#34;https://{self.edupage.subdomain}.edupage.org/timeline/?=&amp;akcia=createItem&amp;eqav=1&amp;maxEqav=7&#34;
+    response = self.edupage.session.post(request_url, data=data, headers=headers)
 
-    request_url = f&#34;https://{self.edupage.subdomain}.edupage.org/timeline&#34;
-    self.edupage.session.post(request_url, params=params,
-                              data=ModuleHelper.encode_form_data(data))</code></pre>
+    response_text = RequestData.decode_response(response.text)
+    if response_text == &#34;0&#34;:
+        raise RequestError(&#34;Edupage returned an error response&#34;)
+    
+    response = json.loads(response_text)
+    
+    changes = response.get(&#34;changes&#34;)
+    if changes == [] or changes is None:
+        raise RequestError(&#34;Failed to send message (edupage returned an empty &#39;changes&#39; array)&#34;)
+    
+    return int(changes[0].get(&#34;timelineid&#34;))</code></pre>
 </details>
 </dd>
 </dl>

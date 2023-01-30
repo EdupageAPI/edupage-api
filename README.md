@@ -31,7 +31,7 @@ except LoginDataParsingException:
 ```
 
 # Documentation
-The docs are available [here](https://ivanhrabcak.hrabcak.eu/edupage-api)
+The docs are available [here](https://ivanhrabcak.github.io/edupage-api/)
 
 # I have a problem or an idea!
 

@@ -38,3 +38,6 @@ The docs are available [here](https://ivanhrabcak.github.io/edupage-api/)
 - If you find any issue with this code, or it doesn't work please, let us know by opening an [issue](https://github.com/ivanhrabcak/edupage-api/issues/new/choose)!
 - Feel free to suggest any other features! Just open an [issue with the _Feature Request_ tag](https://github.com/ivanhrabcak/edupage-api/issues/new?labels=feature+request&template=feature_request.md&title=%5BFeature+request%5D+).
 - If you, even better, have fixed the issue, added a new feature, or made something work better, please, open a [pull request](https://github.com/ivanhrabcak/edupage-api/compare)!
+
+# Discord
+https://discord.gg/fg6zBu9ZAn

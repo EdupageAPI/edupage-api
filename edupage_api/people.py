@@ -92,6 +92,17 @@ class EduStudent(EduAccount):
         self.class_id = class_id
         self.number_in_class = number_in_class
 
+        self.__student_only = False
+    
+    def get_id(self):
+        if not self.__student_only:
+            return super().get_id()
+        else:
+            return super().get_id().replace("Student", "StudentOnly")
+    
+    def set_student_only(self, student_only: bool):
+        self.__student_only = student_only
+
 
 @dataclass
 class EduStudentSkeleton:

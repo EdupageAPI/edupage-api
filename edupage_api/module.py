@@ -8,7 +8,7 @@ import requests
 
 from edupage_api.exceptions import (MissingDataException,
                                     NotAnOnlineLessonError,
-                                    NotLoggedInException)
+                                    NotLoggedInException, NotParentException)
 
 
 class EdupageModule:
@@ -17,6 +17,7 @@ class EdupageModule:
     data: dict
     is_logged_in: bool
     gsec_hash: str
+    username: str
 
 
 class Module:
@@ -102,4 +103,19 @@ class ModuleHelper:
                 raise NotAnOnlineLessonError()
             return method(self, *method_args, **method_kwargs)
 
+        return __impl
+    
+    """
+    Throws NotParentException if someone uses a method with this decorator
+    and is not using a parent account
+    """
+    @staticmethod
+    def is_parent(method):
+        @wraps(method)
+        def __impl(self: Module, *method_args, **method_kwargs):
+            if "Rodic" not in self.edupage.get_user_id():
+                raise NotParentException()
+            
+            return method(self, *method_args, **method_kwargs)
+        
         return __impl

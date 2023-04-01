@@ -120,6 +120,17 @@ class EduStudent(EduAccount):
         self.class_id = class_id
         self.number_in_class = number_in_class
 
+        self.__student_only = False
+    
+    def get_id(self):
+        if not self.__student_only:
+            return super().get_id()
+        else:
+            return super().get_id().replace(&#34;Student&#34;, &#34;StudentOnly&#34;)
+    
+    def set_student_only(self, student_only: bool):
+        self.__student_only = student_only
+
 
 @dataclass
 class EduStudentSkeleton:
@@ -517,7 +528,18 @@ class EduStudent(EduAccount):
         super().__init__(person_id, name, gender, in_school_since, EduAccountType.STUDENT)
 
         self.class_id = class_id
-        self.number_in_class = number_in_class</code></pre>
+        self.number_in_class = number_in_class
+
+        self.__student_only = False
+    
+    def get_id(self):
+        if not self.__student_only:
+            return super().get_id()
+        else:
+            return super().get_id().replace(&#34;Student&#34;, &#34;StudentOnly&#34;)
+    
+    def set_student_only(self, student_only: bool):
+        self.__student_only = student_only</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
@@ -544,6 +566,38 @@ class EduStudent(EduAccount):
 <dt id="edupage_api.people.EduStudent.person_id"><code class="name">var <span class="ident">person_id</span> : int</code></dt>
 <dd>
 <div class="desc"></div>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="edupage_api.people.EduStudent.get_id"><code class="name flex">
+<span>def <span class="ident">get_id</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_id(self):
+    if not self.__student_only:
+        return super().get_id()
+    else:
+        return super().get_id().replace(&#34;Student&#34;, &#34;StudentOnly&#34;)</code></pre>
+</details>
+</dd>
+<dt id="edupage_api.people.EduStudent.set_student_only"><code class="name flex">
+<span>def <span class="ident">set_student_only</span></span>(<span>self, student_only: bool)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def set_student_only(self, student_only: bool):
+    self.__student_only = student_only</code></pre>
+</details>
 </dd>
 </dl>
 </dd>
@@ -968,12 +1022,14 @@ def get_teachers(self) -&gt; Optional[list]:
 </li>
 <li>
 <h4><code><a title="edupage_api.people.EduStudent" href="#edupage_api.people.EduStudent">EduStudent</a></code></h4>
-<ul class="">
+<ul class="two-column">
 <li><code><a title="edupage_api.people.EduStudent.account_type" href="#edupage_api.people.EduStudent.account_type">account_type</a></code></li>
 <li><code><a title="edupage_api.people.EduStudent.gender" href="#edupage_api.people.EduStudent.gender">gender</a></code></li>
+<li><code><a title="edupage_api.people.EduStudent.get_id" href="#edupage_api.people.EduStudent.get_id">get_id</a></code></li>
 <li><code><a title="edupage_api.people.EduStudent.in_school_since" href="#edupage_api.people.EduStudent.in_school_since">in_school_since</a></code></li>
 <li><code><a title="edupage_api.people.EduStudent.name" href="#edupage_api.people.EduStudent.name">name</a></code></li>
 <li><code><a title="edupage_api.people.EduStudent.person_id" href="#edupage_api.people.EduStudent.person_id">person_id</a></code></li>
+<li><code><a title="edupage_api.people.EduStudent.set_student_only" href="#edupage_api.people.EduStudent.set_student_only">set_student_only</a></code></li>
 </ul>
 </li>
 <li>

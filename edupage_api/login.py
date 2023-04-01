@@ -44,6 +44,7 @@ class Login(Module):
 
         self.__parse_login_data(data)
         self.edupage.subdomain = data.split("-->")[0].split(" ")[-1]
+        self.edupage.username = username
 
     def login(self, username: str, password: str, subdomain: str):
         """Login while specifying the subdomain to log into.
@@ -78,8 +79,9 @@ class Login(Module):
 
         self.__parse_login_data(response.content.decode())
         self.edupage.subdomain = subdomain
+        self.edupage.username = username
 
-    def reload_data(self, subdomain: str, session_id: str):
+    def reload_data(self, subdomain: str, session_id: str, username: str):
         request_url = f"https://{subdomain}.edupage.org/user"
 
         self.edupage.session.cookies.set("PHPSESSID", session_id)
@@ -89,5 +91,6 @@ class Login(Module):
         try:
             self.__parse_login_data(response.content.decode())
             self.edupage.subdomain = subdomain
+            self.edupage.username = username
         except (TypeError, JSONDecodeError) as e:
             raise BadCredentialsException(f"Invalid session id: {e}")

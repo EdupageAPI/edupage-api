@@ -48,5 +48,14 @@ class InvalidLunchData(Exception):
 class Base64DecodeError(Exception):
     pass
 
-class InvalidRecipientsExceiption(Exception):
+class InvalidRecipientsException(Exception):
+    pass
+
+class InvalidChildException(Exception):
+    pass
+
+class UnknownServerError(Exception):
+    pass
+
+class NotParentException(Exception):
     pass

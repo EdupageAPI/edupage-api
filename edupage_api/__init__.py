@@ -20,6 +20,7 @@ from edupage_api.ringing import RingingTime, RingingTimes
 from edupage_api.substitution import Substitution, TimetableChange
 from edupage_api.timeline import TimelineEvent, TimelineEvents
 from edupage_api.timetables import Timetable, Timetables
+from edupage_api.parent import Parent
 
 
 class Edupage(EdupageModule):
@@ -36,6 +37,7 @@ class Edupage(EdupageModule):
         self.is_logged_in = False
         self.subdomain = None
         self.gsec_hash = None
+        self.username = None
 
         self.session = requests.session()
         self.session.request = functools.partial(self.session.request, timeout=request_timeout)
@@ -234,6 +236,21 @@ class Edupage(EdupageModule):
             RingingTime: The type (break or lesson) and time of the next ringing.
         """
         return RingingTimes(self).get_next_ringing_time(date_time)
+    
+    def switch_to_child(self, child: Union[EduAccount, int]):
+        """Switch to an account of a child - can only be used on parent accounts
+
+        Args:
+            child (EduAccount | int): The account or `person_id` of the child you want to switch to
+
+        Note: When you switch to a child account, all other methods will return data 
+        as if you were logged in as `child` 
+        """
+        Parent(self).switch_to_child(child)
+    
+    def switch_to_parent(self):
+        """Switches back to your parent account - can only be used on parent accounts"""
+        Parent(self).switch_to_parent()
 
     @classmethod
     def from_session_id(cls, session_id: str, subdomain: str):

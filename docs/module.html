@@ -36,7 +36,7 @@ import requests
 
 from edupage_api.exceptions import (MissingDataException,
                                     NotAnOnlineLessonError,
-                                    NotLoggedInException)
+                                    NotLoggedInException, NotParentException)
 
 
 class EdupageModule:
@@ -45,6 +45,7 @@ class EdupageModule:
     data: dict
     is_logged_in: bool
     gsec_hash: str
+    username: str
 
 
 class Module:
@@ -130,6 +131,21 @@ class ModuleHelper:
                 raise NotAnOnlineLessonError()
             return method(self, *method_args, **method_kwargs)
 
+        return __impl
+    
+    &#34;&#34;&#34;
+    Throws NotParentException if someone uses a method with this decorator
+    and is not using a parent account
+    &#34;&#34;&#34;
+    @staticmethod
+    def is_parent(method):
+        @wraps(method)
+        def __impl(self: Module, *method_args, **method_kwargs):
+            if &#34;Rodic&#34; not in self.edupage.get_user_id():
+                raise NotParentException()
+            
+            return method(self, *method_args, **method_kwargs)
+        
         return __impl</code></pre>
 </details>
 </section>
@@ -156,7 +172,8 @@ class ModuleHelper:
     session: requests.Session
     data: dict
     is_logged_in: bool
-    gsec_hash: str</code></pre>
+    gsec_hash: str
+    username: str</code></pre>
 </details>
 <h3>Subclasses</h3>
 <ul class="hlist">
@@ -181,6 +198,10 @@ class ModuleHelper:
 <div class="desc"></div>
 </dd>
 <dt id="edupage_api.module.EdupageModule.subdomain"><code class="name">var <span class="ident">subdomain</span> : str</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.module.EdupageModule.username"><code class="name">var <span class="ident">username</span> : str</code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
@@ -210,6 +231,7 @@ class ModuleHelper:
 <li><a title="edupage_api.login.Login" href="login.html#edupage_api.login.Login">Login</a></li>
 <li><a title="edupage_api.lunches.Lunches" href="lunches.html#edupage_api.lunches.Lunches">Lunches</a></li>
 <li><a title="edupage_api.messages.Messages" href="messages.html#edupage_api.messages.Messages">Messages</a></li>
+<li><a title="edupage_api.parent.Parent" href="parent.html#edupage_api.parent.Parent">Parent</a></li>
 <li><a title="edupage_api.people.People" href="people.html#edupage_api.people.People">People</a></li>
 <li><a title="edupage_api.ringing.RingingTimes" href="ringing.html#edupage_api.ringing.RingingTimes">RingingTimes</a></li>
 <li><a title="edupage_api.substitution.Substitution" href="substitution.html#edupage_api.substitution.Substitution">Substitution</a></li>
@@ -304,6 +326,21 @@ class ModuleHelper:
                 raise NotAnOnlineLessonError()
             return method(self, *method_args, **method_kwargs)
 
+        return __impl
+    
+    &#34;&#34;&#34;
+    Throws NotParentException if someone uses a method with this decorator
+    and is not using a parent account
+    &#34;&#34;&#34;
+    @staticmethod
+    def is_parent(method):
+        @wraps(method)
+        def __impl(self: Module, *method_args, **method_kwargs):
+            if &#34;Rodic&#34; not in self.edupage.get_user_id():
+                raise NotParentException()
+            
+            return method(self, *method_args, **method_kwargs)
+        
         return __impl</code></pre>
 </details>
 <h3>Static methods</h3>
@@ -341,6 +378,27 @@ def encode_form_data(data: dict) -&gt; str:
 
         output += f&#34;&amp;{entry}&#34; if i != 0 else entry
     return output</code></pre>
+</details>
+</dd>
+<dt id="edupage_api.module.ModuleHelper.is_parent"><code class="name flex">
+<span>def <span class="ident">is_parent</span></span>(<span>method)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def is_parent(method):
+    @wraps(method)
+    def __impl(self: Module, *method_args, **method_kwargs):
+        if &#34;Rodic&#34; not in self.edupage.get_user_id():
+            raise NotParentException()
+        
+        return method(self, *method_args, **method_kwargs)
+    
+    return __impl</code></pre>
 </details>
 </dd>
 <dt id="edupage_api.module.ModuleHelper.logged_in"><code class="name flex">
@@ -486,12 +544,13 @@ def urlencode(string: str) -&gt; str:
 <ul>
 <li>
 <h4><code><a title="edupage_api.module.EdupageModule" href="#edupage_api.module.EdupageModule">EdupageModule</a></code></h4>
-<ul class="">
+<ul class="two-column">
 <li><code><a title="edupage_api.module.EdupageModule.data" href="#edupage_api.module.EdupageModule.data">data</a></code></li>
 <li><code><a title="edupage_api.module.EdupageModule.gsec_hash" href="#edupage_api.module.EdupageModule.gsec_hash">gsec_hash</a></code></li>
 <li><code><a title="edupage_api.module.EdupageModule.is_logged_in" href="#edupage_api.module.EdupageModule.is_logged_in">is_logged_in</a></code></li>
 <li><code><a title="edupage_api.module.EdupageModule.session" href="#edupage_api.module.EdupageModule.session">session</a></code></li>
 <li><code><a title="edupage_api.module.EdupageModule.subdomain" href="#edupage_api.module.EdupageModule.subdomain">subdomain</a></code></li>
+<li><code><a title="edupage_api.module.EdupageModule.username" href="#edupage_api.module.EdupageModule.username">username</a></code></li>
 </ul>
 </li>
 <li>
@@ -502,6 +561,7 @@ def urlencode(string: str) -&gt; str:
 <ul class="">
 <li><code><a title="edupage_api.module.ModuleHelper.assert_none" href="#edupage_api.module.ModuleHelper.assert_none">assert_none</a></code></li>
 <li><code><a title="edupage_api.module.ModuleHelper.encode_form_data" href="#edupage_api.module.ModuleHelper.encode_form_data">encode_form_data</a></code></li>
+<li><code><a title="edupage_api.module.ModuleHelper.is_parent" href="#edupage_api.module.ModuleHelper.is_parent">is_parent</a></code></li>
 <li><code><a title="edupage_api.module.ModuleHelper.logged_in" href="#edupage_api.module.ModuleHelper.logged_in">logged_in</a></code></li>
 <li><code><a title="edupage_api.module.ModuleHelper.online_lesson" href="#edupage_api.module.ModuleHelper.online_lesson">online_lesson</a></code></li>
 <li><code><a title="edupage_api.module.ModuleHelper.parse_enum" href="#edupage_api.module.ModuleHelper.parse_enum">parse_enum</a></code></li>

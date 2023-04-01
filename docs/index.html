@@ -48,6 +48,7 @@ from edupage_api.ringing import RingingTime, RingingTimes
 from edupage_api.substitution import Substitution, TimetableChange
 from edupage_api.timeline import TimelineEvent, TimelineEvents
 from edupage_api.timetables import Timetable, Timetables
+from edupage_api.parent import Parent
 
 
 class Edupage(EdupageModule):
@@ -64,6 +65,7 @@ class Edupage(EdupageModule):
         self.is_logged_in = False
         self.subdomain = None
         self.gsec_hash = None
+        self.username = None
 
         self.session = requests.session()
         self.session.request = functools.partial(self.session.request, timeout=request_timeout)
@@ -262,6 +264,21 @@ class Edupage(EdupageModule):
             RingingTime: The type (break or lesson) and time of the next ringing.
         &#34;&#34;&#34;
         return RingingTimes(self).get_next_ringing_time(date_time)
+    
+    def switch_to_child(self, child: Union[EduAccount, int]):
+        &#34;&#34;&#34;Switch to an account of a child - can only be used on parent accounts
+
+        Args:
+            child (EduAccount | int): The account or `person_id` of the child you want to switch to
+
+        Note: When you switch to a child account, all other methods will return data 
+        as if you were logged in as `child` 
+        &#34;&#34;&#34;
+        Parent(self).switch_to_child(child)
+    
+    def switch_to_parent(self):
+        &#34;&#34;&#34;Switches back to your parent account - can only be used on parent accounts&#34;&#34;&#34;
+        Parent(self).switch_to_parent()
 
     @classmethod
     def from_session_id(cls, session_id: str, subdomain: str):
@@ -325,6 +342,10 @@ class Edupage(EdupageModule):
 <div class="desc"></div>
 </dd>
 <dt><code class="name"><a title="edupage_api.module" href="module.html">edupage_api.module</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt><code class="name"><a title="edupage_api.parent" href="parent.html">edupage_api.parent</a></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
@@ -392,6 +413,7 @@ Defaults to <code>5</code>.</dd>
         self.is_logged_in = False
         self.subdomain = None
         self.gsec_hash = None
+        self.username = None
 
         self.session = requests.session()
         self.session.request = functools.partial(self.session.request, timeout=request_timeout)
@@ -590,6 +612,21 @@ Defaults to <code>5</code>.</dd>
             RingingTime: The type (break or lesson) and time of the next ringing.
         &#34;&#34;&#34;
         return RingingTimes(self).get_next_ringing_time(date_time)
+    
+    def switch_to_child(self, child: Union[EduAccount, int]):
+        &#34;&#34;&#34;Switch to an account of a child - can only be used on parent accounts
+
+        Args:
+            child (EduAccount | int): The account or `person_id` of the child you want to switch to
+
+        Note: When you switch to a child account, all other methods will return data 
+        as if you were logged in as `child` 
+        &#34;&#34;&#34;
+        Parent(self).switch_to_child(child)
+    
+    def switch_to_parent(self):
+        &#34;&#34;&#34;Switches back to your parent account - can only be used on parent accounts&#34;&#34;&#34;
+        Parent(self).switch_to_parent()
 
     @classmethod
     def from_session_id(cls, session_id: str, subdomain: str):
@@ -631,6 +668,10 @@ Defaults to <code>5</code>.</dd>
 <div class="desc"></div>
 </dd>
 <dt id="edupage_api.Edupage.subdomain"><code class="name">var <span class="ident">subdomain</span> : str</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.Edupage.username"><code class="name">var <span class="ident">username</span> : str</code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
@@ -1207,6 +1248,45 @@ def from_session_id(cls, session_id: str, subdomain: str):
     return Messages(self).send_message(recipients, body)</code></pre>
 </details>
 </dd>
+<dt id="edupage_api.Edupage.switch_to_child"><code class="name flex">
+<span>def <span class="ident">switch_to_child</span></span>(<span>self, child: Union[<a title="edupage_api.people.EduAccount" href="people.html#edupage_api.people.EduAccount">EduAccount</a>, int])</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Switch to an account of a child - can only be used on parent accounts</p>
+<h2 id="args">Args</h2>
+<p>child (EduAccount | int): The account or <code>person_id</code> of the child you want to switch to
+Note: When you switch to a child account, all other methods will return data
+as if you were logged in as <code>child</code></p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def switch_to_child(self, child: Union[EduAccount, int]):
+    &#34;&#34;&#34;Switch to an account of a child - can only be used on parent accounts
+
+    Args:
+        child (EduAccount | int): The account or `person_id` of the child you want to switch to
+
+    Note: When you switch to a child account, all other methods will return data 
+    as if you were logged in as `child` 
+    &#34;&#34;&#34;
+    Parent(self).switch_to_child(child)</code></pre>
+</details>
+</dd>
+<dt id="edupage_api.Edupage.switch_to_parent"><code class="name flex">
+<span>def <span class="ident">switch_to_parent</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Switches back to your parent account - can only be used on parent accounts</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def switch_to_parent(self):
+    &#34;&#34;&#34;Switches back to your parent account - can only be used on parent accounts&#34;&#34;&#34;
+    Parent(self).switch_to_parent()</code></pre>
+</details>
+</dd>
 </dl>
 </dd>
 </dl>
@@ -1231,6 +1311,7 @@ def from_session_id(cls, session_id: str, subdomain: str):
 <li><code><a title="edupage_api.lunches" href="lunches.html">edupage_api.lunches</a></code></li>
 <li><code><a title="edupage_api.messages" href="messages.html">edupage_api.messages</a></code></li>
 <li><code><a title="edupage_api.module" href="module.html">edupage_api.module</a></code></li>
+<li><code><a title="edupage_api.parent" href="parent.html">edupage_api.parent</a></code></li>
 <li><code><a title="edupage_api.people" href="people.html">edupage_api.people</a></code></li>
 <li><code><a title="edupage_api.ringing" href="ringing.html">edupage_api.ringing</a></code></li>
 <li><code><a title="edupage_api.substitution" href="substitution.html">edupage_api.substitution</a></code></li>
@@ -1268,6 +1349,9 @@ def from_session_id(cls, session_id: str, subdomain: str):
 <li><code><a title="edupage_api.Edupage.send_message" href="#edupage_api.Edupage.send_message">send_message</a></code></li>
 <li><code><a title="edupage_api.Edupage.session" href="#edupage_api.Edupage.session">session</a></code></li>
 <li><code><a title="edupage_api.Edupage.subdomain" href="#edupage_api.Edupage.subdomain">subdomain</a></code></li>
+<li><code><a title="edupage_api.Edupage.switch_to_child" href="#edupage_api.Edupage.switch_to_child">switch_to_child</a></code></li>
+<li><code><a title="edupage_api.Edupage.switch_to_parent" href="#edupage_api.Edupage.switch_to_parent">switch_to_parent</a></code></li>
+<li><code><a title="edupage_api.Edupage.username" href="#edupage_api.Edupage.username">username</a></code></li>
 </ul>
 </li>
 </ul>

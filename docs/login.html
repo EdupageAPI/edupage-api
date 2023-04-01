@@ -72,6 +72,7 @@ class Login(Module):
 
         self.__parse_login_data(data)
         self.edupage.subdomain = data.split(&#34;--&gt;&#34;)[0].split(&#34; &#34;)[-1]
+        self.edupage.username = username
 
     def login(self, username: str, password: str, subdomain: str):
         &#34;&#34;&#34;Login while specifying the subdomain to log into.
@@ -106,8 +107,9 @@ class Login(Module):
 
         self.__parse_login_data(response.content.decode())
         self.edupage.subdomain = subdomain
+        self.edupage.username = username
 
-    def reload_data(self, subdomain: str, session_id: str):
+    def reload_data(self, subdomain: str, session_id: str, username: str):
         request_url = f&#34;https://{subdomain}.edupage.org/user&#34;
 
         self.edupage.session.cookies.set(&#34;PHPSESSID&#34;, session_id)
@@ -117,6 +119,7 @@ class Login(Module):
         try:
             self.__parse_login_data(response.content.decode())
             self.edupage.subdomain = subdomain
+            self.edupage.username = username
         except (TypeError, JSONDecodeError) as e:
             raise BadCredentialsException(f&#34;Invalid session id: {e}&#34;)</code></pre>
 </details>
@@ -179,6 +182,7 @@ class Login(Module):
 
         self.__parse_login_data(data)
         self.edupage.subdomain = data.split(&#34;--&gt;&#34;)[0].split(&#34; &#34;)[-1]
+        self.edupage.username = username
 
     def login(self, username: str, password: str, subdomain: str):
         &#34;&#34;&#34;Login while specifying the subdomain to log into.
@@ -213,8 +217,9 @@ class Login(Module):
 
         self.__parse_login_data(response.content.decode())
         self.edupage.subdomain = subdomain
+        self.edupage.username = username
 
-    def reload_data(self, subdomain: str, session_id: str):
+    def reload_data(self, subdomain: str, session_id: str, username: str):
         request_url = f&#34;https://{subdomain}.edupage.org/user&#34;
 
         self.edupage.session.cookies.set(&#34;PHPSESSID&#34;, session_id)
@@ -224,6 +229,7 @@ class Login(Module):
         try:
             self.__parse_login_data(response.content.decode())
             self.edupage.subdomain = subdomain
+            self.edupage.username = username
         except (TypeError, JSONDecodeError) as e:
             raise BadCredentialsException(f&#34;Invalid session id: {e}&#34;)</code></pre>
 </details>
@@ -288,7 +294,8 @@ class Login(Module):
         raise BadCredentialsException()
 
     self.__parse_login_data(response.content.decode())
-    self.edupage.subdomain = subdomain</code></pre>
+    self.edupage.subdomain = subdomain
+    self.edupage.username = username</code></pre>
 </details>
 </dd>
 <dt id="edupage_api.login.Login.login_auto"><code class="name flex">
@@ -337,11 +344,12 @@ class Login(Module):
         raise BadCredentialsException()
 
     self.__parse_login_data(data)
-    self.edupage.subdomain = data.split(&#34;--&gt;&#34;)[0].split(&#34; &#34;)[-1]</code></pre>
+    self.edupage.subdomain = data.split(&#34;--&gt;&#34;)[0].split(&#34; &#34;)[-1]
+    self.edupage.username = username</code></pre>
 </details>
 </dd>
 <dt id="edupage_api.login.Login.reload_data"><code class="name flex">
-<span>def <span class="ident">reload_data</span></span>(<span>self, subdomain: str, session_id: str)</span>
+<span>def <span class="ident">reload_data</span></span>(<span>self, subdomain: str, session_id: str, username: str)</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
@@ -349,7 +357,7 @@ class Login(Module):
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def reload_data(self, subdomain: str, session_id: str):
+<pre><code class="python">def reload_data(self, subdomain: str, session_id: str, username: str):
     request_url = f&#34;https://{subdomain}.edupage.org/user&#34;
 
     self.edupage.session.cookies.set(&#34;PHPSESSID&#34;, session_id)
@@ -359,6 +367,7 @@ class Login(Module):
     try:
         self.__parse_login_data(response.content.decode())
         self.edupage.subdomain = subdomain
+        self.edupage.username = username
     except (TypeError, JSONDecodeError) as e:
         raise BadCredentialsException(f&#34;Invalid session id: {e}&#34;)</code></pre>
 </details>

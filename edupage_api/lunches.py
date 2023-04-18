@@ -107,7 +107,7 @@ class Lunches(Module):
         request_url = f"https://{self.edupage.subdomain}.edupage.org/menu/?date={date_strftime}"
         response = self.edupage.session.get(request_url).content.decode()
 
-        lunch_data = json.loads(response.split("edupageData : ")[1].split(",\r\n")[0])
+        lunch_data = json.loads(response.split("edupageData: ")[1].split(",\r\n")[0])
         lunches_data = lunch_data.get(self.edupage.subdomain)
 
         try:

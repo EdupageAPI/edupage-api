@@ -243,8 +243,7 @@ class Edupage(EdupageModule):
         Args:
             child (EduAccount | int): The account or `person_id` of the child you want to switch to
 
-        Note: When you switch to a child account, all other methods will return data 
-        as if you were logged in as `child` 
+        Note: When you switch to a child account, all other methods will return data as if you were logged in as `child` 
         """
         Parent(self).switch_to_child(child)
     

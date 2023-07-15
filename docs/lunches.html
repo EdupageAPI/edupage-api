@@ -135,7 +135,7 @@ class Lunches(Module):
         request_url = f&#34;https://{self.edupage.subdomain}.edupage.org/menu/?date={date_strftime}&#34;
         response = self.edupage.session.get(request_url).content.decode()
 
-        lunch_data = json.loads(response.split(&#34;edupageData : &#34;)[1].split(&#34;,\r\n&#34;)[0])
+        lunch_data = json.loads(response.split(&#34;edupageData: &#34;)[1].split(&#34;,\r\n&#34;)[0])
         lunches_data = lunch_data.get(self.edupage.subdomain)
 
         try:
@@ -362,7 +362,7 @@ class Lunch:
         request_url = f&#34;https://{self.edupage.subdomain}.edupage.org/menu/?date={date_strftime}&#34;
         response = self.edupage.session.get(request_url).content.decode()
 
-        lunch_data = json.loads(response.split(&#34;edupageData : &#34;)[1].split(&#34;,\r\n&#34;)[0])
+        lunch_data = json.loads(response.split(&#34;edupageData: &#34;)[1].split(&#34;,\r\n&#34;)[0])
         lunches_data = lunch_data.get(self.edupage.subdomain)
 
         try:
@@ -458,7 +458,7 @@ def get_lunch(self, date: datetime):
     request_url = f&#34;https://{self.edupage.subdomain}.edupage.org/menu/?date={date_strftime}&#34;
     response = self.edupage.session.get(request_url).content.decode()
 
-    lunch_data = json.loads(response.split(&#34;edupageData : &#34;)[1].split(&#34;,\r\n&#34;)[0])
+    lunch_data = json.loads(response.split(&#34;edupageData: &#34;)[1].split(&#34;,\r\n&#34;)[0])
     lunches_data = lunch_data.get(self.edupage.subdomain)
 
     try:

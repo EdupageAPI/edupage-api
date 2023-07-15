@@ -30,6 +30,7 @@
 from dataclasses import dataclass
 from datetime import datetime
 from typing import Optional, Union
+from enum import Enum
 
 from edupage_api.dbi import DbiHelper
 from edupage_api.exceptions import FailedToParseGradeDataError
@@ -52,6 +53,10 @@ class EduGrade:
     verbal: bool
     percent: float
 
+class Term(Enum):
+    FIRST = &#34;P1&#34;
+    SECOND = &#34;P2&#34;
+
 
 class Grades(Module):
     def __parse_grade_data(self, data: str) -&gt; dict:
@@ -62,17 +67,29 @@ class Grades(Module):
 
     def __get_grade_data(self):
         request_url = f&#34;https://{self.edupage.subdomain}.edupage.org/znamky/&#34;
-
         response = self.edupage.session.get(request_url).content.decode()
 
         try:
             return self.__parse_grade_data(response)
         except json.JSONDecodeError:
             raise FailedToParseGradeDataError(&#34;Failed to parse JSON&#34;)
+    
+    def __get_grade_data_for_term(self, term: Term, year: int):
+        request_url = f&#34;https://{self.edupage.subdomain}.edupage.org/znamky/?what=studentviewer&amp;znamky_yearid={year}&amp;nadobdobie={term.value}&#34;
+        response = self.edupage.session.post(request_url).content.decode()
 
+        try:
+            return self.__parse_grade_data(response)
+        except json.JSONDecodeError:
+            raise FailedToParseGradeDataError(&#34;Failed to parse JSON&#34;)
+    
     @ModuleHelper.logged_in
-    def get_grades(self) -&gt; list[EduGrade]:
-        grade_data = self.__get_grade_data()
+    def get_grades(
+        self, 
+        term: Optional[Term], 
+        year: Optional[int]
+    ) -&gt; list[EduGrade]:
+        grade_data = self.__get_grade_data_for_term(term, year) if term and year else self.__get_grade_data()
 
         grades = grade_data.get(&#34;vsetkyZnamky&#34;)
         grade_details = grade_data.get(&#34;vsetkyUdalosti&#34;).get(&#34;edupage&#34;)
@@ -123,11 +140,11 @@ class Grades(Module):
                 importance = float(details.get(&#34;p_vaha&#34;)) / 20
             elif grade_type == &#34;2&#34;:
                 # Points grade (in points – e.g. 0 – 20 points)
-                max_points = int(details.get(&#34;p_vaha&#34;))
+                max_points = float(details.get(&#34;p_vaha&#34;))
                 importance = None
             elif grade_type == &#34;3&#34;:
                 # Percental grade (0 – 100 %)
-                max_points = int(details.get(&#34;p_vaha_body&#34;))
+                max_points = float(details.get(&#34;p_vaha_body&#34;))
                 importance = float(details.get(&#34;p_vaha&#34;)) / 20
 
              # Grade
@@ -267,17 +284,29 @@ class EduGrade:
 
     def __get_grade_data(self):
         request_url = f&#34;https://{self.edupage.subdomain}.edupage.org/znamky/&#34;
-
         response = self.edupage.session.get(request_url).content.decode()
 
         try:
             return self.__parse_grade_data(response)
         except json.JSONDecodeError:
             raise FailedToParseGradeDataError(&#34;Failed to parse JSON&#34;)
+    
+    def __get_grade_data_for_term(self, term: Term, year: int):
+        request_url = f&#34;https://{self.edupage.subdomain}.edupage.org/znamky/?what=studentviewer&amp;znamky_yearid={year}&amp;nadobdobie={term.value}&#34;
+        response = self.edupage.session.post(request_url).content.decode()
 
+        try:
+            return self.__parse_grade_data(response)
+        except json.JSONDecodeError:
+            raise FailedToParseGradeDataError(&#34;Failed to parse JSON&#34;)
+    
     @ModuleHelper.logged_in
-    def get_grades(self) -&gt; list[EduGrade]:
-        grade_data = self.__get_grade_data()
+    def get_grades(
+        self, 
+        term: Optional[Term], 
+        year: Optional[int]
+    ) -&gt; list[EduGrade]:
+        grade_data = self.__get_grade_data_for_term(term, year) if term and year else self.__get_grade_data()
 
         grades = grade_data.get(&#34;vsetkyZnamky&#34;)
         grade_details = grade_data.get(&#34;vsetkyUdalosti&#34;).get(&#34;edupage&#34;)
@@ -328,11 +357,11 @@ class EduGrade:
                 importance = float(details.get(&#34;p_vaha&#34;)) / 20
             elif grade_type == &#34;2&#34;:
                 # Points grade (in points – e.g. 0 – 20 points)
-                max_points = int(details.get(&#34;p_vaha&#34;))
+                max_points = float(details.get(&#34;p_vaha&#34;))
                 importance = None
             elif grade_type == &#34;3&#34;:
                 # Percental grade (0 – 100 %)
-                max_points = int(details.get(&#34;p_vaha_body&#34;))
+                max_points = float(details.get(&#34;p_vaha_body&#34;))
                 importance = float(details.get(&#34;p_vaha&#34;)) / 20
 
              # Grade
@@ -373,7 +402,7 @@ class EduGrade:
 <h3>Methods</h3>
 <dl>
 <dt id="edupage_api.grades.Grades.get_grades"><code class="name flex">
-<span>def <span class="ident">get_grades</span></span>(<span>self) ‑> list[<a title="edupage_api.grades.EduGrade" href="#edupage_api.grades.EduGrade">EduGrade</a>]</span>
+<span>def <span class="ident">get_grades</span></span>(<span>self, term: Optional[<a title="edupage_api.grades.Term" href="#edupage_api.grades.Term">Term</a>], year: Optional[int]) ‑> list[<a title="edupage_api.grades.EduGrade" href="#edupage_api.grades.EduGrade">EduGrade</a>]</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
@@ -382,8 +411,12 @@ class EduGrade:
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">@ModuleHelper.logged_in
-def get_grades(self) -&gt; list[EduGrade]:
-    grade_data = self.__get_grade_data()
+def get_grades(
+    self, 
+    term: Optional[Term], 
+    year: Optional[int]
+) -&gt; list[EduGrade]:
+    grade_data = self.__get_grade_data_for_term(term, year) if term and year else self.__get_grade_data()
 
     grades = grade_data.get(&#34;vsetkyZnamky&#34;)
     grade_details = grade_data.get(&#34;vsetkyUdalosti&#34;).get(&#34;edupage&#34;)
@@ -434,11 +467,11 @@ def get_grades(self) -&gt; list[EduGrade]:
             importance = float(details.get(&#34;p_vaha&#34;)) / 20
         elif grade_type == &#34;2&#34;:
             # Points grade (in points – e.g. 0 – 20 points)
-            max_points = int(details.get(&#34;p_vaha&#34;))
+            max_points = float(details.get(&#34;p_vaha&#34;))
             importance = None
         elif grade_type == &#34;3&#34;:
             # Percental grade (0 – 100 %)
-            max_points = int(details.get(&#34;p_vaha_body&#34;))
+            max_points = float(details.get(&#34;p_vaha_body&#34;))
             importance = float(details.get(&#34;p_vaha&#34;)) / 20
 
          # Grade
@@ -472,6 +505,36 @@ def get_grades(self) -&gt; list[EduGrade]:
 
     return output</code></pre>
 </details>
+</dd>
+</dl>
+</dd>
+<dt id="edupage_api.grades.Term"><code class="flex name class">
+<span>class <span class="ident">Term</span></span>
+<span>(</span><span>value, names=None, *, module=None, qualname=None, type=None, start=1)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>An enumeration.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Term(Enum):
+    FIRST = &#34;P1&#34;
+    SECOND = &#34;P2&#34;</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>enum.Enum</li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="edupage_api.grades.Term.FIRST"><code class="name">var <span class="ident">FIRST</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.grades.Term.SECOND"><code class="name">var <span class="ident">SECOND</span></code></dt>
+<dd>
+<div class="desc"></div>
 </dd>
 </dl>
 </dd>
@@ -512,6 +575,13 @@ def get_grades(self) -&gt; list[EduGrade]:
 <h4><code><a title="edupage_api.grades.Grades" href="#edupage_api.grades.Grades">Grades</a></code></h4>
 <ul class="">
 <li><code><a title="edupage_api.grades.Grades.get_grades" href="#edupage_api.grades.Grades.get_grades">get_grades</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="edupage_api.grades.Term" href="#edupage_api.grades.Term">Term</a></code></h4>
+<ul class="">
+<li><code><a title="edupage_api.grades.Term.FIRST" href="#edupage_api.grades.Term.FIRST">FIRST</a></code></li>
+<li><code><a title="edupage_api.grades.Term.SECOND" href="#edupage_api.grades.Term.SECOND">SECOND</a></code></li>
 </ul>
 </li>
 </ul>

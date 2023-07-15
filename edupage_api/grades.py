@@ -2,6 +2,7 @@ import json
 from dataclasses import dataclass
 from datetime import datetime
 from typing import Optional, Union
+from enum import Enum
 
 from edupage_api.dbi import DbiHelper
 from edupage_api.exceptions import FailedToParseGradeDataError
@@ -24,6 +25,10 @@ class EduGrade:
     verbal: bool
     percent: float
 
+class Term(Enum):
+    FIRST = "P1"
+    SECOND = "P2"
+
 
 class Grades(Module):
     def __parse_grade_data(self, data: str) -> dict:
@@ -32,22 +37,31 @@ class Grades(Module):
 
         return json.loads(json_string)
 
-    def __get_grade_data(self, term, year):
-        if (term is not None and year is not None):
-            request_url = f"https://{self.edupage.subdomain}.edupage.org/znamky/?what=studentviewer&znamky_yearid={term}&nadobdobie={year}"
-            response = self.edupage.session.post(request_url).content.decode()
-        else:
-            request_url = f"https://{self.edupage.subdomain}.edupage.org/znamky/"
-            response = self.edupage.session.get(request_url).content.decode()
+    def __get_grade_data(self):
+        request_url = f"https://{self.edupage.subdomain}.edupage.org/znamky/"
+        response = self.edupage.session.get(request_url).content.decode()
 
         try:
             return self.__parse_grade_data(response)
         except json.JSONDecodeError:
             raise FailedToParseGradeDataError("Failed to parse JSON")
+    
+    def __get_grade_data_for_term(self, term: Term, year: int):
+        request_url = f"https://{self.edupage.subdomain}.edupage.org/znamky/?what=studentviewer&znamky_yearid={year}&nadobdobie={term.value}"
+        response = self.edupage.session.post(request_url).content.decode()
 
+        try:
+            return self.__parse_grade_data(response)
+        except json.JSONDecodeError:
+            raise FailedToParseGradeDataError("Failed to parse JSON")
+    
     @ModuleHelper.logged_in
-    def get_grades(self, term, year) -> list[EduGrade]:
-        grade_data = self.__get_grade_data(term, year)
+    def get_grades(
+        self, 
+        term: Optional[Term], 
+        year: Optional[int]
+    ) -> list[EduGrade]:
+        grade_data = self.__get_grade_data_for_term(term, year) if term and year else self.__get_grade_data()
 
         grades = grade_data.get("vsetkyZnamky")
         grade_details = grade_data.get("vsetkyUdalosti").get("edupage")

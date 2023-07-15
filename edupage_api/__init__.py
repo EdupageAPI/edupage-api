@@ -9,7 +9,7 @@ from requests import Response
 from edupage_api.cloud import Cloud, EduCloudFile
 from edupage_api.custom_request import CustomRequest
 from edupage_api.foreign_timetables import ForeignTimetables, LessonSkeleton
-from edupage_api.grades import EduGrade, Grades
+from edupage_api.grades import EduGrade, Grades, Term
 from edupage_api.login import Login
 from edupage_api.lunches import Lunch, Lunches
 from edupage_api.messages import Messages
@@ -148,14 +148,23 @@ class Edupage(EdupageModule):
 
         return Cloud(self).upload_file(fd)
 
-    def get_grades(self, year = None, term = None) -> list[EduGrade]:
-        """Get list of all available grades.
+    def get_grades(self) -> list[EduGrade]:
+        """Get a list of all available grades.
 
         Returns:
             list[EduGrade]: List of `EduGrade`s.
         """
 
-        return Grades(self).get_grades(year, term)
+        return Grades(self).get_grades(year=None, term=None)
+    
+    def get_grades_for_term(self, year: int, term: Term) -> list[EduGrade]:
+        """Get a list of all available grades for a given year and term
+        
+        Returns:
+            list[EduGrade]: List of `EduGrade`s
+        """
+
+        return Grades(self).get_grades(year=year, term=term)
 
     def get_user_id(self) -> str:
         """Get your EduPage user ID.

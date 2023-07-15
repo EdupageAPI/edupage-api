@@ -148,14 +148,14 @@ class Edupage(EdupageModule):
 
         return Cloud(self).upload_file(fd)
 
-    def get_grades(self) -> list[EduGrade]:
+    def get_grades(self, year = None, term = None) -> list[EduGrade]:
         """Get list of all available grades.
 
         Returns:
             list[EduGrade]: List of `EduGrade`s.
         """
 
-        return Grades(self).get_grades()
+        return Grades(self).get_grades(year, term)
 
     def get_user_id(self) -> str:
         """Get your EduPage user ID.

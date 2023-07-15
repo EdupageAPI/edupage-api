@@ -112,11 +112,11 @@ class Grades(Module):
                 importance = float(details.get("p_vaha")) / 20
             elif grade_type == "2":
                 # Points grade (in points – e.g. 0 – 20 points)
-                max_points = int(details.get("p_vaha"))
+                max_points = float(details.get("p_vaha"))
                 importance = None
             elif grade_type == "3":
                 # Percental grade (0 – 100 %)
-                max_points = int(details.get("p_vaha_body"))
+                max_points = float(details.get("p_vaha_body"))
                 importance = float(details.get("p_vaha")) / 20
 
              # Grade

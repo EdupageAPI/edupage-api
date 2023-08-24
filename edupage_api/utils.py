@@ -20,7 +20,7 @@ class GradeUtil:
             teacher = teachers.get(teacher_id)
 
             teacher_name = teacher.get("firstname") + " " + teacher.get("lastname")
-        except:
+        except AttributeError:
             teacher_name = None
 
         return teacher_name
@@ -44,7 +44,7 @@ class IdUtil:
 
         try:
             class_name = self.dbi.get("classes").get(c_id).get("name")
-        except:
+        except AttributeError:
             class_name = None
 
         return class_name
@@ -68,7 +68,7 @@ class IdUtil:
 
         try:
             classroom = self.dbi.get("classrooms").get(c_id).get("short")
-        except:
+        except AttributeError:
             classroom = None
 
         return classroom
@@ -79,7 +79,7 @@ class IdUtil:
 
         try:
             subject = self.dbi.get("subjects").get(s_id).get("short")
-        except:
+        except AttributeError:
             subject = None
 
         return subject

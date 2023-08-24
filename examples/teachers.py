@@ -11,9 +11,13 @@ def print_teacher_info(teacher: EduTeacher):
     print(f"{teacher.name} is in your school since {teacher.in_school_since}")
 
 
-oldest_teacher = teachers[0]
+oldest_teacher = None
 for teacher in teachers:
     if not teacher.in_school_since:
+        continue
+
+    if oldest_teacher is None:
+        oldest_teacher = teacher
         continue
 
     if teacher.in_school_since < oldest_teacher.in_school_since:
@@ -22,13 +26,17 @@ for teacher in teachers:
 print("The oldest teacher (the longest time in your school):")
 print_teacher_info(oldest_teacher)
 
-yonguest_teacher = teachers[0]
+youngest_teacher = None
 for teacher in teachers:
     if not teacher.in_school_since:
         continue
 
-    if teacher.in_school_since > yonguest_teacher.in_school_since:
-        yonguest_teacher = teacher
+    if youngest_teacher is None:
+        youngest_teacher = teacher
+        continue
 
-print("\n\nThe yonguest teacher in your school (the shortest time in your school):")
-print_teacher_info(yonguest_teacher)
+    if teacher.in_school_since > youngest_teacher.in_school_since:
+        youngest_teacher = teacher
+
+print("\n\nThe youngest teacher in your school (the shortest time in your school):")
+print_teacher_info(youngest_teacher)

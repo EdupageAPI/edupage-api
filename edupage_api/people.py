@@ -31,7 +31,7 @@ class EduAccount:
     person_id: int
     name: str
     gender: Gender
-    in_school_since: datetime
+    in_school_since: Optional[datetime]
     account_type: EduAccountType
 
     @staticmethod
@@ -85,7 +85,7 @@ class EduAccount:
 
 @dataclass
 class EduStudent(EduAccount):
-    def __init__(self, person_id: int, name: str, gender: Gender, in_school_since: datetime,
+    def __init__(self, person_id: int, name: str, gender: Gender, in_school_since: Optional[datetime],
                  class_id: int, number_in_class: int):
         super().__init__(person_id, name, gender, in_school_since, EduAccountType.STUDENT)
 
@@ -113,14 +113,14 @@ class EduStudentSkeleton:
 
 @dataclass
 class EduParent(EduAccount):
-    def __init__(self, person_id: int, name: str, gender: Gender, in_school_since: datetime):
+    def __init__(self, person_id: int, name: str, gender: Gender, in_school_since: Optional[datetime]):
         super().__init__(person_id, name, gender, in_school_since, EduAccountType.PARENT)
 
 
 @dataclass
 class EduTeacher(EduAccount):
-    def __init__(self, person_id: int, name: str, gender: Gender, in_school_since: datetime,
-                 classroom_name: str, teacher_to: datetime):
+    def __init__(self, person_id: int, name: str, gender: Gender, in_school_since: Optional[datetime],
+                 classroom_name: str, teacher_to: Optional[datetime]):
         super().__init__(person_id, name, gender, in_school_since, EduAccountType.TEACHER)
 
         self.teacher_to = teacher_to

@@ -21,6 +21,5 @@ USERNAME
 PASSWORD
 
 dump.html
-test_resources/*
-test_resources
-tests.py
+tests/
+test.py

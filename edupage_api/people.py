@@ -60,7 +60,7 @@ class EduAccount:
         elif account_type == EduAccountType.TEACHER:
             classroom_id = person_data.get("classroomid")
             classroom_name = DbiHelper(edupage).fetch_classroom_number(
-                classroom_id) if ModuleHelper.parse_int(classroom_id) else ""
+                classroom_id)
 
             name = DbiHelper(edupage).fetch_teacher_name(person_id)
 

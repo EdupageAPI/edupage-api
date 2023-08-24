@@ -14,7 +14,7 @@ class DbiHelper(Module):
 
         return dbi.get(item_group_name)
 
-    def __get_item_with_id(self, item_group_name: str, item_id: int) -> Optional[dict]:
+    def __get_item_with_id(self, item_group_name: str, item_id: str) -> Optional[dict]:
         items_in_group = self.__get_item_group(item_group_name)
         if items_in_group is None:
             return None
@@ -32,7 +32,7 @@ class DbiHelper(Module):
         if subject_item is not None:
             return subject_item.get("short")
 
-    def fetch_classroom_number(self, classroom_id: int) -> Optional[str]:
+    def fetch_classroom_number(self, classroom_id: str) -> Optional[str]:
         classroom_item = self.__get_item_with_id("classrooms", classroom_id)
         if classroom_item is not None:
             return classroom_item.get("short")

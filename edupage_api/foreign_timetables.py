@@ -93,7 +93,7 @@ class ForeignTimetables(Module):
 
             return filtered[0]
 
-        def classroom_by_id(id: int):
+        def classroom_by_id(id: str):
             return DbiHelper(self.edupage).fetch_classroom_number(id)
 
         table = None
@@ -136,7 +136,7 @@ class ForeignTimetables(Module):
             classes = [int(id) for id in skeleton.get("classids")]
             groups = skeleton.get("groupnames")
             teachers = [teacher_by_id(int(id)) for id in skeleton.get("teacherids")]
-            classrooms = [classroom_by_id(int(id)) for id in skeleton.get("classroomids")]
+            classrooms = [classroom_by_id(id) for id in skeleton.get("classroomids")]
 
             duration = (skeleton.get("durationperiods")
                         if skeleton.get("durationperiods") is not None else 1)

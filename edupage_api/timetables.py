@@ -135,13 +135,11 @@ class Timetables(Module):
             classrooms = []
             classroom_ids = subject.get("classroomids")
             if classroom_ids is not None and len(classroom_ids) != 0:
-                for classroom_id_str in classroom_ids:
-                    if not classroom_id_str:
+                for classroom_id in classroom_ids:
+                    if not classroom_id:
                         continue
 
-                    classroom_id = int(classroom_id_str)
                     classroom_number = DbiHelper(self.edupage).fetch_classroom_number(classroom_id)
-
                     classrooms.append(classroom_number)
 
             start_of_lesson_str = subject.get("starttime")

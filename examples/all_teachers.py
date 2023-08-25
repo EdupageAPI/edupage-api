@@ -6,8 +6,5 @@ edupage.login_auto("Username (or e-mail)", "Password")
 
 teachers = edupage.get_teachers()
 
-def print_teacher_name(teacher: EduTeacher):
-    print(f"{teacher.name}")
-
-for teacher in teachers:
-    print_teacher_name(teacher)
+for i, teacher in enumerate(teachers):
+    print(f"{i + 1}. {teacher.name}")

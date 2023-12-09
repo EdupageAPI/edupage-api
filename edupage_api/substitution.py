@@ -118,7 +118,7 @@ class Substitution(Module):
 
             for change in class_changes_rows:
                 change = change.replace("\">", "</span>")
-                action, lesson_n, title = change.split("</span>")[:-1]
+                action, lesson_n, title = change.split("</span>", 3)[:-1]
 
                 if "<img src=" in title:
                     title = title.split(">")[1]

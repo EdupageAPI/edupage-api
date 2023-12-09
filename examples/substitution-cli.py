@@ -96,7 +96,6 @@ else:
 
             missing_teachers_writer.writeheader()
             missing_teachers_dict = [{"name": t} for t in data["missingTeachers"]]
-            print(missing_teachers_dict)
             missing_teachers_writer.writerows(missing_teachers_dict)
 
             stream.write("\n\n")

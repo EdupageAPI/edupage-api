@@ -48,7 +48,7 @@ class GradeUtil:
             teacher = teachers.get(teacher_id)
 
             teacher_name = teacher.get(&#34;firstname&#34;) + &#34; &#34; + teacher.get(&#34;lastname&#34;)
-        except:
+        except AttributeError:
             teacher_name = None
 
         return teacher_name
@@ -72,7 +72,7 @@ class IdUtil:
 
         try:
             class_name = self.dbi.get(&#34;classes&#34;).get(c_id).get(&#34;name&#34;)
-        except:
+        except AttributeError:
             class_name = None
 
         return class_name
@@ -96,7 +96,7 @@ class IdUtil:
 
         try:
             classroom = self.dbi.get(&#34;classrooms&#34;).get(c_id).get(&#34;short&#34;)
-        except:
+        except AttributeError:
             classroom = None
 
         return classroom
@@ -107,7 +107,7 @@ class IdUtil:
 
         try:
             subject = self.dbi.get(&#34;subjects&#34;).get(s_id).get(&#34;short&#34;)
-        except:
+        except AttributeError:
             subject = None
 
         return subject
@@ -172,7 +172,7 @@ class RequestUtil:
             teacher = teachers.get(teacher_id)
 
             teacher_name = teacher.get(&#34;firstname&#34;) + &#34; &#34; + teacher.get(&#34;lastname&#34;)
-        except:
+        except AttributeError:
             teacher_name = None
 
         return teacher_name</code></pre>
@@ -202,7 +202,7 @@ class RequestUtil:
         teacher = teachers.get(teacher_id)
 
         teacher_name = teacher.get(&#34;firstname&#34;) + &#34; &#34; + teacher.get(&#34;lastname&#34;)
-    except:
+    except AttributeError:
         teacher_name = None
 
     return teacher_name</code></pre>
@@ -231,7 +231,7 @@ class RequestUtil:
 
         try:
             class_name = self.dbi.get(&#34;classes&#34;).get(c_id).get(&#34;name&#34;)
-        except:
+        except AttributeError:
             class_name = None
 
         return class_name
@@ -255,7 +255,7 @@ class RequestUtil:
 
         try:
             classroom = self.dbi.get(&#34;classrooms&#34;).get(c_id).get(&#34;short&#34;)
-        except:
+        except AttributeError:
             classroom = None
 
         return classroom
@@ -266,7 +266,7 @@ class RequestUtil:
 
         try:
             subject = self.dbi.get(&#34;subjects&#34;).get(s_id).get(&#34;short&#34;)
-        except:
+        except AttributeError:
             subject = None
 
         return subject</code></pre>
@@ -288,7 +288,7 @@ class RequestUtil:
 
     try:
         class_name = self.dbi.get(&#34;classes&#34;).get(c_id).get(&#34;name&#34;)
-    except:
+    except AttributeError:
         class_name = None
 
     return class_name</code></pre>
@@ -309,7 +309,7 @@ class RequestUtil:
 
     try:
         classroom = self.dbi.get(&#34;classrooms&#34;).get(c_id).get(&#34;short&#34;)
-    except:
+    except AttributeError:
         classroom = None
 
     return classroom</code></pre>
@@ -330,7 +330,7 @@ class RequestUtil:
 
     try:
         subject = self.dbi.get(&#34;subjects&#34;).get(s_id).get(&#34;short&#34;)
-    except:
+    except AttributeError:
         subject = None
 
     return subject</code></pre>

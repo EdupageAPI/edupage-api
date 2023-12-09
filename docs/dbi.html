@@ -42,7 +42,7 @@ class DbiHelper(Module):
 
         return dbi.get(item_group_name)
 
-    def __get_item_with_id(self, item_group_name: str, item_id: int) -&gt; Optional[dict]:
+    def __get_item_with_id(self, item_group_name: str, item_id: str) -&gt; Optional[dict]:
         items_in_group = self.__get_item_group(item_group_name)
         if items_in_group is None:
             return None
@@ -60,7 +60,7 @@ class DbiHelper(Module):
         if subject_item is not None:
             return subject_item.get(&#34;short&#34;)
 
-    def fetch_classroom_number(self, classroom_id: int) -&gt; Optional[str]:
+    def fetch_classroom_number(self, classroom_id: str) -&gt; Optional[str]:
         classroom_item = self.__get_item_with_id(&#34;classrooms&#34;, classroom_id)
         if classroom_item is not None:
             return classroom_item.get(&#34;short&#34;)
@@ -163,7 +163,7 @@ class DbiHelper(Module):
 
         return dbi.get(item_group_name)
 
-    def __get_item_with_id(self, item_group_name: str, item_id: int) -&gt; Optional[dict]:
+    def __get_item_with_id(self, item_group_name: str, item_id: str) -&gt; Optional[dict]:
         items_in_group = self.__get_item_group(item_group_name)
         if items_in_group is None:
             return None
@@ -181,7 +181,7 @@ class DbiHelper(Module):
         if subject_item is not None:
             return subject_item.get(&#34;short&#34;)
 
-    def fetch_classroom_number(self, classroom_id: int) -&gt; Optional[str]:
+    def fetch_classroom_number(self, classroom_id: str) -&gt; Optional[str]:
         classroom_item = self.__get_item_with_id(&#34;classrooms&#34;, classroom_id)
         if classroom_item is not None:
             return classroom_item.get(&#34;short&#34;)
@@ -288,7 +288,7 @@ class DbiHelper(Module):
 </details>
 </dd>
 <dt id="edupage_api.dbi.DbiHelper.fetch_classroom_number"><code class="name flex">
-<span>def <span class="ident">fetch_classroom_number</span></span>(<span>self, classroom_id: int) ‑> Optional[str]</span>
+<span>def <span class="ident">fetch_classroom_number</span></span>(<span>self, classroom_id: str) ‑> Optional[str]</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
@@ -296,7 +296,7 @@ class DbiHelper(Module):
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def fetch_classroom_number(self, classroom_id: int) -&gt; Optional[str]:
+<pre><code class="python">def fetch_classroom_number(self, classroom_id: str) -&gt; Optional[str]:
     classroom_item = self.__get_item_with_id(&#34;classrooms&#34;, classroom_id)
     if classroom_item is not None:
         return classroom_item.get(&#34;short&#34;)</code></pre>

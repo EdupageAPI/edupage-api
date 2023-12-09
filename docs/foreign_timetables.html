@@ -121,7 +121,7 @@ class ForeignTimetables(Module):
 
             return filtered[0]
 
-        def classroom_by_id(id: int):
+        def classroom_by_id(id: str):
             return DbiHelper(self.edupage).fetch_classroom_number(id)
 
         table = None
@@ -164,7 +164,7 @@ class ForeignTimetables(Module):
             classes = [int(id) for id in skeleton.get(&#34;classids&#34;)]
             groups = skeleton.get(&#34;groupnames&#34;)
             teachers = [teacher_by_id(int(id)) for id in skeleton.get(&#34;teacherids&#34;)]
-            classrooms = [classroom_by_id(int(id)) for id in skeleton.get(&#34;classroomids&#34;)]
+            classrooms = [classroom_by_id(id) for id in skeleton.get(&#34;classroomids&#34;)]
 
             duration = (skeleton.get(&#34;durationperiods&#34;)
                         if skeleton.get(&#34;durationperiods&#34;) is not None else 1)
@@ -265,7 +265,7 @@ class ForeignTimetables(Module):
 
             return filtered[0]
 
-        def classroom_by_id(id: int):
+        def classroom_by_id(id: str):
             return DbiHelper(self.edupage).fetch_classroom_number(id)
 
         table = None
@@ -308,7 +308,7 @@ class ForeignTimetables(Module):
             classes = [int(id) for id in skeleton.get(&#34;classids&#34;)]
             groups = skeleton.get(&#34;groupnames&#34;)
             teachers = [teacher_by_id(int(id)) for id in skeleton.get(&#34;teacherids&#34;)]
-            classrooms = [classroom_by_id(int(id)) for id in skeleton.get(&#34;classroomids&#34;)]
+            classrooms = [classroom_by_id(id) for id in skeleton.get(&#34;classroomids&#34;)]
 
             duration = (skeleton.get(&#34;durationperiods&#34;)
                         if skeleton.get(&#34;durationperiods&#34;) is not None else 1)
@@ -371,7 +371,7 @@ def get_timetable_for_person(self, id: int, date: datetime) -&gt; List[LessonSke
 
         return filtered[0]
 
-    def classroom_by_id(id: int):
+    def classroom_by_id(id: str):
         return DbiHelper(self.edupage).fetch_classroom_number(id)
 
     table = None
@@ -414,7 +414,7 @@ def get_timetable_for_person(self, id: int, date: datetime) -&gt; List[LessonSke
         classes = [int(id) for id in skeleton.get(&#34;classids&#34;)]
         groups = skeleton.get(&#34;groupnames&#34;)
         teachers = [teacher_by_id(int(id)) for id in skeleton.get(&#34;teacherids&#34;)]
-        classrooms = [classroom_by_id(int(id)) for id in skeleton.get(&#34;classroomids&#34;)]
+        classrooms = [classroom_by_id(id) for id in skeleton.get(&#34;classroomids&#34;)]
 
         duration = (skeleton.get(&#34;durationperiods&#34;)
                     if skeleton.get(&#34;durationperiods&#34;) is not None else 1)

@@ -59,7 +59,7 @@ class EduAccount:
     person_id: int
     name: str
     gender: Gender
-    in_school_since: datetime
+    in_school_since: Optional[datetime]
     account_type: EduAccountType
 
     @staticmethod
@@ -88,7 +88,7 @@ class EduAccount:
         elif account_type == EduAccountType.TEACHER:
             classroom_id = person_data.get(&#34;classroomid&#34;)
             classroom_name = DbiHelper(edupage).fetch_classroom_number(
-                classroom_id) if ModuleHelper.parse_int(classroom_id) else &#34;&#34;
+                classroom_id)
 
             name = DbiHelper(edupage).fetch_teacher_name(person_id)
 
@@ -113,7 +113,7 @@ class EduAccount:
 
 @dataclass
 class EduStudent(EduAccount):
-    def __init__(self, person_id: int, name: str, gender: Gender, in_school_since: datetime,
+    def __init__(self, person_id: int, name: str, gender: Gender, in_school_since: Optional[datetime],
                  class_id: int, number_in_class: int):
         super().__init__(person_id, name, gender, in_school_since, EduAccountType.STUDENT)
 
@@ -141,14 +141,14 @@ class EduStudentSkeleton:
 
 @dataclass
 class EduParent(EduAccount):
-    def __init__(self, person_id: int, name: str, gender: Gender, in_school_since: datetime):
+    def __init__(self, person_id: int, name: str, gender: Gender, in_school_since: Optional[datetime]):
         super().__init__(person_id, name, gender, in_school_since, EduAccountType.PARENT)
 
 
 @dataclass
 class EduTeacher(EduAccount):
-    def __init__(self, person_id: int, name: str, gender: Gender, in_school_since: datetime,
-                 classroom_name: str, teacher_to: datetime):
+    def __init__(self, person_id: int, name: str, gender: Gender, in_school_since: Optional[datetime],
+                 classroom_name: str, teacher_to: Optional[datetime]):
         super().__init__(person_id, name, gender, in_school_since, EduAccountType.TEACHER)
 
         self.teacher_to = teacher_to
@@ -254,10 +254,10 @@ class People(Module):
 <dl>
 <dt id="edupage_api.people.EduAccount"><code class="flex name class">
 <span>class <span class="ident">EduAccount</span></span>
-<span>(</span><span>person_id: int, name: str, gender: <a title="edupage_api.people.Gender" href="#edupage_api.people.Gender">Gender</a>, in_school_since: datetime, account_type: <a title="edupage_api.people.EduAccountType" href="#edupage_api.people.EduAccountType">EduAccountType</a>)</span>
+<span>(</span><span>person_id: int, name: str, gender: <a title="edupage_api.people.Gender" href="#edupage_api.people.Gender">Gender</a>, in_school_since: Optional[datetime], account_type: <a title="edupage_api.people.EduAccountType" href="#edupage_api.people.EduAccountType">EduAccountType</a>)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>EduAccount(person_id: 'int', name: 'str', gender: 'Gender', in_school_since: 'datetime', account_type: 'EduAccountType')</p></div>
+<div class="desc"><p>EduAccount(person_id: 'int', name: 'str', gender: 'Gender', in_school_since: 'Optional[datetime]', account_type: 'EduAccountType')</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -267,7 +267,7 @@ class EduAccount:
     person_id: int
     name: str
     gender: Gender
-    in_school_since: datetime
+    in_school_since: Optional[datetime]
     account_type: EduAccountType
 
     @staticmethod
@@ -296,7 +296,7 @@ class EduAccount:
         elif account_type == EduAccountType.TEACHER:
             classroom_id = person_data.get(&#34;classroomid&#34;)
             classroom_name = DbiHelper(edupage).fetch_classroom_number(
-                classroom_id) if ModuleHelper.parse_int(classroom_id) else &#34;&#34;
+                classroom_id)
 
             name = DbiHelper(edupage).fetch_teacher_name(person_id)
 
@@ -334,7 +334,7 @@ class EduAccount:
 <dd>
 <div class="desc"></div>
 </dd>
-<dt id="edupage_api.people.EduAccount.in_school_since"><code class="name">var <span class="ident">in_school_since</span> : datetime.datetime</code></dt>
+<dt id="edupage_api.people.EduAccount.in_school_since"><code class="name">var <span class="ident">in_school_since</span> : Optional[datetime.datetime]</code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
@@ -375,7 +375,7 @@ def parse(person_data: dict, person_id: int, edupage: EdupageModule) -&gt; Optio
     elif account_type == EduAccountType.TEACHER:
         classroom_id = person_data.get(&#34;classroomid&#34;)
         classroom_name = DbiHelper(edupage).fetch_classroom_number(
-            classroom_id) if ModuleHelper.parse_int(classroom_id) else &#34;&#34;
+            classroom_id)
 
         name = DbiHelper(edupage).fetch_teacher_name(person_id)
 
@@ -470,17 +470,17 @@ def recognize_account_type(person_data: dict) -&gt; EduAccountType:
 </dd>
 <dt id="edupage_api.people.EduParent"><code class="flex name class">
 <span>class <span class="ident">EduParent</span></span>
-<span>(</span><span>person_id: int, name: str, gender: <a title="edupage_api.people.Gender" href="#edupage_api.people.Gender">Gender</a>, in_school_since: datetime)</span>
+<span>(</span><span>person_id: int, name: str, gender: <a title="edupage_api.people.Gender" href="#edupage_api.people.Gender">Gender</a>, in_school_since: Optional[datetime])</span>
 </code></dt>
 <dd>
-<div class="desc"><p>EduParent(person_id: 'int', name: 'str', gender: 'Gender', in_school_since: 'datetime')</p></div>
+<div class="desc"><p>EduParent(person_id: 'int', name: 'str', gender: 'Gender', in_school_since: 'Optional[datetime]')</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">@dataclass
 class EduParent(EduAccount):
-    def __init__(self, person_id: int, name: str, gender: Gender, in_school_since: datetime):
+    def __init__(self, person_id: int, name: str, gender: Gender, in_school_since: Optional[datetime]):
         super().__init__(person_id, name, gender, in_school_since, EduAccountType.PARENT)</code></pre>
 </details>
 <h3>Ancestors</h3>
@@ -497,7 +497,7 @@ class EduParent(EduAccount):
 <dd>
 <div class="desc"></div>
 </dd>
-<dt id="edupage_api.people.EduParent.in_school_since"><code class="name">var <span class="ident">in_school_since</span> : datetime.datetime</code></dt>
+<dt id="edupage_api.people.EduParent.in_school_since"><code class="name">var <span class="ident">in_school_since</span> : Optional[datetime.datetime]</code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
@@ -513,17 +513,17 @@ class EduParent(EduAccount):
 </dd>
 <dt id="edupage_api.people.EduStudent"><code class="flex name class">
 <span>class <span class="ident">EduStudent</span></span>
-<span>(</span><span>person_id: int, name: str, gender: <a title="edupage_api.people.Gender" href="#edupage_api.people.Gender">Gender</a>, in_school_since: datetime, class_id: int, number_in_class: int)</span>
+<span>(</span><span>person_id: int, name: str, gender: <a title="edupage_api.people.Gender" href="#edupage_api.people.Gender">Gender</a>, in_school_since: Optional[datetime], class_id: int, number_in_class: int)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>EduStudent(person_id: 'int', name: 'str', gender: 'Gender', in_school_since: 'datetime', class_id: 'int', number_in_class: 'int')</p></div>
+<div class="desc"><p>EduStudent(person_id: 'int', name: 'str', gender: 'Gender', in_school_since: 'Optional[datetime]', class_id: 'int', number_in_class: 'int')</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">@dataclass
 class EduStudent(EduAccount):
-    def __init__(self, person_id: int, name: str, gender: Gender, in_school_since: datetime,
+    def __init__(self, person_id: int, name: str, gender: Gender, in_school_since: Optional[datetime],
                  class_id: int, number_in_class: int):
         super().__init__(person_id, name, gender, in_school_since, EduAccountType.STUDENT)
 
@@ -555,7 +555,7 @@ class EduStudent(EduAccount):
 <dd>
 <div class="desc"></div>
 </dd>
-<dt id="edupage_api.people.EduStudent.in_school_since"><code class="name">var <span class="ident">in_school_since</span> : datetime.datetime</code></dt>
+<dt id="edupage_api.people.EduStudent.in_school_since"><code class="name">var <span class="ident">in_school_since</span> : Optional[datetime.datetime]</code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
@@ -635,18 +635,18 @@ class EduStudentSkeleton:
 </dd>
 <dt id="edupage_api.people.EduTeacher"><code class="flex name class">
 <span>class <span class="ident">EduTeacher</span></span>
-<span>(</span><span>person_id: int, name: str, gender: <a title="edupage_api.people.Gender" href="#edupage_api.people.Gender">Gender</a>, in_school_since: datetime, classroom_name: str, teacher_to: datetime)</span>
+<span>(</span><span>person_id: int, name: str, gender: <a title="edupage_api.people.Gender" href="#edupage_api.people.Gender">Gender</a>, in_school_since: Optional[datetime], classroom_name: str, teacher_to: Optional[datetime])</span>
 </code></dt>
 <dd>
-<div class="desc"><p>EduTeacher(person_id: 'int', name: 'str', gender: 'Gender', in_school_since: 'datetime', classroom_name: 'str', teacher_to: 'datetime')</p></div>
+<div class="desc"><p>EduTeacher(person_id: 'int', name: 'str', gender: 'Gender', in_school_since: 'Optional[datetime]', classroom_name: 'str', teacher_to: 'Optional[datetime]')</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">@dataclass
 class EduTeacher(EduAccount):
-    def __init__(self, person_id: int, name: str, gender: Gender, in_school_since: datetime,
-                 classroom_name: str, teacher_to: datetime):
+    def __init__(self, person_id: int, name: str, gender: Gender, in_school_since: Optional[datetime],
+                 classroom_name: str, teacher_to: Optional[datetime]):
         super().__init__(person_id, name, gender, in_school_since, EduAccountType.TEACHER)
 
         self.teacher_to = teacher_to
@@ -666,7 +666,7 @@ class EduTeacher(EduAccount):
 <dd>
 <div class="desc"></div>
 </dd>
-<dt id="edupage_api.people.EduTeacher.in_school_since"><code class="name">var <span class="ident">in_school_since</span> : datetime.datetime</code></dt>
+<dt id="edupage_api.people.EduTeacher.in_school_since"><code class="name">var <span class="ident">in_school_since</span> : Optional[datetime.datetime]</code></dt>
 <dd>
 <div class="desc"></div>
 </dd>

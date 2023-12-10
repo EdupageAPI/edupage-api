@@ -7,6 +7,7 @@ from edupage_api.dbi import DbiHelper
 from edupage_api.exceptions import MissingDataException
 from edupage_api.module import EdupageModule, Module, ModuleHelper
 from edupage_api.people import EduTeacher, People
+from edupage_api.utils import RequestUtil
 
 
 @dataclass
@@ -18,6 +19,7 @@ class Lesson:
     online_lesson_link: Optional[str]
     subject_id: int
     name: str
+    curriculum: Optional[str] = None
 
     def is_online_lesson(self) -> bool:
         return self.online_lesson_link is None
@@ -97,8 +99,120 @@ class Timetables(Module):
             raise MissingDataException()
 
         return dp
-
+    
+    @ModuleHelper.logged_in
     def get_timetable(self, date: datetime) -> Optional[Timetable]:
+        csrf_request_url = f"https://{self.edupage.subdomain}.edupage.org/dashboard/eb.php?mode=ttday"
+        csrf_response = self.edupage.session.get(csrf_request_url)
+
+        gpid = csrf_response.text.split("gpid=")[1].split("&")[0]
+        gsh = csrf_response.text.split("gsh=")[1].split("\"")[0]
+
+        next_gpid = int(gpid) + 1
+
+        url = f"https://{self.edupage.subdomain}.edupage.org/gcall"
+        curriculum_response = self.edupage.session.post(
+            url,
+            data=RequestUtil.encode_form_data({
+                "gpid": str(next_gpid),
+                "gsh": gsh,
+                "action": "loadData",
+                "user": self.edupage.get_user_id(),
+                "changes": "{}",
+                "date": date.strftime("%Y-%m-%d"),
+                "dateto": date.strftime("%Y-%m-%d"),
+                "_LJSL": "4096"
+            }),
+            headers={
+                "Content-Type": "application/x-www-form-urlencoded"
+            }
+        )
+
+        response_start = self.edupage.get_user_id() + "\","
+        response_end = ",[]);"
+
+        curriculum_json = curriculum_response.text.split(response_start)[1].split(response_end)[0]
+
+        data = json.loads(curriculum_json)
+
+        dates = data.get("dates")
+        date_plans = dates.get(date.strftime("%Y-%m-%d"))
+        if date_plans is None:
+            raise MissingDataException()
+        
+        plan = date_plans.get("plan")
+
+        lessons = []
+        for subject in plan:
+            header = subject.get("header")
+            if len(header) == 0:
+                continue
+
+            subject_id = int(subject.get("subjectid")) if subject.get("subjectid") else None
+            if subject_id:
+                subject_name = DbiHelper(self.edupage).fetch_subject_name(subject_id)
+            else:
+                subject_name = header[0].get("text")
+
+            teachers = []
+            teacher_ids = subject.get("teacherids")
+            if teacher_ids is not None and len(teacher_ids) != 0:
+                for teacher_id_str in teacher_ids:
+                    if not teacher_id_str:
+                        continue
+
+                    teacher_id = int(teacher_id_str)
+                    teacher = People(self.edupage).get_teacher(teacher_id)
+
+                    teachers.append(teacher)
+
+            classrooms = []
+            classroom_ids = subject.get("classroomids")
+            if classroom_ids is not None and len(classroom_ids) != 0:
+                for classroom_id in classroom_ids:
+                    if not classroom_id:
+                        continue
+
+                    classroom_number = DbiHelper(self.edupage).fetch_classroom_number(classroom_id)
+                    classrooms.append(classroom_number)
+
+            start_of_lesson_str = subject.get("starttime")
+            end_of_lesson_str = subject.get("endtime")
+
+            ModuleHelper.assert_none(start_of_lesson_str, end_of_lesson_str)
+
+            now = datetime.now()
+
+            try:
+                start_of_lesson = datetime.strptime(start_of_lesson_str, "%H:%M")
+            except ValueError:
+                start_of_lesson = datetime(hour=0, minute=0, day=now.day,
+                                           month=now.month, year=now.year)
+
+            try:
+                end_of_lesson = datetime.strptime(end_of_lesson_str, "%H:%M")
+            except ValueError:
+                end_of_lesson = datetime(hour=0, minute=0, day=now.day,
+                                         month=now.month, year=now.year)
+
+            online_lesson_link = subject.get("ol_url")
+
+            curriculum = None
+            flags = subject.get("flags")
+            if flags is not None and flags != []:
+                dp_0 = flags.get("dp0")
+                if dp_0 is not None:
+                    curriculum = dp_0.get("note_wd")
+            
+
+            lesson = Lesson(teachers, classrooms, start_of_lesson, end_of_lesson,
+                            online_lesson_link, subject_id, subject_name, curriculum)
+            lessons.append(lesson)
+
+        return Timetable(lessons)
+
+    @ModuleHelper.logged_in
+    def get_timetable_dp(self, date: datetime) -> Optional[Timetable]:
         dp = self.__get_dp()
 
         dates = dp.get("dates")

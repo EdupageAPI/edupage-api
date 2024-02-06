@@ -115,6 +115,9 @@ class ForeignTimetables(Module):
 
         skeletons = []
         for skeleton in timetable_data:
+            if skeleton.get("removed"):
+                continue
+
             date_str = skeleton.get("date")
             date = datetime.strptime(date_str, "%Y-%m-%d")
 

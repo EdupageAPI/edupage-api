@@ -115,7 +115,7 @@ class ForeignTimetables(Module):
 
         skeletons = []
         for skeleton in timetable_data:
-            if skeleton.get("removed"):
+            if skeleton.get("removed") or skeleton.get("type") == "absent":
                 continue
 
             date_str = skeleton.get("date")

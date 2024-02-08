@@ -138,7 +138,12 @@ class ForeignTimetables(Module):
 
             classes = [int(id) for id in skeleton.get("classids")]
             groups = skeleton.get("groupnames")
-            teachers = [teacher_by_id(int(id)) for id in skeleton.get("teacherids")]
+
+            try:
+                teachers = [teacher_by_id(int(id)) for id in skeleton.get("teacherids")]
+            except:
+                teachers = []
+
             classrooms = [classroom_by_id(id) for id in skeleton.get("classroomids")]
 
             duration = (skeleton.get("durationperiods")

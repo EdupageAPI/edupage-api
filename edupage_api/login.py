@@ -29,17 +29,21 @@ class Login(Module):
             BadCredentialsException: Your credentials are invalid.
         """
 
+        response = self.edupage.session.get("https://login1.edupage.org")
+        data = response.content.decode()
+        csrf_token = data.split('name="csrfauth" value="')[1].split('"')[0]
+
         parameters = {
-            "meno": username,
-            "heslo": password,
-            "akcia": "login"
+            "csrfauth": csrf_token,
+            "username": username,
+            "password": password,
         }
 
-        request_url = "https://portal.edupage.org/index.php?jwid=jw2&module=login"
-        response = self.edupage.session.post(request_url, params=parameters)
+        request_url = "https://login1.edupage.org/login/edubarLogin.php"
+        response = self.edupage.session.post(request_url, parameters)
         data = response.content.decode()
 
-        if "wrongPassword" in response.url or "errorbox" in data:
+        if "bad=1" in response.url:
             raise BadCredentialsException()
 
         self.__parse_login_data(data)

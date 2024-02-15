@@ -61,7 +61,7 @@ class Edupage(EdupageModule):
             password (str): Your password.
         """
 
-        Login(self).login_auto(username, password)
+        Login(self).login(username, password)
 
     def get_students(self) -> Optional[list[EduStudent]]:
         """Get list of all students in your class.

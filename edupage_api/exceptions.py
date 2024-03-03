@@ -59,3 +59,6 @@ class UnknownServerError(Exception):
 
 class NotParentException(Exception):
     pass
+
+class SecondFactorFailedException(Exception):
+    pass

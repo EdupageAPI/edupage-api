@@ -82,7 +82,7 @@ class TwoFactorLogin:
         This function should be used when using a device to confirm the login. If you are using email 2fa codes, please use `TwoFactorLogin.finish_with_code`.
 
         Notes:
-            - This function can only be used after `TwoFactorLogin.is_checked` returned `True`.
+            - This function can only be used after `TwoFactorLogin.is_confirmed` returned `True`.
             - This function can raise `SecondFactorFailedException` if there is a big delay from calling `TwoFactorLogin.is_confirmed` (and getting `True` as a result) to calling `TwoFactorLogin.finish`.
 
         Raises:

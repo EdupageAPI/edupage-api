@@ -42,7 +42,9 @@ class Edupage(EdupageModule):
         self.session = requests.session()
         self.session.request = functools.partial(self.session.request, timeout=request_timeout)
 
-    def login(self, username: str, password: str, subdomain: str, second_factor_timeout: int = 10):
+    def login(
+        self, username: str, password: str, subdomain: str
+    ) -> Optional[TwoFactorLogin]:
         """Login while specifying the subdomain to log into.
 
         Args:
@@ -50,51 +52,26 @@ class Edupage(EdupageModule):
             password (str): Your password.
             subdomain (str): Subdomain of your school (https://{subdomain}.edupage.org).
 
-            Optional:
-                second_factor_timeout (int): How many seconds to wait for second factor confirmation. See `Login.login` documentation for more details.
+        Returns:
+            Optional[TwoFactorLogin]: Returns `None` if no second factor was needed to login,
+            or the `TwoFactorLogin` object that is used to complete 2fa.
         """
 
-        Login(self).login(username, password, subdomain, second_factor_timeout=second_factor_timeout)
+        return Login(self).login(username, password, subdomain)
 
-    def login_auto(self, username: str, password: str, second_factor_timeout: int = 10):
+    def login_auto(self, username: str, password: str) -> Optional[TwoFactorLogin]:
         """Login using https://portal.edupage.org. If this doesn't work, please use `Edupage.login`.
 
         Args:
             username (str): Your username.
             password (str): Your password.
 
-            Optional:
-                second_factor_timeout (int): How many seconds to wait for second factor confirmation. See `Login.login` documentation for more details.
-        """
-
-        Login(self).login(username, password, second_factor_timeout=second_factor_timeout)
-    
-    def login_2fa(self, username: str, password: str, subdomain: str) -> Optional[TwoFactorLogin]:
-        """Login with a second factor, while specifying the subdomain to log into.
-
-        Args:
-            username (str): Your username.
-            password (str): Your password.
-            subdomain (str): Subdomain of your school (https://{subdomain}.edupage.org).
-
         Returns:
-            Optional[TwoFactorLogin]: Returns `None` if no second factor was needed to login, or the `TwoFactorLogin` object that is used to complete 2fa.
+            Optional[TwoFactorLogin]: Returns `None` if no second factor was needed to login,
+            or the `TwoFactorLogin` object that is used to complete 2fa.
         """
 
-        return Login(self).login_2fa(username, password, subdomain)
-
-    def login_auto_2fa(self, username: str, password: str) -> Optional[TwoFactorLogin]:
-        """Login with a second factor using https://portal.edupage.org. If this doesn't work, please use `Edupage.login_2fa`.
-
-        Args:
-            username (str): Your username.
-            password (str): Your password.
-
-        Returns:
-            Optional[TwoFactorLogin]: Returns `None` if no second factor was needed to login, or the `TwoFactorLogin` object that is used to complete 2fa.
-        """
-
-        return Login(self).login_2fa(username, password)
+        return Login(self).login(username, password)
 
     def get_students(self) -> Optional[list[EduStudent]]:
         """Get list of all students in your class.

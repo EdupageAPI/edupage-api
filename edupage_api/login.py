@@ -1,5 +1,4 @@
 import json
-import time
 
 from json import JSONDecodeError
 from typing import Optional
@@ -164,26 +163,30 @@ class Login(Module):
         
         return response
 
-    def login(self, username: str, password: str, subdomain: str = "login1", second_factor_timeout = 10):
-        """Login to your school's Edupage account.
-        If the subdomain is not specified, the https://login1.edupage.org is used.
+    def login(
+        self, username: str, password: str, subdomain: str = "login1"
+    ) -> Optional[TwoFactorLogin]:
+        """Login to your school's Edupage account (optionally with 2 factor authentication).
 
-        If you have a second factor set up, the function will wait for `second_factor_timeout` seconds or until you confirm the login with your device.
-        To use email 2 factor codes, please see `Edupage.login_2fa`.
+        If you do not have 2 factor authentication set up, this function will return `None`.
+        The login will still work and succeed.
 
-        If `second_factor_timeout` is not specified, 10 is used as the timeout.
-
-        Note: If you do not have a second factor set up, `second_factor_timeout` is ignored, and this function doesn't wait.
+        See the `Edupage.TwoFactorLogin` documentation or the examples for more details
+        of the 2 factor authentication process.
 
         Args:
             username (str): Your username.
             password (str): Your password.
             subdomain (str): Subdomain of your school (https://{subdomain}.edupage.org).
-            second_factor_timeout (int): The amount of time (in seconds) this function wait for you to confirm the login with your device.
-    
+
+        Returns:
+            Optional[TwoFactorLogin]: The object that can be used to complete the second factor
+                (or `None` — if the second factor is not set up)
+
         Raises:
             BadCredentialsException: Your credentials are invalid.
-            SecondFactorFailed: The second factor login timed out, or there was another problem with the second factor.
+            SecondFactorFailed: The second factor login timed out
+                or there was another problem with the second factor.
         """
 
         response = self.__login(username, password, subdomain)
@@ -194,56 +197,9 @@ class Login(Module):
 
         self.edupage.subdomain = subdomain
         self.edupage.username = username
-        
+
         if "twofactor" not in response.url:
             # 2FA not needed
-            self.__parse_login_data(data)
-            return
-        
-        second_factor = self.__second_factor()
-
-        now = time.time()
-        timeout_end = now + second_factor_timeout
-        while now < timeout_end and not second_factor.is_confirmed():
-            time.sleep(0.5)
-            now = time.time()
-        
-        if now >= timeout_end:
-            raise SecondFactorFailedException("The second factor login timed out.")
-        
-        second_factor.finish()
-    
-    def login_2fa(self, username: str, password: str, subdomain: str = "login1") -> Optional[TwoFactorLogin]:
-        """Login to your school's Edupage account with 2 factor authentication.
-
-        If you do not have 2 factor authentication set up, this function will return `None`.
-        The login will still work and succeed - even if you do not have 2 factor authentication set up.
-
-        See the `Edupage.TwoFactorLogin` documentation or the examples for more details of the 2 factor authentication process. 
-
-        Args:
-            username (str): Your username.
-            password (str): Your password.
-            subdomain (str): Subdomain of your school (https://{subdomain}.edupage.org).
-        
-        Returns:
-            Optional[TwoFactorLogin]: the object that can be used to complete the second factor (or None - if the second factor is not set up)
-
-        Raises:
-            BadCredentialsException: Your credentials are invalid.
-        """
-
-        response = self.__login(username, password, subdomain)
-        data = response.content.decode()
-
-        self.edupage.subdomain = subdomain
-        self.edupage.username = username
-        
-        if "twofactor" not in response.url:
-            # 2FA not needed
-            if subdomain == "login1":
-                subdomain = data.split("-->")[0].split(" ")[-1]
-
             self.__parse_login_data(data)
             return
 

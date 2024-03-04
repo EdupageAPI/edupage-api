@@ -9,7 +9,7 @@ PASSWORD = "Password"
 SUBDOMAIN = "Your school's subdomain"
 
 try:
-    second_factor = edupage.login_2fa(USERNAME, PASSWORD, SUBDOMAIN)
+    second_factor = edupage.login(USERNAME, PASSWORD, SUBDOMAIN)
     confirmation_method = input(
         "Choose confirmation method: 1 -> mobile app, 2 -> code: "
     )

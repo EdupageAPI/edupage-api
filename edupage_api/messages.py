@@ -48,7 +48,7 @@ class Messages(Module):
         changes = response.get("changes")
         if changes == [] or changes is None:
             raise RequestError(
-                "Failed to send message (edupage returned an empty 'changes' array) - https://github.com/ivanhrabcak/edupage-api/issues/62"
+                "Failed to send message (edupage returned an empty 'changes' array) - https://github.com/EdupageAPI/edupage-api/issues/62"
             )
 
         return int(changes[0].get("timelineid"))

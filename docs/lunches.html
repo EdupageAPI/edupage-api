@@ -60,7 +60,7 @@ class Rating:
             &#34;mysqlDate&#34;: self.__date,
             &#34;jedlo_dna&#34;: &#34;2&#34;,
             &#34;kvalita&#34;: str(quality),
-            &#34;mnozstvo&#34;: str(quantity)
+            &#34;mnozstvo&#34;: str(quantity),
         }
 
         response = edupage.session.post(request_url, data=data)
@@ -101,16 +101,14 @@ class Lunch:
         boarder_menu = {
             &#34;stravnikid&#34;: self.__boarder_id,
             &#34;mysqlDate&#34;: self.date.strftime(&#34;%Y-%m-%d&#34;),
-            &#34;jids&#34;: {
-                &#34;2&#34;: choice_str
-            },
+            &#34;jids&#34;: {&#34;2&#34;: choice_str},
             &#34;view&#34;: &#34;pc_listok&#34;,
-            &#34;pravo&#34;: &#34;Student&#34;
+            &#34;pravo&#34;: &#34;Student&#34;,
         }
 
         data = {
             &#34;akcia&#34;: &#34;ulozJedlaStravnika&#34;,
-            &#34;jedlaStravnika&#34;: json.dumps(boarder_menu)
+            &#34;jedlaStravnika&#34;: json.dumps(boarder_menu),
         }
 
         response = edupage.session.post(request_url, data=data).content.decode()
@@ -132,7 +130,9 @@ class Lunches(Module):
     @ModuleHelper.logged_in
     def get_lunch(self, date: datetime):
         date_strftime = date.strftime(&#34;%Y%m%d&#34;)
-        request_url = f&#34;https://{self.edupage.subdomain}.edupage.org/menu/?date={date_strftime}&#34;
+        request_url = (
+            f&#34;https://{self.edupage.subdomain}.edupage.org/menu/?date={date_strftime}&#34;
+        )
         response = self.edupage.session.get(request_url).content.decode()
 
         lunch_data = json.loads(response.split(&#34;edupageData: &#34;)[1].split(&#34;,\r\n&#34;)[0])
@@ -199,16 +199,29 @@ class Lunches(Module):
                     quantity_average = quantity.get(&#34;priemer&#34;)
                     quantity_ratings = quantity.get(&#34;pocet&#34;)
 
-                    rating = Rating(date.strftime(&#34;%Y-%m-%d&#34;), boarder_id,
-                                    quality_average, quantity_average,
-                                    quality_ratings, quantity_ratings)
+                    rating = Rating(
+                        date.strftime(&#34;%Y-%m-%d&#34;),
+                        boarder_id,
+                        quality_average,
+                        quantity_average,
+                        quality_ratings,
+                        quantity_ratings,
+                    )
                 else:
                     rating = None
             menus.append(Menu(name, allergens, weight, number, rating))
 
-        return Lunch(served_from, served_to, amount_of_foods,
-                     chooseable_menus, can_be_changed_until,
-                     title, menus, date, boarder_id)</code></pre>
+        return Lunch(
+            served_from,
+            served_to,
+            amount_of_foods,
+            chooseable_menus,
+            can_be_changed_until,
+            title,
+            menus,
+            date,
+            boarder_id,
+        )</code></pre>
 </details>
 </section>
 <section>
@@ -251,16 +264,14 @@ class Lunch:
         boarder_menu = {
             &#34;stravnikid&#34;: self.__boarder_id,
             &#34;mysqlDate&#34;: self.date.strftime(&#34;%Y-%m-%d&#34;),
-            &#34;jids&#34;: {
-                &#34;2&#34;: choice_str
-            },
+            &#34;jids&#34;: {&#34;2&#34;: choice_str},
             &#34;view&#34;: &#34;pc_listok&#34;,
-            &#34;pravo&#34;: &#34;Student&#34;
+            &#34;pravo&#34;: &#34;Student&#34;,
         }
 
         data = {
             &#34;akcia&#34;: &#34;ulozJedlaStravnika&#34;,
-            &#34;jedlaStravnika&#34;: json.dumps(boarder_menu)
+            &#34;jedlaStravnika&#34;: json.dumps(boarder_menu),
         }
 
         response = edupage.session.post(request_url, data=data).content.decode()
@@ -359,7 +370,9 @@ class Lunch:
     @ModuleHelper.logged_in
     def get_lunch(self, date: datetime):
         date_strftime = date.strftime(&#34;%Y%m%d&#34;)
-        request_url = f&#34;https://{self.edupage.subdomain}.edupage.org/menu/?date={date_strftime}&#34;
+        request_url = (
+            f&#34;https://{self.edupage.subdomain}.edupage.org/menu/?date={date_strftime}&#34;
+        )
         response = self.edupage.session.get(request_url).content.decode()
 
         lunch_data = json.loads(response.split(&#34;edupageData: &#34;)[1].split(&#34;,\r\n&#34;)[0])
@@ -426,16 +439,29 @@ class Lunch:
                     quantity_average = quantity.get(&#34;priemer&#34;)
                     quantity_ratings = quantity.get(&#34;pocet&#34;)
 
-                    rating = Rating(date.strftime(&#34;%Y-%m-%d&#34;), boarder_id,
-                                    quality_average, quantity_average,
-                                    quality_ratings, quantity_ratings)
+                    rating = Rating(
+                        date.strftime(&#34;%Y-%m-%d&#34;),
+                        boarder_id,
+                        quality_average,
+                        quantity_average,
+                        quality_ratings,
+                        quantity_ratings,
+                    )
                 else:
                     rating = None
             menus.append(Menu(name, allergens, weight, number, rating))
 
-        return Lunch(served_from, served_to, amount_of_foods,
-                     chooseable_menus, can_be_changed_until,
-                     title, menus, date, boarder_id)</code></pre>
+        return Lunch(
+            served_from,
+            served_to,
+            amount_of_foods,
+            chooseable_menus,
+            can_be_changed_until,
+            title,
+            menus,
+            date,
+            boarder_id,
+        )</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
@@ -455,7 +481,9 @@ class Lunch:
 <pre><code class="python">@ModuleHelper.logged_in
 def get_lunch(self, date: datetime):
     date_strftime = date.strftime(&#34;%Y%m%d&#34;)
-    request_url = f&#34;https://{self.edupage.subdomain}.edupage.org/menu/?date={date_strftime}&#34;
+    request_url = (
+        f&#34;https://{self.edupage.subdomain}.edupage.org/menu/?date={date_strftime}&#34;
+    )
     response = self.edupage.session.get(request_url).content.decode()
 
     lunch_data = json.loads(response.split(&#34;edupageData: &#34;)[1].split(&#34;,\r\n&#34;)[0])
@@ -522,16 +550,29 @@ def get_lunch(self, date: datetime):
                 quantity_average = quantity.get(&#34;priemer&#34;)
                 quantity_ratings = quantity.get(&#34;pocet&#34;)
 
-                rating = Rating(date.strftime(&#34;%Y-%m-%d&#34;), boarder_id,
-                                quality_average, quantity_average,
-                                quality_ratings, quantity_ratings)
+                rating = Rating(
+                    date.strftime(&#34;%Y-%m-%d&#34;),
+                    boarder_id,
+                    quality_average,
+                    quantity_average,
+                    quality_ratings,
+                    quantity_ratings,
+                )
             else:
                 rating = None
         menus.append(Menu(name, allergens, weight, number, rating))
 
-    return Lunch(served_from, served_to, amount_of_foods,
-                 chooseable_menus, can_be_changed_until,
-                 title, menus, date, boarder_id)</code></pre>
+    return Lunch(
+        served_from,
+        served_to,
+        amount_of_foods,
+        chooseable_menus,
+        can_be_changed_until,
+        title,
+        menus,
+        date,
+        boarder_id,
+    )</code></pre>
 </details>
 </dd>
 </dl>
@@ -611,7 +652,7 @@ class Rating:
             &#34;mysqlDate&#34;: self.__date,
             &#34;jedlo_dna&#34;: &#34;2&#34;,
             &#34;kvalita&#34;: str(quality),
-            &#34;mnozstvo&#34;: str(quantity)
+            &#34;mnozstvo&#34;: str(quantity),
         }
 
         response = edupage.session.post(request_url, data=data)
@@ -663,7 +704,7 @@ class Rating:
         &#34;mysqlDate&#34;: self.__date,
         &#34;jedlo_dna&#34;: &#34;2&#34;,
         &#34;kvalita&#34;: str(quality),
-        &#34;mnozstvo&#34;: str(quantity)
+        &#34;mnozstvo&#34;: str(quantity),
     }
 
     response = edupage.session.post(request_url, data=data)

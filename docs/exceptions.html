@@ -73,19 +73,28 @@ class RequestError(Exception):
 class InvalidLunchData(Exception):
     pass
 
+
 class Base64DecodeError(Exception):
     pass
+
 
 class InvalidRecipientsException(Exception):
     pass
 
+
 class InvalidChildException(Exception):
     pass
+
 
 class UnknownServerError(Exception):
     pass
 
+
 class NotParentException(Exception):
+    pass
+
+
+class SecondFactorFailedException(Exception):
     pass</code></pre>
 </details>
 </section>
@@ -402,6 +411,25 @@ class NotParentException(Exception):
 <li>builtins.BaseException</li>
 </ul>
 </dd>
+<dt id="edupage_api.exceptions.SecondFactorFailedException"><code class="flex name class">
+<span>class <span class="ident">SecondFactorFailedException</span></span>
+<span>(</span><span>*args, **kwargs)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Common base class for all non-exit exceptions.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class SecondFactorFailedException(Exception):
+    pass</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>builtins.Exception</li>
+<li>builtins.BaseException</li>
+</ul>
+</dd>
 <dt id="edupage_api.exceptions.UnknownServerError"><code class="flex name class">
 <span>class <span class="ident">UnknownServerError</span></span>
 <span>(</span><span>*args, **kwargs)</span>
@@ -484,6 +512,9 @@ class NotParentException(Exception):
 </li>
 <li>
 <h4><code><a title="edupage_api.exceptions.RequestError" href="#edupage_api.exceptions.RequestError">RequestError</a></code></h4>
+</li>
+<li>
+<h4><code><a title="edupage_api.exceptions.SecondFactorFailedException" href="#edupage_api.exceptions.SecondFactorFailedException">SecondFactorFailedException</a></code></h4>
 </li>
 <li>
 <h4><code><a title="edupage_api.exceptions.UnknownServerError" href="#edupage_api.exceptions.UnknownServerError">UnknownServerError</a></code></h4>

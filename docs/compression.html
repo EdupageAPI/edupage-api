@@ -29,9 +29,10 @@
 <pre><code class="python">import zlib
 from hashlib import sha1
 from typing import Union
-from edupage_api.exceptions import Base64DecodeError
 
+from edupage_api.exceptions import Base64DecodeError
 from edupage_api.module import ModuleHelper
+
 
 # compression parameters from https://github.com/rgnter/epea_cpp
 # encoding and decoding from https://github.com/jsdom/abab
@@ -39,13 +40,8 @@ class RequestData:
     @staticmethod
     def __compress(data: bytes) -&gt; bytes:
         compressor = zlib.compressobj(
-            -1,
-            zlib.DEFLATED,
-            -15,
-            8,
-            zlib.Z_DEFAULT_STRATEGY
+            -1, zlib.DEFLATED, -15, 8, zlib.Z_DEFAULT_STRATEGY
         )
-
 
         compressor.compress(data)
         return compressor.flush(zlib.Z_FINISH)
@@ -64,10 +60,11 @@ class RequestData:
         # Lookup table for btoa(), which converts a six-bit number into the
         # corresponding ASCII character.
         chars = &#34;ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/&#34;
+
         def btoa_lookup(index):
             if index &gt;= 0 and index &lt; 64:
                 return chars[index]
-            
+
             return None
 
         out = &#34;&#34;
@@ -78,28 +75,26 @@ class RequestData:
 
             if length &gt; i + 1:
                 groups_of_six[1] |= ord(data[i + 1]) &gt;&gt; 4
-                groups_of_six[2] = (ord(data[i + 1]) &amp; 0x0f) &lt;&lt; 2
+                groups_of_six[2] = (ord(data[i + 1]) &amp; 0x0F) &lt;&lt; 2
 
             if length &gt; i + 2:
                 groups_of_six[2] |= ord(data[i + 2]) &gt;&gt; 6
-                groups_of_six[3] = ord(data[i + 2]) &amp; 0x3f
+                groups_of_six[3] = ord(data[i + 2]) &amp; 0x3F
 
             for k in groups_of_six:
                 if k is None:
                     out += &#34;=&#34;
                 else:
                     out += btoa_lookup(k)
-                
-            
+
             i += 3
 
         return out
-                
 
     def chromium_base64_decode(data: str) -&gt; str:
         # &#34;Remove all ASCII whitespace from data.&#34;
         [data := data.replace(char, &#34;&#34;) for char in &#34;\t\n\f\r&#34;]
-        
+
         # &#34;If data&#39;s code point length divides by 4 leaving no remainder, then: if data ends
         # with one or two U+003D (=) code points, then remove them from data.&#34;
         if len(data) % 4 == 0:
@@ -107,8 +102,11 @@ class RequestData:
                 data = data.replace(&#34;==&#34;, &#34;&#34;)
             elif data.endswith(&#34;=&#34;):
                 data = data.replace(&#34;=&#34;, &#34;&#34;)
-        
-        allowed_chars = &#34;ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/&#34;
+
+        allowed_chars = (
+            &#34;ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/&#34;
+        )
+
         def atob_lookup(ch: str):
             try:
                 return allowed_chars.index(ch)
@@ -128,7 +126,7 @@ class RequestData:
         data_contains_invalid_chars = False in [ch in allowed_chars for ch in data]
         if len(data) % 4 == 1 or data_contains_invalid_chars:
             return None
-        
+
         # &#34;Let output be an empty byte sequence.&#34;
         output = &#34;&#34;
 
@@ -138,7 +136,7 @@ class RequestData:
         # when we&#39;ve gotten to 24 bits.
         buffer = 0
         accumulated_bits = 0
-        
+
         # &#34;Let position be a position variable for data, initially pointing at the
         # start of data.&#34;
         #
@@ -160,13 +158,13 @@ class RequestData:
             # big-endian numbers. Append three bytes with values equal to those
             # numbers to output, in the same order, and then empty buffer.&#34;
             if accumulated_bits == 24:
-                output += chr((buffer &amp; 0xff0000) &gt;&gt; 16)
-                output += chr((buffer &amp; 0xff00) &gt;&gt; 8)
-                output += chr(buffer &amp; 0xff)
-                
+                output += chr((buffer &amp; 0xFF0000) &gt;&gt; 16)
+                output += chr((buffer &amp; 0xFF00) &gt;&gt; 8)
+                output += chr(buffer &amp; 0xFF)
+
                 buffer = 0
                 accumulated_bits = 0
-        
+
         # &#34;If buffer is not empty, it contains either 12 or 18 bits. If it contains
         # 12 bits, then discard the last four and interpret the remaining eight as
         # an 8-bit big-endian number. If it contains 18 bits, then discard the last
@@ -178,51 +176,57 @@ class RequestData:
             output += chr(buffer)
         elif accumulated_bits == 18:
             buffer &gt;&gt;= 2
-            output += chr((buffer &amp; 0xff00) &gt;&gt; 8)
-            output += chr(buffer &amp; 0xff)
-        
+            output += chr((buffer &amp; 0xFF00) &gt;&gt; 8)
+            output += chr(buffer &amp; 0xFF)
+
         return output
-    
 
     @staticmethod
     def __encode_data(data: str) -&gt; bytes:
         compressed = RequestData.__compress(data.encode())
 
-        encoded = RequestData.chromium_base64_encode(&#34;&#34;.join([chr(ch) for ch in compressed]))
+        encoded = RequestData.chromium_base64_encode(
+            &#34;&#34;.join([chr(ch) for ch in compressed])
+        )
 
         return encoded
-    
+
     @staticmethod
     def __decode_data(data: str) -&gt; str:
         return RequestData.chromium_base64_decode(data)
 
     @staticmethod
     def encode_request_body(request_data: Union[dict, str]) -&gt; str:
-        encoded_data = ModuleHelper.encode_form_data(request_data) if type(request_data) == dict else request_data
+        encoded_data = (
+            ModuleHelper.encode_form_data(request_data)
+            if type(request_data) == dict
+            else request_data
+        )
         encoded_data = RequestData.__encode_data(encoded_data)
         data_hash = sha1(encoded_data.encode()).hexdigest()
 
-        return ModuleHelper.encode_form_data({
-            &#34;eqap&#34;: f&#34;dz:{encoded_data}&#34;,
-            &#34;eqacs&#34;: data_hash,
-            &#34;eqaz&#34;: &#34;1&#34; # use &#34;encryption&#34;? (compression)
-        })
-    
+        return ModuleHelper.encode_form_data(
+            {
+                &#34;eqap&#34;: f&#34;dz:{encoded_data}&#34;,
+                &#34;eqacs&#34;: data_hash,
+                &#34;eqaz&#34;: &#34;1&#34;,  # use &#34;encryption&#34;? (compression)
+            }
+        )
+
     @staticmethod
     def decode_response(response: str) -&gt; str:
         # error
         if response.startswith(&#34;eqwd:&#34;):
             return RequestData.chromium_base64_decode(response[5:])
-        
+
         # response not compressed
         if not response.startswith(&#34;eqz:&#34;):
             return response
-        
 
         decoded = RequestData.__decode_data(response[4:])
         if decoded is None:
             raise Base64DecodeError(&#34;Failed to decode response.&#34;)
-        
+
         return decoded</code></pre>
 </details>
 </section>
@@ -248,13 +252,8 @@ class RequestData:
     @staticmethod
     def __compress(data: bytes) -&gt; bytes:
         compressor = zlib.compressobj(
-            -1,
-            zlib.DEFLATED,
-            -15,
-            8,
-            zlib.Z_DEFAULT_STRATEGY
+            -1, zlib.DEFLATED, -15, 8, zlib.Z_DEFAULT_STRATEGY
         )
-
 
         compressor.compress(data)
         return compressor.flush(zlib.Z_FINISH)
@@ -273,10 +272,11 @@ class RequestData:
         # Lookup table for btoa(), which converts a six-bit number into the
         # corresponding ASCII character.
         chars = &#34;ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/&#34;
+
         def btoa_lookup(index):
             if index &gt;= 0 and index &lt; 64:
                 return chars[index]
-            
+
             return None
 
         out = &#34;&#34;
@@ -287,28 +287,26 @@ class RequestData:
 
             if length &gt; i + 1:
                 groups_of_six[1] |= ord(data[i + 1]) &gt;&gt; 4
-                groups_of_six[2] = (ord(data[i + 1]) &amp; 0x0f) &lt;&lt; 2
+                groups_of_six[2] = (ord(data[i + 1]) &amp; 0x0F) &lt;&lt; 2
 
             if length &gt; i + 2:
                 groups_of_six[2] |= ord(data[i + 2]) &gt;&gt; 6
-                groups_of_six[3] = ord(data[i + 2]) &amp; 0x3f
+                groups_of_six[3] = ord(data[i + 2]) &amp; 0x3F
 
             for k in groups_of_six:
                 if k is None:
                     out += &#34;=&#34;
                 else:
                     out += btoa_lookup(k)
-                
-            
+
             i += 3
 
         return out
-                
 
     def chromium_base64_decode(data: str) -&gt; str:
         # &#34;Remove all ASCII whitespace from data.&#34;
         [data := data.replace(char, &#34;&#34;) for char in &#34;\t\n\f\r&#34;]
-        
+
         # &#34;If data&#39;s code point length divides by 4 leaving no remainder, then: if data ends
         # with one or two U+003D (=) code points, then remove them from data.&#34;
         if len(data) % 4 == 0:
@@ -316,8 +314,11 @@ class RequestData:
                 data = data.replace(&#34;==&#34;, &#34;&#34;)
             elif data.endswith(&#34;=&#34;):
                 data = data.replace(&#34;=&#34;, &#34;&#34;)
-        
-        allowed_chars = &#34;ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/&#34;
+
+        allowed_chars = (
+            &#34;ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/&#34;
+        )
+
         def atob_lookup(ch: str):
             try:
                 return allowed_chars.index(ch)
@@ -337,7 +338,7 @@ class RequestData:
         data_contains_invalid_chars = False in [ch in allowed_chars for ch in data]
         if len(data) % 4 == 1 or data_contains_invalid_chars:
             return None
-        
+
         # &#34;Let output be an empty byte sequence.&#34;
         output = &#34;&#34;
 
@@ -347,7 +348,7 @@ class RequestData:
         # when we&#39;ve gotten to 24 bits.
         buffer = 0
         accumulated_bits = 0
-        
+
         # &#34;Let position be a position variable for data, initially pointing at the
         # start of data.&#34;
         #
@@ -369,13 +370,13 @@ class RequestData:
             # big-endian numbers. Append three bytes with values equal to those
             # numbers to output, in the same order, and then empty buffer.&#34;
             if accumulated_bits == 24:
-                output += chr((buffer &amp; 0xff0000) &gt;&gt; 16)
-                output += chr((buffer &amp; 0xff00) &gt;&gt; 8)
-                output += chr(buffer &amp; 0xff)
-                
+                output += chr((buffer &amp; 0xFF0000) &gt;&gt; 16)
+                output += chr((buffer &amp; 0xFF00) &gt;&gt; 8)
+                output += chr(buffer &amp; 0xFF)
+
                 buffer = 0
                 accumulated_bits = 0
-        
+
         # &#34;If buffer is not empty, it contains either 12 or 18 bits. If it contains
         # 12 bits, then discard the last four and interpret the remaining eight as
         # an 8-bit big-endian number. If it contains 18 bits, then discard the last
@@ -387,51 +388,57 @@ class RequestData:
             output += chr(buffer)
         elif accumulated_bits == 18:
             buffer &gt;&gt;= 2
-            output += chr((buffer &amp; 0xff00) &gt;&gt; 8)
-            output += chr(buffer &amp; 0xff)
-        
+            output += chr((buffer &amp; 0xFF00) &gt;&gt; 8)
+            output += chr(buffer &amp; 0xFF)
+
         return output
-    
 
     @staticmethod
     def __encode_data(data: str) -&gt; bytes:
         compressed = RequestData.__compress(data.encode())
 
-        encoded = RequestData.chromium_base64_encode(&#34;&#34;.join([chr(ch) for ch in compressed]))
+        encoded = RequestData.chromium_base64_encode(
+            &#34;&#34;.join([chr(ch) for ch in compressed])
+        )
 
         return encoded
-    
+
     @staticmethod
     def __decode_data(data: str) -&gt; str:
         return RequestData.chromium_base64_decode(data)
 
     @staticmethod
     def encode_request_body(request_data: Union[dict, str]) -&gt; str:
-        encoded_data = ModuleHelper.encode_form_data(request_data) if type(request_data) == dict else request_data
+        encoded_data = (
+            ModuleHelper.encode_form_data(request_data)
+            if type(request_data) == dict
+            else request_data
+        )
         encoded_data = RequestData.__encode_data(encoded_data)
         data_hash = sha1(encoded_data.encode()).hexdigest()
 
-        return ModuleHelper.encode_form_data({
-            &#34;eqap&#34;: f&#34;dz:{encoded_data}&#34;,
-            &#34;eqacs&#34;: data_hash,
-            &#34;eqaz&#34;: &#34;1&#34; # use &#34;encryption&#34;? (compression)
-        })
-    
+        return ModuleHelper.encode_form_data(
+            {
+                &#34;eqap&#34;: f&#34;dz:{encoded_data}&#34;,
+                &#34;eqacs&#34;: data_hash,
+                &#34;eqaz&#34;: &#34;1&#34;,  # use &#34;encryption&#34;? (compression)
+            }
+        )
+
     @staticmethod
     def decode_response(response: str) -&gt; str:
         # error
         if response.startswith(&#34;eqwd:&#34;):
             return RequestData.chromium_base64_decode(response[5:])
-        
+
         # response not compressed
         if not response.startswith(&#34;eqz:&#34;):
             return response
-        
 
         decoded = RequestData.__decode_data(response[4:])
         if decoded is None:
             raise Base64DecodeError(&#34;Failed to decode response.&#34;)
-        
+
         return decoded</code></pre>
 </details>
 <h3>Static methods</h3>
@@ -459,10 +466,11 @@ def chromium_base64_encode(data: str) -&gt; str:
     # Lookup table for btoa(), which converts a six-bit number into the
     # corresponding ASCII character.
     chars = &#34;ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/&#34;
+
     def btoa_lookup(index):
         if index &gt;= 0 and index &lt; 64:
             return chars[index]
-        
+
         return None
 
     out = &#34;&#34;
@@ -473,19 +481,18 @@ def chromium_base64_encode(data: str) -&gt; str:
 
         if length &gt; i + 1:
             groups_of_six[1] |= ord(data[i + 1]) &gt;&gt; 4
-            groups_of_six[2] = (ord(data[i + 1]) &amp; 0x0f) &lt;&lt; 2
+            groups_of_six[2] = (ord(data[i + 1]) &amp; 0x0F) &lt;&lt; 2
 
         if length &gt; i + 2:
             groups_of_six[2] |= ord(data[i + 2]) &gt;&gt; 6
-            groups_of_six[3] = ord(data[i + 2]) &amp; 0x3f
+            groups_of_six[3] = ord(data[i + 2]) &amp; 0x3F
 
         for k in groups_of_six:
             if k is None:
                 out += &#34;=&#34;
             else:
                 out += btoa_lookup(k)
-            
-        
+
         i += 3
 
     return out</code></pre>
@@ -505,16 +512,15 @@ def decode_response(response: str) -&gt; str:
     # error
     if response.startswith(&#34;eqwd:&#34;):
         return RequestData.chromium_base64_decode(response[5:])
-    
+
     # response not compressed
     if not response.startswith(&#34;eqz:&#34;):
         return response
-    
 
     decoded = RequestData.__decode_data(response[4:])
     if decoded is None:
         raise Base64DecodeError(&#34;Failed to decode response.&#34;)
-    
+
     return decoded</code></pre>
 </details>
 </dd>
@@ -529,15 +535,21 @@ def decode_response(response: str) -&gt; str:
 </summary>
 <pre><code class="python">@staticmethod
 def encode_request_body(request_data: Union[dict, str]) -&gt; str:
-    encoded_data = ModuleHelper.encode_form_data(request_data) if type(request_data) == dict else request_data
+    encoded_data = (
+        ModuleHelper.encode_form_data(request_data)
+        if type(request_data) == dict
+        else request_data
+    )
     encoded_data = RequestData.__encode_data(encoded_data)
     data_hash = sha1(encoded_data.encode()).hexdigest()
 
-    return ModuleHelper.encode_form_data({
-        &#34;eqap&#34;: f&#34;dz:{encoded_data}&#34;,
-        &#34;eqacs&#34;: data_hash,
-        &#34;eqaz&#34;: &#34;1&#34; # use &#34;encryption&#34;? (compression)
-    })</code></pre>
+    return ModuleHelper.encode_form_data(
+        {
+            &#34;eqap&#34;: f&#34;dz:{encoded_data}&#34;,
+            &#34;eqacs&#34;: data_hash,
+            &#34;eqaz&#34;: &#34;1&#34;,  # use &#34;encryption&#34;? (compression)
+        }
+    )</code></pre>
 </details>
 </dd>
 </dl>
@@ -555,7 +567,7 @@ def encode_request_body(request_data: Union[dict, str]) -&gt; str:
 <pre><code class="python">def chromium_base64_decode(data: str) -&gt; str:
     # &#34;Remove all ASCII whitespace from data.&#34;
     [data := data.replace(char, &#34;&#34;) for char in &#34;\t\n\f\r&#34;]
-    
+
     # &#34;If data&#39;s code point length divides by 4 leaving no remainder, then: if data ends
     # with one or two U+003D (=) code points, then remove them from data.&#34;
     if len(data) % 4 == 0:
@@ -563,8 +575,11 @@ def encode_request_body(request_data: Union[dict, str]) -&gt; str:
             data = data.replace(&#34;==&#34;, &#34;&#34;)
         elif data.endswith(&#34;=&#34;):
             data = data.replace(&#34;=&#34;, &#34;&#34;)
-    
-    allowed_chars = &#34;ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/&#34;
+
+    allowed_chars = (
+        &#34;ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/&#34;
+    )
+
     def atob_lookup(ch: str):
         try:
             return allowed_chars.index(ch)
@@ -584,7 +599,7 @@ def encode_request_body(request_data: Union[dict, str]) -&gt; str:
     data_contains_invalid_chars = False in [ch in allowed_chars for ch in data]
     if len(data) % 4 == 1 or data_contains_invalid_chars:
         return None
-    
+
     # &#34;Let output be an empty byte sequence.&#34;
     output = &#34;&#34;
 
@@ -594,7 +609,7 @@ def encode_request_body(request_data: Union[dict, str]) -&gt; str:
     # when we&#39;ve gotten to 24 bits.
     buffer = 0
     accumulated_bits = 0
-    
+
     # &#34;Let position be a position variable for data, initially pointing at the
     # start of data.&#34;
     #
@@ -616,13 +631,13 @@ def encode_request_body(request_data: Union[dict, str]) -&gt; str:
         # big-endian numbers. Append three bytes with values equal to those
         # numbers to output, in the same order, and then empty buffer.&#34;
         if accumulated_bits == 24:
-            output += chr((buffer &amp; 0xff0000) &gt;&gt; 16)
-            output += chr((buffer &amp; 0xff00) &gt;&gt; 8)
-            output += chr(buffer &amp; 0xff)
-            
+            output += chr((buffer &amp; 0xFF0000) &gt;&gt; 16)
+            output += chr((buffer &amp; 0xFF00) &gt;&gt; 8)
+            output += chr(buffer &amp; 0xFF)
+
             buffer = 0
             accumulated_bits = 0
-    
+
     # &#34;If buffer is not empty, it contains either 12 or 18 bits. If it contains
     # 12 bits, then discard the last four and interpret the remaining eight as
     # an 8-bit big-endian number. If it contains 18 bits, then discard the last
@@ -634,9 +649,9 @@ def encode_request_body(request_data: Union[dict, str]) -&gt; str:
         output += chr(buffer)
     elif accumulated_bits == 18:
         buffer &gt;&gt;= 2
-        output += chr((buffer &amp; 0xff00) &gt;&gt; 8)
-        output += chr(buffer &amp; 0xff)
-    
+        output += chr((buffer &amp; 0xFF00) &gt;&gt; 8)
+        output += chr(buffer &amp; 0xFF)
+
     return output</code></pre>
 </details>
 </dd>

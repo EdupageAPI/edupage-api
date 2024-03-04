@@ -66,6 +66,7 @@ class ModuleHelper:
     &#34;&#34;&#34;
     If any argument of this function is none, it throws MissingDataException
     &#34;&#34;&#34;
+
     @staticmethod
     def assert_none(*args):
         if None in args:
@@ -113,6 +114,7 @@ class ModuleHelper:
     Throws NotLoggedInException if someone uses a method with this decorator
     and hasn&#39;t logged in yet
     &#34;&#34;&#34;
+
     @staticmethod
     def logged_in(method):
         @wraps(method)
@@ -121,6 +123,7 @@ class ModuleHelper:
                 raise NotLoggedInException()
 
             return method(self, *method_args, **method_kwargs)
+
         return __impl
 
     @staticmethod
@@ -132,20 +135,21 @@ class ModuleHelper:
             return method(self, *method_args, **method_kwargs)
 
         return __impl
-    
+
     &#34;&#34;&#34;
     Throws NotParentException if someone uses a method with this decorator
     and is not using a parent account
     &#34;&#34;&#34;
+
     @staticmethod
     def is_parent(method):
         @wraps(method)
         def __impl(self: Module, *method_args, **method_kwargs):
             if &#34;Rodic&#34; not in self.edupage.get_user_id():
                 raise NotParentException()
-            
+
             return method(self, *method_args, **method_kwargs)
-        
+
         return __impl</code></pre>
 </details>
 </section>
@@ -261,6 +265,7 @@ class ModuleHelper:
     &#34;&#34;&#34;
     If any argument of this function is none, it throws MissingDataException
     &#34;&#34;&#34;
+
     @staticmethod
     def assert_none(*args):
         if None in args:
@@ -308,6 +313,7 @@ class ModuleHelper:
     Throws NotLoggedInException if someone uses a method with this decorator
     and hasn&#39;t logged in yet
     &#34;&#34;&#34;
+
     @staticmethod
     def logged_in(method):
         @wraps(method)
@@ -316,6 +322,7 @@ class ModuleHelper:
                 raise NotLoggedInException()
 
             return method(self, *method_args, **method_kwargs)
+
         return __impl
 
     @staticmethod
@@ -327,20 +334,21 @@ class ModuleHelper:
             return method(self, *method_args, **method_kwargs)
 
         return __impl
-    
+
     &#34;&#34;&#34;
     Throws NotParentException if someone uses a method with this decorator
     and is not using a parent account
     &#34;&#34;&#34;
+
     @staticmethod
     def is_parent(method):
         @wraps(method)
         def __impl(self: Module, *method_args, **method_kwargs):
             if &#34;Rodic&#34; not in self.edupage.get_user_id():
                 raise NotParentException()
-            
+
             return method(self, *method_args, **method_kwargs)
-        
+
         return __impl</code></pre>
 </details>
 <h3>Static methods</h3>
@@ -395,9 +403,9 @@ def is_parent(method):
     def __impl(self: Module, *method_args, **method_kwargs):
         if &#34;Rodic&#34; not in self.edupage.get_user_id():
             raise NotParentException()
-        
+
         return method(self, *method_args, **method_kwargs)
-    
+
     return __impl</code></pre>
 </details>
 </dd>
@@ -418,6 +426,7 @@ def logged_in(method):
             raise NotLoggedInException()
 
         return method(self, *method_args, **method_kwargs)
+
     return __impl</code></pre>
 </details>
 </dd>

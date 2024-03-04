@@ -32,7 +32,9 @@ from edupage_api.module import Module
 
 
 class CustomRequest(Module):
-    def custom_request(self, url: str, method: str, data: str = &#34;&#34;, headers: dict = {}) -&gt; Response:
+    def custom_request(
+        self, url: str, method: str, data: str = &#34;&#34;, headers: dict = {}
+    ) -&gt; Response:
         if method == &#34;GET&#34;:
             response = self.edupage.session.get(url, headers=headers)
         elif method == &#34;POST&#34;:
@@ -61,7 +63,9 @@ class CustomRequest(Module):
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">class CustomRequest(Module):
-    def custom_request(self, url: str, method: str, data: str = &#34;&#34;, headers: dict = {}) -&gt; Response:
+    def custom_request(
+        self, url: str, method: str, data: str = &#34;&#34;, headers: dict = {}
+    ) -&gt; Response:
         if method == &#34;GET&#34;:
             response = self.edupage.session.get(url, headers=headers)
         elif method == &#34;POST&#34;:
@@ -84,7 +88,9 @@ class CustomRequest(Module):
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def custom_request(self, url: str, method: str, data: str = &#34;&#34;, headers: dict = {}) -&gt; Response:
+<pre><code class="python">def custom_request(
+    self, url: str, method: str, data: str = &#34;&#34;, headers: dict = {}
+) -&gt; Response:
     if method == &#34;GET&#34;:
         response = self.edupage.session.get(url, headers=headers)
     elif method == &#34;POST&#34;:

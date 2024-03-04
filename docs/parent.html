@@ -27,34 +27,34 @@
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">from typing import Union
+
+from edupage_api.exceptions import InvalidChildException, UnknownServerError
 from edupage_api.module import Module, ModuleHelper
 from edupage_api.people import EduAccount
-from edupage_api.exceptions import InvalidChildException, UnknownServerError
+
 
 class Parent(Module):
     @ModuleHelper.logged_in
     @ModuleHelper.is_parent
     def switch_to_child(self, child: Union[EduAccount, int]):
-        params = {
-            &#34;studentid&#34;: child.person_id if type(child) == EduAccount else child
-        }
+        params = {&#34;studentid&#34;: child.person_id if type(child) == EduAccount else child}
 
         url = f&#34;https://{self.edupage.subdomain}.edupage.org/login/switchchild&#34;
         response = self.edupage.session.get(url, params=params)
 
         if response.text != &#34;OK&#34;:
-            raise InvalidChildException(f&#34;{response.text}: Invalid child selected! (not your child?)&#34;)
+            raise InvalidChildException(
+                f&#34;{response.text}: Invalid child selected! (not your child?)&#34;
+            )
 
     @ModuleHelper.logged_in
     @ModuleHelper.is_parent
     def switch_to_parent(self):
         # variable name is from edupage&#39;s code :/
         rid = f&#34;edupage;{self.edupage.subdomain};{self.edupage.username}&#34;
-        
-        params = {
-            &#34;rid&#34;: rid
-        }
-        
+
+        params = {&#34;rid&#34;: rid}
+
         url = f&#34;https://{self.edupage.subdomain}.edupage.org/login/edupageChange&#34;
         response = self.edupage.session.get(url, params=params)
 
@@ -85,26 +85,24 @@ class Parent(Module):
     @ModuleHelper.logged_in
     @ModuleHelper.is_parent
     def switch_to_child(self, child: Union[EduAccount, int]):
-        params = {
-            &#34;studentid&#34;: child.person_id if type(child) == EduAccount else child
-        }
+        params = {&#34;studentid&#34;: child.person_id if type(child) == EduAccount else child}
 
         url = f&#34;https://{self.edupage.subdomain}.edupage.org/login/switchchild&#34;
         response = self.edupage.session.get(url, params=params)
 
         if response.text != &#34;OK&#34;:
-            raise InvalidChildException(f&#34;{response.text}: Invalid child selected! (not your child?)&#34;)
+            raise InvalidChildException(
+                f&#34;{response.text}: Invalid child selected! (not your child?)&#34;
+            )
 
     @ModuleHelper.logged_in
     @ModuleHelper.is_parent
     def switch_to_parent(self):
         # variable name is from edupage&#39;s code :/
         rid = f&#34;edupage;{self.edupage.subdomain};{self.edupage.username}&#34;
-        
-        params = {
-            &#34;rid&#34;: rid
-        }
-        
+
+        params = {&#34;rid&#34;: rid}
+
         url = f&#34;https://{self.edupage.subdomain}.edupage.org/login/edupageChange&#34;
         response = self.edupage.session.get(url, params=params)
 
@@ -129,15 +127,15 @@ class Parent(Module):
 <pre><code class="python">@ModuleHelper.logged_in
 @ModuleHelper.is_parent
 def switch_to_child(self, child: Union[EduAccount, int]):
-    params = {
-        &#34;studentid&#34;: child.person_id if type(child) == EduAccount else child
-    }
+    params = {&#34;studentid&#34;: child.person_id if type(child) == EduAccount else child}
 
     url = f&#34;https://{self.edupage.subdomain}.edupage.org/login/switchchild&#34;
     response = self.edupage.session.get(url, params=params)
 
     if response.text != &#34;OK&#34;:
-        raise InvalidChildException(f&#34;{response.text}: Invalid child selected! (not your child?)&#34;)</code></pre>
+        raise InvalidChildException(
+            f&#34;{response.text}: Invalid child selected! (not your child?)&#34;
+        )</code></pre>
 </details>
 </dd>
 <dt id="edupage_api.parent.Parent.switch_to_parent"><code class="name flex">
@@ -154,11 +152,9 @@ def switch_to_child(self, child: Union[EduAccount, int]):
 def switch_to_parent(self):
     # variable name is from edupage&#39;s code :/
     rid = f&#34;edupage;{self.edupage.subdomain};{self.edupage.username}&#34;
-    
-    params = {
-        &#34;rid&#34;: rid
-    }
-    
+
+    params = {&#34;rid&#34;: rid}
+
     url = f&#34;https://{self.edupage.subdomain}.edupage.org/login/edupageChange&#34;
     response = self.edupage.session.get(url, params=params)
 

@@ -38,17 +38,17 @@ from edupage_api.cloud import Cloud, EduCloudFile
 from edupage_api.custom_request import CustomRequest
 from edupage_api.foreign_timetables import ForeignTimetables, LessonSkeleton
 from edupage_api.grades import EduGrade, Grades, Term
-from edupage_api.login import Login
+from edupage_api.login import Login, TwoFactorLogin
 from edupage_api.lunches import Lunch, Lunches
 from edupage_api.messages import Messages
 from edupage_api.module import EdupageModule
+from edupage_api.parent import Parent
 from edupage_api.people import (EduAccount, EduStudent, EduStudentSkeleton,
                                 EduTeacher, People)
 from edupage_api.ringing import RingingTime, RingingTimes
 from edupage_api.substitution import Substitution, TimetableChange
 from edupage_api.timeline import TimelineEvent, TimelineEvents
 from edupage_api.timetables import Timetable, Timetables
-from edupage_api.parent import Parent
 
 
 class Edupage(EdupageModule):
@@ -68,28 +68,40 @@ class Edupage(EdupageModule):
         self.username = None
 
         self.session = requests.session()
-        self.session.request = functools.partial(self.session.request, timeout=request_timeout)
+        self.session.request = functools.partial(
+            self.session.request, timeout=request_timeout
+        )
 
-    def login(self, username: str, password: str, subdomain: str):
+    def login(
+        self, username: str, password: str, subdomain: str
+    ) -&gt; Optional[TwoFactorLogin]:
         &#34;&#34;&#34;Login while specifying the subdomain to log into.
 
         Args:
             username (str): Your username.
             password (str): Your password.
             subdomain (str): Subdomain of your school (https://{subdomain}.edupage.org).
+
+        Returns:
+            Optional[TwoFactorLogin]: Returns `None` if no second factor was needed to login,
+            or the `TwoFactorLogin` object that is used to complete 2fa.
         &#34;&#34;&#34;
 
-        Login(self).login(username, password, subdomain)
+        return Login(self).login(username, password, subdomain)
 
-    def login_auto(self, username: str, password: str):
+    def login_auto(self, username: str, password: str) -&gt; Optional[TwoFactorLogin]:
         &#34;&#34;&#34;Login using https://portal.edupage.org. If this doesn&#39;t work, please use `Edupage.login`.
 
         Args:
             username (str): Your username.
             password (str): Your password.
+
+        Returns:
+            Optional[TwoFactorLogin]: Returns `None` if no second factor was needed to login,
+            or the `TwoFactorLogin` object that is used to complete 2fa.
         &#34;&#34;&#34;
 
-        Login(self).login_auto(username, password)
+        return Login(self).login(username, password)
 
     def get_students(self) -&gt; Optional[list[EduStudent]]:
         &#34;&#34;&#34;Get list of all students in your class.
@@ -118,13 +130,15 @@ class Edupage(EdupageModule):
 
         return People(self).get_teachers()
 
-    def send_message(self, recipients: Union[list[EduAccount], EduAccount], body: str) -&gt; int:
+    def send_message(
+        self, recipients: Union[list[EduAccount], EduAccount], body: str
+    ) -&gt; int:
         &#34;&#34;&#34;Send message.
 
         Args:
             recipients (Optional[list[EduAccount]]): Recipients of your message (list of `EduAccount`s).
             body (str): Body of your message.
-        
+
         Returns:
             int: The timeline id of the new message.
         &#34;&#34;&#34;
@@ -184,10 +198,10 @@ class Edupage(EdupageModule):
         &#34;&#34;&#34;
 
         return Grades(self).get_grades(year=None, term=None)
-    
+
     def get_grades_for_term(self, year: int, term: Term) -&gt; list[EduGrade]:
         &#34;&#34;&#34;Get a list of all available grades for a given year and term
-        
+
         Returns:
             list[EduGrade]: List of `EduGrade`s
         &#34;&#34;&#34;
@@ -203,7 +217,9 @@ class Edupage(EdupageModule):
 
         return self.data.get(&#34;userid&#34;)
 
-    def custom_request(self, url: str, method: str, data: str = &#34;&#34;, headers: dict = {}) -&gt; Response:
+    def custom_request(
+        self, url: str, method: str, data: str = &#34;&#34;, headers: dict = {}
+    ) -&gt; Response:
         &#34;&#34;&#34;Send custom request to EduPage.
 
         Args:
@@ -273,17 +289,17 @@ class Edupage(EdupageModule):
             RingingTime: The type (break or lesson) and time of the next ringing.
         &#34;&#34;&#34;
         return RingingTimes(self).get_next_ringing_time(date_time)
-    
+
     def switch_to_child(self, child: Union[EduAccount, int]):
         &#34;&#34;&#34;Switch to an account of a child - can only be used on parent accounts
 
         Args:
             child (EduAccount | int): The account or `person_id` of the child you want to switch to
 
-        Note: When you switch to a child account, all other methods will return data as if you were logged in as `child` 
+        Note: When you switch to a child account, all other methods will return data as if you were logged in as `child`
         &#34;&#34;&#34;
         Parent(self).switch_to_child(child)
-    
+
     def switch_to_parent(self):
         &#34;&#34;&#34;Switches back to your parent account - can only be used on parent accounts&#34;&#34;&#34;
         Parent(self).switch_to_parent()
@@ -424,28 +440,40 @@ Defaults to <code>5</code>.</dd>
         self.username = None
 
         self.session = requests.session()
-        self.session.request = functools.partial(self.session.request, timeout=request_timeout)
+        self.session.request = functools.partial(
+            self.session.request, timeout=request_timeout
+        )
 
-    def login(self, username: str, password: str, subdomain: str):
+    def login(
+        self, username: str, password: str, subdomain: str
+    ) -&gt; Optional[TwoFactorLogin]:
         &#34;&#34;&#34;Login while specifying the subdomain to log into.
 
         Args:
             username (str): Your username.
             password (str): Your password.
             subdomain (str): Subdomain of your school (https://{subdomain}.edupage.org).
+
+        Returns:
+            Optional[TwoFactorLogin]: Returns `None` if no second factor was needed to login,
+            or the `TwoFactorLogin` object that is used to complete 2fa.
         &#34;&#34;&#34;
 
-        Login(self).login(username, password, subdomain)
+        return Login(self).login(username, password, subdomain)
 
-    def login_auto(self, username: str, password: str):
+    def login_auto(self, username: str, password: str) -&gt; Optional[TwoFactorLogin]:
         &#34;&#34;&#34;Login using https://portal.edupage.org. If this doesn&#39;t work, please use `Edupage.login`.
 
         Args:
             username (str): Your username.
             password (str): Your password.
+
+        Returns:
+            Optional[TwoFactorLogin]: Returns `None` if no second factor was needed to login,
+            or the `TwoFactorLogin` object that is used to complete 2fa.
         &#34;&#34;&#34;
 
-        Login(self).login_auto(username, password)
+        return Login(self).login(username, password)
 
     def get_students(self) -&gt; Optional[list[EduStudent]]:
         &#34;&#34;&#34;Get list of all students in your class.
@@ -474,13 +502,15 @@ Defaults to <code>5</code>.</dd>
 
         return People(self).get_teachers()
 
-    def send_message(self, recipients: Union[list[EduAccount], EduAccount], body: str) -&gt; int:
+    def send_message(
+        self, recipients: Union[list[EduAccount], EduAccount], body: str
+    ) -&gt; int:
         &#34;&#34;&#34;Send message.
 
         Args:
             recipients (Optional[list[EduAccount]]): Recipients of your message (list of `EduAccount`s).
             body (str): Body of your message.
-        
+
         Returns:
             int: The timeline id of the new message.
         &#34;&#34;&#34;
@@ -540,10 +570,10 @@ Defaults to <code>5</code>.</dd>
         &#34;&#34;&#34;
 
         return Grades(self).get_grades(year=None, term=None)
-    
+
     def get_grades_for_term(self, year: int, term: Term) -&gt; list[EduGrade]:
         &#34;&#34;&#34;Get a list of all available grades for a given year and term
-        
+
         Returns:
             list[EduGrade]: List of `EduGrade`s
         &#34;&#34;&#34;
@@ -559,7 +589,9 @@ Defaults to <code>5</code>.</dd>
 
         return self.data.get(&#34;userid&#34;)
 
-    def custom_request(self, url: str, method: str, data: str = &#34;&#34;, headers: dict = {}) -&gt; Response:
+    def custom_request(
+        self, url: str, method: str, data: str = &#34;&#34;, headers: dict = {}
+    ) -&gt; Response:
         &#34;&#34;&#34;Send custom request to EduPage.
 
         Args:
@@ -629,17 +661,17 @@ Defaults to <code>5</code>.</dd>
             RingingTime: The type (break or lesson) and time of the next ringing.
         &#34;&#34;&#34;
         return RingingTimes(self).get_next_ringing_time(date_time)
-    
+
     def switch_to_child(self, child: Union[EduAccount, int]):
         &#34;&#34;&#34;Switch to an account of a child - can only be used on parent accounts
 
         Args:
             child (EduAccount | int): The account or `person_id` of the child you want to switch to
 
-        Note: When you switch to a child account, all other methods will return data as if you were logged in as `child` 
+        Note: When you switch to a child account, all other methods will return data as if you were logged in as `child`
         &#34;&#34;&#34;
         Parent(self).switch_to_child(child)
-    
+
     def switch_to_parent(self):
         &#34;&#34;&#34;Switches back to your parent account - can only be used on parent accounts&#34;&#34;&#34;
         Parent(self).switch_to_parent()
@@ -793,7 +825,9 @@ def from_session_id(cls, session_id: str, subdomain: str):
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def custom_request(self, url: str, method: str, data: str = &#34;&#34;, headers: dict = {}) -&gt; Response:
+<pre><code class="python">def custom_request(
+    self, url: str, method: str, data: str = &#34;&#34;, headers: dict = {}
+) -&gt; Response:
     &#34;&#34;&#34;Send custom request to EduPage.
 
     Args:
@@ -912,7 +946,7 @@ def from_session_id(cls, session_id: str, subdomain: str):
 </summary>
 <pre><code class="python">def get_grades_for_term(self, year: int, term: Term) -&gt; list[EduGrade]:
     &#34;&#34;&#34;Get a list of all available grades for a given year and term
-    
+
     Returns:
         list[EduGrade]: List of `EduGrade`s
     &#34;&#34;&#34;
@@ -1197,7 +1231,7 @@ def from_session_id(cls, session_id: str, subdomain: str):
 </details>
 </dd>
 <dt id="edupage_api.Edupage.login"><code class="name flex">
-<span>def <span class="ident">login</span></span>(<span>self, username: str, password: str, subdomain: str)</span>
+<span>def <span class="ident">login</span></span>(<span>self, username: str, password: str, subdomain: str) ‑> Optional[<a title="edupage_api.login.TwoFactorLogin" href="login.html#edupage_api.login.TwoFactorLogin">TwoFactorLogin</a>]</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Login while specifying the subdomain to log into.</p>
@@ -1209,25 +1243,37 @@ def from_session_id(cls, session_id: str, subdomain: str):
 <dd>Your password.</dd>
 <dt><strong><code>subdomain</code></strong> :&ensp;<code>str</code></dt>
 <dd>Subdomain of your school (<a href="https://{subdomain}.edupage.org">https://{subdomain}.edupage.org</a>).</dd>
-</dl></div>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>Optional[TwoFactorLogin]</code></dt>
+<dd>Returns <code>None</code> if no second factor was needed to login,</dd>
+</dl>
+<p>or the <code>TwoFactorLogin</code> object that is used to complete 2fa.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def login(self, username: str, password: str, subdomain: str):
+<pre><code class="python">def login(
+    self, username: str, password: str, subdomain: str
+) -&gt; Optional[TwoFactorLogin]:
     &#34;&#34;&#34;Login while specifying the subdomain to log into.
 
     Args:
         username (str): Your username.
         password (str): Your password.
         subdomain (str): Subdomain of your school (https://{subdomain}.edupage.org).
+
+    Returns:
+        Optional[TwoFactorLogin]: Returns `None` if no second factor was needed to login,
+        or the `TwoFactorLogin` object that is used to complete 2fa.
     &#34;&#34;&#34;
 
-    Login(self).login(username, password, subdomain)</code></pre>
+    return Login(self).login(username, password, subdomain)</code></pre>
 </details>
 </dd>
 <dt id="edupage_api.Edupage.login_auto"><code class="name flex">
-<span>def <span class="ident">login_auto</span></span>(<span>self, username: str, password: str)</span>
+<span>def <span class="ident">login_auto</span></span>(<span>self, username: str, password: str) ‑> Optional[<a title="edupage_api.login.TwoFactorLogin" href="login.html#edupage_api.login.TwoFactorLogin">TwoFactorLogin</a>]</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Login using <a href="https://portal.edupage.org.">https://portal.edupage.org.</a> If this doesn't work, please use <code><a title="edupage_api.Edupage.login" href="#edupage_api.Edupage.login">Edupage.login()</a></code>.</p>
@@ -1237,20 +1283,30 @@ def from_session_id(cls, session_id: str, subdomain: str):
 <dd>Your username.</dd>
 <dt><strong><code>password</code></strong> :&ensp;<code>str</code></dt>
 <dd>Your password.</dd>
-</dl></div>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>Optional[TwoFactorLogin]</code></dt>
+<dd>Returns <code>None</code> if no second factor was needed to login,</dd>
+</dl>
+<p>or the <code>TwoFactorLogin</code> object that is used to complete 2fa.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def login_auto(self, username: str, password: str):
+<pre><code class="python">def login_auto(self, username: str, password: str) -&gt; Optional[TwoFactorLogin]:
     &#34;&#34;&#34;Login using https://portal.edupage.org. If this doesn&#39;t work, please use `Edupage.login`.
 
     Args:
         username (str): Your username.
         password (str): Your password.
+
+    Returns:
+        Optional[TwoFactorLogin]: Returns `None` if no second factor was needed to login,
+        or the `TwoFactorLogin` object that is used to complete 2fa.
     &#34;&#34;&#34;
 
-    Login(self).login_auto(username, password)</code></pre>
+    return Login(self).login(username, password)</code></pre>
 </details>
 </dd>
 <dt id="edupage_api.Edupage.send_message"><code class="name flex">
@@ -1274,13 +1330,15 @@ def from_session_id(cls, session_id: str, subdomain: str):
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def send_message(self, recipients: Union[list[EduAccount], EduAccount], body: str) -&gt; int:
+<pre><code class="python">def send_message(
+    self, recipients: Union[list[EduAccount], EduAccount], body: str
+) -&gt; int:
     &#34;&#34;&#34;Send message.
 
     Args:
         recipients (Optional[list[EduAccount]]): Recipients of your message (list of `EduAccount`s).
         body (str): Body of your message.
-    
+
     Returns:
         int: The timeline id of the new message.
     &#34;&#34;&#34;
@@ -1306,7 +1364,7 @@ Note: When you switch to a child account, all other methods will return data as 
     Args:
         child (EduAccount | int): The account or `person_id` of the child you want to switch to
 
-    Note: When you switch to a child account, all other methods will return data as if you were logged in as `child` 
+    Note: When you switch to a child account, all other methods will return data as if you were logged in as `child`
     &#34;&#34;&#34;
     Parent(self).switch_to_child(child)</code></pre>
 </details>

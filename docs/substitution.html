@@ -35,7 +35,8 @@ from datetime import date
 from enum import Enum
 from typing import Optional, Union
 
-from edupage_api.exceptions import ExpiredSessionException, InvalidTeacherException
+from edupage_api.exceptions import (ExpiredSessionException,
+                                    InvalidTeacherException)
 from edupage_api.module import Module, ModuleHelper
 from edupage_api.people import EduTeacher, People
 
@@ -60,34 +61,32 @@ class TimetableChange:
 
 class Substitution(Module):
     def __get_substitution_data(self, date: date) -&gt; str:
-        url = (f&#34;https://{self.edupage.subdomain}.edupage.org/substitution/server/viewer.js&#34;
-               &#34;?__func=getSubstViewerDayDataHtml&#34;)
+        url = (
+            f&#34;https://{self.edupage.subdomain}.edupage.org/substitution/server/viewer.js&#34;
+            &#34;?__func=getSubstViewerDayDataHtml&#34;
+        )
 
         data = {
-            &#34;__args&#34;: [
-                None,
-                {
-                    &#34;date&#34;: date.strftime(&#34;%Y-%m-%d&#34;),
-                    &#34;mode&#34;: &#34;classes&#34;
-                }
-            ],
-            &#34;__gsh&#34;: self.edupage.gsec_hash
+            &#34;__args&#34;: [None, {&#34;date&#34;: date.strftime(&#34;%Y-%m-%d&#34;), &#34;mode&#34;: &#34;classes&#34;}],
+            &#34;__gsh&#34;: self.edupage.gsec_hash,
         }
 
         response = self.edupage.session.post(url, json=data).content.decode()
         response = json.loads(response)
 
         if response.get(&#34;reload&#34;):
-            raise ExpiredSessionException(&#34;Invalid gsec hash! &#34;
-                                          &#34;(Expired session, try logging in again!)&#34;)
+            raise ExpiredSessionException(
+                &#34;Invalid gsec hash! &#34; &#34;(Expired session, try logging in again!)&#34;
+            )
 
         return response.get(&#34;r&#34;)
 
     @ModuleHelper.logged_in
     def get_missing_teachers(self, date: date) -&gt; Optional[list[EduTeacher]]:
         html = self.__get_substitution_data(date)
-        missing_teachers_string = (html.split(&#34;&lt;span class=\&#34;print-font-resizable\&#34;&gt;&#34;)[1]
-                                       .split(&#34;&lt;/span&gt;&#34;)[0])
+        missing_teachers_string = html.split(&#39;&lt;span class=&#34;print-font-resizable&#34;&gt;&#39;)[
+            1
+        ].split(&#34;&lt;/span&gt;&#34;)[0]
 
         if not missing_teachers_string:
             return None
@@ -96,11 +95,14 @@ class Substitution(Module):
 
         all_teachers = People(self.edupage).get_teachers()
 
-        missing_teachers = [item for sublist in [
-            (t.strip()
-              .split(&#34;  (&#34;)[0]).split(&#34; + &#34;)
-            for t in missing_teachers.split(&#34;, &#34;)
-        ] for item in sublist]
+        missing_teachers = [
+            item
+            for sublist in [
+                (t.strip().split(&#34;  (&#34;)[0]).split(&#34; + &#34;)
+                for t in missing_teachers.split(&#34;, &#34;)
+            ]
+            for item in sublist
+        ]
 
         try:
             missing_teachers = [
@@ -108,8 +110,10 @@ class Substitution(Module):
                 for t in missing_teachers
             ]
         except IndexError:
-            raise InvalidTeacherException(&#34;Invalid teacher in substitution! &#34;
-                                          &#34;(The teacher is no longer frequenting this school)&#34;)
+            raise InvalidTeacherException(
+                &#34;Invalid teacher in substitution! &#34;
+                &#34;(The teacher is no longer frequenting this school)&#34;
+            )
 
         return missing_teachers
 
@@ -117,35 +121,41 @@ class Substitution(Module):
     def get_timetable_changes(self, date: date) -&gt; Optional[list[TimetableChange]]:
         html = self.__get_substitution_data(date)
 
-        class_delim = (&#34;&lt;/div&gt;&lt;div class=\&#34;section print-nobreak\&#34;&gt;&#34;
-                       &#34;&lt;div class=\&#34;header\&#34;&gt;&lt;span class=\&#34;print-font-resizable\&#34;&gt;&#34;)
+        class_delim = (
+            &#39;&lt;/div&gt;&lt;div class=&#34;section print-nobreak&#34;&gt;&#39;
+            &#39;&lt;div class=&#34;header&#34;&gt;&lt;span class=&#34;print-font-resizable&#34;&gt;&#39;
+        )
         changes_by_class_dirty = html.split(class_delim)[1:]
 
         if not changes_by_class_dirty:
             return None
 
-        footer_delim = (&#34;&lt;div style=\&#34;text-align:center;font-size:12px\&#34;&gt;&#34;
-                        &#34;&lt;a href=\&#34;https://www.asctimetables.com\&#34; target=\&#34;_blank\&#34;&gt;&#34;
-                        &#34;www.asctimetables.com&lt;/a&gt; -&#34;)
+        footer_delim = (
+            &#39;&lt;div style=&#34;text-align:center;font-size:12px&#34;&gt;&#39;
+            &#39;&lt;a href=&#34;https://www.asctimetables.com&#34; target=&#34;_blank&#34;&gt;&#39;
+            &#34;www.asctimetables.com&lt;/a&gt; -&#34;
+        )
         changes_by_class_dirty[-1] = changes_by_class_dirty[-1].split(footer_delim)[0]
 
         changes = [
-            (x.replace(&#34;&lt;/div&gt;&#34;, &#34;&#34;)
-              .replace(&#34;&lt;div class=\&#34;period\&#34;&gt;&#34;, &#34;&#34;)
-              .replace(&#34;&lt;span class=\&#34;print-font-resizable\&#34;&gt;&#34;, &#34;&#34;)
-              .replace(&#34;&lt;div class=\&#34;info\&#34;&gt;&#34;, &#34;&#34;))
+            (
+                x.replace(&#34;&lt;/div&gt;&#34;, &#34;&#34;)
+                .replace(&#39;&lt;div class=&#34;period&#34;&gt;&#39;, &#34;&#34;)
+                .replace(&#39;&lt;span class=&#34;print-font-resizable&#34;&gt;&#39;, &#34;&#34;)
+                .replace(&#39;&lt;div class=&#34;info&#34;&gt;&#39;, &#34;&#34;)
+            )
             for x in changes_by_class_dirty
         ]
 
         lesson_changes = []
         for class_changes in changes:
-            class_changes_data = class_changes.split(&#34;&lt;/span&gt;&lt;div class=\&#34;rows\&#34;&gt;&#34;)
+            class_changes_data = class_changes.split(&#39;&lt;/span&gt;&lt;div class=&#34;rows&#34;&gt;&#39;)
             change_class = class_changes_data[0]
 
-            class_changes_rows = class_changes_data[1].split(&#34;&lt;div class=\&#34;row &#34;)[1:]
+            class_changes_rows = class_changes_data[1].split(&#39;&lt;div class=&#34;row &#39;)[1:]
 
             for change in class_changes_rows:
-                change = change.replace(&#34;\&#34;&gt;&#34;, &#34;&lt;/span&gt;&#34;)
+                change = change.replace(&#39;&#34;&gt;&#39;, &#34;&lt;/span&gt;&#34;)
                 action, lesson_n, title = change.split(&#34;&lt;/span&gt;&#34;, 3)[:-1]
 
                 if &#34;&lt;img src=&#34; in title:
@@ -155,8 +165,10 @@ class Substitution(Module):
 
                 if &#34;-&#34; in lesson_n:
                     lesson_from, lesson_to = lesson_n.split(&#34; - &#34;)
-                    lesson_n = (ModuleHelper.parse_int(lesson_from),
-                                ModuleHelper.parse_int(lesson_to))
+                    lesson_n = (
+                        ModuleHelper.parse_int(lesson_from),
+                        ModuleHelper.parse_int(lesson_to),
+                    )
                 else:
                     lesson_n = ModuleHelper.parse_int(lesson_n)
 
@@ -244,34 +256,32 @@ def parse(string: str) -&gt; Optional[Action]:
 </summary>
 <pre><code class="python">class Substitution(Module):
     def __get_substitution_data(self, date: date) -&gt; str:
-        url = (f&#34;https://{self.edupage.subdomain}.edupage.org/substitution/server/viewer.js&#34;
-               &#34;?__func=getSubstViewerDayDataHtml&#34;)
+        url = (
+            f&#34;https://{self.edupage.subdomain}.edupage.org/substitution/server/viewer.js&#34;
+            &#34;?__func=getSubstViewerDayDataHtml&#34;
+        )
 
         data = {
-            &#34;__args&#34;: [
-                None,
-                {
-                    &#34;date&#34;: date.strftime(&#34;%Y-%m-%d&#34;),
-                    &#34;mode&#34;: &#34;classes&#34;
-                }
-            ],
-            &#34;__gsh&#34;: self.edupage.gsec_hash
+            &#34;__args&#34;: [None, {&#34;date&#34;: date.strftime(&#34;%Y-%m-%d&#34;), &#34;mode&#34;: &#34;classes&#34;}],
+            &#34;__gsh&#34;: self.edupage.gsec_hash,
         }
 
         response = self.edupage.session.post(url, json=data).content.decode()
         response = json.loads(response)
 
         if response.get(&#34;reload&#34;):
-            raise ExpiredSessionException(&#34;Invalid gsec hash! &#34;
-                                          &#34;(Expired session, try logging in again!)&#34;)
+            raise ExpiredSessionException(
+                &#34;Invalid gsec hash! &#34; &#34;(Expired session, try logging in again!)&#34;
+            )
 
         return response.get(&#34;r&#34;)
 
     @ModuleHelper.logged_in
     def get_missing_teachers(self, date: date) -&gt; Optional[list[EduTeacher]]:
         html = self.__get_substitution_data(date)
-        missing_teachers_string = (html.split(&#34;&lt;span class=\&#34;print-font-resizable\&#34;&gt;&#34;)[1]
-                                       .split(&#34;&lt;/span&gt;&#34;)[0])
+        missing_teachers_string = html.split(&#39;&lt;span class=&#34;print-font-resizable&#34;&gt;&#39;)[
+            1
+        ].split(&#34;&lt;/span&gt;&#34;)[0]
 
         if not missing_teachers_string:
             return None
@@ -280,11 +290,14 @@ def parse(string: str) -&gt; Optional[Action]:
 
         all_teachers = People(self.edupage).get_teachers()
 
-        missing_teachers = [item for sublist in [
-            (t.strip()
-              .split(&#34;  (&#34;)[0]).split(&#34; + &#34;)
-            for t in missing_teachers.split(&#34;, &#34;)
-        ] for item in sublist]
+        missing_teachers = [
+            item
+            for sublist in [
+                (t.strip().split(&#34;  (&#34;)[0]).split(&#34; + &#34;)
+                for t in missing_teachers.split(&#34;, &#34;)
+            ]
+            for item in sublist
+        ]
 
         try:
             missing_teachers = [
@@ -292,8 +305,10 @@ def parse(string: str) -&gt; Optional[Action]:
                 for t in missing_teachers
             ]
         except IndexError:
-            raise InvalidTeacherException(&#34;Invalid teacher in substitution! &#34;
-                                          &#34;(The teacher is no longer frequenting this school)&#34;)
+            raise InvalidTeacherException(
+                &#34;Invalid teacher in substitution! &#34;
+                &#34;(The teacher is no longer frequenting this school)&#34;
+            )
 
         return missing_teachers
 
@@ -301,35 +316,41 @@ def parse(string: str) -&gt; Optional[Action]:
     def get_timetable_changes(self, date: date) -&gt; Optional[list[TimetableChange]]:
         html = self.__get_substitution_data(date)
 
-        class_delim = (&#34;&lt;/div&gt;&lt;div class=\&#34;section print-nobreak\&#34;&gt;&#34;
-                       &#34;&lt;div class=\&#34;header\&#34;&gt;&lt;span class=\&#34;print-font-resizable\&#34;&gt;&#34;)
+        class_delim = (
+            &#39;&lt;/div&gt;&lt;div class=&#34;section print-nobreak&#34;&gt;&#39;
+            &#39;&lt;div class=&#34;header&#34;&gt;&lt;span class=&#34;print-font-resizable&#34;&gt;&#39;
+        )
         changes_by_class_dirty = html.split(class_delim)[1:]
 
         if not changes_by_class_dirty:
             return None
 
-        footer_delim = (&#34;&lt;div style=\&#34;text-align:center;font-size:12px\&#34;&gt;&#34;
-                        &#34;&lt;a href=\&#34;https://www.asctimetables.com\&#34; target=\&#34;_blank\&#34;&gt;&#34;
-                        &#34;www.asctimetables.com&lt;/a&gt; -&#34;)
+        footer_delim = (
+            &#39;&lt;div style=&#34;text-align:center;font-size:12px&#34;&gt;&#39;
+            &#39;&lt;a href=&#34;https://www.asctimetables.com&#34; target=&#34;_blank&#34;&gt;&#39;
+            &#34;www.asctimetables.com&lt;/a&gt; -&#34;
+        )
         changes_by_class_dirty[-1] = changes_by_class_dirty[-1].split(footer_delim)[0]
 
         changes = [
-            (x.replace(&#34;&lt;/div&gt;&#34;, &#34;&#34;)
-              .replace(&#34;&lt;div class=\&#34;period\&#34;&gt;&#34;, &#34;&#34;)
-              .replace(&#34;&lt;span class=\&#34;print-font-resizable\&#34;&gt;&#34;, &#34;&#34;)
-              .replace(&#34;&lt;div class=\&#34;info\&#34;&gt;&#34;, &#34;&#34;))
+            (
+                x.replace(&#34;&lt;/div&gt;&#34;, &#34;&#34;)
+                .replace(&#39;&lt;div class=&#34;period&#34;&gt;&#39;, &#34;&#34;)
+                .replace(&#39;&lt;span class=&#34;print-font-resizable&#34;&gt;&#39;, &#34;&#34;)
+                .replace(&#39;&lt;div class=&#34;info&#34;&gt;&#39;, &#34;&#34;)
+            )
             for x in changes_by_class_dirty
         ]
 
         lesson_changes = []
         for class_changes in changes:
-            class_changes_data = class_changes.split(&#34;&lt;/span&gt;&lt;div class=\&#34;rows\&#34;&gt;&#34;)
+            class_changes_data = class_changes.split(&#39;&lt;/span&gt;&lt;div class=&#34;rows&#34;&gt;&#39;)
             change_class = class_changes_data[0]
 
-            class_changes_rows = class_changes_data[1].split(&#34;&lt;div class=\&#34;row &#34;)[1:]
+            class_changes_rows = class_changes_data[1].split(&#39;&lt;div class=&#34;row &#39;)[1:]
 
             for change in class_changes_rows:
-                change = change.replace(&#34;\&#34;&gt;&#34;, &#34;&lt;/span&gt;&#34;)
+                change = change.replace(&#39;&#34;&gt;&#39;, &#34;&lt;/span&gt;&#34;)
                 action, lesson_n, title = change.split(&#34;&lt;/span&gt;&#34;, 3)[:-1]
 
                 if &#34;&lt;img src=&#34; in title:
@@ -339,8 +360,10 @@ def parse(string: str) -&gt; Optional[Action]:
 
                 if &#34;-&#34; in lesson_n:
                     lesson_from, lesson_to = lesson_n.split(&#34; - &#34;)
-                    lesson_n = (ModuleHelper.parse_int(lesson_from),
-                                ModuleHelper.parse_int(lesson_to))
+                    lesson_n = (
+                        ModuleHelper.parse_int(lesson_from),
+                        ModuleHelper.parse_int(lesson_to),
+                    )
                 else:
                     lesson_n = ModuleHelper.parse_int(lesson_n)
 
@@ -367,8 +390,9 @@ def parse(string: str) -&gt; Optional[Action]:
 <pre><code class="python">@ModuleHelper.logged_in
 def get_missing_teachers(self, date: date) -&gt; Optional[list[EduTeacher]]:
     html = self.__get_substitution_data(date)
-    missing_teachers_string = (html.split(&#34;&lt;span class=\&#34;print-font-resizable\&#34;&gt;&#34;)[1]
-                                   .split(&#34;&lt;/span&gt;&#34;)[0])
+    missing_teachers_string = html.split(&#39;&lt;span class=&#34;print-font-resizable&#34;&gt;&#39;)[
+        1
+    ].split(&#34;&lt;/span&gt;&#34;)[0]
 
     if not missing_teachers_string:
         return None
@@ -377,11 +401,14 @@ def get_missing_teachers(self, date: date) -&gt; Optional[list[EduTeacher]]:
 
     all_teachers = People(self.edupage).get_teachers()
 
-    missing_teachers = [item for sublist in [
-        (t.strip()
-          .split(&#34;  (&#34;)[0]).split(&#34; + &#34;)
-        for t in missing_teachers.split(&#34;, &#34;)
-    ] for item in sublist]
+    missing_teachers = [
+        item
+        for sublist in [
+            (t.strip().split(&#34;  (&#34;)[0]).split(&#34; + &#34;)
+            for t in missing_teachers.split(&#34;, &#34;)
+        ]
+        for item in sublist
+    ]
 
     try:
         missing_teachers = [
@@ -389,8 +416,10 @@ def get_missing_teachers(self, date: date) -&gt; Optional[list[EduTeacher]]:
             for t in missing_teachers
         ]
     except IndexError:
-        raise InvalidTeacherException(&#34;Invalid teacher in substitution! &#34;
-                                      &#34;(The teacher is no longer frequenting this school)&#34;)
+        raise InvalidTeacherException(
+            &#34;Invalid teacher in substitution! &#34;
+            &#34;(The teacher is no longer frequenting this school)&#34;
+        )
 
     return missing_teachers</code></pre>
 </details>
@@ -408,35 +437,41 @@ def get_missing_teachers(self, date: date) -&gt; Optional[list[EduTeacher]]:
 def get_timetable_changes(self, date: date) -&gt; Optional[list[TimetableChange]]:
     html = self.__get_substitution_data(date)
 
-    class_delim = (&#34;&lt;/div&gt;&lt;div class=\&#34;section print-nobreak\&#34;&gt;&#34;
-                   &#34;&lt;div class=\&#34;header\&#34;&gt;&lt;span class=\&#34;print-font-resizable\&#34;&gt;&#34;)
+    class_delim = (
+        &#39;&lt;/div&gt;&lt;div class=&#34;section print-nobreak&#34;&gt;&#39;
+        &#39;&lt;div class=&#34;header&#34;&gt;&lt;span class=&#34;print-font-resizable&#34;&gt;&#39;
+    )
     changes_by_class_dirty = html.split(class_delim)[1:]
 
     if not changes_by_class_dirty:
         return None
 
-    footer_delim = (&#34;&lt;div style=\&#34;text-align:center;font-size:12px\&#34;&gt;&#34;
-                    &#34;&lt;a href=\&#34;https://www.asctimetables.com\&#34; target=\&#34;_blank\&#34;&gt;&#34;
-                    &#34;www.asctimetables.com&lt;/a&gt; -&#34;)
+    footer_delim = (
+        &#39;&lt;div style=&#34;text-align:center;font-size:12px&#34;&gt;&#39;
+        &#39;&lt;a href=&#34;https://www.asctimetables.com&#34; target=&#34;_blank&#34;&gt;&#39;
+        &#34;www.asctimetables.com&lt;/a&gt; -&#34;
+    )
     changes_by_class_dirty[-1] = changes_by_class_dirty[-1].split(footer_delim)[0]
 
     changes = [
-        (x.replace(&#34;&lt;/div&gt;&#34;, &#34;&#34;)
-          .replace(&#34;&lt;div class=\&#34;period\&#34;&gt;&#34;, &#34;&#34;)
-          .replace(&#34;&lt;span class=\&#34;print-font-resizable\&#34;&gt;&#34;, &#34;&#34;)
-          .replace(&#34;&lt;div class=\&#34;info\&#34;&gt;&#34;, &#34;&#34;))
+        (
+            x.replace(&#34;&lt;/div&gt;&#34;, &#34;&#34;)
+            .replace(&#39;&lt;div class=&#34;period&#34;&gt;&#39;, &#34;&#34;)
+            .replace(&#39;&lt;span class=&#34;print-font-resizable&#34;&gt;&#39;, &#34;&#34;)
+            .replace(&#39;&lt;div class=&#34;info&#34;&gt;&#39;, &#34;&#34;)
+        )
         for x in changes_by_class_dirty
     ]
 
     lesson_changes = []
     for class_changes in changes:
-        class_changes_data = class_changes.split(&#34;&lt;/span&gt;&lt;div class=\&#34;rows\&#34;&gt;&#34;)
+        class_changes_data = class_changes.split(&#39;&lt;/span&gt;&lt;div class=&#34;rows&#34;&gt;&#39;)
         change_class = class_changes_data[0]
 
-        class_changes_rows = class_changes_data[1].split(&#34;&lt;div class=\&#34;row &#34;)[1:]
+        class_changes_rows = class_changes_data[1].split(&#39;&lt;div class=&#34;row &#39;)[1:]
 
         for change in class_changes_rows:
-            change = change.replace(&#34;\&#34;&gt;&#34;, &#34;&lt;/span&gt;&#34;)
+            change = change.replace(&#39;&#34;&gt;&#39;, &#34;&lt;/span&gt;&#34;)
             action, lesson_n, title = change.split(&#34;&lt;/span&gt;&#34;, 3)[:-1]
 
             if &#34;&lt;img src=&#34; in title:
@@ -446,8 +481,10 @@ def get_timetable_changes(self, date: date) -&gt; Optional[list[TimetableChange]
 
             if &#34;-&#34; in lesson_n:
                 lesson_from, lesson_to = lesson_n.split(&#34; - &#34;)
-                lesson_n = (ModuleHelper.parse_int(lesson_from),
-                            ModuleHelper.parse_int(lesson_to))
+                lesson_n = (
+                    ModuleHelper.parse_int(lesson_from),
+                    ModuleHelper.parse_int(lesson_to),
+                )
             else:
                 lesson_n = ModuleHelper.parse_int(lesson_n)
 

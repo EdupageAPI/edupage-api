@@ -70,7 +70,7 @@ class EduCloudFile:
             data.get(&#34;extension&#34;),
             data.get(&#34;type&#34;),
             data.get(&#34;file&#34;),
-            data.get(&#34;name&#34;)
+            data.get(&#34;name&#34;),
         )
 
 
@@ -105,7 +105,9 @@ class Cloud(Module):
             EduCloudFile: `EduCloudFile` object.
         &#34;&#34;&#34;
 
-        request_url = f&#34;https://{self.edupage.subdomain}.edupage.org/timeline/?akcia=uploadAtt&#34;
+        request_url = (
+            f&#34;https://{self.edupage.subdomain}.edupage.org/timeline/?akcia=uploadAtt&#34;
+        )
 
         files = {&#34;att&#34;: fd}
 
@@ -172,7 +174,9 @@ class Cloud(Module):
             EduCloudFile: `EduCloudFile` object.
         &#34;&#34;&#34;
 
-        request_url = f&#34;https://{self.edupage.subdomain}.edupage.org/timeline/?akcia=uploadAtt&#34;
+        request_url = (
+            f&#34;https://{self.edupage.subdomain}.edupage.org/timeline/?akcia=uploadAtt&#34;
+        )
 
         files = {&#34;att&#34;: fd}
 
@@ -259,7 +263,9 @@ def upload_file(self, fd: TextIOWrapper) -&gt; EduCloudFile:
         EduCloudFile: `EduCloudFile` object.
     &#34;&#34;&#34;
 
-    request_url = f&#34;https://{self.edupage.subdomain}.edupage.org/timeline/?akcia=uploadAtt&#34;
+    request_url = (
+        f&#34;https://{self.edupage.subdomain}.edupage.org/timeline/?akcia=uploadAtt&#34;
+    )
 
     files = {&#34;att&#34;: fd}
 
@@ -324,7 +330,7 @@ class EduCloudFile:
             data.get(&#34;extension&#34;),
             data.get(&#34;type&#34;),
             data.get(&#34;file&#34;),
-            data.get(&#34;name&#34;)
+            data.get(&#34;name&#34;),
         )</code></pre>
 </details>
 <h3>Class variables</h3>
@@ -387,7 +393,7 @@ def parse(data: dict):
         data.get(&#34;extension&#34;),
         data.get(&#34;type&#34;),
         data.get(&#34;file&#34;),
-        data.get(&#34;name&#34;)
+        data.get(&#34;name&#34;),
     )</code></pre>
 </details>
 </dd>

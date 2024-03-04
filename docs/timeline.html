@@ -198,7 +198,9 @@ class TimelineEvents(Module):
                 continue
             event_type = EventType.parse(event_type_str)
 
-            event_timestamp = datetime.strptime(event.get(&#34;timestamp&#34;), &#34;%Y-%m-%d %H:%M:%S&#34;)
+            event_timestamp = datetime.strptime(
+                event.get(&#34;timestamp&#34;), &#34;%Y-%m-%d %H:%M:%S&#34;
+            )
             text = event.get(&#34;text&#34;)
 
             # what about different languages?
@@ -214,7 +216,9 @@ class TimelineEvents(Module):
 
             # todo: add support for &#34;*&#34;
             recipient_name = event.get(&#34;user_meno&#34;)
-            recipient_data = DbiHelper(self.edupage).fetch_person_data_by_name(recipient_name)
+            recipient_data = DbiHelper(self.edupage).fetch_person_data_by_name(
+                recipient_name
+            )
 
             if recipient_name in [&#34;*&#34;, &#34;Celá škola&#34;]:
                 recipient = &#34;*&#34;
@@ -223,7 +227,9 @@ class TimelineEvents(Module):
             else:
                 ModuleHelper.assert_none(recipient_data)
 
-                recipient = EduAccount.parse(recipient_data, recipient_data.get(&#34;id&#34;), self.edupage)
+                recipient = EduAccount.parse(
+                    recipient_data, recipient_data.get(&#34;id&#34;), self.edupage
+                )
 
             # todo: add support for &#34;*&#34;
             author_name = event.get(&#34;vlastnik_meno&#34;)
@@ -235,14 +241,23 @@ class TimelineEvents(Module):
                 author = author_name
             else:
                 ModuleHelper.assert_none(author_data)
-                author = EduAccount.parse(author_data, author_data.get(&#34;id&#34;), self.edupage)
+                author = EduAccount.parse(
+                    author_data, author_data.get(&#34;id&#34;), self.edupage
+                )
 
             additional_data = event.get(&#34;data&#34;)
             if additional_data and type(additional_data) == str:
                 additional_data = json.loads(additional_data)
 
-            event = TimelineEvent(event_id, event_timestamp, text, author,
-                                  recipient, event_type, additional_data)
+            event = TimelineEvent(
+                event_id,
+                event_timestamp,
+                text,
+                author,
+                recipient,
+                event_type,
+                additional_data,
+            )
             output.append(event)
         return output</code></pre>
 </details>
@@ -795,7 +810,9 @@ class TimelineEvent:
                 continue
             event_type = EventType.parse(event_type_str)
 
-            event_timestamp = datetime.strptime(event.get(&#34;timestamp&#34;), &#34;%Y-%m-%d %H:%M:%S&#34;)
+            event_timestamp = datetime.strptime(
+                event.get(&#34;timestamp&#34;), &#34;%Y-%m-%d %H:%M:%S&#34;
+            )
             text = event.get(&#34;text&#34;)
 
             # what about different languages?
@@ -811,7 +828,9 @@ class TimelineEvent:
 
             # todo: add support for &#34;*&#34;
             recipient_name = event.get(&#34;user_meno&#34;)
-            recipient_data = DbiHelper(self.edupage).fetch_person_data_by_name(recipient_name)
+            recipient_data = DbiHelper(self.edupage).fetch_person_data_by_name(
+                recipient_name
+            )
 
             if recipient_name in [&#34;*&#34;, &#34;Celá škola&#34;]:
                 recipient = &#34;*&#34;
@@ -820,7 +839,9 @@ class TimelineEvent:
             else:
                 ModuleHelper.assert_none(recipient_data)
 
-                recipient = EduAccount.parse(recipient_data, recipient_data.get(&#34;id&#34;), self.edupage)
+                recipient = EduAccount.parse(
+                    recipient_data, recipient_data.get(&#34;id&#34;), self.edupage
+                )
 
             # todo: add support for &#34;*&#34;
             author_name = event.get(&#34;vlastnik_meno&#34;)
@@ -832,14 +853,23 @@ class TimelineEvent:
                 author = author_name
             else:
                 ModuleHelper.assert_none(author_data)
-                author = EduAccount.parse(author_data, author_data.get(&#34;id&#34;), self.edupage)
+                author = EduAccount.parse(
+                    author_data, author_data.get(&#34;id&#34;), self.edupage
+                )
 
             additional_data = event.get(&#34;data&#34;)
             if additional_data and type(additional_data) == str:
                 additional_data = json.loads(additional_data)
 
-            event = TimelineEvent(event_id, event_timestamp, text, author,
-                                  recipient, event_type, additional_data)
+            event = TimelineEvent(
+                event_id,
+                event_timestamp,
+                text,
+                author,
+                recipient,
+                event_type,
+                additional_data,
+            )
             output.append(event)
         return output</code></pre>
 </details>
@@ -877,7 +907,9 @@ def get_notifications(self):
             continue
         event_type = EventType.parse(event_type_str)
 
-        event_timestamp = datetime.strptime(event.get(&#34;timestamp&#34;), &#34;%Y-%m-%d %H:%M:%S&#34;)
+        event_timestamp = datetime.strptime(
+            event.get(&#34;timestamp&#34;), &#34;%Y-%m-%d %H:%M:%S&#34;
+        )
         text = event.get(&#34;text&#34;)
 
         # what about different languages?
@@ -893,7 +925,9 @@ def get_notifications(self):
 
         # todo: add support for &#34;*&#34;
         recipient_name = event.get(&#34;user_meno&#34;)
-        recipient_data = DbiHelper(self.edupage).fetch_person_data_by_name(recipient_name)
+        recipient_data = DbiHelper(self.edupage).fetch_person_data_by_name(
+            recipient_name
+        )
 
         if recipient_name in [&#34;*&#34;, &#34;Celá škola&#34;]:
             recipient = &#34;*&#34;
@@ -902,7 +936,9 @@ def get_notifications(self):
         else:
             ModuleHelper.assert_none(recipient_data)
 
-            recipient = EduAccount.parse(recipient_data, recipient_data.get(&#34;id&#34;), self.edupage)
+            recipient = EduAccount.parse(
+                recipient_data, recipient_data.get(&#34;id&#34;), self.edupage
+            )
 
         # todo: add support for &#34;*&#34;
         author_name = event.get(&#34;vlastnik_meno&#34;)
@@ -914,14 +950,23 @@ def get_notifications(self):
             author = author_name
         else:
             ModuleHelper.assert_none(author_data)
-            author = EduAccount.parse(author_data, author_data.get(&#34;id&#34;), self.edupage)
+            author = EduAccount.parse(
+                author_data, author_data.get(&#34;id&#34;), self.edupage
+            )
 
         additional_data = event.get(&#34;data&#34;)
         if additional_data and type(additional_data) == str:
             additional_data = json.loads(additional_data)
 
-        event = TimelineEvent(event_id, event_timestamp, text, author,
-                              recipient, event_type, additional_data)
+        event = TimelineEvent(
+            event_id,
+            event_timestamp,
+            text,
+            author,
+            recipient,
+            event_type,
+            additional_data,
+        )
         output.append(event)
     return output</code></pre>
 </details>

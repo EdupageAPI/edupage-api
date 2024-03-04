@@ -29,8 +29,8 @@
 <pre><code class="python">import json
 from dataclasses import dataclass
 from datetime import datetime
-from typing import Optional, Union
 from enum import Enum
+from typing import Optional, Union
 
 from edupage_api.dbi import DbiHelper
 from edupage_api.exceptions import FailedToParseGradeDataError
@@ -53,6 +53,7 @@ class EduGrade:
     verbal: bool
     percent: float
 
+
 class Term(Enum):
     FIRST = &#34;P1&#34;
     SECOND = &#34;P2&#34;
@@ -60,8 +61,9 @@ class Term(Enum):
 
 class Grades(Module):
     def __parse_grade_data(self, data: str) -&gt; dict:
-        json_string = data.split(&#34;.znamkyStudentViewer(&#34;)[1] \
-                          .split(&#34;);\r\n\t\t});\r\n\t\t&lt;/script&gt;&#34;)[0]
+        json_string = data.split(&#34;.znamkyStudentViewer(&#34;)[1].split(
+            &#34;);\r\n\t\t});\r\n\t\t&lt;/script&gt;&#34;
+        )[0]
 
         return json.loads(json_string)
 
@@ -73,7 +75,7 @@ class Grades(Module):
             return self.__parse_grade_data(response)
         except json.JSONDecodeError:
             raise FailedToParseGradeDataError(&#34;Failed to parse JSON&#34;)
-    
+
     def __get_grade_data_for_term(self, term: Term, year: int):
         request_url = f&#34;https://{self.edupage.subdomain}.edupage.org/znamky/?what=studentviewer&amp;znamky_yearid={year}&amp;nadobdobie={term.value}&#34;
         response = self.edupage.session.post(request_url).content.decode()
@@ -82,14 +84,14 @@ class Grades(Module):
             return self.__parse_grade_data(response)
         except json.JSONDecodeError:
             raise FailedToParseGradeDataError(&#34;Failed to parse JSON&#34;)
-    
+
     @ModuleHelper.logged_in
-    def get_grades(
-        self, 
-        term: Optional[Term], 
-        year: Optional[int]
-    ) -&gt; list[EduGrade]:
-        grade_data = self.__get_grade_data_for_term(term, year) if term and year else self.__get_grade_data()
+    def get_grades(self, term: Optional[Term], year: Optional[int]) -&gt; list[EduGrade]:
+        grade_data = (
+            self.__get_grade_data_for_term(term, year)
+            if term and year
+            else self.__get_grade_data()
+        )
 
         grades = grade_data.get(&#34;vsetkyZnamky&#34;)
         grade_details = grade_data.get(&#34;vsetkyUdalosti&#34;).get(&#34;edupage&#34;)
@@ -147,7 +149,7 @@ class Grades(Module):
                 max_points = float(details.get(&#34;p_vaha_body&#34;))
                 importance = float(details.get(&#34;p_vaha&#34;)) / 20
 
-             # Grade
+            # Grade
             grade_raw = grade.get(&#34;data&#34;).split(&#34; (&#34;, 1)
             if grade_raw[0].isdigit():
                 grade_n = float(grade_raw[0])
@@ -172,8 +174,20 @@ class Grades(Module):
             except:
                 verbal = True
 
-            grade = EduGrade(event_id, title, grade_n, comment, date, subject_id,
-                             subject_name, teacher, max_points, importance, verbal, percent)
+            grade = EduGrade(
+                event_id,
+                title,
+                grade_n,
+                comment,
+                date,
+                subject_id,
+                subject_name,
+                teacher,
+                max_points,
+                importance,
+                verbal,
+                percent,
+            )
             output.append(grade)
 
         return output</code></pre>
@@ -277,8 +291,9 @@ class EduGrade:
 </summary>
 <pre><code class="python">class Grades(Module):
     def __parse_grade_data(self, data: str) -&gt; dict:
-        json_string = data.split(&#34;.znamkyStudentViewer(&#34;)[1] \
-                          .split(&#34;);\r\n\t\t});\r\n\t\t&lt;/script&gt;&#34;)[0]
+        json_string = data.split(&#34;.znamkyStudentViewer(&#34;)[1].split(
+            &#34;);\r\n\t\t});\r\n\t\t&lt;/script&gt;&#34;
+        )[0]
 
         return json.loads(json_string)
 
@@ -290,7 +305,7 @@ class EduGrade:
             return self.__parse_grade_data(response)
         except json.JSONDecodeError:
             raise FailedToParseGradeDataError(&#34;Failed to parse JSON&#34;)
-    
+
     def __get_grade_data_for_term(self, term: Term, year: int):
         request_url = f&#34;https://{self.edupage.subdomain}.edupage.org/znamky/?what=studentviewer&amp;znamky_yearid={year}&amp;nadobdobie={term.value}&#34;
         response = self.edupage.session.post(request_url).content.decode()
@@ -299,14 +314,14 @@ class EduGrade:
             return self.__parse_grade_data(response)
         except json.JSONDecodeError:
             raise FailedToParseGradeDataError(&#34;Failed to parse JSON&#34;)
-    
+
     @ModuleHelper.logged_in
-    def get_grades(
-        self, 
-        term: Optional[Term], 
-        year: Optional[int]
-    ) -&gt; list[EduGrade]:
-        grade_data = self.__get_grade_data_for_term(term, year) if term and year else self.__get_grade_data()
+    def get_grades(self, term: Optional[Term], year: Optional[int]) -&gt; list[EduGrade]:
+        grade_data = (
+            self.__get_grade_data_for_term(term, year)
+            if term and year
+            else self.__get_grade_data()
+        )
 
         grades = grade_data.get(&#34;vsetkyZnamky&#34;)
         grade_details = grade_data.get(&#34;vsetkyUdalosti&#34;).get(&#34;edupage&#34;)
@@ -364,7 +379,7 @@ class EduGrade:
                 max_points = float(details.get(&#34;p_vaha_body&#34;))
                 importance = float(details.get(&#34;p_vaha&#34;)) / 20
 
-             # Grade
+            # Grade
             grade_raw = grade.get(&#34;data&#34;).split(&#34; (&#34;, 1)
             if grade_raw[0].isdigit():
                 grade_n = float(grade_raw[0])
@@ -389,8 +404,20 @@ class EduGrade:
             except:
                 verbal = True
 
-            grade = EduGrade(event_id, title, grade_n, comment, date, subject_id,
-                             subject_name, teacher, max_points, importance, verbal, percent)
+            grade = EduGrade(
+                event_id,
+                title,
+                grade_n,
+                comment,
+                date,
+                subject_id,
+                subject_name,
+                teacher,
+                max_points,
+                importance,
+                verbal,
+                percent,
+            )
             output.append(grade)
 
         return output</code></pre>
@@ -411,12 +438,12 @@ class EduGrade:
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">@ModuleHelper.logged_in
-def get_grades(
-    self, 
-    term: Optional[Term], 
-    year: Optional[int]
-) -&gt; list[EduGrade]:
-    grade_data = self.__get_grade_data_for_term(term, year) if term and year else self.__get_grade_data()
+def get_grades(self, term: Optional[Term], year: Optional[int]) -&gt; list[EduGrade]:
+    grade_data = (
+        self.__get_grade_data_for_term(term, year)
+        if term and year
+        else self.__get_grade_data()
+    )
 
     grades = grade_data.get(&#34;vsetkyZnamky&#34;)
     grade_details = grade_data.get(&#34;vsetkyUdalosti&#34;).get(&#34;edupage&#34;)
@@ -474,7 +501,7 @@ def get_grades(
             max_points = float(details.get(&#34;p_vaha_body&#34;))
             importance = float(details.get(&#34;p_vaha&#34;)) / 20
 
-         # Grade
+        # Grade
         grade_raw = grade.get(&#34;data&#34;).split(&#34; (&#34;, 1)
         if grade_raw[0].isdigit():
             grade_n = float(grade_raw[0])
@@ -499,8 +526,20 @@ def get_grades(
         except:
             verbal = True
 
-        grade = EduGrade(event_id, title, grade_n, comment, date, subject_id,
-                         subject_name, teacher, max_points, importance, verbal, percent)
+        grade = EduGrade(
+            event_id,
+            title,
+            grade_n,
+            comment,
+            date,
+            subject_id,
+            subject_name,
+            teacher,
+            max_points,
+            importance,
+            verbal,
+            percent,
+        )
         output.append(grade)
 
     return output</code></pre>

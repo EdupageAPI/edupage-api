@@ -79,16 +79,20 @@ class ForeignTimetables(Module):
                     &#34;showColors&#34;: True,
                     &#34;showIgroupsInClasses&#34;: True,
                     &#34;showOrig&#34;: True,
-                    &#34;log_module&#34;: &#34;CurrentTTView&#34;
-                }
+                    &#34;log_module&#34;: &#34;CurrentTTView&#34;,
+                },
             ],
-            &#34;__gsh&#34;: self.edupage.gsec_hash
+            &#34;__gsh&#34;: self.edupage.gsec_hash,
         }
 
-        request_url = (f&#34;https://{self.edupage.subdomain}.edupage.org/&#34;
-                       &#34;timetable/server/currenttt.js?__func=curentttGetData&#34;)
+        request_url = (
+            f&#34;https://{self.edupage.subdomain}.edupage.org/&#34;
+            &#34;timetable/server/currenttt.js?__func=curentttGetData&#34;
+        )
 
-        timetable_data = self.edupage.session.post(request_url, json=request_data).content.decode()
+        timetable_data = self.edupage.session.post(
+            request_url, json=request_data
+        ).content.decode()
         timetable_data = json.loads(timetable_data)
 
         timetable_data_response = timetable_data.get(&#34;r&#34;)
@@ -98,7 +102,9 @@ class ForeignTimetables(Module):
             raise MissingDataException(&#34;The server returned an incorrect response.&#34;)
 
         if timetable_data_error is not None:
-            raise RequestError(f&#34;Edupage returned an error response: {timetable_data_error}&#34;)
+            raise RequestError(
+                f&#34;Edupage returned an error response: {timetable_data_error}&#34;
+            )
 
         return timetable_data_response.get(&#34;ttitems&#34;)
 
@@ -137,20 +143,33 @@ class ForeignTimetables(Module):
                     table = &#34;classrooms&#34;
 
         if not table:
-            raise MissingDataException(f&#34;Teacher, student or class with id {id} doesn&#39;t exist!&#34;)
+            raise MissingDataException(
+                f&#34;Teacher, student or class with id {id} doesn&#39;t exist!&#34;
+            )
 
         timetable_data = self.__get_timetable_data(id, table, date)
 
         skeletons = []
         for skeleton in timetable_data:
+            if (
+                skeleton.get(&#34;removed&#34;)
+                or skeleton.get(&#34;main&#34;)
+                or skeleton.get(&#34;type&#34;) == &#34;absent&#34;
+            ):
+                continue
+
             date_str = skeleton.get(&#34;date&#34;)
             date = datetime.strptime(date_str, &#34;%Y-%m-%d&#34;)
 
             start_time_str = skeleton.get(&#34;starttime&#34;)
+            if start_time_str == &#34;24:00&#34;:
+                start_time_str = &#34;23:59&#34;
             start_time_dt = datetime.strptime(start_time_str, &#34;%H:%M&#34;)
             start_time = time(start_time_dt.hour, start_time_dt.minute)
 
             end_time_str = skeleton.get(&#34;endtime&#34;)
+            if end_time_str == &#34;24:00&#34;:
+                end_time_str = &#34;23:59&#34;
             end_time_dt = datetime.strptime(end_time_str, &#34;%H:%M&#34;)
             end_time = time(end_time_dt.hour, end_time_dt.minute)
 
@@ -163,15 +182,32 @@ class ForeignTimetables(Module):
 
             classes = [int(id) for id in skeleton.get(&#34;classids&#34;)]
             groups = skeleton.get(&#34;groupnames&#34;)
-            teachers = [teacher_by_id(int(id)) for id in skeleton.get(&#34;teacherids&#34;)]
+
+            try:
+                teachers = [teacher_by_id(int(id)) for id in skeleton.get(&#34;teacherids&#34;)]
+            except:
+                teachers = []
+
             classrooms = [classroom_by_id(id) for id in skeleton.get(&#34;classroomids&#34;)]
 
-            duration = (skeleton.get(&#34;durationperiods&#34;)
-                        if skeleton.get(&#34;durationperiods&#34;) is not None else 1)
+            duration = (
+                skeleton.get(&#34;durationperiods&#34;)
+                if skeleton.get(&#34;durationperiods&#34;) is not None
+                else 1
+            )
 
-            new_skeleton = LessonSkeleton(date.weekday(), start_time, end_time,
-                                          subject_id, subject_name, classes, groups, classrooms,
-                                          duration, teachers)
+            new_skeleton = LessonSkeleton(
+                date.weekday(),
+                start_time,
+                end_time,
+                subject_id,
+                subject_name,
+                classes,
+                groups,
+                classrooms,
+                duration,
+                teachers,
+            )
             skeletons.append(new_skeleton)
         return skeletons</code></pre>
 </details>
@@ -223,16 +259,20 @@ class ForeignTimetables(Module):
                     &#34;showColors&#34;: True,
                     &#34;showIgroupsInClasses&#34;: True,
                     &#34;showOrig&#34;: True,
-                    &#34;log_module&#34;: &#34;CurrentTTView&#34;
-                }
+                    &#34;log_module&#34;: &#34;CurrentTTView&#34;,
+                },
             ],
-            &#34;__gsh&#34;: self.edupage.gsec_hash
+            &#34;__gsh&#34;: self.edupage.gsec_hash,
         }
 
-        request_url = (f&#34;https://{self.edupage.subdomain}.edupage.org/&#34;
-                       &#34;timetable/server/currenttt.js?__func=curentttGetData&#34;)
+        request_url = (
+            f&#34;https://{self.edupage.subdomain}.edupage.org/&#34;
+            &#34;timetable/server/currenttt.js?__func=curentttGetData&#34;
+        )
 
-        timetable_data = self.edupage.session.post(request_url, json=request_data).content.decode()
+        timetable_data = self.edupage.session.post(
+            request_url, json=request_data
+        ).content.decode()
         timetable_data = json.loads(timetable_data)
 
         timetable_data_response = timetable_data.get(&#34;r&#34;)
@@ -242,7 +282,9 @@ class ForeignTimetables(Module):
             raise MissingDataException(&#34;The server returned an incorrect response.&#34;)
 
         if timetable_data_error is not None:
-            raise RequestError(f&#34;Edupage returned an error response: {timetable_data_error}&#34;)
+            raise RequestError(
+                f&#34;Edupage returned an error response: {timetable_data_error}&#34;
+            )
 
         return timetable_data_response.get(&#34;ttitems&#34;)
 
@@ -281,20 +323,33 @@ class ForeignTimetables(Module):
                     table = &#34;classrooms&#34;
 
         if not table:
-            raise MissingDataException(f&#34;Teacher, student or class with id {id} doesn&#39;t exist!&#34;)
+            raise MissingDataException(
+                f&#34;Teacher, student or class with id {id} doesn&#39;t exist!&#34;
+            )
 
         timetable_data = self.__get_timetable_data(id, table, date)
 
         skeletons = []
         for skeleton in timetable_data:
+            if (
+                skeleton.get(&#34;removed&#34;)
+                or skeleton.get(&#34;main&#34;)
+                or skeleton.get(&#34;type&#34;) == &#34;absent&#34;
+            ):
+                continue
+
             date_str = skeleton.get(&#34;date&#34;)
             date = datetime.strptime(date_str, &#34;%Y-%m-%d&#34;)
 
             start_time_str = skeleton.get(&#34;starttime&#34;)
+            if start_time_str == &#34;24:00&#34;:
+                start_time_str = &#34;23:59&#34;
             start_time_dt = datetime.strptime(start_time_str, &#34;%H:%M&#34;)
             start_time = time(start_time_dt.hour, start_time_dt.minute)
 
             end_time_str = skeleton.get(&#34;endtime&#34;)
+            if end_time_str == &#34;24:00&#34;:
+                end_time_str = &#34;23:59&#34;
             end_time_dt = datetime.strptime(end_time_str, &#34;%H:%M&#34;)
             end_time = time(end_time_dt.hour, end_time_dt.minute)
 
@@ -307,15 +362,32 @@ class ForeignTimetables(Module):
 
             classes = [int(id) for id in skeleton.get(&#34;classids&#34;)]
             groups = skeleton.get(&#34;groupnames&#34;)
-            teachers = [teacher_by_id(int(id)) for id in skeleton.get(&#34;teacherids&#34;)]
+
+            try:
+                teachers = [teacher_by_id(int(id)) for id in skeleton.get(&#34;teacherids&#34;)]
+            except:
+                teachers = []
+
             classrooms = [classroom_by_id(id) for id in skeleton.get(&#34;classroomids&#34;)]
 
-            duration = (skeleton.get(&#34;durationperiods&#34;)
-                        if skeleton.get(&#34;durationperiods&#34;) is not None else 1)
+            duration = (
+                skeleton.get(&#34;durationperiods&#34;)
+                if skeleton.get(&#34;durationperiods&#34;) is not None
+                else 1
+            )
 
-            new_skeleton = LessonSkeleton(date.weekday(), start_time, end_time,
-                                          subject_id, subject_name, classes, groups, classrooms,
-                                          duration, teachers)
+            new_skeleton = LessonSkeleton(
+                date.weekday(),
+                start_time,
+                end_time,
+                subject_id,
+                subject_name,
+                classes,
+                groups,
+                classrooms,
+                duration,
+                teachers,
+            )
             skeletons.append(new_skeleton)
         return skeletons</code></pre>
 </details>
@@ -387,20 +459,33 @@ def get_timetable_for_person(self, id: int, date: datetime) -&gt; List[LessonSke
                 table = &#34;classrooms&#34;
 
     if not table:
-        raise MissingDataException(f&#34;Teacher, student or class with id {id} doesn&#39;t exist!&#34;)
+        raise MissingDataException(
+            f&#34;Teacher, student or class with id {id} doesn&#39;t exist!&#34;
+        )
 
     timetable_data = self.__get_timetable_data(id, table, date)
 
     skeletons = []
     for skeleton in timetable_data:
+        if (
+            skeleton.get(&#34;removed&#34;)
+            or skeleton.get(&#34;main&#34;)
+            or skeleton.get(&#34;type&#34;) == &#34;absent&#34;
+        ):
+            continue
+
         date_str = skeleton.get(&#34;date&#34;)
         date = datetime.strptime(date_str, &#34;%Y-%m-%d&#34;)
 
         start_time_str = skeleton.get(&#34;starttime&#34;)
+        if start_time_str == &#34;24:00&#34;:
+            start_time_str = &#34;23:59&#34;
         start_time_dt = datetime.strptime(start_time_str, &#34;%H:%M&#34;)
         start_time = time(start_time_dt.hour, start_time_dt.minute)
 
         end_time_str = skeleton.get(&#34;endtime&#34;)
+        if end_time_str == &#34;24:00&#34;:
+            end_time_str = &#34;23:59&#34;
         end_time_dt = datetime.strptime(end_time_str, &#34;%H:%M&#34;)
         end_time = time(end_time_dt.hour, end_time_dt.minute)
 
@@ -413,15 +498,32 @@ def get_timetable_for_person(self, id: int, date: datetime) -&gt; List[LessonSke
 
         classes = [int(id) for id in skeleton.get(&#34;classids&#34;)]
         groups = skeleton.get(&#34;groupnames&#34;)
-        teachers = [teacher_by_id(int(id)) for id in skeleton.get(&#34;teacherids&#34;)]
+
+        try:
+            teachers = [teacher_by_id(int(id)) for id in skeleton.get(&#34;teacherids&#34;)]
+        except:
+            teachers = []
+
         classrooms = [classroom_by_id(id) for id in skeleton.get(&#34;classroomids&#34;)]
 
-        duration = (skeleton.get(&#34;durationperiods&#34;)
-                    if skeleton.get(&#34;durationperiods&#34;) is not None else 1)
+        duration = (
+            skeleton.get(&#34;durationperiods&#34;)
+            if skeleton.get(&#34;durationperiods&#34;) is not None
+            else 1
+        )
 
-        new_skeleton = LessonSkeleton(date.weekday(), start_time, end_time,
-                                      subject_id, subject_name, classes, groups, classrooms,
-                                      duration, teachers)
+        new_skeleton = LessonSkeleton(
+            date.weekday(),
+            start_time,
+            end_time,
+            subject_id,
+            subject_name,
+            classes,
+            groups,
+            classrooms,
+            duration,
+            teachers,
+        )
         skeletons.append(new_skeleton)
     return skeletons</code></pre>
 </details>

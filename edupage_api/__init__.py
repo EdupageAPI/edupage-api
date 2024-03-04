@@ -10,7 +10,7 @@ from edupage_api.cloud import Cloud, EduCloudFile
 from edupage_api.custom_request import CustomRequest
 from edupage_api.foreign_timetables import ForeignTimetables, LessonSkeleton
 from edupage_api.grades import EduGrade, Grades, Term
-from edupage_api.login import Login
+from edupage_api.login import Login, TwoFactorLogin
 from edupage_api.lunches import Lunch, Lunches
 from edupage_api.messages import Messages
 from edupage_api.module import EdupageModule
@@ -42,26 +42,36 @@ class Edupage(EdupageModule):
         self.session = requests.session()
         self.session.request = functools.partial(self.session.request, timeout=request_timeout)
 
-    def login(self, username: str, password: str, subdomain: str):
+    def login(
+        self, username: str, password: str, subdomain: str
+    ) -> Optional[TwoFactorLogin]:
         """Login while specifying the subdomain to log into.
 
         Args:
             username (str): Your username.
             password (str): Your password.
             subdomain (str): Subdomain of your school (https://{subdomain}.edupage.org).
+
+        Returns:
+            Optional[TwoFactorLogin]: Returns `None` if no second factor was needed to login,
+            or the `TwoFactorLogin` object that is used to complete 2fa.
         """
 
-        Login(self).login(username, password, subdomain)
+        return Login(self).login(username, password, subdomain)
 
-    def login_auto(self, username: str, password: str):
+    def login_auto(self, username: str, password: str) -> Optional[TwoFactorLogin]:
         """Login using https://portal.edupage.org. If this doesn't work, please use `Edupage.login`.
 
         Args:
             username (str): Your username.
             password (str): Your password.
+
+        Returns:
+            Optional[TwoFactorLogin]: Returns `None` if no second factor was needed to login,
+            or the `TwoFactorLogin` object that is used to complete 2fa.
         """
 
-        Login(self).login(username, password)
+        return Login(self).login(username, password)
 
     def get_students(self) -> Optional[list[EduStudent]]:
         """Get list of all students in your class.

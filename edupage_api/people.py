@@ -44,23 +44,28 @@ class EduAccount:
             return EduAccountType.PARENT
 
     @staticmethod
-    def parse(person_data: dict, person_id: int, edupage: EdupageModule) -> Optional[EduAccount]:
+    def parse(
+        person_data: dict, person_id: int, edupage: EdupageModule
+    ) -> Optional[EduAccount]:
         account_type = EduAccount.recognize_account_type(person_data)
 
         if account_type == EduAccountType.STUDENT:
             class_id = ModuleHelper.parse_int(person_data.get("classid"))
             name = DbiHelper(edupage).fetch_student_name(person_id)
             gender = Gender.parse(person_data.get("gender"))
-            student_since = ModuleHelper.strptime_or_none(person_data.get("datefrom"), "%Y-%m-%d")
+            student_since = ModuleHelper.strptime_or_none(
+                person_data.get("datefrom"), "%Y-%m-%d"
+            )
             number_in_class = ModuleHelper.parse_int(person_data.get("numberinclass"))
 
             ModuleHelper.assert_none(name)
 
-            return EduStudent(person_id, name, gender, student_since, class_id, number_in_class)
+            return EduStudent(
+                person_id, name, gender, student_since, class_id, number_in_class
+            )
         elif account_type == EduAccountType.TEACHER:
             classroom_id = person_data.get("classroomid")
-            classroom_name = DbiHelper(edupage).fetch_classroom_number(
-                classroom_id)
+            classroom_name = DbiHelper(edupage).fetch_classroom_number(classroom_id)
 
             name = DbiHelper(edupage).fetch_teacher_name(person_id)
 
@@ -75,7 +80,9 @@ class EduAccount:
             else:
                 teacher_to = None
 
-            return EduTeacher(person_id, name, gender, teacher_since, classroom_name, teacher_to)
+            return EduTeacher(
+                person_id, name, gender, teacher_since, classroom_name, teacher_to
+            )
         else:
             return None
 
@@ -85,21 +92,30 @@ class EduAccount:
 
 @dataclass
 class EduStudent(EduAccount):
-    def __init__(self, person_id: int, name: str, gender: Gender, in_school_since: Optional[datetime],
-                 class_id: int, number_in_class: int):
-        super().__init__(person_id, name, gender, in_school_since, EduAccountType.STUDENT)
+    def __init__(
+        self,
+        person_id: int,
+        name: str,
+        gender: Gender,
+        in_school_since: Optional[datetime],
+        class_id: int,
+        number_in_class: int,
+    ):
+        super().__init__(
+            person_id, name, gender, in_school_since, EduAccountType.STUDENT
+        )
 
         self.class_id = class_id
         self.number_in_class = number_in_class
 
         self.__student_only = False
-    
+
     def get_id(self):
         if not self.__student_only:
             return super().get_id()
         else:
             return super().get_id().replace("Student", "StudentOnly")
-    
+
     def set_student_only(self, student_only: bool):
         self.__student_only = student_only
 
@@ -113,15 +129,32 @@ class EduStudentSkeleton:
 
 @dataclass
 class EduParent(EduAccount):
-    def __init__(self, person_id: int, name: str, gender: Gender, in_school_since: Optional[datetime]):
-        super().__init__(person_id, name, gender, in_school_since, EduAccountType.PARENT)
+    def __init__(
+        self,
+        person_id: int,
+        name: str,
+        gender: Gender,
+        in_school_since: Optional[datetime],
+    ):
+        super().__init__(
+            person_id, name, gender, in_school_since, EduAccountType.PARENT
+        )
 
 
 @dataclass
 class EduTeacher(EduAccount):
-    def __init__(self, person_id: int, name: str, gender: Gender, in_school_since: Optional[datetime],
-                 classroom_name: str, teacher_to: Optional[datetime]):
-        super().__init__(person_id, name, gender, in_school_since, EduAccountType.TEACHER)
+    def __init__(
+        self,
+        person_id: int,
+        name: str,
+        gender: Gender,
+        in_school_since: Optional[datetime],
+        classroom_name: str,
+        teacher_to: Optional[datetime],
+    ):
+        super().__init__(
+            person_id, name, gender, in_school_since, EduAccountType.TEACHER
+        )
 
         self.teacher_to = teacher_to
         self.classroom_name = classroom_name
@@ -159,10 +192,10 @@ class People(Module):
                     "op": "fetch",
                     "needed_part": {
                         "students": ["id", "classid", "short"],
-                    }
-                }
+                    },
+                },
             ],
-            "__gsh": self.edupage.gsec_hash
+            "__gsh": self.edupage.gsec_hash,
         }
 
         response = self.edupage.session.post(request_url, json=data).content.decode()
@@ -174,7 +207,9 @@ class People(Module):
             student_class_id = int(student["classid"]) if student["classid"] else None
             student_name_short = student["short"]
 
-            student = EduStudentSkeleton(student_id, student_name_short, student_class_id)
+            student = EduStudentSkeleton(
+                student_id, student_name_short, student_class_id
+            )
             result.append(student)
 
         return result

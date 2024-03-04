@@ -102,4 +102,6 @@ class DbiHelper(Module):
         student_data = self.fetch_student_data_by_name(name)
         parent_data = self.fetch_parent_data_by_name(name)
 
-        return ModuleHelper.return_first_not_null(teacher_data, student_data, parent_data)
+        return ModuleHelper.return_first_not_null(
+            teacher_data, student_data, parent_data
+        )

@@ -51,16 +51,20 @@ class ForeignTimetables(Module):
                     "showColors": True,
                     "showIgroupsInClasses": True,
                     "showOrig": True,
-                    "log_module": "CurrentTTView"
-                }
+                    "log_module": "CurrentTTView",
+                },
             ],
-            "__gsh": self.edupage.gsec_hash
+            "__gsh": self.edupage.gsec_hash,
         }
 
-        request_url = (f"https://{self.edupage.subdomain}.edupage.org/"
-                       "timetable/server/currenttt.js?__func=curentttGetData")
+        request_url = (
+            f"https://{self.edupage.subdomain}.edupage.org/"
+            "timetable/server/currenttt.js?__func=curentttGetData"
+        )
 
-        timetable_data = self.edupage.session.post(request_url, json=request_data).content.decode()
+        timetable_data = self.edupage.session.post(
+            request_url, json=request_data
+        ).content.decode()
         timetable_data = json.loads(timetable_data)
 
         timetable_data_response = timetable_data.get("r")
@@ -70,7 +74,9 @@ class ForeignTimetables(Module):
             raise MissingDataException("The server returned an incorrect response.")
 
         if timetable_data_error is not None:
-            raise RequestError(f"Edupage returned an error response: {timetable_data_error}")
+            raise RequestError(
+                f"Edupage returned an error response: {timetable_data_error}"
+            )
 
         return timetable_data_response.get("ttitems")
 
@@ -109,7 +115,9 @@ class ForeignTimetables(Module):
                     table = "classrooms"
 
         if not table:
-            raise MissingDataException(f"Teacher, student or class with id {id} doesn't exist!")
+            raise MissingDataException(
+                f"Teacher, student or class with id {id} doesn't exist!"
+            )
 
         timetable_data = self.__get_timetable_data(id, table, date)
 
@@ -154,11 +162,23 @@ class ForeignTimetables(Module):
 
             classrooms = [classroom_by_id(id) for id in skeleton.get("classroomids")]
 
-            duration = (skeleton.get("durationperiods")
-                        if skeleton.get("durationperiods") is not None else 1)
+            duration = (
+                skeleton.get("durationperiods")
+                if skeleton.get("durationperiods") is not None
+                else 1
+            )
 
-            new_skeleton = LessonSkeleton(date.weekday(), start_time, end_time,
-                                          subject_id, subject_name, classes, groups, classrooms,
-                                          duration, teachers)
+            new_skeleton = LessonSkeleton(
+                date.weekday(),
+                start_time,
+                end_time,
+                subject_id,
+                subject_name,
+                classes,
+                groups,
+                classrooms,
+                duration,
+                teachers,
+            )
             skeletons.append(new_skeleton)
         return skeletons

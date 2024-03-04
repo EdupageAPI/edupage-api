@@ -1,6 +1,8 @@
 import time
+
 from edupage_api import Edupage
-from edupage_api.exceptions import SecondFactorFailedException, BadCredentialsException
+from edupage_api.exceptions import (BadCredentialsException,
+                                    SecondFactorFailedException)
 
 edupage = Edupage()
 

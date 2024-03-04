@@ -14,13 +14,13 @@ from edupage_api.login import Login, TwoFactorLogin
 from edupage_api.lunches import Lunch, Lunches
 from edupage_api.messages import Messages
 from edupage_api.module import EdupageModule
+from edupage_api.parent import Parent
 from edupage_api.people import (EduAccount, EduStudent, EduStudentSkeleton,
                                 EduTeacher, People)
 from edupage_api.ringing import RingingTime, RingingTimes
 from edupage_api.substitution import Substitution, TimetableChange
 from edupage_api.timeline import TimelineEvent, TimelineEvents
 from edupage_api.timetables import Timetable, Timetables
-from edupage_api.parent import Parent
 
 
 class Edupage(EdupageModule):
@@ -40,7 +40,9 @@ class Edupage(EdupageModule):
         self.username = None
 
         self.session = requests.session()
-        self.session.request = functools.partial(self.session.request, timeout=request_timeout)
+        self.session.request = functools.partial(
+            self.session.request, timeout=request_timeout
+        )
 
     def login(
         self, username: str, password: str, subdomain: str
@@ -100,13 +102,15 @@ class Edupage(EdupageModule):
 
         return People(self).get_teachers()
 
-    def send_message(self, recipients: Union[list[EduAccount], EduAccount], body: str) -> int:
+    def send_message(
+        self, recipients: Union[list[EduAccount], EduAccount], body: str
+    ) -> int:
         """Send message.
 
         Args:
             recipients (Optional[list[EduAccount]]): Recipients of your message (list of `EduAccount`s).
             body (str): Body of your message.
-        
+
         Returns:
             int: The timeline id of the new message.
         """
@@ -166,10 +170,10 @@ class Edupage(EdupageModule):
         """
 
         return Grades(self).get_grades(year=None, term=None)
-    
+
     def get_grades_for_term(self, year: int, term: Term) -> list[EduGrade]:
         """Get a list of all available grades for a given year and term
-        
+
         Returns:
             list[EduGrade]: List of `EduGrade`s
         """
@@ -185,7 +189,9 @@ class Edupage(EdupageModule):
 
         return self.data.get("userid")
 
-    def custom_request(self, url: str, method: str, data: str = "", headers: dict = {}) -> Response:
+    def custom_request(
+        self, url: str, method: str, data: str = "", headers: dict = {}
+    ) -> Response:
         """Send custom request to EduPage.
 
         Args:
@@ -255,17 +261,17 @@ class Edupage(EdupageModule):
             RingingTime: The type (break or lesson) and time of the next ringing.
         """
         return RingingTimes(self).get_next_ringing_time(date_time)
-    
+
     def switch_to_child(self, child: Union[EduAccount, int]):
         """Switch to an account of a child - can only be used on parent accounts
 
         Args:
             child (EduAccount | int): The account or `person_id` of the child you want to switch to
 
-        Note: When you switch to a child account, all other methods will return data as if you were logged in as `child` 
+        Note: When you switch to a child account, all other methods will return data as if you were logged in as `child`
         """
         Parent(self).switch_to_child(child)
-    
+
     def switch_to_parent(self):
         """Switches back to your parent account - can only be used on parent accounts"""
         Parent(self).switch_to_parent()

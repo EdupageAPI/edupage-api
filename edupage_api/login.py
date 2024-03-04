@@ -1,12 +1,15 @@
 import json
-
+from dataclasses import dataclass
 from json import JSONDecodeError
 from typing import Optional
-from dataclasses import dataclass
+
 from requests import Response
 
-from edupage_api.exceptions import BadCredentialsException, MissingDataException, SecondFactorFailedException, RequestError
-from edupage_api.module import Module, EdupageModule
+from edupage_api.exceptions import (BadCredentialsException,
+                                    MissingDataException, RequestError,
+                                    SecondFactorFailedException)
+from edupage_api.module import EdupageModule, Module
+
 
 @dataclass
 class TwoFactorLogin:
@@ -33,48 +36,53 @@ class TwoFactorLogin:
         if data.get("status") == "fail":
             return False
         elif data.get("status") != "ok":
-            raise MissingDataException(f"Invalid response from edupage's server!: {str(data)}")
+            raise MissingDataException(
+                f"Invalid response from edupage's server!: {str(data)}"
+            )
 
         self.__code = data["data"]
 
         return True
-    
+
     def resend_notifications(self):
         """Resends the confirmation notification to all devices."""
-        
+
         request_url = f"https://{self.__edupage.subdomain}.edupage.org/login/twofactor?akcia=resendNotifs"
         response = self.__edupage.session.post(request_url)
 
         data = response.json()
         if data.get("status") != "ok":
             raise RequestError(f"Failed to resend notifications: {str(data)}")
-        
-        
+
     def __finish(self, code: str):
-        request_url = f"https://{self.__edupage.subdomain}.edupage.org/login/edubarLogin.php"
+        request_url = (
+            f"https://{self.__edupage.subdomain}.edupage.org/login/edubarLogin.php"
+        )
         parameters = {
             "csrfauth": self.__csrf_token,
             "t2fasec": code,
             "2fNoSave": "y",
             "2fform": "1",
             "gu": self.__authentication_endpoint,
-            "au": self.__authentication_token
+            "au": self.__authentication_token,
         }
 
         response = self.__edupage.session.post(request_url, parameters)
-        
+
         if "window.location = gu;" in response.text:
-            cookies = self.__edupage.session.cookies.get_dict(f"{self.__edupage.subdomain}.edupage.org")
+            cookies = self.__edupage.session.cookies.get_dict(
+                f"{self.__edupage.subdomain}.edupage.org"
+            )
 
             Login(self.__edupage).reload_data(
-                self.__edupage.subdomain, 
-                cookies["PHPSESSID"],
-                self.__edupage.username
+                self.__edupage.subdomain, cookies["PHPSESSID"], self.__edupage.username
             )
 
             return
-        
-        raise SecondFactorFailedException(f"Second factor failed! (wrong/expired code? expired session?)")
+
+        raise SecondFactorFailedException(
+            f"Second factor failed! (wrong/expired code? expired session?)"
+        )
 
     def finish(self):
         """Finish the second factor authentication process.
@@ -90,10 +98,12 @@ class TwoFactorLogin:
         """
 
         if self.__code is None:
-            raise BadCredentialsException("Not confirmed! (you can only call finish after `TwoFactorLogin.is_confirmed` has returned True)")
-        
+            raise BadCredentialsException(
+                "Not confirmed! (you can only call finish after `TwoFactorLogin.is_confirmed` has returned True)"
+            )
+
         self.__finish(self.__code)
-    
+
     def finish_with_code(self, code: str):
         """Finish the second factor authentication process.
         This function should be used when email 2fa codes are used to confirm the login. If you are using a device to confirm the login, please use `TwoFactorLogin.finish`.
@@ -105,7 +115,7 @@ class TwoFactorLogin:
             SecondFactorFailedException: An invalid 2fa code was provided.
         """
         self.__finish(code)
-    
+
 
 class Login(Module):
     def __parse_login_data(self, data):
@@ -121,25 +131,24 @@ class Login(Module):
         self.edupage.is_logged_in = True
 
         self.edupage.gsec_hash = data.split('ASC.gsechash="')[1].split('"')[0]
-    
+
     def __second_factor(self):
-        request_url = f"https://{self.edupage.subdomain}.edupage.org/login/twofactor?sn=1"
+        request_url = (
+            f"https://{self.edupage.subdomain}.edupage.org/login/twofactor?sn=1"
+        )
         two_factor_response = self.edupage.session.get(request_url)
-        
+
         data = two_factor_response.content.decode()
 
-        csrf_token = data.split("csrfauth\" value=\"")[1].split("\"")[0]
+        csrf_token = data.split('csrfauth" value="')[1].split('"')[0]
 
-        authentication_token = data.split("au\" value=\"")[1].split("\"")[0]
-        authentication_endpoint = data.split("gu\" value=\"")[1].split("\"")[0]
+        authentication_token = data.split('au" value="')[1].split('"')[0]
+        authentication_endpoint = data.split('gu" value="')[1].split('"')[0]
 
         return TwoFactorLogin(
-            authentication_endpoint,
-            authentication_token,
-            csrf_token,
-            self.edupage
+            authentication_endpoint, authentication_token, csrf_token, self.edupage
         )
-    
+
     def __login(self, username: str, password: str, subdomain: str) -> Response:
         request_url = f"https://{subdomain}.edupage.org/login/index.php"
 
@@ -160,7 +169,7 @@ class Login(Module):
 
         if "bad=1" in response.url:
             raise BadCredentialsException()
-        
+
         return response
 
     def login(

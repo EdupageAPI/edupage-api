@@ -4,8 +4,11 @@ from edupage_api import Edupage
 from edupage_api.timeline import EventType
 
 edupage = Edupage()
-edupage.login("Username (or e-mail)", "Password",
-              "Subdomain of your school (SUBDOMAIN.edupage.org)")
+edupage.login(
+    "Username (or e-mail)",
+    "Password",
+    "Subdomain of your school (SUBDOMAIN.edupage.org)",
+)
 
 notifications = edupage.get_notifications()
 
@@ -32,7 +35,7 @@ for hw in homework:
     text = f"Homework from {hw.timestamp}\n"
 
     hw_text = hw_title or hw.text.replace("\n", " ")
-    text += (f"{hw_text}")
+    text += f"{hw_text}"
 
     if due_date:
         now = datetime.now()

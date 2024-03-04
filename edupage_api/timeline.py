@@ -170,7 +170,9 @@ class TimelineEvents(Module):
                 continue
             event_type = EventType.parse(event_type_str)
 
-            event_timestamp = datetime.strptime(event.get("timestamp"), "%Y-%m-%d %H:%M:%S")
+            event_timestamp = datetime.strptime(
+                event.get("timestamp"), "%Y-%m-%d %H:%M:%S"
+            )
             text = event.get("text")
 
             # what about different languages?
@@ -186,7 +188,9 @@ class TimelineEvents(Module):
 
             # todo: add support for "*"
             recipient_name = event.get("user_meno")
-            recipient_data = DbiHelper(self.edupage).fetch_person_data_by_name(recipient_name)
+            recipient_data = DbiHelper(self.edupage).fetch_person_data_by_name(
+                recipient_name
+            )
 
             if recipient_name in ["*", "Celá škola"]:
                 recipient = "*"
@@ -195,7 +199,9 @@ class TimelineEvents(Module):
             else:
                 ModuleHelper.assert_none(recipient_data)
 
-                recipient = EduAccount.parse(recipient_data, recipient_data.get("id"), self.edupage)
+                recipient = EduAccount.parse(
+                    recipient_data, recipient_data.get("id"), self.edupage
+                )
 
             # todo: add support for "*"
             author_name = event.get("vlastnik_meno")
@@ -207,13 +213,22 @@ class TimelineEvents(Module):
                 author = author_name
             else:
                 ModuleHelper.assert_none(author_data)
-                author = EduAccount.parse(author_data, author_data.get("id"), self.edupage)
+                author = EduAccount.parse(
+                    author_data, author_data.get("id"), self.edupage
+                )
 
             additional_data = event.get("data")
             if additional_data and type(additional_data) == str:
                 additional_data = json.loads(additional_data)
 
-            event = TimelineEvent(event_id, event_timestamp, text, author,
-                                  recipient, event_type, additional_data)
+            event = TimelineEvent(
+                event_id,
+                event_timestamp,
+                text,
+                author,
+                recipient,
+                event_type,
+                additional_data,
+            )
             output.append(event)
         return output

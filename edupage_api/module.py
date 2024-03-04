@@ -38,6 +38,7 @@ class ModuleHelper:
     """
     If any argument of this function is none, it throws MissingDataException
     """
+
     @staticmethod
     def assert_none(*args):
         if None in args:
@@ -85,6 +86,7 @@ class ModuleHelper:
     Throws NotLoggedInException if someone uses a method with this decorator
     and hasn't logged in yet
     """
+
     @staticmethod
     def logged_in(method):
         @wraps(method)
@@ -93,6 +95,7 @@ class ModuleHelper:
                 raise NotLoggedInException()
 
             return method(self, *method_args, **method_kwargs)
+
         return __impl
 
     @staticmethod
@@ -104,18 +107,19 @@ class ModuleHelper:
             return method(self, *method_args, **method_kwargs)
 
         return __impl
-    
+
     """
     Throws NotParentException if someone uses a method with this decorator
     and is not using a parent account
     """
+
     @staticmethod
     def is_parent(method):
         @wraps(method)
         def __impl(self: Module, *method_args, **method_kwargs):
             if "Rodic" not in self.edupage.get_user_id():
                 raise NotParentException()
-            
+
             return method(self, *method_args, **method_kwargs)
-        
+
         return __impl

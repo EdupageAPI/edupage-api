@@ -42,7 +42,7 @@ class EduCloudFile:
             data.get("extension"),
             data.get("type"),
             data.get("file"),
-            data.get("name")
+            data.get("name"),
         )
 
 
@@ -77,7 +77,9 @@ class Cloud(Module):
             EduCloudFile: `EduCloudFile` object.
         """
 
-        request_url = f"https://{self.edupage.subdomain}.edupage.org/timeline/?akcia=uploadAtt"
+        request_url = (
+            f"https://{self.edupage.subdomain}.edupage.org/timeline/?akcia=uploadAtt"
+        )
 
         files = {"att": fd}
 

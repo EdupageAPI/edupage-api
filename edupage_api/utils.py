@@ -55,8 +55,9 @@ class IdUtil:
 
         try:
             teacher_data = self.dbi.get("teachers").get(t_id)
-            teacher_full_name = teacher_data.get(
-                "firstname") + " " + teacher_data.get("lastname")
+            teacher_full_name = (
+                teacher_data.get("firstname") + " " + teacher_data.get("lastname")
+            )
         except:
             teacher_full_name = None
 

@@ -32,7 +32,7 @@ class Rating:
             "mysqlDate": self.__date,
             "jedlo_dna": "2",
             "kvalita": str(quality),
-            "mnozstvo": str(quantity)
+            "mnozstvo": str(quantity),
         }
 
         response = edupage.session.post(request_url, data=data)
@@ -73,16 +73,14 @@ class Lunch:
         boarder_menu = {
             "stravnikid": self.__boarder_id,
             "mysqlDate": self.date.strftime("%Y-%m-%d"),
-            "jids": {
-                "2": choice_str
-            },
+            "jids": {"2": choice_str},
             "view": "pc_listok",
-            "pravo": "Student"
+            "pravo": "Student",
         }
 
         data = {
             "akcia": "ulozJedlaStravnika",
-            "jedlaStravnika": json.dumps(boarder_menu)
+            "jedlaStravnika": json.dumps(boarder_menu),
         }
 
         response = edupage.session.post(request_url, data=data).content.decode()
@@ -104,7 +102,9 @@ class Lunches(Module):
     @ModuleHelper.logged_in
     def get_lunch(self, date: datetime):
         date_strftime = date.strftime("%Y%m%d")
-        request_url = f"https://{self.edupage.subdomain}.edupage.org/menu/?date={date_strftime}"
+        request_url = (
+            f"https://{self.edupage.subdomain}.edupage.org/menu/?date={date_strftime}"
+        )
         response = self.edupage.session.get(request_url).content.decode()
 
         lunch_data = json.loads(response.split("edupageData: ")[1].split(",\r\n")[0])
@@ -171,13 +171,26 @@ class Lunches(Module):
                     quantity_average = quantity.get("priemer")
                     quantity_ratings = quantity.get("pocet")
 
-                    rating = Rating(date.strftime("%Y-%m-%d"), boarder_id,
-                                    quality_average, quantity_average,
-                                    quality_ratings, quantity_ratings)
+                    rating = Rating(
+                        date.strftime("%Y-%m-%d"),
+                        boarder_id,
+                        quality_average,
+                        quantity_average,
+                        quality_ratings,
+                        quantity_ratings,
+                    )
                 else:
                     rating = None
             menus.append(Menu(name, allergens, weight, number, rating))
 
-        return Lunch(served_from, served_to, amount_of_foods,
-                     chooseable_menus, can_be_changed_until,
-                     title, menus, date, boarder_id)
+        return Lunch(
+            served_from,
+            served_to,
+            amount_of_foods,
+            chooseable_menus,
+            can_be_changed_until,
+            title,
+            menus,
+            date,
+            boarder_id,
+        )

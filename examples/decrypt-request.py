@@ -1,10 +1,11 @@
-from edupage_api.compression import RequestData
+import sys
 import zlib
 from urllib.parse import unquote
-import sys
+
+from edupage_api.compression import RequestData
 
 if len(sys.argv) != 2:
-    print("Usage: python decrypt-request.py \"<request body>\"")
+    print('Usage: python decrypt-request.py "<request body>"')
     sys.exit(1)
 
 pairs = sys.argv[1].split("&")

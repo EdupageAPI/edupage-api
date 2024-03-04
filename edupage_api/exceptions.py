@@ -45,20 +45,26 @@ class RequestError(Exception):
 class InvalidLunchData(Exception):
     pass
 
+
 class Base64DecodeError(Exception):
     pass
+
 
 class InvalidRecipientsException(Exception):
     pass
 
+
 class InvalidChildException(Exception):
     pass
+
 
 class UnknownServerError(Exception):
     pass
 
+
 class NotParentException(Exception):
     pass
+
 
 class SecondFactorFailedException(Exception):
     pass

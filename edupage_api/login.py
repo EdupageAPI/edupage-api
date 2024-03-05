@@ -132,46 +132,6 @@ class Login(Module):
 
         self.edupage.gsec_hash = data.split('ASC.gsechash="')[1].split('"')[0]
 
-    def __second_factor(self):
-        request_url = (
-            f"https://{self.edupage.subdomain}.edupage.org/login/twofactor?sn=1"
-        )
-        two_factor_response = self.edupage.session.get(request_url)
-
-        data = two_factor_response.content.decode()
-
-        csrf_token = data.split('csrfauth" value="')[1].split('"')[0]
-
-        authentication_token = data.split('au" value="')[1].split('"')[0]
-        authentication_endpoint = data.split('gu" value="')[1].split('"')[0]
-
-        return TwoFactorLogin(
-            authentication_endpoint, authentication_token, csrf_token, self.edupage
-        )
-
-    def __login(self, username: str, password: str, subdomain: str) -> Response:
-        request_url = f"https://{subdomain}.edupage.org/login/index.php"
-
-        response = self.edupage.session.get(request_url)
-        data = response.content.decode()
-
-        csrf_token = data.split('name="csrfauth" value="')[1].split('"')[0]
-
-        parameters = {
-            "csrfauth": csrf_token,
-            "username": username,
-            "password": password,
-        }
-
-        request_url = f"https://{subdomain}.edupage.org/login/edubarLogin.php"
-
-        response = self.edupage.session.post(request_url, parameters)
-
-        if "bad=1" in response.url:
-            raise BadCredentialsException()
-
-        return response
-
     def login(
         self, username: str, password: str, subdomain: str = "login1"
     ) -> Optional[TwoFactorLogin]:
@@ -198,7 +158,26 @@ class Login(Module):
                 or there was another problem with the second factor.
         """
 
-        response = self.__login(username, password, subdomain)
+        request_url = f"https://{subdomain}.edupage.org/login/index.php"
+
+        response = self.edupage.session.get(request_url)
+        data = response.content.decode()
+
+        csrf_token = data.split('name="csrfauth" value="')[1].split('"')[0]
+
+        parameters = {
+            "csrfauth": csrf_token,
+            "username": username,
+            "password": password,
+        }
+
+        request_url = f"https://{subdomain}.edupage.org/login/edubarLogin.php"
+
+        response = self.edupage.session.post(request_url, parameters)
+
+        if "bad=1" in response.url:
+            raise BadCredentialsException()
+        
         data = response.content.decode()
 
         if subdomain == "login1":
@@ -212,7 +191,22 @@ class Login(Module):
             self.__parse_login_data(data)
             return
 
-        return self.__second_factor()
+        request_url = (
+            f"https://{self.edupage.subdomain}.edupage.org/login/twofactor?sn=1"
+        )
+        
+        two_factor_response = self.edupage.session.get(request_url)
+
+        data = two_factor_response.content.decode()
+
+        csrf_token = data.split('csrfauth" value="')[1].split('"')[0]
+
+        authentication_token = data.split('au" value="')[1].split('"')[0]
+        authentication_endpoint = data.split('gu" value="')[1].split('"')[0]
+
+        return TwoFactorLogin(
+            authentication_endpoint, authentication_token, csrf_token, self.edupage
+        )
 
     def reload_data(self, subdomain: str, session_id: str, username: str):
         request_url = f"https://{subdomain}.edupage.org/user"

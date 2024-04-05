@@ -250,6 +250,21 @@ class Edupage(EdupageModule):
             This returns the whole timetable (lessons from 1 week, NOT 1 day)!
         """
         return ForeignTimetables(self).get_timetable_for_person(id, date)
+        
+    def get_classroom_timetable(self, id: int, date: datetime) -> list[LessonSkeleton]:
+        """Get a timetable of a classroom for the week `date` is in.
+        
+        Args:
+            id (int): The `classroom_id` of the classroom whose timetable you want.
+            date (datetime.date): A date from the week from which you want this timetable.
+            
+        Returns:
+            list[LessonSkeleton]: Lessons (in order) that this classroom has for `date`'s week.
+            
+        Note:
+            This returns the whole timetable (lessons from 1 week, NOT 1 day)!
+        """
+        return ForeignTimetables(self).get_timetable_for_classroom(id, date)
 
     def get_next_ringing_time(self, date_time: datetime) -> RingingTime:
         """Get the next lesson's ringing time for given `date_time`.

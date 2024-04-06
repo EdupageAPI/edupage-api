@@ -17,6 +17,7 @@ from edupage_api.module import EdupageModule
 from edupage_api.parent import Parent
 from edupage_api.people import (EduAccount, EduStudent, EduStudentSkeleton,
                                 EduTeacher, People)
+from edupage_api.classrooms import EduClassroom, Classrooms
 from edupage_api.ringing import RingingTime, RingingTimes
 from edupage_api.substitution import Substitution, TimetableChange
 from edupage_api.timeline import TimelineEvent, TimelineEvents
@@ -101,6 +102,24 @@ class Edupage(EdupageModule):
         """
 
         return People(self).get_teachers()
+
+    def get_classrooms(self) -> Optional[list[EduClassroom]]:
+        """Get list of all classrooms in your school.
+
+        Returns:
+            Optional[list[EduClassroom]]: List of `EduClassroom`s.
+        """
+
+        return Classrooms(self).get_classrooms()
+
+    def get_free_classrooms(self, datetime: datetime) -> Optional[list[EduClassroom]]:
+        """Get list of all free classrooms in your school at the time.
+
+        Returns:
+            Optional[list[EduClassroom]]: List of `EduClassroom`s.
+        """
+
+        return Classrooms(self).get_free_classrooms(datetime)
 
     def send_message(
         self, recipients: Union[list[EduAccount], EduAccount], body: str
@@ -250,17 +269,17 @@ class Edupage(EdupageModule):
             This returns the whole timetable (lessons from 1 week, NOT 1 day)!
         """
         return ForeignTimetables(self).get_timetable_for_person(id, date)
-        
+
     def get_classroom_timetable(self, id: int, date: datetime) -> list[LessonSkeleton]:
         """Get a timetable of a classroom for the week `date` is in.
-        
+
         Args:
             id (int): The `classroom_id` of the classroom whose timetable you want.
             date (datetime.date): A date from the week from which you want this timetable.
-            
+
         Returns:
             list[LessonSkeleton]: Lessons (in order) that this classroom has for `date`'s week.
-            
+
         Note:
             This returns the whole timetable (lessons from 1 week, NOT 1 day)!
         """

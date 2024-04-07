@@ -1,13 +1,16 @@
-from edupage_api.dbi import DbiHelper
 from dataclasses import dataclass
 from typing import Optional
+
+from edupage_api.dbi import DbiHelper
 from edupage_api.module import Module, ModuleHelper
+
 
 @dataclass
 class Classroom:
     classroom_id: int
     name: str
     short: str
+
 
 class Classrooms(Module):
     @ModuleHelper.logged_in
@@ -27,7 +30,7 @@ class Classrooms(Module):
                 Classroom(
                     int(classroom_id_str),
                     classroom_list[classroom_id_str]["name"],
-                    classroom_list[classroom_id_str]["short"]
+                    classroom_list[classroom_id_str]["short"],
                 )
             )
 

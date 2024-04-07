@@ -6,6 +6,7 @@ from typing import Optional, Union
 import requests
 from requests import Response
 
+from edupage_api.classrooms import Classroom, Classrooms
 from edupage_api.cloud import Cloud, EduCloudFile
 from edupage_api.custom_request import CustomRequest
 from edupage_api.foreign_timetables import ForeignTimetables, LessonSkeleton
@@ -17,7 +18,6 @@ from edupage_api.module import EdupageModule
 from edupage_api.parent import Parent
 from edupage_api.people import (EduAccount, EduStudent, EduStudentSkeleton,
                                 EduTeacher, People)
-from edupage_api.classrooms import Classroom, Classrooms
 from edupage_api.ringing import RingingTime, RingingTimes
 from edupage_api.substitution import Substitution, TimetableChange
 from edupage_api.timeline import TimelineEvent, TimelineEvents
@@ -261,7 +261,9 @@ class Edupage(EdupageModule):
         """
         return ForeignTimetables(self).get_timetable_for_person(id, date)
 
-    def get_classroom_timetable(self, classroom_id: int, date: datetime) -> list[LessonSkeleton]:
+    def get_classroom_timetable(
+        self, classroom_id: int, date: datetime
+    ) -> list[LessonSkeleton]:
         """Get a timetable of a classroom for the week `date` is in.
 
         Args:

@@ -4,7 +4,12 @@ from datetime import datetime, time, timedelta
 from typing import List, Optional
 
 from edupage_api.dbi import DbiHelper
-from edupage_api.exceptions import InsufficientPermissionsException, MissingDataException, RequestError, UnknownServerError
+from edupage_api.exceptions import (
+    InsufficientPermissionsException,
+    MissingDataException,
+    RequestError,
+    UnknownServerError,
+)
 from edupage_api.module import Module, ModuleHelper
 from edupage_api.people import EduTeacher, People
 
@@ -182,15 +187,16 @@ class ForeignTimetables(Module):
             )
             skeletons.append(new_skeleton)
         return skeletons
-        
-        
+
     @ModuleHelper.logged_in
-    def get_timetable_for_classroom(self, id: int, date: datetime) -> List[LessonSkeleton]:
+    def get_timetable_for_classroom(
+        self, id: int, date: datetime
+    ) -> List[LessonSkeleton]:
         all_teachers = People(self.edupage).get_teachers()
 
         def classroom_by_id(id: str):
             return DbiHelper(self.edupage).fetch_classroom_number(id)
-        
+
         def teacher_by_id(id: int):
             filtered = list(filter(lambda x: x.person_id == id, all_teachers))
             if not filtered:
@@ -206,9 +212,7 @@ class ForeignTimetables(Module):
             else:
                 raise MissingDataException(f"Classroom with id {id} doesn't exist!")
         except Exception as e:
-            raise UnknownServerError(
-                f"There was an unknown error: {str(e)}"
-            )
+            raise UnknownServerError(f"There was an unknown error: {str(e)}")
 
         skeletons = []
         for skeleton in timetable_data:
@@ -253,7 +257,8 @@ class ForeignTimetables(Module):
 
             duration = (
                 skeleton.get("durationperiods")
-                    if skeleton.get("durationperiods") is not None else 1
+                if skeleton.get("durationperiods") is not None
+                else 1
             )
 
             new_skeleton = LessonSkeleton(
@@ -269,5 +274,5 @@ class ForeignTimetables(Module):
                 teachers,
             )
             skeletons.append(new_skeleton)
-        
+
         return skeletons

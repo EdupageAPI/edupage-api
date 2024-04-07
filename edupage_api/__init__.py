@@ -276,7 +276,7 @@ class Edupage(EdupageModule):
         Note:
             This returns the whole timetable (lessons from 1 week, NOT 1 day)!
         """
-        return ForeignTimetables(self).get_timetable_for_classroom(classroom_id, date)
+        return ForeignTimetables(self).get_timetable_for_person(classroom_id, date)
 
     def get_next_ringing_time(self, date_time: datetime) -> RingingTime:
         """Get the next lesson's ringing time for given `date_time`.

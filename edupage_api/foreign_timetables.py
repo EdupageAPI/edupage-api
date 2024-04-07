@@ -124,93 +124,11 @@ class ForeignTimetables(Module):
                 f"Teacher, student or class with id {id} doesn't exist!"
             )
 
-        timetable_data = self.__get_timetable_data(id, table, date)
-
-        skeletons = []
-        for skeleton in timetable_data:
-            if (
-                skeleton.get("removed")
-                or skeleton.get("main")
-                or skeleton.get("type") == "absent"
-            ):
-                continue
-
-            date_str = skeleton.get("date")
-            date = datetime.strptime(date_str, "%Y-%m-%d")
-
-            start_time_str = skeleton.get("starttime")
-            if start_time_str == "24:00":
-                start_time_str = "23:59"
-            start_time_dt = datetime.strptime(start_time_str, "%H:%M")
-            start_time = time(start_time_dt.hour, start_time_dt.minute)
-
-            end_time_str = skeleton.get("endtime")
-            if end_time_str == "24:00":
-                end_time_str = "23:59"
-            end_time_dt = datetime.strptime(end_time_str, "%H:%M")
-            end_time = time(end_time_dt.hour, end_time_dt.minute)
-
-            subject_id_str = skeleton.get("subjectid")
-            subject_id = int(subject_id_str) if subject_id_str.isdigit() else None
-
-            subject_name = None
-            if subject_id is not None:
-                subject_name = DbiHelper(self.edupage).fetch_subject_name(subject_id)
-
-            classes = [int(id) for id in skeleton.get("classids")]
-            groups = skeleton.get("groupnames")
-
-            try:
-                teachers = [teacher_by_id(int(id)) for id in skeleton.get("teacherids")]
-            except:
-                teachers = []
-
-            classrooms = [classroom_by_id(id) for id in skeleton.get("classroomids")]
-
-            duration = (
-                skeleton.get("durationperiods")
-                if skeleton.get("durationperiods") is not None
-                else 1
-            )
-
-            new_skeleton = LessonSkeleton(
-                date.weekday(),
-                start_time,
-                end_time,
-                subject_id,
-                subject_name,
-                classes,
-                groups,
-                classrooms,
-                duration,
-                teachers,
-            )
-            skeletons.append(new_skeleton)
-        return skeletons
-
-    @ModuleHelper.logged_in
-    def get_timetable_for_classroom(
-        self, id: int, date: datetime
-    ) -> List[LessonSkeleton]:
-        all_teachers = People(self.edupage).get_teachers()
-
-        def classroom_by_id(id: str):
-            return DbiHelper(self.edupage).fetch_classroom_number(id)
-
-        def teacher_by_id(id: int):
-            filtered = list(filter(lambda x: x.person_id == id, all_teachers))
-            if not filtered:
-                raise MissingDataException(f"Teacher with id {id} doesn't exist!")
-
-            return filtered[0]
-
         try:
-            timetable_data = self.__get_timetable_data(id, "classrooms", date)
+            timetable_data = self.__get_timetable_data(id, table, date)
         except RequestError as e:
             if "insuficient" in str(e).lower():
                 raise InsufficientPermissionsException(f"Missing permissions: {str(e)}")
-            else:
-                raise MissingDataException(f"Classroom with id {id} doesn't exist!")
         except Exception as e:
             raise UnknownServerError(f"There was an unknown error: {str(e)}")
 
@@ -274,5 +192,4 @@ class ForeignTimetables(Module):
                 teachers,
             )
             skeletons.append(new_skeleton)
-
         return skeletons

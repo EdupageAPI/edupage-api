@@ -4,7 +4,12 @@ from datetime import datetime, time, timedelta
 from typing import List, Optional
 
 from edupage_api.dbi import DbiHelper
-from edupage_api.exceptions import MissingDataException, RequestError
+from edupage_api.exceptions import (
+    InsufficientPermissionsException,
+    MissingDataException,
+    RequestError,
+    UnknownServerError,
+)
 from edupage_api.module import Module, ModuleHelper
 from edupage_api.people import EduTeacher, People
 
@@ -119,7 +124,13 @@ class ForeignTimetables(Module):
                 f"Teacher, student or class with id {id} doesn't exist!"
             )
 
-        timetable_data = self.__get_timetable_data(id, table, date)
+        try:
+            timetable_data = self.__get_timetable_data(id, table, date)
+        except RequestError as e:
+            if "insuficient" in str(e).lower():
+                raise InsufficientPermissionsException(f"Missing permissions: {str(e)}")
+        except Exception as e:
+            raise UnknownServerError(f"There was an unknown error: {str(e)}")
 
         skeletons = []
         for skeleton in timetable_data:

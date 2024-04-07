@@ -68,3 +68,7 @@ class NotParentException(Exception):
 
 class SecondFactorFailedException(Exception):
     pass
+
+
+class InsufficientPermissionsException(Exception):
+    pass

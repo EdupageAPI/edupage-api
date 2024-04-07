@@ -17,7 +17,7 @@ from edupage_api.module import EdupageModule
 from edupage_api.parent import Parent
 from edupage_api.people import (EduAccount, EduStudent, EduStudentSkeleton,
                                 EduTeacher, People)
-from edupage_api.classrooms import EduClassroom, Classrooms
+from edupage_api.classrooms import Classroom, Classrooms
 from edupage_api.ringing import RingingTime, RingingTimes
 from edupage_api.substitution import Substitution, TimetableChange
 from edupage_api.timeline import TimelineEvent, TimelineEvents
@@ -103,23 +103,14 @@ class Edupage(EdupageModule):
 
         return People(self).get_teachers()
 
-    def get_classrooms(self) -> Optional[list[EduClassroom]]:
+    def get_classrooms(self) -> Optional[list[Classroom]]:
         """Get list of all classrooms in your school.
 
         Returns:
-            Optional[list[EduClassroom]]: List of `EduClassroom`s.
+            Optional[list[Classroom]]: List of `Classroom`s.
         """
 
         return Classrooms(self).get_classrooms()
-
-    def get_free_classrooms(self, datetime: datetime) -> Optional[list[EduClassroom]]:
-        """Get list of all free classrooms in your school at the time.
-
-        Returns:
-            Optional[list[EduClassroom]]: List of `EduClassroom`s.
-        """
-
-        return Classrooms(self).get_free_classrooms(datetime)
 
     def send_message(
         self, recipients: Union[list[EduAccount], EduAccount], body: str
@@ -270,7 +261,7 @@ class Edupage(EdupageModule):
         """
         return ForeignTimetables(self).get_timetable_for_person(id, date)
 
-    def get_classroom_timetable(self, id: int, date: datetime) -> list[LessonSkeleton]:
+    def get_classroom_timetable(self, classroom_id: int, date: datetime) -> list[LessonSkeleton]:
         """Get a timetable of a classroom for the week `date` is in.
 
         Args:
@@ -283,7 +274,7 @@ class Edupage(EdupageModule):
         Note:
             This returns the whole timetable (lessons from 1 week, NOT 1 day)!
         """
-        return ForeignTimetables(self).get_timetable_for_classroom(id, date)
+        return ForeignTimetables(self).get_timetable_for_classroom(classroom_id, date)
 
     def get_next_ringing_time(self, date_time: datetime) -> RingingTime:
         """Get the next lesson's ringing time for given `date_time`.

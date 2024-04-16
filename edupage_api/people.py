@@ -87,7 +87,7 @@ class EduAccount:
             return None
 
     def get_id(self):
-        return f"{self.account_type.value}-{self.person_id}"
+        return f"{self.account_type.value}{self.person_id}"
 
 
 @dataclass

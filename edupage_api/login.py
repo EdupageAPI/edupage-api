@@ -154,6 +154,7 @@ class Login(Module):
 
         Raises:
             BadCredentialsException: Your credentials are invalid.
+            CaptchaException: The login process failed because of a captcha.
             SecondFactorFailed: The second factor login timed out
                 or there was another problem with the second factor.
         """

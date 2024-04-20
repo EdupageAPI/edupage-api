@@ -72,3 +72,7 @@ class SecondFactorFailedException(Exception):
 
 class InsufficientPermissionsException(Exception):
     pass
+
+
+class CaptchaException(Exception):
+    pass

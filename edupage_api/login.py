@@ -5,7 +5,7 @@ from typing import Optional
 
 from requests import Response
 
-from edupage_api.exceptions import (BadCredentialsException,
+from edupage_api.exceptions import (BadCredentialsException, CaptchaException,
                                     MissingDataException, RequestError,
                                     SecondFactorFailedException)
 from edupage_api.module import EdupageModule, Module
@@ -174,6 +174,9 @@ class Login(Module):
         request_url = f"https://{subdomain}.edupage.org/login/edubarLogin.php"
 
         response = self.edupage.session.post(request_url, parameters)
+
+        if "cap=1" in response.url or "lerr=b43b43" in response.url:
+            raise CaptchaException()
 
         if "bad=1" in response.url:
             raise BadCredentialsException()

@@ -6,6 +6,7 @@ from typing import Optional, Union
 import requests
 from requests import Response
 
+from edupage_api.classes import Class, Classes
 from edupage_api.classrooms import Classroom, Classrooms
 from edupage_api.cloud import Cloud, EduCloudFile
 from edupage_api.custom_request import CustomRequest
@@ -111,6 +112,15 @@ class Edupage(EdupageModule):
         """
 
         return Classrooms(self).get_classrooms()
+
+    def get_classes(self) -> Optional[list[Class]]:
+        """Get list of all classes in your school.
+
+        Returns:
+            Optional[list[Class]]: List of `Class`es.
+        """
+
+        return Classes(self).get_classes()
 
     def send_message(
         self, recipients: Union[list[EduAccount], EduAccount], body: str

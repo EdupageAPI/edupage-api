@@ -35,3 +35,13 @@ class Classrooms(Module):
             )
 
         return classrooms
+
+    def get_classroom(self, classroom_id: int) -> Optional[Classroom]:
+        return next(
+            (
+                classroom
+                for classroom in self.get_classrooms()
+                if classroom.classroom_id == classroom_id
+            ),
+            None,
+        )

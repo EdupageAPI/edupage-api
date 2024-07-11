@@ -64,6 +64,9 @@ class DbiHelper(Module):
     def fetch_classroom_list(self) -> Optional[list]:
         return self.__get_item_group("classrooms")
 
+    def fetch_class_list(self) -> Optional[list]:
+        return self.__get_item_group("classes")
+
     def fetch_teacher_data(self, teacher_id: int) -> Optional[dict]:
         return self.__get_item_with_id("teachers", teacher_id)
 

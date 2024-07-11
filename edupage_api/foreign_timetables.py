@@ -92,7 +92,7 @@ class ForeignTimetables(Module):
         self, target_id: int, date: datetime
     ) -> List[LessonSkeleton]:
         all_teachers = People(self.edupage).get_teachers()
-        students = People(self.edupage).get_students()
+        students = People(self.edupage).get_all_students()
 
         def teacher_by_id(target_id: int):
             filtered = list(filter(lambda x: x.person_id == target_id, all_teachers))

@@ -3,6 +3,8 @@ from dataclasses import dataclass
 from datetime import datetime, time, timedelta
 from typing import List, Optional
 
+from edupage_api.classes import Classes
+from edupage_api.classrooms import Classrooms
 from edupage_api.dbi import DbiHelper
 from edupage_api.exceptions import (
     InsufficientPermissionsException,
@@ -86,46 +88,65 @@ class ForeignTimetables(Module):
         return timetable_data_response.get("ttitems")
 
     @ModuleHelper.logged_in
-    def get_timetable_for_person(self, id: int, date: datetime) -> List[LessonSkeleton]:
+    def get_timetable_for_person(
+        self, target_id: int, date: datetime
+    ) -> List[LessonSkeleton]:
         all_teachers = People(self.edupage).get_teachers()
         students = People(self.edupage).get_students()
 
-        def teacher_by_id(id: int):
-            filtered = list(filter(lambda x: x.person_id == id, all_teachers))
+        def teacher_by_id(target_id: int):
+            filtered = list(filter(lambda x: x.person_id == target_id, all_teachers))
             if not filtered:
-                raise MissingDataException(f"Teacher with id {id} doesn't exist!")
+                raise MissingDataException(
+                    f"Teacher with id {target_id} doesn't exist!"
+                )
 
             return filtered[0]
 
-        def student_by_id(id: int):
-            filtered = list(filter(lambda x: x.person_id == id, students))
+        def student_by_id(target_id: int):
+            filtered = list(filter(lambda x: x.person_id == target_id, students))
             if not filtered:
-                raise MissingDataException(f"Student with id {id} doesn't exist!")
+                raise MissingDataException(
+                    f"Student with id {target_id} doesn't exist!"
+                )
 
             return filtered[0]
 
-        def classroom_by_id(id: str):
-            return DbiHelper(self.edupage).fetch_classroom_number(id)
+        def classroom_by_id(target_id: int):
+            if not Classrooms(self.edupage).get_classroom(target_id):
+                raise MissingDataException(
+                    f"Classroom with id {target_id} doesn't exist!"
+                )
 
-        table = None
-        try:
-            teacher_by_id(id)
-            table = "teachers"
-        except:
-            try:
-                student_by_id(id)
-                table = "students"
-            except:
-                if classroom_by_id(id):
-                    table = "classrooms"
+        def class_by_id(target_id: int):
+            if not Classes(self.edupage).get_class(target_id):
+                raise MissingDataException(
+                    f"Classroom with id {target_id} doesn't exist!"
+                )
 
-        if not table:
+        def find_table_by_id(target_id):
+            lookup_functions = [
+                (teacher_by_id, "teachers"),
+                (student_by_id, "students"),
+                (classroom_by_id, "classrooms"),
+                (class_by_id, "classes"),
+            ]
+
+            for func, table_name in lookup_functions:
+                try:
+                    func(target_id)
+                    return table_name
+                except:
+                    continue
+
             raise MissingDataException(
-                f"Teacher, student or class with id {id} doesn't exist!"
+                f"Teacher, student, classroom, or class with id {target_id} doesn't exist!"
             )
 
+        table = find_table_by_id(target_id)
+
         try:
-            timetable_data = self.__get_timetable_data(id, table, date)
+            timetable_data = self.__get_timetable_data(target_id, table, date)
         except RequestError as e:
             if "insuficient" in str(e).lower():
                 raise InsufficientPermissionsException(f"Missing permissions: {str(e)}")

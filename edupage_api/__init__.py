@@ -17,8 +17,13 @@ from edupage_api.lunches import Lunch, Lunches
 from edupage_api.messages import Messages
 from edupage_api.module import EdupageModule
 from edupage_api.parent import Parent
-from edupage_api.people import (EduAccount, EduStudent, EduStudentSkeleton,
-                                EduTeacher, People)
+from edupage_api.people import (
+    EduAccount,
+    EduStudent,
+    EduStudentSkeleton,
+    EduTeacher,
+    People,
+)
 from edupage_api.ringing import RingingTime, RingingTimes
 from edupage_api.substitution import Substitution, TimetableChange
 from edupage_api.timeline import TimelineEvent, TimelineEvents
@@ -256,37 +261,25 @@ class Edupage(EdupageModule):
         """
         return ForeignTimetables(self).get_school_year()
 
-    def get_foreign_timetable(self, id: int, date: datetime) -> list[LessonSkeleton]:
-        """Get someone else's timetable for the week `date` is in.
+    def get_foreign_timetable(
+        self,
+        target: Union[EduTeacher, EduStudent, Class, Classroom],
+        date: datetime,
+    ) -> Optional[list[LessonSkeleton]]:
+        """Get timetable of a teacher, student, class, or classroom for a specific week.
 
         Args:
-            id (int): The `person_id` of the person whoose timetable you want.
-            date (datetime.date): A date from the week from which you want this timetable.
+            target (Union[EduTeacher, EduStudent, Class, Classroom]): The target entity whose timetable you want.
+            date (datetime.date): The date within the week for which you want the timetable.
 
         Returns:
-            list[LessonSkeleton]: Lessons (in order) that this person has for `date`'s week.
+            Optional[list[LessonSkeleton]]: A list of `LessonSkeleton` objects representing the lessons for the target entity during the week of the specified date. Returns `None` if no timetable is found.
 
         Note:
-            This returns the whole timetable (lessons from 1 week, NOT 1 day)!
+            This method returns the entire timetable for the week, not just for a single day.
         """
-        return ForeignTimetables(self).get_timetable_for_person(id, date)
 
-    def get_classroom_timetable(
-        self, classroom_id: int, date: datetime
-    ) -> list[LessonSkeleton]:
-        """Get a timetable of a classroom for the week `date` is in.
-
-        Args:
-            id (int): The `classroom_id` of the classroom whose timetable you want.
-            date (datetime.date): A date from the week from which you want this timetable.
-
-        Returns:
-            list[LessonSkeleton]: Lessons (in order) that this classroom has for `date`'s week.
-
-        Note:
-            This returns the whole timetable (lessons from 1 week, NOT 1 day)!
-        """
-        return ForeignTimetables(self).get_timetable_for_person(classroom_id, date)
+        return ForeignTimetables(self).get_foreign_timetable(target, date)
 
     def get_next_ringing_time(self, date_time: datetime) -> RingingTime:
         """Get the next lesson's ringing time for given `date_time`.

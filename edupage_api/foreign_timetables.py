@@ -1,10 +1,10 @@
 import json
 from dataclasses import dataclass
 from datetime import datetime, time, timedelta
-from typing import List, Optional
+from typing import List, Optional, Union
 
-from edupage_api.classes import Classes
-from edupage_api.classrooms import Classrooms
+from edupage_api.classes import Class
+from edupage_api.classrooms import Classroom, Classrooms
 from edupage_api.dbi import DbiHelper
 from edupage_api.exceptions import (
     InsufficientPermissionsException,
@@ -13,7 +13,7 @@ from edupage_api.exceptions import (
     UnknownServerError,
 )
 from edupage_api.module import Module, ModuleHelper
-from edupage_api.people import EduTeacher, People
+from edupage_api.people import EduStudent, EduTeacher, People
 
 
 @dataclass
@@ -88,62 +88,21 @@ class ForeignTimetables(Module):
         return timetable_data_response.get("ttitems")
 
     @ModuleHelper.logged_in
-    def get_timetable_for_person(
-        self, target_id: int, date: datetime
-    ) -> List[LessonSkeleton]:
-        all_teachers = People(self.edupage).get_teachers()
-        students = People(self.edupage).get_all_students()
+    def get_foreign_timetable(
+        self,
+        target: Union[EduTeacher, EduStudent, Class, Classroom],
+        date: datetime,
+    ) -> Optional[List[LessonSkeleton]]:
 
-        def teacher_by_id(target_id: int):
-            filtered = list(filter(lambda x: x.person_id == target_id, all_teachers))
-            if not filtered:
-                raise MissingDataException(
-                    f"Teacher with id {target_id} doesn't exist!"
-                )
+        lookup = {
+            EduTeacher: ("teachers", "person_id"),
+            EduStudent: ("students", "person_id"),
+            Class: ("classes", "class_id"),
+            Classroom: ("classrooms", "classroom_id"),
+        }
 
-            return filtered[0]
-
-        def student_by_id(target_id: int):
-            filtered = list(filter(lambda x: x.person_id == target_id, students))
-            if not filtered:
-                raise MissingDataException(
-                    f"Student with id {target_id} doesn't exist!"
-                )
-
-            return filtered[0]
-
-        def classroom_by_id(target_id: int):
-            if not Classrooms(self.edupage).get_classroom(target_id):
-                raise MissingDataException(
-                    f"Classroom with id {target_id} doesn't exist!"
-                )
-
-        def class_by_id(target_id: int):
-            if not Classes(self.edupage).get_class(target_id):
-                raise MissingDataException(
-                    f"Classroom with id {target_id} doesn't exist!"
-                )
-
-        def find_table_by_id(target_id):
-            lookup_functions = [
-                (teacher_by_id, "teachers"),
-                (student_by_id, "students"),
-                (classroom_by_id, "classrooms"),
-                (class_by_id, "classes"),
-            ]
-
-            for func, table_name in lookup_functions:
-                try:
-                    func(target_id)
-                    return table_name
-                except:
-                    continue
-
-            raise MissingDataException(
-                f"Teacher, student, classroom, or class with id {target_id} doesn't exist!"
-            )
-
-        table = find_table_by_id(target_id)
+        table = lookup.get(type(target))[0]
+        target_id = getattr(target, lookup.get(type(target))[1])
 
         try:
             timetable_data = self.__get_timetable_data(target_id, table, date)
@@ -187,12 +146,19 @@ class ForeignTimetables(Module):
             classes = [int(id) for id in skeleton.get("classids")]
             groups = skeleton.get("groupnames")
 
-            try:
-                teachers = [teacher_by_id(int(id)) for id in skeleton.get("teacherids")]
-            except:
-                teachers = []
+            teachers = [
+                People(self.edupage).get_teacher(int(teacher_id))
+                for teacher_id in skeleton.get("teacherids", [])
+            ]
+            teachers = [teacher for teacher in teachers if teacher is not None]
 
-            classrooms = [classroom_by_id(id) for id in skeleton.get("classroomids")]
+            classrooms = [
+                Classrooms(self.edupage).get_classroom(classroom_id)
+                for classroom_id in skeleton.get("classroomids")
+            ]
+            classrooms = [
+                classroom for classroom in classrooms if classroom is not None
+            ]
 
             duration = (
                 skeleton.get("durationperiods")
@@ -208,9 +174,9 @@ class ForeignTimetables(Module):
                 subject_name,
                 classes,
                 groups,
-                classrooms,
+                classrooms or None,
                 duration,
-                teachers,
+                teachers or None,
             )
             skeletons.append(new_skeleton)
         return skeletons

@@ -12,8 +12,8 @@ class Class:
     class_id: int
     name: str
     short: str
-    homeroom_teachers: list[EduTeacher]
-    homeroom: Classroom
+    homeroom_teachers: Optional[list[EduTeacher]]
+    homeroom: Optional[Classroom]
     grade: int
 
 
@@ -27,32 +27,34 @@ class Classes(Module):
 
         classes = []
 
-        for class_id_str in classes_list:
+        for class_id_str, class_info in classes_list.items():
             if not class_id_str:
                 continue
 
-            home_teacher = People(self.edupage).get_teacher(
-                classes_list[class_id_str]["teacherid"]
-            )
-            home_teacher2 = People(self.edupage).get_teacher(
-                classes_list[class_id_str]["teacher2id"]
-            )
-            home_teachers = (
-                [home_teacher, home_teacher2] if home_teacher2 else [home_teacher]
-            )
+            home_teacher_ids = [
+                class_info.get("teacherid"),
+                class_info.get("teacher2id"),
+            ]
+            home_teachers = [
+                People(self.edupage).get_teacher(tid) for tid in home_teacher_ids if tid
+            ]
+            home_teachers = [ht for ht in home_teachers if ht]
 
-            homeroom = Classrooms(self.edupage).get_classroom(
-                int(classes_list[class_id_str]["classroomid"])
+            homeroom_id = class_info.get("classroomid")
+            homeroom = (
+                Classrooms(self.edupage).get_classroom(int(homeroom_id))
+                if homeroom_id
+                else None
             )
 
             classes.append(
                 Class(
                     int(class_id_str),
-                    classes_list[class_id_str]["name"],
-                    classes_list[class_id_str]["short"],
-                    home_teachers,
+                    class_info["name"],
+                    class_info["short"],
+                    home_teachers if home_teachers else None,
                     homeroom,
-                    int(classes_list[class_id_str]["grade"]),
+                    int(class_info["grade"]),
                 )
             )
 
@@ -60,6 +62,10 @@ class Classes(Module):
 
     def get_class(self, class_id: int) -> Optional[Class]:
         return next(
-            (edu_class for edu_class in self.get_classes() if edu_class.class_id == class_id),
+            (
+                edu_class
+                for edu_class in self.get_classes()
+                if edu_class.class_id == class_id
+            ),
             None,
         )

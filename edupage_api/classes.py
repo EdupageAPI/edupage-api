@@ -14,7 +14,7 @@ class Class:
     short: str
     homeroom_teachers: Optional[list[EduTeacher]]
     homeroom: Optional[Classroom]
-    grade: int
+    grade: Optional[int]
 
 
 class Classes(Module):
@@ -54,7 +54,7 @@ class Classes(Module):
                     class_info["short"],
                     home_teachers if home_teachers else None,
                     homeroom,
-                    int(class_info["grade"]),
+                    int(class_info["grade"]) if class_info["grade"] else None,
                 )
             )
 

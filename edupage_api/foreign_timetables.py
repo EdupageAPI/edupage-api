@@ -5,7 +5,6 @@ from typing import List, Optional, Union
 
 from edupage_api.classes import Class, Classes
 from edupage_api.classrooms import Classroom, Classrooms
-from edupage_api.dbi import DbiHelper
 from edupage_api.exceptions import (
     InsufficientPermissionsException,
     MissingDataException,
@@ -14,6 +13,7 @@ from edupage_api.exceptions import (
 )
 from edupage_api.module import Module, ModuleHelper
 from edupage_api.people import EduStudent, EduTeacher, People
+from edupage_api.subjects import Subject, Subjects
 
 
 @dataclass
@@ -21,13 +21,12 @@ class LessonSkeleton:
     period: Optional[int]
     start_time: time
     end_time: time
-    subject_id: Optional[int]
-    subject_name: Optional[str]
+    duration: int
+    subject: Optional[Subject]
     classes: Optional[List[Class]]
     groups: Optional[List[str]]
-    classrooms: Optional[List[Classroom]]
-    duration: int
     teachers: Optional[List[EduTeacher]]
+    classrooms: Optional[List[Classroom]]
     is_removed: bool
     is_event: bool
 
@@ -138,14 +137,11 @@ class ForeignTimetables(Module):
             end_time_dt = datetime.strptime(end_time_str, "%H:%M")
             end_time = time(end_time_dt.hour, end_time_dt.minute)
 
-            subject_id_str = skeleton.get("subjectid")
-            subject_id = int(subject_id_str) if subject_id_str.isdigit() else None
-
-            subject_name = None
-            if subject_id is not None:
-                subject_name = DbiHelper(self.edupage).fetch_subject_name(subject_id)
-            else:
-                subject_name = skeleton.get("name") if "name" in skeleton else None
+            subject = (
+                Subjects(self.edupage).get_subject(int(skeleton["subjectid"]))
+                if skeleton.get("subjectid", "").isdigit()
+                else None
+            )
 
             classes = [
                 edu_class
@@ -192,13 +188,12 @@ class ForeignTimetables(Module):
                 period,
                 start_time,
                 end_time,
-                subject_id,
-                subject_name,
+                duration,
+                subject,
                 classes or None,
                 groups or None,
-                classrooms or None,
-                duration,
                 teachers or None,
+                classrooms or None,
                 is_removed,
                 is_event,
             )

@@ -18,7 +18,6 @@ from edupage_api.people import EduStudent, EduTeacher, People
 
 @dataclass
 class LessonSkeleton:
-    weekday: int
     start_time: time
     end_time: time
     subject_id: Optional[int]
@@ -175,7 +174,6 @@ class ForeignTimetables(Module):
             ) or False
 
             new_skeleton = LessonSkeleton(
-                lesson_date.weekday(),
                 start_time,
                 end_time,
                 subject_id,

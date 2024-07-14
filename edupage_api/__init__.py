@@ -25,6 +25,7 @@ from edupage_api.people import (
     People,
 )
 from edupage_api.ringing import RingingTime, RingingTimes
+from edupage_api.subjects import Subject, Subjects
 from edupage_api.substitution import Substitution, TimetableChange
 from edupage_api.timeline import TimelineEvent, TimelineEvents
 from edupage_api.timetables import Timetable, Timetables
@@ -126,6 +127,15 @@ class Edupage(EdupageModule):
         """
 
         return Classes(self).get_classes()
+
+    def get_subjects(self) -> Optional[list[Subject]]:
+        """Get list of all subjects in your school.
+
+        Returns:
+            Optional[list[Subject]]: List of `Subject`s.
+        """
+
+        return Subjects(self).get_subjects()
 
     def send_message(
         self, recipients: Union[list[EduAccount], EduAccount], body: str

@@ -3,7 +3,7 @@ from dataclasses import dataclass
 from datetime import datetime, time, timedelta
 from typing import List, Optional, Union
 
-from edupage_api.classes import Class
+from edupage_api.classes import Class, Classes
 from edupage_api.classrooms import Classroom, Classrooms
 from edupage_api.dbi import DbiHelper
 from edupage_api.exceptions import (
@@ -23,11 +23,11 @@ class LessonSkeleton:
     end_time: time
     subject_id: Optional[int]
     subject_name: Optional[str]
-    classes: List[int]
-    groups: List[str]
-    classrooms: List[str]
+    classes: Optional[List[Class]]
+    groups: Optional[List[str]]
+    classrooms: Optional[List[Classroom]]
     duration: int
-    teachers: List[EduTeacher]
+    teachers: Optional[List[EduTeacher]]
     is_removed: bool
     is_event: bool
 
@@ -147,21 +147,32 @@ class ForeignTimetables(Module):
             else:
                 subject_name = skeleton.get("name") if "name" in skeleton else None
 
-            classes = [int(id) for id in skeleton.get("classids")]
-            groups = skeleton.get("groupnames")
+            classes = [
+                edu_class
+                for class_id in skeleton.get("classids", [])
+                if class_id.isdigit()
+                for edu_class in [Classes(self.edupage).get_class(int(class_id))]
+                if edu_class is not None
+            ]
+
+            groups = [group for group in skeleton.get("groupnames") if group != ""]
 
             teachers = [
-                People(self.edupage).get_teacher(int(teacher_id))
+                teacher
                 for teacher_id in skeleton.get("teacherids", [])
+                if teacher_id.isdigit()
+                for teacher in [People(self.edupage).get_teacher(int(teacher_id))]
+                if teacher is not None
             ]
-            teachers = [teacher for teacher in teachers if teacher is not None]
 
             classrooms = [
-                Classrooms(self.edupage).get_classroom(classroom_id)
-                for classroom_id in skeleton.get("classroomids")
-            ]
-            classrooms = [
-                classroom for classroom in classrooms if classroom is not None
+                classroom
+                for classroom_id in skeleton.get("classroomids", [])
+                if classroom_id.isdigit()
+                for classroom in [
+                    Classrooms(self.edupage).get_classroom(int(classroom_id))
+                ]
+                if classroom is not None
             ]
 
             duration = (
@@ -183,8 +194,8 @@ class ForeignTimetables(Module):
                 end_time,
                 subject_id,
                 subject_name,
-                classes,
-                groups,
+                classes or None,
+                groups or None,
                 classrooms or None,
                 duration,
                 teachers or None,

@@ -122,7 +122,11 @@ class ForeignTimetables(Module):
                 continue
 
             date_str = skeleton.get("date")
-            date = datetime.strptime(date_str, "%Y-%m-%d")
+            lesson_date = datetime.strptime(date_str, "%Y-%m-%d")
+
+            # Skip lessons from other days
+            if lesson_date != date:
+                continue
 
             start_time_str = skeleton.get("starttime")
             if start_time_str == "24:00":
@@ -167,7 +171,7 @@ class ForeignTimetables(Module):
             )
 
             new_skeleton = LessonSkeleton(
-                date.weekday(),
+                lesson_date.weekday(),
                 start_time,
                 end_time,
                 subject_id,

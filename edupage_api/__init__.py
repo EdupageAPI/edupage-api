@@ -266,17 +266,14 @@ class Edupage(EdupageModule):
         target: Union[EduTeacher, EduStudent, Class, Classroom],
         date: datetime,
     ) -> Optional[list[LessonSkeleton]]:
-        """Get timetable of a teacher, student, class, or classroom for a specific week.
+        """Get timetable of a teacher, student, class, or classroom for a specific date.
 
         Args:
             target (Union[EduTeacher, EduStudent, Class, Classroom]): The target entity whose timetable you want.
-            date (datetime.date): The date within the week for which you want the timetable.
+            date (datetime.date): The date for which you want the timetable.
 
         Returns:
-            Optional[list[LessonSkeleton]]: A list of `LessonSkeleton` objects representing the lessons for the target entity during the week of the specified date. Returns `None` if no timetable is found.
-
-        Note:
-            This method returns the entire timetable for the week, not just for a single day.
+            Optional[list[LessonSkeleton]]: A list of `LessonSkeleton` objects representing the lessons for the target entity during the specified date. Returns `None` if no timetable is found.
         """
 
         return ForeignTimetables(self).get_foreign_timetable(target, date)

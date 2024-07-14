@@ -152,23 +152,23 @@ class Edupage(EdupageModule):
 
         return Messages(self).send_message(recipients, body)
 
-    def get_timetable(self, date: datetime) -> Optional[Timetable]:
-        """Get timetable.
+    def get_timetable(self, date: date) -> Optional[Timetable]:
+        """Get timetable for the logged-in user on a specified date.
 
         Args:
-            date (datetime): Date from which you want to get timetable.
+            date (datetime.date): The date for which you want to get timetable
 
         Returns:
-            Optional[Timetable]: Timetable object for entered date.
+            Optional[Timetable]: `Timetable` object for the specified date, if available; otherwise, `None`.
         """
 
         return Timetables(self).get_timetable(date)
 
-    def get_lunches(self, date: datetime) -> Optional[Lunch]:
+    def get_lunches(self, date: date) -> Optional[Lunch]:
         """Get lunches.
 
         Args:
-            date (datetime): Date from which you want to get lunches.
+            date (datetime.date): Date from which you want to get lunches.
 
         Returns:
             Optional[Lunch]: Lunch object for entered date.
@@ -274,7 +274,7 @@ class Edupage(EdupageModule):
     def get_foreign_timetable(
         self,
         target: Union[EduTeacher, EduStudent, Class, Classroom],
-        date: datetime,
+        date: date,
     ) -> Optional[list[LessonSkeleton]]:
         """Get timetable of a teacher, student, class, or classroom for a specific date.
 

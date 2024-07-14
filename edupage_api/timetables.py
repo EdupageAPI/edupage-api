@@ -1,6 +1,6 @@
 import json
 from dataclasses import dataclass
-from datetime import datetime, time
+from datetime import date, datetime, time
 from typing import List, Optional
 
 from edupage_api.classes import Class, Classes
@@ -87,7 +87,7 @@ class Timetable:
 
 
 class Timetables(Module):
-    def __get_date_plan(self, date: datetime):
+    def __get_date_plan(self, date: date):
         csrf_request_url = (
             f"https://{self.edupage.subdomain}.edupage.org/dashboard/eb.php?mode=ttday"
         )
@@ -133,7 +133,7 @@ class Timetables(Module):
         return date_plans.get("plan")
 
     @ModuleHelper.logged_in
-    def get_timetable(self, date: datetime) -> Optional[Timetable]:
+    def get_timetable(self, date: date) -> Optional[Timetable]:
         plan = self.__get_date_plan(date)
 
         lessons = []

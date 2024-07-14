@@ -1,6 +1,6 @@
 import json
 from dataclasses import dataclass
-from datetime import datetime
+from datetime import date, datetime
 from typing import List, Optional
 
 from edupage_api.exceptions import (
@@ -103,7 +103,7 @@ class Lunch:
 
 class Lunches(Module):
     @ModuleHelper.logged_in
-    def get_lunch(self, date: datetime):
+    def get_lunch(self, date: date):
         date_strftime = date.strftime("%Y%m%d")
         request_url = (
             f"https://{self.edupage.subdomain}.edupage.org/menu/?date={date_strftime}"

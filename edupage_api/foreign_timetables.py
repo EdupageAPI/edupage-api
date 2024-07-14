@@ -1,6 +1,6 @@
 import json
 from dataclasses import dataclass
-from datetime import datetime, time, timedelta
+from datetime import date, datetime, time, timedelta
 from typing import List, Optional, Union
 
 from edupage_api.classes import Class, Classes
@@ -32,7 +32,7 @@ class LessonSkeleton:
 
 
 class ForeignTimetables(Module):
-    def __get_this_week_weekday(self, date: datetime, n: int) -> datetime:
+    def __get_this_week_weekday(self, date: date, n: int) -> date:
         return date - timedelta(days=(date.weekday() - n))
 
     def get_school_year(self):
@@ -43,7 +43,7 @@ class ForeignTimetables(Module):
 
         return dp.get("year")
 
-    def __get_timetable_data(self, id: int, table: str, date: datetime):
+    def __get_timetable_data(self, id: int, table: str, date: date):
         this_monday = self.__get_this_week_weekday(date, 0)
         this_sunday = self.__get_this_week_weekday(date, 6)
 
@@ -92,7 +92,7 @@ class ForeignTimetables(Module):
     def get_foreign_timetable(
         self,
         target: Union[EduTeacher, EduStudent, Class, Classroom],
-        date: datetime,
+        date: date,
     ) -> Optional[List[LessonSkeleton]]:
 
         lookup = {

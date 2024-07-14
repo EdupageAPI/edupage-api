@@ -102,8 +102,8 @@ class ForeignTimetables(Module):
             Classroom: ("classrooms", "classroom_id"),
         }
 
-        table = lookup.get(type(target))[0]
-        target_id = getattr(target, lookup.get(type(target))[1])
+        table, target_id_attr = lookup.get(type(target))
+        target_id = getattr(target, target_id_attr)
 
         try:
             timetable_data = self.__get_timetable_data(target_id, table, date)
@@ -137,45 +137,37 @@ class ForeignTimetables(Module):
             end_time_dt = datetime.strptime(end_time_str, "%H:%M")
             end_time = time(end_time_dt.hour, end_time_dt.minute)
 
+            duration = skeleton.get("durationperiods", 1)
+
+            subject_id = skeleton.get("subjectid")
             subject = (
-                Subjects(self.edupage).get_subject(int(skeleton["subjectid"]))
-                if skeleton.get("subjectid", "").isdigit()
+                Subjects(self.edupage).get_subject(int(subject_id))
+                if subject_id.isdigit()
                 else None
             )
 
+            class_ids = skeleton.get("classids", [])
             classes = [
-                edu_class
-                for class_id in skeleton.get("classids", [])
+                Classes(self.edupage).get_class(int(class_id))
+                for class_id in class_ids
                 if class_id.isdigit()
-                for edu_class in [Classes(self.edupage).get_class(int(class_id))]
-                if edu_class is not None
             ]
 
             groups = [group for group in skeleton.get("groupnames") if group != ""]
 
+            teacher_ids = skeleton.get("teacherids", [])
             teachers = [
-                teacher
-                for teacher_id in skeleton.get("teacherids", [])
+                People(self.edupage).get_teacher(int(teacher_id))
+                for teacher_id in teacher_ids
                 if teacher_id.isdigit()
-                for teacher in [People(self.edupage).get_teacher(int(teacher_id))]
-                if teacher is not None
             ]
 
+            classroom_ids = skeleton.get("classroomids", [])
             classrooms = [
-                classroom
-                for classroom_id in skeleton.get("classroomids", [])
+                Classrooms(self.edupage).get_classroom(int(classroom_id))
+                for classroom_id in classroom_ids
                 if classroom_id.isdigit()
-                for classroom in [
-                    Classrooms(self.edupage).get_classroom(int(classroom_id))
-                ]
-                if classroom is not None
             ]
-
-            duration = (
-                skeleton.get("durationperiods")
-                if skeleton.get("durationperiods") is not None
-                else 1
-            )
 
             is_removed = skeleton.get("removed") or skeleton.get("type") == "absent"
             is_event = (

@@ -28,6 +28,8 @@ class LessonSkeleton:
     classrooms: List[str]
     duration: int
     teachers: List[EduTeacher]
+    is_removed: bool
+    is_event: bool
 
 
 class ForeignTimetables(Module):
@@ -114,13 +116,6 @@ class ForeignTimetables(Module):
 
         skeletons = []
         for skeleton in timetable_data:
-            if (
-                skeleton.get("removed")
-                or skeleton.get("main")
-                or skeleton.get("type") == "absent"
-            ):
-                continue
-
             date_str = skeleton.get("date")
             lesson_date = datetime.strptime(date_str, "%Y-%m-%d")
 
@@ -146,6 +141,8 @@ class ForeignTimetables(Module):
             subject_name = None
             if subject_id is not None:
                 subject_name = DbiHelper(self.edupage).fetch_subject_name(subject_id)
+            else:
+                subject_name = skeleton.get("name") if "name" in skeleton else None
 
             classes = [int(id) for id in skeleton.get("classids")]
             groups = skeleton.get("groupnames")
@@ -170,6 +167,13 @@ class ForeignTimetables(Module):
                 else 1
             )
 
+            is_removed = skeleton.get("removed") or skeleton.get("type") == "absent"
+            is_event = (
+                skeleton.get("type") == "event"
+                or skeleton.get("type") == "out"
+                or skeleton.get("main")
+            ) or False
+
             new_skeleton = LessonSkeleton(
                 lesson_date.weekday(),
                 start_time,
@@ -181,6 +185,8 @@ class ForeignTimetables(Module):
                 classrooms or None,
                 duration,
                 teachers or None,
+                is_removed,
+                is_event,
             )
             skeletons.append(new_skeleton)
         return skeletons

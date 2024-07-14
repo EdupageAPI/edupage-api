@@ -123,10 +123,8 @@ class ForeignTimetables(Module):
             if lesson_date != date:
                 continue
 
-            try:
-                period = int(skeleton.get("uniperiod"))
-            except ValueError:
-                period = None
+            period_str = skeleton.get("uniperiod")
+            period = int(period_str) if period_str.isdigit() else None
 
             start_time_str = skeleton.get("starttime")
             if start_time_str == "24:00":

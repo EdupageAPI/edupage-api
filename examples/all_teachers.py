@@ -1,5 +1,4 @@
 from edupage_api import Edupage
-from edupage_api.people import EduTeacher
 
 edupage = Edupage()
 edupage.login_auto("Username (or e-mail)", "Password")

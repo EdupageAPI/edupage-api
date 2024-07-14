@@ -6,9 +6,12 @@ from typing import Optional
 
 import requests
 
-from edupage_api.exceptions import (MissingDataException,
-                                    NotAnOnlineLessonError,
-                                    NotLoggedInException, NotParentException)
+from edupage_api.exceptions import (
+    MissingDataException,
+    NotAnOnlineLessonError,
+    NotLoggedInException,
+    NotParentException,
+)
 
 
 class EdupageModule:

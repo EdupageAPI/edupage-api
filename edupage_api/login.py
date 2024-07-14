@@ -3,11 +3,13 @@ from dataclasses import dataclass
 from json import JSONDecodeError
 from typing import Optional
 
-from requests import Response
-
-from edupage_api.exceptions import (BadCredentialsException, CaptchaException,
-                                    MissingDataException, RequestError,
-                                    SecondFactorFailedException)
+from edupage_api.exceptions import (
+    BadCredentialsException,
+    CaptchaException,
+    MissingDataException,
+    RequestError,
+    SecondFactorFailedException,
+)
 from edupage_api.module import EdupageModule, Module
 
 
@@ -181,7 +183,7 @@ class Login(Module):
 
         if "bad=1" in response.url:
             raise BadCredentialsException()
-        
+
         data = response.content.decode()
 
         if subdomain == "login1":
@@ -198,7 +200,7 @@ class Login(Module):
         request_url = (
             f"https://{self.edupage.subdomain}.edupage.org/login/twofactor?sn=1"
         )
-        
+
         two_factor_response = self.edupage.session.get(request_url)
 
         data = two_factor_response.content.decode()

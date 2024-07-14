@@ -3,9 +3,12 @@ from dataclasses import dataclass
 from datetime import datetime
 from typing import List, Optional
 
-from edupage_api.exceptions import (FailedToChangeLunchError,
-                                    FailedToRateException, InvalidLunchData,
-                                    NotLoggedInException)
+from edupage_api.exceptions import (
+    FailedToChangeLunchError,
+    FailedToRateException,
+    InvalidLunchData,
+    NotLoggedInException,
+)
 from edupage_api.module import EdupageModule, Module, ModuleHelper
 
 

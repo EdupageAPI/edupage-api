@@ -18,6 +18,7 @@ from edupage_api.people import EduStudent, EduTeacher, People
 
 @dataclass
 class LessonSkeleton:
+    period: Optional[int]
     start_time: time
     end_time: time
     subject_id: Optional[int]
@@ -122,6 +123,11 @@ class ForeignTimetables(Module):
             if lesson_date != date:
                 continue
 
+            try:
+                period = int(skeleton.get("uniperiod"))
+            except ValueError:
+                period = None
+
             start_time_str = skeleton.get("starttime")
             if start_time_str == "24:00":
                 start_time_str = "23:59"
@@ -174,6 +180,7 @@ class ForeignTimetables(Module):
             ) or False
 
             new_skeleton = LessonSkeleton(
+                period,
                 start_time,
                 end_time,
                 subject_id,

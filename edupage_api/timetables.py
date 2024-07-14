@@ -22,8 +22,8 @@ class Lesson:
     groups: Optional[List[str]]
     teachers: Optional[List[EduTeacher]]
     classrooms: Optional[List[Classroom]]
+    curriculum: Optional[str]
     online_lesson_link: Optional[str]
-    curriculum: Optional[str] = None
 
     def is_online_lesson(self) -> bool:
         return self.online_lesson_link is not None
@@ -188,7 +188,9 @@ class Timetables(Module):
 
             online_lesson_link = lesson.get("ol_url")
 
-            curriculum = lesson.get("flags", {}).get("dp0", {}).get("note_wd", None)
+            curriculum = lesson.get("flags", {}).get("dp0", {}).get(
+                "note_wd"
+            ) or lesson.get("flags", {}).get("event", {}).get("name")
 
             lesson_object = Lesson(
                 period,
@@ -199,8 +201,8 @@ class Timetables(Module):
                 groups or None,
                 teachers or None,
                 classrooms or None,
+                curriculum or None,
                 online_lesson_link,
-                curriculum,
             )
             lessons.append(lesson_object)
 

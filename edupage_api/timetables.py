@@ -144,17 +144,15 @@ class Timetables(Module):
             period_str = lesson.get("uniperiod")
             period = int(period_str) if period_str.isdigit() else None
 
-            start_time_str = lesson.get("starttime")
-            if start_time_str == "24:00":
-                start_time_str = "23:59"
-            start_time_dt = datetime.strptime(start_time_str, "%H:%M")
-            start_time = time(start_time_dt.hour, start_time_dt.minute)
+            start_time_str = lesson.get("starttime").replace("24:00", "23:59")
+            start_time = (
+                time(*map(int, start_time_str.split(":"))) if start_time_str else None
+            )
 
-            end_time_str = lesson.get("endtime")
-            if end_time_str == "24:00":
-                end_time_str = "23:59"
-            end_time_dt = datetime.strptime(end_time_str, "%H:%M")
-            end_time = time(end_time_dt.hour, end_time_dt.minute)
+            end_time_str = lesson.get("endtime").replace("24:00", "23:59")
+            end_time = (
+                time(*map(int, end_time_str.split(":"))) if end_time_str else None
+            )
 
             subject_id = lesson.get("subjectid")
             subject = Subjects(self.edupage).get_subject(subject_id)
@@ -182,9 +180,12 @@ class Timetables(Module):
 
             online_lesson_link = lesson.get("ol_url")
 
-            curriculum = lesson.get("flags", {}).get("dp0", {}).get(
-                "note_wd"
-            ) or lesson.get("flags", {}).get("event", {}).get("name")
+            try:
+                curriculum = lesson.get("flags", {}).get("dp0", {}).get(
+                    "note_wd"
+                ) or lesson.get("flags", {}).get("event", {}).get("name")
+            except AttributeError:
+                curriculum = None
 
             lesson_object = Lesson(
                 period,

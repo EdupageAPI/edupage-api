@@ -59,7 +59,7 @@ class Classes(Module):
     def get_class(self, class_id: int | str) -> Optional[Class]:
         try:
             class_id = int(class_id)
-        except ValueError:
+        except (ValueError, TypeError):
             return None
 
         return next(

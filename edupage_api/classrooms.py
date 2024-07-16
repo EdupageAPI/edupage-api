@@ -39,7 +39,7 @@ class Classrooms(Module):
     def get_classroom(self, classroom_id: int | str) -> Optional[Classroom]:
         try:
             classroom_id = int(classroom_id)
-        except ValueError:
+        except (ValueError, TypeError):
             return None
 
         return next(

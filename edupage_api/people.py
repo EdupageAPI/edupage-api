@@ -218,7 +218,7 @@ class People(Module):
     def get_teacher(self, teacher_id: int | str) -> Optional[EduTeacher]:
         try:
             teacher_id = int(teacher_id)
-        except ValueError:
+        except (ValueError, TypeError):
             return None
 
         return next(
@@ -234,7 +234,7 @@ class People(Module):
     def get_student(self, student_id: int | str) -> Optional[EduStudent]:
         try:
             student_id = int(student_id)
-        except ValueError:
+        except (ValueError, TypeError):
             return None
 
         return next(

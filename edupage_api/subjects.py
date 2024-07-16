@@ -39,7 +39,7 @@ class Subjects(Module):
     def get_subject(self, subject_id: int | str) -> Optional[Subject]:
         try:
             subject_id = int(subject_id)
-        except ValueError:
+        except (ValueError, TypeError):
             return None
 
         return next(

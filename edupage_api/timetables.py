@@ -157,33 +157,27 @@ class Timetables(Module):
             end_time = time(end_time_dt.hour, end_time_dt.minute)
 
             subject_id = lesson.get("subjectid")
-            subject = (
-                Subjects(self.edupage).get_subject(int(subject_id))
-                if subject_id.isdigit()
-                else None
-            )
+            subject = Subjects(self.edupage).get_subject(subject_id)
 
-            class_ids = lesson.get("classids", [])
             classes = [
-                Classes(self.edupage).get_class(int(class_id))
-                for class_id in class_ids
-                if class_id.isdigit()
+                edu_class
+                for class_id in lesson.get("classids", [])
+                if (edu_class := Classes(self.edupage).get_class(class_id)) is not None
             ]
 
             groups = [group for group in lesson.get("groupnames") if group != ""]
 
-            teacher_ids = lesson.get("teacherids", [])
             teachers = [
-                People(self.edupage).get_teacher(int(teacher_id))
-                for teacher_id in teacher_ids
-                if teacher_id.isdigit()
+                teacher
+                for teacher_id in lesson.get("teacherids", [])
+                if (teacher := People(self.edupage).get_teacher(teacher_id)) is not None
             ]
 
-            classroom_ids = lesson.get("classroomids", [])
             classrooms = [
-                Classrooms(self.edupage).get_classroom(int(classroom_id))
-                for classroom_id in classroom_ids
-                if classroom_id.isdigit()
+                classroom
+                for classroom_id in lesson.get("classroomids", [])
+                if (classroom := Classrooms(self.edupage).get_classroom(classroom_id))
+                is not None
             ]
 
             online_lesson_link = lesson.get("ol_url")

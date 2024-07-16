@@ -140,33 +140,27 @@ class ForeignTimetables(Module):
             duration = skeleton.get("durationperiods", 1)
 
             subject_id = skeleton.get("subjectid")
-            subject = (
-                Subjects(self.edupage).get_subject(int(subject_id))
-                if subject_id.isdigit()
-                else None
-            )
+            subject = Subjects(self.edupage).get_subject(subject_id)
 
-            class_ids = skeleton.get("classids", [])
             classes = [
-                Classes(self.edupage).get_class(int(class_id))
-                for class_id in class_ids
-                if class_id.isdigit()
+                edu_class
+                for class_id in skeleton.get("classids", [])
+                if (edu_class := Classes(self.edupage).get_class(class_id)) is not None
             ]
 
             groups = [group for group in skeleton.get("groupnames") if group != ""]
 
-            teacher_ids = skeleton.get("teacherids", [])
             teachers = [
-                People(self.edupage).get_teacher(int(teacher_id))
-                for teacher_id in teacher_ids
-                if teacher_id.isdigit()
+                teacher
+                for teacher_id in skeleton.get("teacherids", [])
+                if (teacher := People(self.edupage).get_teacher(teacher_id)) is not None
             ]
 
-            classroom_ids = skeleton.get("classroomids", [])
             classrooms = [
-                Classrooms(self.edupage).get_classroom(int(classroom_id))
-                for classroom_id in classroom_ids
-                if classroom_id.isdigit()
+                classroom
+                for classroom_id in skeleton.get("classroomids", [])
+                if (classroom := Classrooms(self.edupage).get_classroom(classroom_id))
+                is not None
             ]
 
             is_removed = skeleton.get("removed") or skeleton.get("type") == "absent"

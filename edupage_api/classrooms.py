@@ -36,7 +36,12 @@ class Classrooms(Module):
 
         return classrooms
 
-    def get_classroom(self, classroom_id: int) -> Optional[Classroom]:
+    def get_classroom(self, classroom_id: int | str) -> Optional[Classroom]:
+        try:
+            classroom_id = int(classroom_id)
+        except ValueError:
+            return None
+
         return next(
             (
                 classroom

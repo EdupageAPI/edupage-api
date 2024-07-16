@@ -36,7 +36,12 @@ class Subjects(Module):
 
         return subjects
 
-    def get_subject(self, subject_id: int) -> Optional[Subject]:
+    def get_subject(self, subject_id: int | str) -> Optional[Subject]:
+        try:
+            subject_id = int(subject_id)
+        except ValueError:
+            return None
+
         return next(
             (
                 subject

@@ -215,20 +215,36 @@ class People(Module):
         return result
 
     @ModuleHelper.logged_in
-    def get_teacher(self, teacher_id: int) -> Optional[EduTeacher]:
-        teacher_data = DbiHelper(self.edupage).fetch_teacher_data(teacher_id)
-        if teacher_data is None:
+    def get_teacher(self, teacher_id: int | str) -> Optional[EduTeacher]:
+        try:
+            teacher_id = int(teacher_id)
+        except ValueError:
             return None
 
-        return EduAccount.parse(teacher_data, teacher_id, self.edupage)
+        return next(
+            (
+                teacher
+                for teacher in self.get_teachers()
+                if teacher.person_id == teacher_id
+            ),
+            None,
+        )
 
     @ModuleHelper.logged_in
-    def get_student(self, student_id: int) -> Optional[EduStudent]:
-        student_data = DbiHelper(self.edupage).fetch_student_data(student_id)
-        if student_data is None:
+    def get_student(self, student_id: int | str) -> Optional[EduStudent]:
+        try:
+            student_id = int(student_id)
+        except ValueError:
             return None
 
-        return EduAccount.parse(student_data, student_id, self.edupage)
+        return next(
+            (
+                student
+                for student in self.get_students()
+                if student.person_id == student_id
+            ),
+            None,
+        )
 
     @ModuleHelper.logged_in
     def get_teachers(self) -> Optional[list]:

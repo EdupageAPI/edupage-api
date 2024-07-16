@@ -41,11 +41,7 @@ class Classes(Module):
             home_teachers = [ht for ht in home_teachers if ht]
 
             homeroom_id = class_info.get("classroomid")
-            homeroom = (
-                Classrooms(self.edupage).get_classroom(int(homeroom_id))
-                if homeroom_id
-                else None
-            )
+            homeroom = Classrooms(self.edupage).get_classroom(homeroom_id)
 
             classes.append(
                 Class(
@@ -60,7 +56,12 @@ class Classes(Module):
 
         return classes
 
-    def get_class(self, class_id: int) -> Optional[Class]:
+    def get_class(self, class_id: int | str) -> Optional[Class]:
+        try:
+            class_id = int(class_id)
+        except ValueError:
+            return None
+
         return next(
             (
                 edu_class

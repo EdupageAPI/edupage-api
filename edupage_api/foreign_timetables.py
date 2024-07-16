@@ -1,6 +1,6 @@
 import json
 from dataclasses import dataclass
-from datetime import date, datetime, time, timedelta
+from datetime import date, time
 from typing import List, Optional, Union
 
 from edupage_api.classes import Class, Classes
@@ -32,9 +32,6 @@ class LessonSkeleton:
 
 
 class ForeignTimetables(Module):
-    def __get_this_week_weekday(self, date: date, n: int) -> date:
-        return date - timedelta(days=(date.weekday() - n))
-
     def get_school_year(self):
         dp = self.edupage.data.get("dp")
 
@@ -43,19 +40,16 @@ class ForeignTimetables(Module):
 
         return dp.get("year")
 
-    def __get_timetable_data(self, id: int, table: str, date: date):
-        this_monday = self.__get_this_week_weekday(date, 0)
-        this_sunday = self.__get_this_week_weekday(date, 6)
-
+    def __get_timetable_data(self, target_id: int, table: str, date: date):
         request_data = {
             "__args": [
                 None,
                 {
                     "year": self.get_school_year(),
-                    "datefrom": this_monday.strftime("%Y-%m-%d"),
-                    "dateto": this_sunday.strftime("%Y-%m-%d"),
+                    "datefrom": date.strftime("%Y-%m-%d"),
+                    "dateto": date.strftime("%Y-%m-%d"),
                     "table": table,
-                    "id": str(id),
+                    "id": str(target_id),
                     "showColors": True,
                     "showIgroupsInClasses": True,
                     "showOrig": True,
@@ -115,13 +109,6 @@ class ForeignTimetables(Module):
 
         skeletons = []
         for skeleton in timetable_data:
-            date_str = skeleton.get("date")
-            lesson_date = datetime.strptime(date_str, "%Y-%m-%d")
-
-            # Skip lessons from other days
-            if lesson_date != date:
-                continue
-
             period_str = skeleton.get("uniperiod")
             period = int(period_str) if period_str.isdigit() else None
 

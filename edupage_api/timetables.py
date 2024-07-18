@@ -175,10 +175,10 @@ class Timetables(Module):
         )
 
         response_start = self.edupage.get_user_id() + '",'
-        response_end = ",[]);"
+        response_end = ",["
 
-        curriculum_json = curriculum_response.text.split(response_start)[1].split(
-            response_end
+        curriculum_json = curriculum_response.text.split(response_start)[1].rsplit(
+            response_end, 1
         )[0]
 
         data = json.loads(curriculum_json)

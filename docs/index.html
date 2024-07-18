@@ -2,18 +2,21 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
-<meta name="generator" content="pdoc 0.10.0" />
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+<meta name="generator" content="pdoc3 0.11.1">
 <title>edupage_api API documentation</title>
-<meta name="description" content="" />
-<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
-<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
-<link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
-<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
-<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<meta name="description" content="">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/sanitize.min.css" integrity="sha512-y1dtMcuvtTMJc1yPgEqF0ZjQbhnc/bFhyvIyVNb9Zk5mIGtqVaAB1Ttl28su8AvFMOY0EwRbAe+HCLqj6W7/KA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/typography.min.css" integrity="sha512-Y1DYSb995BAfxobCkKepB1BqJJTPrOp3zPL74AWFugHHmmdcvO+C48WLrUOlhGMc0QG7AE3f7gmvvcrmX2fDoA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:1.5em;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:2em 0 .50em 0}h3{font-size:1.4em;margin:1.6em 0 .7em 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .2s ease-in-out}a:visited{color:#503}a:hover{color:#b62}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900;font-weight:bold}pre code{font-size:.8em;line-height:1.4em;padding:1em;display:block}code{background:#f3f3f3;font-family:"DejaVu Sans Mono",monospace;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em 1em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul ul{padding-left:1em}.toc > ul > li{margin-top:.5em}}</style>
 <style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
-<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/highlight.min.js" integrity="sha256-Uv3H6lx7dJmRfRvH8TH6kJD1TSK1aFcwgx+mdg3epi8=" crossorigin></script>
-<script>window.addEventListener('DOMContentLoaded', () => hljs.initHighlighting())</script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha512-D9gUyxqja7hBtkWpPWGt9wfbfaMGVt9gnyCvYa+jojwwPHLCzUm5i8rpk7vD7wNee9bA35eYIjobYPaQuKS1MQ==" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => {
+hljs.configure({languages: ['bash', 'css', 'diff', 'graphql', 'ini', 'javascript', 'json', 'plaintext', 'python', 'python-repl', 'rust', 'shell', 'sql', 'typescript', 'xml', 'yaml']});
+hljs.highlightAll();
+})</script>
 </head>
 <body>
 <main>
@@ -22,309 +25,18 @@
 <h1 class="title">Package <code>edupage_api</code></h1>
 </header>
 <section id="section-intro">
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">import functools
-from datetime import date, datetime
-from io import TextIOWrapper
-from typing import Optional, Union
-
-import requests
-from requests import Response
-
-from edupage_api.cloud import Cloud, EduCloudFile
-from edupage_api.custom_request import CustomRequest
-from edupage_api.foreign_timetables import ForeignTimetables, LessonSkeleton
-from edupage_api.grades import EduGrade, Grades, Term
-from edupage_api.login import Login, TwoFactorLogin
-from edupage_api.lunches import Lunch, Lunches
-from edupage_api.messages import Messages
-from edupage_api.module import EdupageModule
-from edupage_api.parent import Parent
-from edupage_api.people import (EduAccount, EduStudent, EduStudentSkeleton,
-                                EduTeacher, People)
-from edupage_api.ringing import RingingTime, RingingTimes
-from edupage_api.substitution import Substitution, TimetableChange
-from edupage_api.timeline import TimelineEvent, TimelineEvents
-from edupage_api.timetables import Timetable, Timetables
-
-
-class Edupage(EdupageModule):
-    def __init__(self, request_timeout=5):
-        &#34;&#34;&#34;Initialize `Edupage` object.
-
-        Args:
-            request_timeout (int, optional): Length of request timeout in seconds.
-                If want to upload bigger files, you will have to increase its value.
-                Defaults to `5`.
-        &#34;&#34;&#34;
-
-        self.data = None
-        self.is_logged_in = False
-        self.subdomain = None
-        self.gsec_hash = None
-        self.username = None
-
-        self.session = requests.session()
-        self.session.request = functools.partial(
-            self.session.request, timeout=request_timeout
-        )
-
-    def login(
-        self, username: str, password: str, subdomain: str
-    ) -&gt; Optional[TwoFactorLogin]:
-        &#34;&#34;&#34;Login while specifying the subdomain to log into.
-
-        Args:
-            username (str): Your username.
-            password (str): Your password.
-            subdomain (str): Subdomain of your school (https://{subdomain}.edupage.org).
-
-        Returns:
-            Optional[TwoFactorLogin]: Returns `None` if no second factor was needed to login,
-            or the `TwoFactorLogin` object that is used to complete 2fa.
-        &#34;&#34;&#34;
-
-        return Login(self).login(username, password, subdomain)
-
-    def login_auto(self, username: str, password: str) -&gt; Optional[TwoFactorLogin]:
-        &#34;&#34;&#34;Login using https://portal.edupage.org. If this doesn&#39;t work, please use `Edupage.login`.
-
-        Args:
-            username (str): Your username.
-            password (str): Your password.
-
-        Returns:
-            Optional[TwoFactorLogin]: Returns `None` if no second factor was needed to login,
-            or the `TwoFactorLogin` object that is used to complete 2fa.
-        &#34;&#34;&#34;
-
-        return Login(self).login(username, password)
-
-    def get_students(self) -&gt; Optional[list[EduStudent]]:
-        &#34;&#34;&#34;Get list of all students in your class.
-
-        Returns:
-            Optional[list[EduStudent]]: List of `EduStudent`s.
-        &#34;&#34;&#34;
-
-        return People(self).get_students()
-
-    def get_all_students(self) -&gt; Optional[list[EduStudentSkeleton]]:
-        &#34;&#34;&#34;Get list of all students in your school.
-
-        Returns:
-            Optional[list[EduStudentSkeleton]]: List of `EduStudentSkeleton`s.
-        &#34;&#34;&#34;
-
-        return People(self).get_all_students()
-
-    def get_teachers(self) -&gt; Optional[list[EduTeacher]]:
-        &#34;&#34;&#34;Get list of all teachers in your school.
-
-        Returns:
-            Optional[list[EduTeacher]]: List of `EduTeacher`s.
-        &#34;&#34;&#34;
-
-        return People(self).get_teachers()
-
-    def send_message(
-        self, recipients: Union[list[EduAccount], EduAccount], body: str
-    ) -&gt; int:
-        &#34;&#34;&#34;Send message.
-
-        Args:
-            recipients (Optional[list[EduAccount]]): Recipients of your message (list of `EduAccount`s).
-            body (str): Body of your message.
-
-        Returns:
-            int: The timeline id of the new message.
-        &#34;&#34;&#34;
-
-        return Messages(self).send_message(recipients, body)
-
-    def get_timetable(self, date: datetime) -&gt; Optional[Timetable]:
-        &#34;&#34;&#34;Get timetable.
-
-        Args:
-            date (datetime): Date from which you want to get timetable.
-
-        Returns:
-            Optional[Timetable]: Timetable object for entered date.
-        &#34;&#34;&#34;
-
-        return Timetables(self).get_timetable(date)
-
-    def get_lunches(self, date: datetime) -&gt; Optional[Lunch]:
-        &#34;&#34;&#34;Get lunches.
-
-        Args:
-            date (datetime): Date from which you want to get lunches.
-
-        Returns:
-            Optional[Lunch]: Lunch object for entered date.
-        &#34;&#34;&#34;
-
-        return Lunches(self).get_lunch(date)
-
-    def get_notifications(self) -&gt; list[TimelineEvent]:
-        &#34;&#34;&#34;Get list of all available notifications.
-
-        Returns:
-            list[TimelineEvent]: List of `TimelineEvent`s.
-        &#34;&#34;&#34;
-
-        return TimelineEvents(self).get_notifications()
-
-    def cloud_upload(self, fd: TextIOWrapper) -&gt; EduCloudFile:
-        &#34;&#34;&#34;Upload file to EduPage cloud.
-
-        Args:
-            fd (TextIOWrapper): File you want to upload.
-
-        Returns:
-            EduCloudFile: Object of uploaded file.
-        &#34;&#34;&#34;
-
-        return Cloud(self).upload_file(fd)
-
-    def get_grades(self) -&gt; list[EduGrade]:
-        &#34;&#34;&#34;Get a list of all available grades.
-
-        Returns:
-            list[EduGrade]: List of `EduGrade`s.
-        &#34;&#34;&#34;
-
-        return Grades(self).get_grades(year=None, term=None)
-
-    def get_grades_for_term(self, year: int, term: Term) -&gt; list[EduGrade]:
-        &#34;&#34;&#34;Get a list of all available grades for a given year and term
-
-        Returns:
-            list[EduGrade]: List of `EduGrade`s
-        &#34;&#34;&#34;
-
-        return Grades(self).get_grades(year=year, term=term)
-
-    def get_user_id(self) -&gt; str:
-        &#34;&#34;&#34;Get your EduPage user ID.
-
-        Returns:
-            str: Your EduPage user ID.
-        &#34;&#34;&#34;
-
-        return self.data.get(&#34;userid&#34;)
-
-    def custom_request(
-        self, url: str, method: str, data: str = &#34;&#34;, headers: dict = {}
-    ) -&gt; Response:
-        &#34;&#34;&#34;Send custom request to EduPage.
-
-        Args:
-            url (str): URL endpoint.
-            method (str): Method (`GET` or `POST`).
-            data (str, optional): Request data. Defaults to `&#34;&#34;`.
-            headers (dict, optional): Request headers. Defaults to `{}`.
-
-        Returns:
-            Response: Response.
-        &#34;&#34;&#34;
-
-        return CustomRequest(self).custom_request(url, method, data, headers)
-
-    def get_missing_teachers(self, date: date) -&gt; list[EduTeacher]:
-        &#34;&#34;&#34;Get missing teachers for a given date.
-
-        Args:
-            date (datetime.date): The date you want to get this information for.
-
-        Returns:
-            list[EduTeacher]: List of the missing teachers for `date`.
-        &#34;&#34;&#34;
-        return Substitution(self).get_missing_teachers(date)
-
-    def get_timetable_changes(self, date: date) -&gt; list[TimetableChange]:
-        &#34;&#34;&#34;Get the changes in the timetable for a given date.
-
-        Args:
-            date (datetime.date): The date you want to get this information for.
-
-        Returns:
-            list[TimetableChange]: List of changes in the timetable.
-        &#34;&#34;&#34;
-        return Substitution(self).get_timetable_changes(date)
-
-    def get_school_year(self) -&gt; int:
-        &#34;&#34;&#34;Returns the current school year.
-
-        Returns:
-            int: The starting year of the current school year.
-        &#34;&#34;&#34;
-        return ForeignTimetables(self).get_school_year()
-
-    def get_foreign_timetable(self, id: int, date: datetime) -&gt; list[LessonSkeleton]:
-        &#34;&#34;&#34;Get someone else&#39;s timetable for the week `date` is in.
-
-        Args:
-            id (int): The `person_id` of the person whoose timetable you want.
-            date (datetime.date): A date from the week from which you want this timetable.
-
-        Returns:
-            list[LessonSkeleton]: Lessons (in order) that this person has for `date`&#39;s week.
-
-        Note:
-            This returns the whole timetable (lessons from 1 week, NOT 1 day)!
-        &#34;&#34;&#34;
-        return ForeignTimetables(self).get_timetable_for_person(id, date)
-
-    def get_next_ringing_time(self, date_time: datetime) -&gt; RingingTime:
-        &#34;&#34;&#34;Get the next lesson&#39;s ringing time for given `date_time`.
-
-        Args:
-            date_time (datetime.datetime): The (date)time you want to get this information for.
-
-        Returns:
-            RingingTime: The type (break or lesson) and time of the next ringing.
-        &#34;&#34;&#34;
-        return RingingTimes(self).get_next_ringing_time(date_time)
-
-    def switch_to_child(self, child: Union[EduAccount, int]):
-        &#34;&#34;&#34;Switch to an account of a child - can only be used on parent accounts
-
-        Args:
-            child (EduAccount | int): The account or `person_id` of the child you want to switch to
-
-        Note: When you switch to a child account, all other methods will return data as if you were logged in as `child`
-        &#34;&#34;&#34;
-        Parent(self).switch_to_child(child)
-
-    def switch_to_parent(self):
-        &#34;&#34;&#34;Switches back to your parent account - can only be used on parent accounts&#34;&#34;&#34;
-        Parent(self).switch_to_parent()
-
-    @classmethod
-    def from_session_id(cls, session_id: str, subdomain: str):
-        &#34;&#34;&#34;Create an `Edupage` instance with a session id and subdomain.
-
-        Args:
-            session_id (str): The `PHPSESSID` cookie.
-            subdomain (str): Subdomain of the school which cookie is from.
-
-        Returns:
-            Edupage: A new `Edupage` instance.
-        &#34;&#34;&#34;
-        instance = cls()
-
-        Login(instance).reload_data(subdomain, session_id)
-
-        return instance</code></pre>
-</details>
 </section>
 <section>
 <h2 class="section-title" id="header-submodules">Sub-modules</h2>
 <dl>
+<dt><code class="name"><a title="edupage_api.classes" href="classes.html">edupage_api.classes</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt><code class="name"><a title="edupage_api.classrooms" href="classrooms.html">edupage_api.classrooms</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
 <dt><code class="name"><a title="edupage_api.cloud" href="cloud.html">edupage_api.cloud</a></code></dt>
 <dd>
 <div class="desc"></div>
@@ -342,10 +54,6 @@ class Edupage(EdupageModule):
 <div class="desc"></div>
 </dd>
 <dt><code class="name"><a title="edupage_api.exceptions" href="exceptions.html">edupage_api.exceptions</a></code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-<dt><code class="name"><a title="edupage_api.foreign_timetables" href="foreign_timetables.html">edupage_api.foreign_timetables</a></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
@@ -378,6 +86,10 @@ class Edupage(EdupageModule):
 <div class="desc"></div>
 </dd>
 <dt><code class="name"><a title="edupage_api.ringing" href="ringing.html">edupage_api.ringing</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt><code class="name"><a title="edupage_api.subjects" href="subjects.html">edupage_api.subjects</a></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
@@ -502,6 +214,33 @@ Defaults to <code>5</code>.</dd>
 
         return People(self).get_teachers()
 
+    def get_classrooms(self) -&gt; Optional[list[Classroom]]:
+        &#34;&#34;&#34;Get list of all classrooms in your school.
+
+        Returns:
+            Optional[list[Classroom]]: List of `Classroom`s.
+        &#34;&#34;&#34;
+
+        return Classrooms(self).get_classrooms()
+
+    def get_classes(self) -&gt; Optional[list[Class]]:
+        &#34;&#34;&#34;Get list of all classes in your school.
+
+        Returns:
+            Optional[list[Class]]: List of `Class`es.
+        &#34;&#34;&#34;
+
+        return Classes(self).get_classes()
+
+    def get_subjects(self) -&gt; Optional[list[Subject]]:
+        &#34;&#34;&#34;Get list of all subjects in your school.
+
+        Returns:
+            Optional[list[Subject]]: List of `Subject`s.
+        &#34;&#34;&#34;
+
+        return Subjects(self).get_subjects()
+
     def send_message(
         self, recipients: Union[list[EduAccount], EduAccount], body: str
     ) -&gt; int:
@@ -517,23 +256,23 @@ Defaults to <code>5</code>.</dd>
 
         return Messages(self).send_message(recipients, body)
 
-    def get_timetable(self, date: datetime) -&gt; Optional[Timetable]:
-        &#34;&#34;&#34;Get timetable.
+    def get_my_timetable(self, date: date) -&gt; Optional[Timetable]:
+        &#34;&#34;&#34;Get timetable for the logged-in user on a specified date.
 
         Args:
-            date (datetime): Date from which you want to get timetable.
+            date (datetime.date): The date for which you want to get timetable
 
         Returns:
-            Optional[Timetable]: Timetable object for entered date.
+            Optional[Timetable]: `Timetable` object for the specified date, if available; otherwise, `None`.
         &#34;&#34;&#34;
 
-        return Timetables(self).get_timetable(date)
+        return Timetables(self).get_my_timetable(date)
 
-    def get_lunches(self, date: datetime) -&gt; Optional[Lunch]:
+    def get_lunches(self, date: date) -&gt; Optional[Lunch]:
         &#34;&#34;&#34;Get lunches.
 
         Args:
-            date (datetime): Date from which you want to get lunches.
+            date (datetime.date): Date from which you want to get lunches.
 
         Returns:
             Optional[Lunch]: Lunch object for entered date.
@@ -634,22 +373,24 @@ Defaults to <code>5</code>.</dd>
         Returns:
             int: The starting year of the current school year.
         &#34;&#34;&#34;
-        return ForeignTimetables(self).get_school_year()
+        return Timetables(self).get_school_year()
 
-    def get_foreign_timetable(self, id: int, date: datetime) -&gt; list[LessonSkeleton]:
-        &#34;&#34;&#34;Get someone else&#39;s timetable for the week `date` is in.
+    def get_timetable(
+        self,
+        target: Union[EduTeacher, EduStudent, Class, Classroom],
+        date: date,
+    ) -&gt; Optional[Timetable]:
+        &#34;&#34;&#34;Get timetable of a teacher, student, class, or classroom for a specific date.
 
         Args:
-            id (int): The `person_id` of the person whoose timetable you want.
-            date (datetime.date): A date from the week from which you want this timetable.
+            target (Union[EduTeacher, EduStudent, Class, Classroom]): The target entity whose timetable you want.
+            date (datetime.date): The date for which you want the timetable.
 
         Returns:
-            list[LessonSkeleton]: Lessons (in order) that this person has for `date`&#39;s week.
-
-        Note:
-            This returns the whole timetable (lessons from 1 week, NOT 1 day)!
+            Optional[Timetable]: `Timetable` object for the specified date, if available; otherwise, `None`.
         &#34;&#34;&#34;
-        return ForeignTimetables(self).get_timetable_for_person(id, date)
+
+        return Timetables(self).get_timetable(target, date)
 
     def get_next_ringing_time(self, date_time: datetime) -&gt; RingingTime:
         &#34;&#34;&#34;Get the next lesson&#39;s ringing time for given `date_time`.
@@ -743,27 +484,6 @@ Defaults to <code>5</code>.</dd>
 <dt><code><a title="edupage_api.Edupage" href="#edupage_api.Edupage">Edupage</a></code></dt>
 <dd>A new <code><a title="edupage_api.Edupage" href="#edupage_api.Edupage">Edupage</a></code> instance.</dd>
 </dl></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">@classmethod
-def from_session_id(cls, session_id: str, subdomain: str):
-    &#34;&#34;&#34;Create an `Edupage` instance with a session id and subdomain.
-
-    Args:
-        session_id (str): The `PHPSESSID` cookie.
-        subdomain (str): Subdomain of the school which cookie is from.
-
-    Returns:
-        Edupage: A new `Edupage` instance.
-    &#34;&#34;&#34;
-    instance = cls()
-
-    Login(instance).reload_data(subdomain, session_id)
-
-    return instance</code></pre>
-</details>
 </dd>
 </dl>
 <h3>Methods</h3>
@@ -783,22 +503,6 @@ def from_session_id(cls, session_id: str, subdomain: str):
 <dt><code>EduCloudFile</code></dt>
 <dd>Object of uploaded file.</dd>
 </dl></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def cloud_upload(self, fd: TextIOWrapper) -&gt; EduCloudFile:
-    &#34;&#34;&#34;Upload file to EduPage cloud.
-
-    Args:
-        fd (TextIOWrapper): File you want to upload.
-
-    Returns:
-        EduCloudFile: Object of uploaded file.
-    &#34;&#34;&#34;
-
-    return Cloud(self).upload_file(fd)</code></pre>
-</details>
 </dd>
 <dt id="edupage_api.Edupage.custom_request"><code class="name flex">
 <span>def <span class="ident">custom_request</span></span>(<span>self, url: str, method: str, data: str = '', headers: dict = {}) ‑> requests.models.Response</span>
@@ -821,27 +525,6 @@ def from_session_id(cls, session_id: str, subdomain: str):
 <dt><code>Response</code></dt>
 <dd>Response.</dd>
 </dl></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def custom_request(
-    self, url: str, method: str, data: str = &#34;&#34;, headers: dict = {}
-) -&gt; Response:
-    &#34;&#34;&#34;Send custom request to EduPage.
-
-    Args:
-        url (str): URL endpoint.
-        method (str): Method (`GET` or `POST`).
-        data (str, optional): Request data. Defaults to `&#34;&#34;`.
-        headers (dict, optional): Request headers. Defaults to `{}`.
-
-    Returns:
-        Response: Response.
-    &#34;&#34;&#34;
-
-    return CustomRequest(self).custom_request(url, method, data, headers)</code></pre>
-</details>
 </dd>
 <dt id="edupage_api.Edupage.get_all_students"><code class="name flex">
 <span>def <span class="ident">get_all_students</span></span>(<span>self) ‑> Optional[list[<a title="edupage_api.people.EduStudentSkeleton" href="people.html#edupage_api.people.EduStudentSkeleton">EduStudentSkeleton</a>]]</span>
@@ -853,58 +536,28 @@ def from_session_id(cls, session_id: str, subdomain: str):
 <dt><code>Optional[list[EduStudentSkeleton]]</code></dt>
 <dd>List of <code>EduStudentSkeleton</code>s.</dd>
 </dl></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def get_all_students(self) -&gt; Optional[list[EduStudentSkeleton]]:
-    &#34;&#34;&#34;Get list of all students in your school.
-
-    Returns:
-        Optional[list[EduStudentSkeleton]]: List of `EduStudentSkeleton`s.
-    &#34;&#34;&#34;
-
-    return People(self).get_all_students()</code></pre>
-</details>
 </dd>
-<dt id="edupage_api.Edupage.get_foreign_timetable"><code class="name flex">
-<span>def <span class="ident">get_foreign_timetable</span></span>(<span>self, id: int, date: datetime.datetime) ‑> list[<a title="edupage_api.foreign_timetables.LessonSkeleton" href="foreign_timetables.html#edupage_api.foreign_timetables.LessonSkeleton">LessonSkeleton</a>]</span>
+<dt id="edupage_api.Edupage.get_classes"><code class="name flex">
+<span>def <span class="ident">get_classes</span></span>(<span>self) ‑> Optional[list[<a title="edupage_api.classes.Class" href="classes.html#edupage_api.classes.Class">Class</a>]]</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Get someone else's timetable for the week <code>date</code> is in.</p>
-<h2 id="args">Args</h2>
-<dl>
-<dt><strong><code>id</code></strong> :&ensp;<code>int</code></dt>
-<dd>The <code>person_id</code> of the person whoose timetable you want.</dd>
-<dt><strong><code>date</code></strong> :&ensp;<code>datetime.date</code></dt>
-<dd>A date from the week from which you want this timetable.</dd>
-</dl>
+<div class="desc"><p>Get list of all classes in your school.</p>
 <h2 id="returns">Returns</h2>
 <dl>
-<dt><code>list[LessonSkeleton]</code></dt>
-<dd>Lessons (in order) that this person has for <code>date</code>'s week.</dd>
-</dl>
-<h2 id="note">Note</h2>
-<p>This returns the whole timetable (lessons from 1 week, NOT 1 day)!</p></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def get_foreign_timetable(self, id: int, date: datetime) -&gt; list[LessonSkeleton]:
-    &#34;&#34;&#34;Get someone else&#39;s timetable for the week `date` is in.
-
-    Args:
-        id (int): The `person_id` of the person whoose timetable you want.
-        date (datetime.date): A date from the week from which you want this timetable.
-
-    Returns:
-        list[LessonSkeleton]: Lessons (in order) that this person has for `date`&#39;s week.
-
-    Note:
-        This returns the whole timetable (lessons from 1 week, NOT 1 day)!
-    &#34;&#34;&#34;
-    return ForeignTimetables(self).get_timetable_for_person(id, date)</code></pre>
-</details>
+<dt><code>Optional[list[Class]]</code></dt>
+<dd>List of <code>Class</code>es.</dd>
+</dl></div>
+</dd>
+<dt id="edupage_api.Edupage.get_classrooms"><code class="name flex">
+<span>def <span class="ident">get_classrooms</span></span>(<span>self) ‑> Optional[list[<a title="edupage_api.classrooms.Classroom" href="classrooms.html#edupage_api.classrooms.Classroom">Classroom</a>]]</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Get list of all classrooms in your school.</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>Optional[list[Classroom]]</code></dt>
+<dd>List of <code>Classroom</code>s.</dd>
+</dl></div>
 </dd>
 <dt id="edupage_api.Edupage.get_grades"><code class="name flex">
 <span>def <span class="ident">get_grades</span></span>(<span>self) ‑> list[<a title="edupage_api.grades.EduGrade" href="grades.html#edupage_api.grades.EduGrade">EduGrade</a>]</span>
@@ -916,19 +569,6 @@ def from_session_id(cls, session_id: str, subdomain: str):
 <dt><code>list[EduGrade]</code></dt>
 <dd>List of <code>EduGrade</code>s.</dd>
 </dl></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def get_grades(self) -&gt; list[EduGrade]:
-    &#34;&#34;&#34;Get a list of all available grades.
-
-    Returns:
-        list[EduGrade]: List of `EduGrade`s.
-    &#34;&#34;&#34;
-
-    return Grades(self).get_grades(year=None, term=None)</code></pre>
-</details>
 </dd>
 <dt id="edupage_api.Edupage.get_grades_for_term"><code class="name flex">
 <span>def <span class="ident">get_grades_for_term</span></span>(<span>self, year: int, term: <a title="edupage_api.grades.Term" href="grades.html#edupage_api.grades.Term">Term</a>) ‑> list[<a title="edupage_api.grades.EduGrade" href="grades.html#edupage_api.grades.EduGrade">EduGrade</a>]</span>
@@ -940,28 +580,15 @@ def from_session_id(cls, session_id: str, subdomain: str):
 <dt><code>list[EduGrade]</code></dt>
 <dd>List of <code>EduGrade</code>s</dd>
 </dl></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def get_grades_for_term(self, year: int, term: Term) -&gt; list[EduGrade]:
-    &#34;&#34;&#34;Get a list of all available grades for a given year and term
-
-    Returns:
-        list[EduGrade]: List of `EduGrade`s
-    &#34;&#34;&#34;
-
-    return Grades(self).get_grades(year=year, term=term)</code></pre>
-</details>
 </dd>
 <dt id="edupage_api.Edupage.get_lunches"><code class="name flex">
-<span>def <span class="ident">get_lunches</span></span>(<span>self, date: datetime.datetime) ‑> Optional[<a title="edupage_api.lunches.Lunch" href="lunches.html#edupage_api.lunches.Lunch">Lunch</a>]</span>
+<span>def <span class="ident">get_lunches</span></span>(<span>self, date: datetime.date) ‑> Optional[<a title="edupage_api.lunches.Lunch" href="lunches.html#edupage_api.lunches.Lunch">Lunch</a>]</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Get lunches.</p>
 <h2 id="args">Args</h2>
 <dl>
-<dt><strong><code>date</code></strong> :&ensp;<code>datetime</code></dt>
+<dt><strong><code>date</code></strong> :&ensp;<code>datetime.date</code></dt>
 <dd>Date from which you want to get lunches.</dd>
 </dl>
 <h2 id="returns">Returns</h2>
@@ -969,22 +596,6 @@ def from_session_id(cls, session_id: str, subdomain: str):
 <dt><code>Optional[Lunch]</code></dt>
 <dd>Lunch object for entered date.</dd>
 </dl></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def get_lunches(self, date: datetime) -&gt; Optional[Lunch]:
-    &#34;&#34;&#34;Get lunches.
-
-    Args:
-        date (datetime): Date from which you want to get lunches.
-
-    Returns:
-        Optional[Lunch]: Lunch object for entered date.
-    &#34;&#34;&#34;
-
-    return Lunches(self).get_lunch(date)</code></pre>
-</details>
 </dd>
 <dt id="edupage_api.Edupage.get_missing_teachers"><code class="name flex">
 <span>def <span class="ident">get_missing_teachers</span></span>(<span>self, date: datetime.date) ‑> list[<a title="edupage_api.people.EduTeacher" href="people.html#edupage_api.people.EduTeacher">EduTeacher</a>]</span>
@@ -1001,21 +612,22 @@ def from_session_id(cls, session_id: str, subdomain: str):
 <dt><code>list[EduTeacher]</code></dt>
 <dd>List of the missing teachers for <code>date</code>.</dd>
 </dl></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def get_missing_teachers(self, date: date) -&gt; list[EduTeacher]:
-    &#34;&#34;&#34;Get missing teachers for a given date.
-
-    Args:
-        date (datetime.date): The date you want to get this information for.
-
-    Returns:
-        list[EduTeacher]: List of the missing teachers for `date`.
-    &#34;&#34;&#34;
-    return Substitution(self).get_missing_teachers(date)</code></pre>
-</details>
+</dd>
+<dt id="edupage_api.Edupage.get_my_timetable"><code class="name flex">
+<span>def <span class="ident">get_my_timetable</span></span>(<span>self, date: datetime.date) ‑> Optional[<a title="edupage_api.timetables.Timetable" href="timetables.html#edupage_api.timetables.Timetable">Timetable</a>]</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Get timetable for the logged-in user on a specified date.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>date</code></strong> :&ensp;<code>datetime.date</code></dt>
+<dd>The date for which you want to get timetable</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>Optional[Timetable]</code></dt>
+<dd><code>Timetable</code> object for the specified date, if available; otherwise, <code>None</code>.</dd>
+</dl></div>
 </dd>
 <dt id="edupage_api.Edupage.get_next_ringing_time"><code class="name flex">
 <span>def <span class="ident">get_next_ringing_time</span></span>(<span>self, date_time: datetime.datetime) ‑> <a title="edupage_api.ringing.RingingTime" href="ringing.html#edupage_api.ringing.RingingTime">RingingTime</a></span>
@@ -1032,21 +644,6 @@ def from_session_id(cls, session_id: str, subdomain: str):
 <dt><code>RingingTime</code></dt>
 <dd>The type (break or lesson) and time of the next ringing.</dd>
 </dl></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def get_next_ringing_time(self, date_time: datetime) -&gt; RingingTime:
-    &#34;&#34;&#34;Get the next lesson&#39;s ringing time for given `date_time`.
-
-    Args:
-        date_time (datetime.datetime): The (date)time you want to get this information for.
-
-    Returns:
-        RingingTime: The type (break or lesson) and time of the next ringing.
-    &#34;&#34;&#34;
-    return RingingTimes(self).get_next_ringing_time(date_time)</code></pre>
-</details>
 </dd>
 <dt id="edupage_api.Edupage.get_notifications"><code class="name flex">
 <span>def <span class="ident">get_notifications</span></span>(<span>self) ‑> list[<a title="edupage_api.timeline.TimelineEvent" href="timeline.html#edupage_api.timeline.TimelineEvent">TimelineEvent</a>]</span>
@@ -1058,19 +655,6 @@ def from_session_id(cls, session_id: str, subdomain: str):
 <dt><code>list[TimelineEvent]</code></dt>
 <dd>List of <code>TimelineEvent</code>s.</dd>
 </dl></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def get_notifications(self) -&gt; list[TimelineEvent]:
-    &#34;&#34;&#34;Get list of all available notifications.
-
-    Returns:
-        list[TimelineEvent]: List of `TimelineEvent`s.
-    &#34;&#34;&#34;
-
-    return TimelineEvents(self).get_notifications()</code></pre>
-</details>
 </dd>
 <dt id="edupage_api.Edupage.get_school_year"><code class="name flex">
 <span>def <span class="ident">get_school_year</span></span>(<span>self) ‑> int</span>
@@ -1082,18 +666,6 @@ def from_session_id(cls, session_id: str, subdomain: str):
 <dt><code>int</code></dt>
 <dd>The starting year of the current school year.</dd>
 </dl></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def get_school_year(self) -&gt; int:
-    &#34;&#34;&#34;Returns the current school year.
-
-    Returns:
-        int: The starting year of the current school year.
-    &#34;&#34;&#34;
-    return ForeignTimetables(self).get_school_year()</code></pre>
-</details>
 </dd>
 <dt id="edupage_api.Edupage.get_students"><code class="name flex">
 <span>def <span class="ident">get_students</span></span>(<span>self) ‑> Optional[list[<a title="edupage_api.people.EduStudent" href="people.html#edupage_api.people.EduStudent">EduStudent</a>]]</span>
@@ -1105,19 +677,17 @@ def from_session_id(cls, session_id: str, subdomain: str):
 <dt><code>Optional[list[EduStudent]]</code></dt>
 <dd>List of <code>EduStudent</code>s.</dd>
 </dl></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def get_students(self) -&gt; Optional[list[EduStudent]]:
-    &#34;&#34;&#34;Get list of all students in your class.
-
-    Returns:
-        Optional[list[EduStudent]]: List of `EduStudent`s.
-    &#34;&#34;&#34;
-
-    return People(self).get_students()</code></pre>
-</details>
+</dd>
+<dt id="edupage_api.Edupage.get_subjects"><code class="name flex">
+<span>def <span class="ident">get_subjects</span></span>(<span>self) ‑> Optional[list[<a title="edupage_api.subjects.Subject" href="subjects.html#edupage_api.subjects.Subject">Subject</a>]]</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Get list of all subjects in your school.</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>Optional[list[Subject]]</code></dt>
+<dd>List of <code>Subject</code>s.</dd>
+</dl></div>
 </dd>
 <dt id="edupage_api.Edupage.get_teachers"><code class="name flex">
 <span>def <span class="ident">get_teachers</span></span>(<span>self) ‑> Optional[list[<a title="edupage_api.people.EduTeacher" href="people.html#edupage_api.people.EduTeacher">EduTeacher</a>]]</span>
@@ -1129,51 +699,24 @@ def from_session_id(cls, session_id: str, subdomain: str):
 <dt><code>Optional[list[EduTeacher]]</code></dt>
 <dd>List of <code>EduTeacher</code>s.</dd>
 </dl></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def get_teachers(self) -&gt; Optional[list[EduTeacher]]:
-    &#34;&#34;&#34;Get list of all teachers in your school.
-
-    Returns:
-        Optional[list[EduTeacher]]: List of `EduTeacher`s.
-    &#34;&#34;&#34;
-
-    return People(self).get_teachers()</code></pre>
-</details>
 </dd>
 <dt id="edupage_api.Edupage.get_timetable"><code class="name flex">
-<span>def <span class="ident">get_timetable</span></span>(<span>self, date: datetime.datetime) ‑> Optional[<a title="edupage_api.timetables.Timetable" href="timetables.html#edupage_api.timetables.Timetable">Timetable</a>]</span>
+<span>def <span class="ident">get_timetable</span></span>(<span>self, target: Union[<a title="edupage_api.people.EduTeacher" href="people.html#edupage_api.people.EduTeacher">EduTeacher</a>, <a title="edupage_api.people.EduStudent" href="people.html#edupage_api.people.EduStudent">EduStudent</a>, <a title="edupage_api.classes.Class" href="classes.html#edupage_api.classes.Class">Class</a>, <a title="edupage_api.classrooms.Classroom" href="classrooms.html#edupage_api.classrooms.Classroom">Classroom</a>], date: datetime.date) ‑> Optional[<a title="edupage_api.timetables.Timetable" href="timetables.html#edupage_api.timetables.Timetable">Timetable</a>]</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Get timetable.</p>
+<div class="desc"><p>Get timetable of a teacher, student, class, or classroom for a specific date.</p>
 <h2 id="args">Args</h2>
 <dl>
-<dt><strong><code>date</code></strong> :&ensp;<code>datetime</code></dt>
-<dd>Date from which you want to get timetable.</dd>
+<dt><strong><code>target</code></strong> :&ensp;<code>Union[EduTeacher, EduStudent, Class, Classroom]</code></dt>
+<dd>The target entity whose timetable you want.</dd>
+<dt><strong><code>date</code></strong> :&ensp;<code>datetime.date</code></dt>
+<dd>The date for which you want the timetable.</dd>
 </dl>
 <h2 id="returns">Returns</h2>
 <dl>
 <dt><code>Optional[Timetable]</code></dt>
-<dd>Timetable object for entered date.</dd>
+<dd><code>Timetable</code> object for the specified date, if available; otherwise, <code>None</code>.</dd>
 </dl></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def get_timetable(self, date: datetime) -&gt; Optional[Timetable]:
-    &#34;&#34;&#34;Get timetable.
-
-    Args:
-        date (datetime): Date from which you want to get timetable.
-
-    Returns:
-        Optional[Timetable]: Timetable object for entered date.
-    &#34;&#34;&#34;
-
-    return Timetables(self).get_timetable(date)</code></pre>
-</details>
 </dd>
 <dt id="edupage_api.Edupage.get_timetable_changes"><code class="name flex">
 <span>def <span class="ident">get_timetable_changes</span></span>(<span>self, date: datetime.date) ‑> list[<a title="edupage_api.substitution.TimetableChange" href="substitution.html#edupage_api.substitution.TimetableChange">TimetableChange</a>]</span>
@@ -1190,21 +733,6 @@ def from_session_id(cls, session_id: str, subdomain: str):
 <dt><code>list[TimetableChange]</code></dt>
 <dd>List of changes in the timetable.</dd>
 </dl></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def get_timetable_changes(self, date: date) -&gt; list[TimetableChange]:
-    &#34;&#34;&#34;Get the changes in the timetable for a given date.
-
-    Args:
-        date (datetime.date): The date you want to get this information for.
-
-    Returns:
-        list[TimetableChange]: List of changes in the timetable.
-    &#34;&#34;&#34;
-    return Substitution(self).get_timetable_changes(date)</code></pre>
-</details>
 </dd>
 <dt id="edupage_api.Edupage.get_user_id"><code class="name flex">
 <span>def <span class="ident">get_user_id</span></span>(<span>self) ‑> str</span>
@@ -1216,19 +744,6 @@ def from_session_id(cls, session_id: str, subdomain: str):
 <dt><code>str</code></dt>
 <dd>Your EduPage user ID.</dd>
 </dl></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def get_user_id(self) -&gt; str:
-    &#34;&#34;&#34;Get your EduPage user ID.
-
-    Returns:
-        str: Your EduPage user ID.
-    &#34;&#34;&#34;
-
-    return self.data.get(&#34;userid&#34;)</code></pre>
-</details>
 </dd>
 <dt id="edupage_api.Edupage.login"><code class="name flex">
 <span>def <span class="ident">login</span></span>(<span>self, username: str, password: str, subdomain: str) ‑> Optional[<a title="edupage_api.login.TwoFactorLogin" href="login.html#edupage_api.login.TwoFactorLogin">TwoFactorLogin</a>]</span>
@@ -1250,27 +765,6 @@ def from_session_id(cls, session_id: str, subdomain: str):
 <dd>Returns <code>None</code> if no second factor was needed to login,</dd>
 </dl>
 <p>or the <code>TwoFactorLogin</code> object that is used to complete 2fa.</p></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def login(
-    self, username: str, password: str, subdomain: str
-) -&gt; Optional[TwoFactorLogin]:
-    &#34;&#34;&#34;Login while specifying the subdomain to log into.
-
-    Args:
-        username (str): Your username.
-        password (str): Your password.
-        subdomain (str): Subdomain of your school (https://{subdomain}.edupage.org).
-
-    Returns:
-        Optional[TwoFactorLogin]: Returns `None` if no second factor was needed to login,
-        or the `TwoFactorLogin` object that is used to complete 2fa.
-    &#34;&#34;&#34;
-
-    return Login(self).login(username, password, subdomain)</code></pre>
-</details>
 </dd>
 <dt id="edupage_api.Edupage.login_auto"><code class="name flex">
 <span>def <span class="ident">login_auto</span></span>(<span>self, username: str, password: str) ‑> Optional[<a title="edupage_api.login.TwoFactorLogin" href="login.html#edupage_api.login.TwoFactorLogin">TwoFactorLogin</a>]</span>
@@ -1290,24 +784,6 @@ def from_session_id(cls, session_id: str, subdomain: str):
 <dd>Returns <code>None</code> if no second factor was needed to login,</dd>
 </dl>
 <p>or the <code>TwoFactorLogin</code> object that is used to complete 2fa.</p></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def login_auto(self, username: str, password: str) -&gt; Optional[TwoFactorLogin]:
-    &#34;&#34;&#34;Login using https://portal.edupage.org. If this doesn&#39;t work, please use `Edupage.login`.
-
-    Args:
-        username (str): Your username.
-        password (str): Your password.
-
-    Returns:
-        Optional[TwoFactorLogin]: Returns `None` if no second factor was needed to login,
-        or the `TwoFactorLogin` object that is used to complete 2fa.
-    &#34;&#34;&#34;
-
-    return Login(self).login(username, password)</code></pre>
-</details>
 </dd>
 <dt id="edupage_api.Edupage.send_message"><code class="name flex">
 <span>def <span class="ident">send_message</span></span>(<span>self, recipients: Union[list[<a title="edupage_api.people.EduAccount" href="people.html#edupage_api.people.EduAccount">EduAccount</a>], <a title="edupage_api.people.EduAccount" href="people.html#edupage_api.people.EduAccount">EduAccount</a>], body: str) ‑> int</span>
@@ -1326,25 +802,6 @@ def from_session_id(cls, session_id: str, subdomain: str):
 <dt><code>int</code></dt>
 <dd>The timeline id of the new message.</dd>
 </dl></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def send_message(
-    self, recipients: Union[list[EduAccount], EduAccount], body: str
-) -&gt; int:
-    &#34;&#34;&#34;Send message.
-
-    Args:
-        recipients (Optional[list[EduAccount]]): Recipients of your message (list of `EduAccount`s).
-        body (str): Body of your message.
-
-    Returns:
-        int: The timeline id of the new message.
-    &#34;&#34;&#34;
-
-    return Messages(self).send_message(recipients, body)</code></pre>
-</details>
 </dd>
 <dt id="edupage_api.Edupage.switch_to_child"><code class="name flex">
 <span>def <span class="ident">switch_to_child</span></span>(<span>self, child: Union[<a title="edupage_api.people.EduAccount" href="people.html#edupage_api.people.EduAccount">EduAccount</a>, int])</span>
@@ -1352,36 +809,17 @@ def from_session_id(cls, session_id: str, subdomain: str):
 <dd>
 <div class="desc"><p>Switch to an account of a child - can only be used on parent accounts</p>
 <h2 id="args">Args</h2>
-<p>child (EduAccount | int): The account or <code>person_id</code> of the child you want to switch to
-Note: When you switch to a child account, all other methods will return data as if you were logged in as <code>child</code></p></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def switch_to_child(self, child: Union[EduAccount, int]):
-    &#34;&#34;&#34;Switch to an account of a child - can only be used on parent accounts
-
-    Args:
-        child (EduAccount | int): The account or `person_id` of the child you want to switch to
-
-    Note: When you switch to a child account, all other methods will return data as if you were logged in as `child`
-    &#34;&#34;&#34;
-    Parent(self).switch_to_child(child)</code></pre>
-</details>
+<dl>
+<dt><strong><code>child</code></strong> :&ensp;<code>EduAccount | int</code></dt>
+<dd>The account or <code>person_id</code> of the child you want to switch to</dd>
+</dl>
+<p>Note: When you switch to a child account, all other methods will return data as if you were logged in as <code>child</code></p></div>
 </dd>
 <dt id="edupage_api.Edupage.switch_to_parent"><code class="name flex">
 <span>def <span class="ident">switch_to_parent</span></span>(<span>self)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Switches back to your parent account - can only be used on parent accounts</p></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def switch_to_parent(self):
-    &#34;&#34;&#34;Switches back to your parent account - can only be used on parent accounts&#34;&#34;&#34;
-    Parent(self).switch_to_parent()</code></pre>
-</details>
 </dd>
 </dl>
 </dd>
@@ -1389,19 +827,19 @@ Note: When you switch to a child account, all other methods will return data as 
 </section>
 </article>
 <nav id="sidebar">
-<h1>Index</h1>
 <div class="toc">
 <ul></ul>
 </div>
 <ul id="index">
 <li><h3><a href="#header-submodules">Sub-modules</a></h3>
 <ul>
+<li><code><a title="edupage_api.classes" href="classes.html">edupage_api.classes</a></code></li>
+<li><code><a title="edupage_api.classrooms" href="classrooms.html">edupage_api.classrooms</a></code></li>
 <li><code><a title="edupage_api.cloud" href="cloud.html">edupage_api.cloud</a></code></li>
 <li><code><a title="edupage_api.compression" href="compression.html">edupage_api.compression</a></code></li>
 <li><code><a title="edupage_api.custom_request" href="custom_request.html">edupage_api.custom_request</a></code></li>
 <li><code><a title="edupage_api.dbi" href="dbi.html">edupage_api.dbi</a></code></li>
 <li><code><a title="edupage_api.exceptions" href="exceptions.html">edupage_api.exceptions</a></code></li>
-<li><code><a title="edupage_api.foreign_timetables" href="foreign_timetables.html">edupage_api.foreign_timetables</a></code></li>
 <li><code><a title="edupage_api.grades" href="grades.html">edupage_api.grades</a></code></li>
 <li><code><a title="edupage_api.login" href="login.html">edupage_api.login</a></code></li>
 <li><code><a title="edupage_api.lunches" href="lunches.html">edupage_api.lunches</a></code></li>
@@ -1410,6 +848,7 @@ Note: When you switch to a child account, all other methods will return data as 
 <li><code><a title="edupage_api.parent" href="parent.html">edupage_api.parent</a></code></li>
 <li><code><a title="edupage_api.people" href="people.html">edupage_api.people</a></code></li>
 <li><code><a title="edupage_api.ringing" href="ringing.html">edupage_api.ringing</a></code></li>
+<li><code><a title="edupage_api.subjects" href="subjects.html">edupage_api.subjects</a></code></li>
 <li><code><a title="edupage_api.substitution" href="substitution.html">edupage_api.substitution</a></code></li>
 <li><code><a title="edupage_api.timeline" href="timeline.html">edupage_api.timeline</a></code></li>
 <li><code><a title="edupage_api.timetables" href="timetables.html">edupage_api.timetables</a></code></li>
@@ -1426,15 +865,18 @@ Note: When you switch to a child account, all other methods will return data as 
 <li><code><a title="edupage_api.Edupage.data" href="#edupage_api.Edupage.data">data</a></code></li>
 <li><code><a title="edupage_api.Edupage.from_session_id" href="#edupage_api.Edupage.from_session_id">from_session_id</a></code></li>
 <li><code><a title="edupage_api.Edupage.get_all_students" href="#edupage_api.Edupage.get_all_students">get_all_students</a></code></li>
-<li><code><a title="edupage_api.Edupage.get_foreign_timetable" href="#edupage_api.Edupage.get_foreign_timetable">get_foreign_timetable</a></code></li>
+<li><code><a title="edupage_api.Edupage.get_classes" href="#edupage_api.Edupage.get_classes">get_classes</a></code></li>
+<li><code><a title="edupage_api.Edupage.get_classrooms" href="#edupage_api.Edupage.get_classrooms">get_classrooms</a></code></li>
 <li><code><a title="edupage_api.Edupage.get_grades" href="#edupage_api.Edupage.get_grades">get_grades</a></code></li>
 <li><code><a title="edupage_api.Edupage.get_grades_for_term" href="#edupage_api.Edupage.get_grades_for_term">get_grades_for_term</a></code></li>
 <li><code><a title="edupage_api.Edupage.get_lunches" href="#edupage_api.Edupage.get_lunches">get_lunches</a></code></li>
 <li><code><a title="edupage_api.Edupage.get_missing_teachers" href="#edupage_api.Edupage.get_missing_teachers">get_missing_teachers</a></code></li>
+<li><code><a title="edupage_api.Edupage.get_my_timetable" href="#edupage_api.Edupage.get_my_timetable">get_my_timetable</a></code></li>
 <li><code><a title="edupage_api.Edupage.get_next_ringing_time" href="#edupage_api.Edupage.get_next_ringing_time">get_next_ringing_time</a></code></li>
 <li><code><a title="edupage_api.Edupage.get_notifications" href="#edupage_api.Edupage.get_notifications">get_notifications</a></code></li>
 <li><code><a title="edupage_api.Edupage.get_school_year" href="#edupage_api.Edupage.get_school_year">get_school_year</a></code></li>
 <li><code><a title="edupage_api.Edupage.get_students" href="#edupage_api.Edupage.get_students">get_students</a></code></li>
+<li><code><a title="edupage_api.Edupage.get_subjects" href="#edupage_api.Edupage.get_subjects">get_subjects</a></code></li>
 <li><code><a title="edupage_api.Edupage.get_teachers" href="#edupage_api.Edupage.get_teachers">get_teachers</a></code></li>
 <li><code><a title="edupage_api.Edupage.get_timetable" href="#edupage_api.Edupage.get_timetable">get_timetable</a></code></li>
 <li><code><a title="edupage_api.Edupage.get_timetable_changes" href="#edupage_api.Edupage.get_timetable_changes">get_timetable_changes</a></code></li>
@@ -1457,7 +899,7 @@ Note: When you switch to a child account, all other methods will return data as 
 </nav>
 </main>
 <footer id="footer">
-<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.10.0</a>.</p>
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.11.1</a>.</p>
 </footer>
 </body>
 </html>

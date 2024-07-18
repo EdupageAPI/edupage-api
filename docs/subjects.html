@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
 <meta name="generator" content="pdoc3 0.11.1">
-<title>edupage_api.parent API documentation</title>
+<title>edupage_api.subjects API documentation</title>
 <meta name="description" content="">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/sanitize.min.css" integrity="sha512-y1dtMcuvtTMJc1yPgEqF0ZjQbhnc/bFhyvIyVNb9Zk5mIGtqVaAB1Ttl28su8AvFMOY0EwRbAe+HCLqj6W7/KA==" crossorigin>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/typography.min.css" integrity="sha512-Y1DYSb995BAfxobCkKepB1BqJJTPrOp3zPL74AWFugHHmmdcvO+C48WLrUOlhGMc0QG7AE3f7gmvvcrmX2fDoA==" crossorigin>
@@ -22,7 +22,7 @@ hljs.highlightAll();
 <main>
 <article id="content">
 <header>
-<h1 class="title">Module <code>edupage_api.parent</code></h1>
+<h1 class="title">Module <code>edupage_api.subjects</code></h1>
 </header>
 <section id="section-intro">
 </section>
@@ -35,8 +35,40 @@ hljs.highlightAll();
 <section>
 <h2 class="section-title" id="header-classes">Classes</h2>
 <dl>
-<dt id="edupage_api.parent.Parent"><code class="flex name class">
-<span>class <span class="ident">Parent</span></span>
+<dt id="edupage_api.subjects.Subject"><code class="flex name class">
+<span>class <span class="ident">Subject</span></span>
+<span>(</span><span>subject_id: int, name: str, short: str)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Subject(subject_id: int, name: str, short: str)</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@dataclass
+class Subject:
+    subject_id: int
+    name: str
+    short: str</code></pre>
+</details>
+<h3>Class variables</h3>
+<dl>
+<dt id="edupage_api.subjects.Subject.name"><code class="name">var <span class="ident">name</span> : str</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.subjects.Subject.short"><code class="name">var <span class="ident">short</span> : str</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.subjects.Subject.subject_id"><code class="name">var <span class="ident">subject_id</span> : int</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+</dd>
+<dt id="edupage_api.subjects.Subjects"><code class="flex name class">
+<span>class <span class="ident">Subjects</span></span>
 <span>(</span><span>edupage: <a title="edupage_api.module.EdupageModule" href="module.html#edupage_api.module.EdupageModule">EdupageModule</a>)</span>
 </code></dt>
 <dd>
@@ -45,33 +77,44 @@ hljs.highlightAll();
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">class Parent(Module):
+<pre><code class="python">class Subjects(Module):
     @ModuleHelper.logged_in
-    @ModuleHelper.is_parent
-    def switch_to_child(self, child: Union[EduAccount, int]):
-        params = {&#34;studentid&#34;: child.person_id if type(child) == EduAccount else child}
+    def get_subjects(self) -&gt; Optional[list]:
+        subject_list = DbiHelper(self.edupage).fetch_subject_list()
 
-        url = f&#34;https://{self.edupage.subdomain}.edupage.org/login/switchchild&#34;
-        response = self.edupage.session.get(url, params=params)
+        if subject_list is None:
+            return None
 
-        if response.text != &#34;OK&#34;:
-            raise InvalidChildException(
-                f&#34;{response.text}: Invalid child selected! (not your child?)&#34;
+        subjects = []
+
+        for subject_id_str in subject_list:
+            if not subject_id_str:
+                continue
+
+            subjects.append(
+                Subject(
+                    int(subject_id_str),
+                    subject_list[subject_id_str][&#34;name&#34;],
+                    subject_list[subject_id_str][&#34;short&#34;],
+                )
             )
 
-    @ModuleHelper.logged_in
-    @ModuleHelper.is_parent
-    def switch_to_parent(self):
-        # variable name is from edupage&#39;s code :/
-        rid = f&#34;edupage;{self.edupage.subdomain};{self.edupage.username}&#34;
+        return subjects
 
-        params = {&#34;rid&#34;: rid}
+    def get_subject(self, subject_id: Union[int, str]) -&gt; Optional[Subject]:
+        try:
+            subject_id = int(subject_id)
+        except (ValueError, TypeError):
+            return None
 
-        url = f&#34;https://{self.edupage.subdomain}.edupage.org/login/edupageChange&#34;
-        response = self.edupage.session.get(url, params=params)
-
-        if &#34;EdupageLoginFailed&#34; in response.url:
-            raise UnknownServerError()</code></pre>
+        return next(
+            (
+                subject
+                for subject in self.get_subjects()
+                if subject.subject_id == subject_id
+            ),
+            None,
+        )</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
@@ -79,14 +122,14 @@ hljs.highlightAll();
 </ul>
 <h3>Methods</h3>
 <dl>
-<dt id="edupage_api.parent.Parent.switch_to_child"><code class="name flex">
-<span>def <span class="ident">switch_to_child</span></span>(<span>self, child: Union[<a title="edupage_api.people.EduAccount" href="people.html#edupage_api.people.EduAccount">EduAccount</a>, int])</span>
+<dt id="edupage_api.subjects.Subjects.get_subject"><code class="name flex">
+<span>def <span class="ident">get_subject</span></span>(<span>self, subject_id: Union[int, str]) ‑> Optional[<a title="edupage_api.subjects.Subject" href="#edupage_api.subjects.Subject">Subject</a>]</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
-<dt id="edupage_api.parent.Parent.switch_to_parent"><code class="name flex">
-<span>def <span class="ident">switch_to_parent</span></span>(<span>self)</span>
+<dt id="edupage_api.subjects.Subjects.get_subjects"><code class="name flex">
+<span>def <span class="ident">get_subjects</span></span>(<span>self) ‑> Optional[list]</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
@@ -109,10 +152,18 @@ hljs.highlightAll();
 <li><h3><a href="#header-classes">Classes</a></h3>
 <ul>
 <li>
-<h4><code><a title="edupage_api.parent.Parent" href="#edupage_api.parent.Parent">Parent</a></code></h4>
+<h4><code><a title="edupage_api.subjects.Subject" href="#edupage_api.subjects.Subject">Subject</a></code></h4>
 <ul class="">
-<li><code><a title="edupage_api.parent.Parent.switch_to_child" href="#edupage_api.parent.Parent.switch_to_child">switch_to_child</a></code></li>
-<li><code><a title="edupage_api.parent.Parent.switch_to_parent" href="#edupage_api.parent.Parent.switch_to_parent">switch_to_parent</a></code></li>
+<li><code><a title="edupage_api.subjects.Subject.name" href="#edupage_api.subjects.Subject.name">name</a></code></li>
+<li><code><a title="edupage_api.subjects.Subject.short" href="#edupage_api.subjects.Subject.short">short</a></code></li>
+<li><code><a title="edupage_api.subjects.Subject.subject_id" href="#edupage_api.subjects.Subject.subject_id">subject_id</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="edupage_api.subjects.Subjects" href="#edupage_api.subjects.Subjects">Subjects</a></code></h4>
+<ul class="">
+<li><code><a title="edupage_api.subjects.Subjects.get_subject" href="#edupage_api.subjects.Subjects.get_subject">get_subject</a></code></li>
+<li><code><a title="edupage_api.subjects.Subjects.get_subjects" href="#edupage_api.subjects.Subjects.get_subjects">get_subjects</a></code></li>
 </ul>
 </li>
 </ul>

@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import Optional
+from typing import Optional, Union
 
 from edupage_api.dbi import DbiHelper
 from edupage_api.module import Module, ModuleHelper
@@ -36,7 +36,7 @@ class Subjects(Module):
 
         return subjects
 
-    def get_subject(self, subject_id: int | str) -> Optional[Subject]:
+    def get_subject(self, subject_id: Union[int, str]) -> Optional[Subject]:
         try:
             subject_id = int(subject_id)
         except (ValueError, TypeError):

@@ -5,7 +5,7 @@ import json
 from dataclasses import dataclass
 from datetime import datetime
 from enum import Enum
-from typing import Optional
+from typing import Optional, Union
 
 from edupage_api.dbi import DbiHelper
 from edupage_api.module import EdupageModule, Module, ModuleHelper
@@ -215,7 +215,7 @@ class People(Module):
         return result
 
     @ModuleHelper.logged_in
-    def get_teacher(self, teacher_id: int | str) -> Optional[EduTeacher]:
+    def get_teacher(self, teacher_id: Union[int, str]) -> Optional[EduTeacher]:
         try:
             teacher_id = int(teacher_id)
         except (ValueError, TypeError):
@@ -231,7 +231,7 @@ class People(Module):
         )
 
     @ModuleHelper.logged_in
-    def get_student(self, student_id: int | str) -> Optional[EduStudent]:
+    def get_student(self, student_id: Union[int, str]) -> Optional[EduStudent]:
         try:
             student_id = int(student_id)
         except (ValueError, TypeError):

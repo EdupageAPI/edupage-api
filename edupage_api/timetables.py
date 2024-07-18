@@ -193,7 +193,10 @@ class Timetables(Module):
     def __parse_timetable(self, plan):
         lessons = []
         for lesson in plan:
-            if "header" in lesson and not lesson.get("header"):
+            if "header" in lesson and (
+                not lesson.get("header")
+                or lesson.get("header")[0].get("cmd") == "addlesson_t"
+            ):
                 continue
 
             period_str = lesson.get("uniperiod")

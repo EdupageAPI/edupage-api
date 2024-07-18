@@ -10,7 +10,6 @@ from edupage_api.classes import Class, Classes
 from edupage_api.classrooms import Classroom, Classrooms
 from edupage_api.cloud import Cloud, EduCloudFile
 from edupage_api.custom_request import CustomRequest
-from edupage_api.foreign_timetables import ForeignTimetables, LessonSkeleton
 from edupage_api.grades import EduGrade, Grades, Term
 from edupage_api.login import Login, TwoFactorLogin
 from edupage_api.lunches import Lunch, Lunches
@@ -152,7 +151,7 @@ class Edupage(EdupageModule):
 
         return Messages(self).send_message(recipients, body)
 
-    def get_timetable(self, date: date) -> Optional[Timetable]:
+    def get_my_timetable(self, date: date) -> Optional[Timetable]:
         """Get timetable for the logged-in user on a specified date.
 
         Args:
@@ -162,7 +161,7 @@ class Edupage(EdupageModule):
             Optional[Timetable]: `Timetable` object for the specified date, if available; otherwise, `None`.
         """
 
-        return Timetables(self).get_timetable(date)
+        return Timetables(self).get_my_timetable(date)
 
     def get_lunches(self, date: date) -> Optional[Lunch]:
         """Get lunches.
@@ -269,13 +268,13 @@ class Edupage(EdupageModule):
         Returns:
             int: The starting year of the current school year.
         """
-        return ForeignTimetables(self).get_school_year()
+        return Timetables(self).get_school_year()
 
-    def get_foreign_timetable(
+    def get_timetable(
         self,
         target: Union[EduTeacher, EduStudent, Class, Classroom],
         date: date,
-    ) -> Optional[list[LessonSkeleton]]:
+    ) -> Optional[Timetable]:
         """Get timetable of a teacher, student, class, or classroom for a specific date.
 
         Args:
@@ -283,10 +282,10 @@ class Edupage(EdupageModule):
             date (datetime.date): The date for which you want the timetable.
 
         Returns:
-            Optional[list[LessonSkeleton]]: A list of `LessonSkeleton` objects representing the lessons for the target entity during the specified date. Returns `None` if no timetable is found.
+            Optional[Timetable]: `Timetable` object for the specified date, if available; otherwise, `None`.
         """
 
-        return ForeignTimetables(self).get_foreign_timetable(target, date)
+        return Timetables(self).get_timetable(target, date)
 
     def get_next_ringing_time(self, date_time: datetime) -> RingingTime:
         """Get the next lesson's ringing time for given `date_time`.

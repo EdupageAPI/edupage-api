@@ -19,6 +19,7 @@ You can log in easily, it works with any school:
 
 ```python
 from edupage_api import Edupage
+from edupage_api.exceptions import BadCredentialsException, CaptchaException
 
 edupage = Edupage()
 
@@ -26,8 +27,8 @@ try:
     edupage.login("Username", "Password", "Your school's subdomain")
 except BadCredentialsException:
     print("Wrong username or password!")
-except LoginDataParsingException:
-    print("Try again or open an issue!")
+except CaptchaException:
+    print("Captcha required!")
 ```
 
 # Documentation

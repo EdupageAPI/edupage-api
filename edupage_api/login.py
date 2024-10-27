@@ -121,16 +121,17 @@ class TwoFactorLogin:
 
 class Login(Module):
     def __parse_login_data(self, data):
-        # json_string = (
-        #    data.split("userhome(", 1)[1]
-        #    .rsplit(");", 2)[0]
-        #    .replace("\t", "")
-        #    .replace("\n", "")
-        #    .replace("\r", "")
-        # )
-        #
-        # self.edupage.data = json.loads(json_string)
-        # self.edupage.is_logged_in = True
+        if "userhome" in data:
+            json_string = (
+                data.split("userhome(", 1)[1]
+                .rsplit(");", 2)[0]
+                .replace("\t", "")
+                .replace("\n", "")
+                .replace("\r", "")
+            )
+
+            self.edupage.data = json.loads(json_string)
+            self.edupage.is_logged_in = True
 
         self.edupage.gsec_hash = data.split('ASC.gsechash="')[1].split('"')[0]
 

@@ -313,7 +313,7 @@ class Edupage(EdupageModule):
         Parent(self).switch_to_parent()
 
     @classmethod
-    def from_session_id(cls, session_id: str, subdomain: str):
+    def from_session_id(cls, session_id: str, subdomain: str, username: str):
         """Create an `Edupage` instance with a session id and subdomain.
 
         Args:
@@ -325,6 +325,6 @@ class Edupage(EdupageModule):
         """
         instance = cls()
 
-        Login(instance).reload_data(subdomain, session_id)
+        Login(instance).reload_data(subdomain, session_id, username)
 
         return instance

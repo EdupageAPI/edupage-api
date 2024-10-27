@@ -13,20 +13,14 @@ from edupage_api.exceptions import (
 from edupage_api.module import EdupageModule, Module
 
 
+@dataclass
 class TwoFactorLogin:
-    def __init__(
-        self,
-        authentication_endpoint: str,
-        authentication_token: str,
-        csrf_token: str,
-        edupage: EdupageModule,
-        code: Optional[str] = None,
-    ):
-        self.__authentication_endpoint = authentication_endpoint
-        self.__authentication_token = authentication_token
-        self.__csrf_token = csrf_token
-        self.__edupage = edupage
-        self.__code = code
+    __authentication_endpoint: str
+    __authentication_token: str
+    __csrf_token: str
+    __edupage: EdupageModule
+
+    __code: Optional[str] = None
 
     def is_confirmed(self):
         """Check if the second factor process was finished by confirmation with a device.

@@ -112,7 +112,6 @@ class Lunches(Module):
 
         lunch_data = json.loads(response.split("edupageData: ")[1].split(",\r\n")[0])
         lunches_data = lunch_data.get(self.edupage.subdomain)
-
         try:
             boarder_id = lunches_data.get("novyListok").get("addInfo").get("stravnikid")
         except AttributeError as e:
@@ -185,7 +184,6 @@ class Lunches(Module):
                 else:
                     rating = None
             menus.append(Menu(name, allergens, weight, number, rating))
-
         return Lunch(
             served_from,
             served_to,
@@ -197,3 +195,27 @@ class Lunches(Module):
             date,
             boarder_id,
         )
+
+    @ModuleHelper.logged_in
+    def get_ordered_lunch(self, date: date):
+        date_strftime = date.strftime("%Y%m%d")
+        request_url = (
+            f"https://{self.edupage.subdomain}.edupage.org/menu/?date={date_strftime}"
+        )
+        response = self.edupage.session.get(request_url).content.decode()
+
+        lunch_data = json.loads(response.split("edupageData: ")[1].split(",\r\n")[0])
+        lunches_data = lunch_data.get(self.edupage.subdomain)
+        lunch = lunches_data.get("novyListok").get(date.strftime("%Y-%m-%d"))
+
+        if lunch is None:
+            return None
+
+        lunch = lunch.get("2")
+        lunch_ordered = lunch.get("evidencia").get("stav")
+
+        if lunch_ordered == "X": lunch_ordered = 0
+        
+        # clever way to get an index of the current ordered lunch
+        # instead of letters due to the ordering function taking indexes
+        return ord(lunch_ordered.lower())-96

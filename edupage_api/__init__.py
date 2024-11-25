@@ -174,6 +174,18 @@ class Edupage(EdupageModule):
         """
 
         return Lunches(self).get_lunch(date)
+    
+    def get_ordered_lunch(self, date: date) -> Optional[int]:
+
+        """Get currently ordered lunch.
+
+        Args:
+            date (datetime.date): Date from which you want to get ordered lunch.
+
+        Returns:
+            int: Index of the ordered lunch, if lunch is ordered; otherwise, `0`.
+        """
+        return Lunches(self).get_ordered_lunch(date)
 
     def get_notifications(self) -> list[TimelineEvent]:
         """Get list of all available notifications.

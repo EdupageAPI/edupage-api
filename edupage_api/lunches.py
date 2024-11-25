@@ -184,6 +184,7 @@ class Lunches(Module):
                 else:
                     rating = None
             menus.append(Menu(name, allergens, weight, number, rating))
+            
         return Lunch(
             served_from,
             served_to,
@@ -208,13 +209,12 @@ class Lunches(Module):
         lunches_data = lunch_data.get(self.edupage.subdomain)
         lunch = lunches_data.get("novyListok").get(date.strftime("%Y-%m-%d"))
 
-        if lunch is None:
-            return None
+        if lunch is None: return 0
 
         lunch = lunch.get("2")
         lunch_ordered = lunch.get("evidencia").get("stav")
 
-        if lunch_ordered == "X": lunch_ordered = 0
+        if lunch_ordered == "X": return 0
         
         # clever way to get an index of the current ordered lunch
         # instead of letters due to the ordering function taking indexes

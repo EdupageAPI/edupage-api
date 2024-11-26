@@ -119,8 +119,7 @@ class Lunches(Module):
 
         lunch = lunches_data.get("novyListok").get(date.strftime("%Y-%m-%d"))
 
-        if lunch is None:
-            return None
+        if lunch is None: return 0
 
         lunch = lunch.get("2")
 
@@ -184,7 +183,6 @@ class Lunches(Module):
                 else:
                     rating = None
             menus.append(Menu(name, allergens, weight, number, rating))
-            
         return Lunch(
             served_from,
             served_to,
@@ -212,8 +210,13 @@ class Lunches(Module):
         if lunch is None: return 0
 
         lunch = lunch.get("2")
-        lunch_ordered = lunch.get("evidencia").get("stav")
+        lunch_evidencia = lunch.get("evidencia")
 
+        if lunch_evidencia == None: return 0
+        
+        lunch_ordered = lunch_evidencia.get("stav")
+
+        if lunch_ordered == "V": lunch_ordered = lunch_evidencia.get("obj")
         if lunch_ordered == "X": return 0
         
         # clever way to get an index of the current ordered lunch

@@ -65,6 +65,7 @@ class Lunch:
     title: str
     menus: List[Menu]
     date: datetime
+    ordered_lunch: Optional[str]
     __boarder_id: str
 
     def __iter__(self):
@@ -118,13 +119,19 @@ class Lunches(Module):
             raise InvalidLunchData(f"Missing boarder id: {e}")
 
         lunch = lunches_data.get("novyListok").get(date.strftime("%Y-%m-%d"))
-
-        if lunch is None: return 0
-
         lunch = lunch.get("2")
 
         if lunch.get("isCooking") == False:
             return "Not cooking"
+        
+        ordered_lunch = None
+        lunch_record = lunch.get("evidencia")
+        
+        if lunch_record is not None:
+            ordered_lunch = lunch_record.get("stav")
+
+            if ordered_lunch == "V":
+                ordered_lunch = lunch_record.get("obj")
 
         served_from_str = lunch.get("vydaj_od")
         served_to_str = lunch.get("vydaj_do")
@@ -192,33 +199,6 @@ class Lunches(Module):
             title,
             menus,
             date,
+            ordered_lunch,
             boarder_id,
         )
-
-    @ModuleHelper.logged_in
-    def get_ordered_lunch(self, date: date):
-        date_strftime = date.strftime("%Y%m%d")
-        request_url = (
-            f"https://{self.edupage.subdomain}.edupage.org/menu/?date={date_strftime}"
-        )
-        response = self.edupage.session.get(request_url).content.decode()
-
-        lunch_data = json.loads(response.split("edupageData: ")[1].split(",\r\n")[0])
-        lunches_data = lunch_data.get(self.edupage.subdomain)
-        lunch = lunches_data.get("novyListok").get(date.strftime("%Y-%m-%d"))
-
-        if lunch is None: return 0
-
-        lunch = lunch.get("2")
-        lunch_evidencia = lunch.get("evidencia")
-
-        if lunch_evidencia == None: return 0
-        
-        lunch_ordered = lunch_evidencia.get("stav")
-
-        if lunch_ordered == "V": lunch_ordered = lunch_evidencia.get("obj")
-        if lunch_ordered == "X": return 0
-        
-        # clever way to get an index of the current ordered lunch
-        # instead of letters due to the ordering function taking indexes
-        return ord(lunch_ordered.lower())-96

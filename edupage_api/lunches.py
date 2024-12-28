@@ -87,7 +87,9 @@ class Lunch:
             "jedlaStravnika": json.dumps(boarder_menu),
         }
 
-        response = edupage.session.post(request_url, data=data).content.decode()
+        response = edupage.session.post(
+            request_url, data=data
+        ).content.decode()
 
         if json.loads(response).get("error") != "":
             raise FailedToChangeLunchError()
@@ -97,24 +99,28 @@ class Lunch:
         letter = letters[number - 1]
 
         self.__make_choice(edupage, letter)
+        self.ordered_lunch = letter
 
     def sign_off(self, edupage: EdupageModule):
         self.__make_choice(edupage, "AX")
+        self.ordered_lunch = None
 
 
 class Lunches(Module):
     @ModuleHelper.logged_in
     def get_lunch(self, date: date):
         date_strftime = date.strftime("%Y%m%d")
-        request_url = (
-            f"https://{self.edupage.subdomain}.edupage.org/menu/?date={date_strftime}"
-        )
+        request_url = f"https://{self.edupage.subdomain}.edupage.org/menu/?date={date_strftime}"
         response = self.edupage.session.get(request_url).content.decode()
 
-        lunch_data = json.loads(response.split("edupageData: ")[1].split(",\r\n")[0])
+        lunch_data = json.loads(
+            response.split("edupageData: ")[1].split(",\r\n")[0]
+        )
         lunches_data = lunch_data.get(self.edupage.subdomain)
         try:
-            boarder_id = lunches_data.get("novyListok").get("addInfo").get("stravnikid")
+            boarder_id = (
+                lunches_data.get("novyListok").get("addInfo").get("stravnikid")
+            )
         except AttributeError as e:
             raise InvalidLunchData(f"Missing boarder id: {e}")
 
@@ -123,10 +129,10 @@ class Lunches(Module):
 
         if lunch.get("isCooking") == False:
             return "Not cooking"
-        
+
         ordered_lunch = None
         lunch_record = lunch.get("evidencia")
-        
+
         if lunch_record is not None:
             ordered_lunch = lunch_record.get("stav")
 

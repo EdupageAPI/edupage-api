@@ -19,7 +19,7 @@ for meal_name, meal in [("snack", meals.snack), ("lunch", meals.lunch), ("aftern
         continue
     
     chosen_meal_index = (
-        "ABCDEFGH".index(meal.ordered_lunch) if meal.ordered_lunch is not None else None
+        "ABCDEFGH".index(meal.ordered_meal) if meal.ordered_meal is not None else None
     )
     
     for menu_index_str in meal.chooseable_menus:

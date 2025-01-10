@@ -4,9 +4,9 @@ from datetime import date, datetime
 from typing import List, Optional
 
 from edupage_api.exceptions import (
-    FailedToChangeLunchError,
+    FailedToChangeMealError,
     FailedToRateException,
-    InvalidLunchData,
+    InvalidMealsData,
     NotLoggedInException,
 )
 from edupage_api.module import EdupageModule, Module, ModuleHelper
@@ -65,7 +65,7 @@ class Meal:
     title: str
     menus: List[Menu]
     date: datetime
-    ordered_lunch: Optional[str]
+    ordered_meal: Optional[str]
     __boarder_id: str
     __meal_index: str
 
@@ -93,18 +93,18 @@ class Meal:
         ).content.decode()
 
         if json.loads(response).get("error") != "":
-            raise FailedToChangeLunchError()
+            raise FailedToChangeMealError()
 
     def choose(self, edupage: EdupageModule, number: int):
         letters = "ABCDEFGH"
         letter = letters[number - 1]
 
         self.__make_choice(edupage, letter)
-        self.ordered_lunch = letter
+        self.ordered_meal = letter
 
     def sign_off(self, edupage: EdupageModule):
         self.__make_choice(edupage, "AX")
-        self.ordered_lunch = None
+        self.ordered_meal = None
 
 @dataclass
 class Meals:
@@ -218,7 +218,7 @@ class Lunches(Module):
                 lunches_data.get("novyListok").get("addInfo").get("stravnikid")
             )
         except AttributeError as e:
-            raise InvalidLunchData(f"Missing boarder id: {e}")
+            raise InvalidMealsData(f"Missing boarder id: {e}")
 
         meals = lunches_data.get("novyListok").get(date.strftime("%Y-%m-%d"))
         if meals is None:

@@ -5,14 +5,21 @@ name: Upload Python Package
 
 permissions:
   contents: write
+  id-token: write
 
 on:
-  workflow_dispatch:
+  push:
+    tags:        
+      - '**'     
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
+    environment:
+      name: pypi
+      url: https://pypi.org/p/edupage-api
+      
     steps:
       - uses: actions/checkout@v2
 
@@ -42,10 +49,8 @@ jobs:
           pathspec_error_handling: ignore
           push: origin master
 
-      - name: Build and publish
-        env:
-          TWINE_USERNAME: ${{ secrets.PYPI_USERNAME }}
-          TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
-        run: |
-          python -m build
-          twine upload dist/*
+      - name: Build
+        run: python -m build
+      - name: Publish to pypi
+        uses: pypa/gh-action-pypi-publish@release/v1
+          

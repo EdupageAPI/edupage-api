@@ -2,6 +2,7 @@ import json
 from dataclasses import dataclass
 from datetime import date, datetime
 from typing import List, Optional
+from enum import Enum
 
 from edupage_api.exceptions import (
     FailedToChangeMealError,
@@ -54,6 +55,10 @@ class Menu:
     number: str
     rating: Optional[Rating]
 
+class MealType(Enum):
+    SNACK = 1
+    LUNCH = 2
+    AFTERNOON_SNACK = 3
 
 @dataclass
 class Meal:
@@ -66,6 +71,7 @@ class Meal:
     menus: List[Menu]
     date: datetime
     ordered_meal: Optional[str]
+    meal_type: MealType
     __boarder_id: str
     __meal_index: str
 
@@ -199,6 +205,7 @@ class Lunches(Module):
             menus,
             date,
             ordered_meal,
+            MealType(int(meal_index)),
             boarder_id,
             meal_index
         )

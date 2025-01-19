@@ -2,11 +2,12 @@ import json
 from dataclasses import dataclass
 from datetime import date, datetime
 from typing import List, Optional
+from enum import Enum
 
 from edupage_api.exceptions import (
-    FailedToChangeLunchError,
+    FailedToChangeMealError,
     FailedToRateException,
-    InvalidLunchData,
+    InvalidMealsData,
     NotLoggedInException,
 )
 from edupage_api.module import EdupageModule, Module, ModuleHelper
@@ -54,9 +55,13 @@ class Menu:
     number: str
     rating: Optional[Rating]
 
+class MealType(Enum):
+    SNACK = 1
+    LUNCH = 2
+    AFTERNOON_SNACK = 3
 
 @dataclass
-class Lunch:
+class Meal:
     served_from: Optional[datetime]
     served_to: Optional[datetime]
     amount_of_foods: int
@@ -65,8 +70,10 @@ class Lunch:
     title: str
     menus: List[Menu]
     date: datetime
-    ordered_lunch: Optional[str]
+    ordered_meal: Optional[str]
+    meal_type: MealType
     __boarder_id: str
+    __meal_index: str
 
     def __iter__(self):
         return iter(self.menus)
@@ -77,7 +84,7 @@ class Lunch:
         boarder_menu = {
             "stravnikid": self.__boarder_id,
             "mysqlDate": self.date.strftime("%Y-%m-%d"),
-            "jids": {"2": choice_str},
+            "jids": {self.__meal_index: choice_str},
             "view": "pc_listok",
             "pravo": "Student",
         }
@@ -92,55 +99,46 @@ class Lunch:
         ).content.decode()
 
         if json.loads(response).get("error") != "":
-            raise FailedToChangeLunchError()
+            raise FailedToChangeMealError()
 
     def choose(self, edupage: EdupageModule, number: int):
         letters = "ABCDEFGH"
         letter = letters[number - 1]
 
         self.__make_choice(edupage, letter)
-        self.ordered_lunch = letter
+        self.ordered_meal = letter
 
     def sign_off(self, edupage: EdupageModule):
         self.__make_choice(edupage, "AX")
-        self.ordered_lunch = None
+        self.ordered_meal = None
+
+@dataclass
+class Meals:
+    snack: Optional[Meal]
+    lunch: Optional[Meal]
+    afternoon_snack: Optional[Meal]
+    
 
 
 class Lunches(Module):
-    @ModuleHelper.logged_in
-    def get_lunch(self, date: date):
-        date_strftime = date.strftime("%Y%m%d")
-        request_url = f"https://{self.edupage.subdomain}.edupage.org/menu/?date={date_strftime}"
-        response = self.edupage.session.get(request_url).content.decode()
+    def parse_meal(self, meal_index: str, meal: dict, boarder_id: str, date: date) -> Optional[Meal]:
+        if meal is None:
+            return None
+        
+        if meal.get("isCooking") == False:
+            return None
 
-        lunch_data = json.loads(
-            response.split("edupageData: ")[1].split(",\r\n")[0]
-        )
-        lunches_data = lunch_data.get(self.edupage.subdomain)
-        try:
-            boarder_id = (
-                lunches_data.get("novyListok").get("addInfo").get("stravnikid")
-            )
-        except AttributeError as e:
-            raise InvalidLunchData(f"Missing boarder id: {e}")
+        ordered_meal = None
+        meal_record = meal.get("evidencia")
 
-        lunch = lunches_data.get("novyListok").get(date.strftime("%Y-%m-%d"))
-        lunch = lunch.get("2")
+        if meal_record is not None:
+            ordered_meal = meal_record.get("stav")
 
-        if lunch.get("isCooking") == False:
-            return "Not cooking"
+            if ordered_meal == "V":
+                ordered_meal = meal_record.get("obj")
 
-        ordered_lunch = None
-        lunch_record = lunch.get("evidencia")
-
-        if lunch_record is not None:
-            ordered_lunch = lunch_record.get("stav")
-
-            if ordered_lunch == "V":
-                ordered_lunch = lunch_record.get("obj")
-
-        served_from_str = lunch.get("vydaj_od")
-        served_to_str = lunch.get("vydaj_do")
+        served_from_str = meal.get("vydaj_od")
+        served_to_str = meal.get("vydaj_do")
 
         if served_from_str:
             served_from = datetime.strptime(served_from_str, "%H:%M")
@@ -152,16 +150,16 @@ class Lunches(Module):
         else:
             served_to = None
 
-        title = lunch.get("nazov")
+        title = meal.get("nazov")
 
-        amount_of_foods = lunch.get("druhov_jedal")
-        chooseable_menus = list(lunch.get("choosableMenus").keys())
+        amount_of_foods = meal.get("druhov_jedal")
+        chooseable_menus = list(meal.get("choosableMenus").keys())
 
-        can_be_changed_until = lunch.get("zmen_do")
+        can_be_changed_until = meal.get("zmen_do")
 
         menus = []
 
-        for food in lunch.get("rows"):
+        for food in meal.get("rows"):
             if not food:
                 continue
 
@@ -173,7 +171,7 @@ class Lunches(Module):
 
             if number is not None:
                 number = number.replace(": ", "")
-                rating = lunch.get("hodnotenia")
+                rating = meal.get("hodnotenia")
                 if rating is not None and rating:
                     rating = rating.get(number)
 
@@ -196,7 +194,8 @@ class Lunches(Module):
                 else:
                     rating = None
             menus.append(Menu(name, allergens, weight, number, rating))
-        return Lunch(
+        
+        return Meal(
             served_from,
             served_to,
             amount_of_foods,
@@ -205,6 +204,37 @@ class Lunches(Module):
             title,
             menus,
             date,
-            ordered_lunch,
+            ordered_meal,
+            MealType(int(meal_index)),
             boarder_id,
+            meal_index
         )
+
+    @ModuleHelper.logged_in
+    def get_meals(self, date: date) -> Optional[Meals]:
+        date_strftime = date.strftime("%Y%m%d")
+        request_url = f"https://{self.edupage.subdomain}.edupage.org/menu/?date={date_strftime}"
+        response = self.edupage.session.get(request_url).content.decode()
+
+        lunch_data = json.loads(
+            response.split("edupageData: ")[1].split(",\r\n")[0]
+        )
+        lunches_data = lunch_data.get(self.edupage.subdomain)
+        try:
+            boarder_id = (
+                lunches_data.get("novyListok").get("addInfo").get("stravnikid")
+            )
+        except AttributeError as e:
+            raise InvalidMealsData(f"Missing boarder id: {e}")
+
+        meals = lunches_data.get("novyListok").get(date.strftime("%Y-%m-%d"))
+        if meals is None:
+            return None
+        
+        snack = self.parse_meal("1", meals.get("1"), boarder_id, date)
+        lunch = self.parse_meal("2", meals.get("2"), boarder_id, date)
+        afternoon_snack = self.parse_meal("3", meals.get("3"), boarder_id, date)
+        
+        return Meals(snack, lunch, afternoon_snack)
+        
+        

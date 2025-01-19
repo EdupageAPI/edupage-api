@@ -12,7 +12,7 @@ from edupage_api.cloud import Cloud, EduCloudFile
 from edupage_api.custom_request import CustomRequest
 from edupage_api.grades import EduGrade, Grades, Term
 from edupage_api.login import Login, TwoFactorLogin
-from edupage_api.lunches import Lunch, Lunches
+from edupage_api.lunches import Lunches, Meals
 from edupage_api.messages import Messages
 from edupage_api.module import EdupageModule
 from edupage_api.parent import Parent
@@ -163,7 +163,7 @@ class Edupage(EdupageModule):
 
         return Timetables(self).get_my_timetable(date)
 
-    def get_lunches(self, date: date) -> Optional[Lunch]:
+    def get_meals(self, date: date) -> Optional[Meals]:
         """Get lunches.
 
         Args:
@@ -173,7 +173,7 @@ class Edupage(EdupageModule):
             Optional[Lunch]: Lunch object for entered date.
         """
 
-        return Lunches(self).get_lunch(date)
+        return Lunches(self).get_meals(date)
 
     def get_notifications(self) -> list[TimelineEvent]:
         """Get list of all available notifications.

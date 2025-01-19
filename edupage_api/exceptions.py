@@ -18,7 +18,7 @@ class FailedToRateException(Exception):
     pass
 
 
-class FailedToChangeLunchError(Exception):
+class FailedToChangeMealError(Exception):
     pass
 
 
@@ -42,7 +42,7 @@ class RequestError(Exception):
     pass
 
 
-class InvalidLunchData(Exception):
+class InvalidMealsData(Exception):
     pass
 
 

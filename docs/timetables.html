@@ -3,19 +3,30 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
-<meta name="generator" content="pdoc3 0.11.1">
+<meta name="generator" content="pdoc3 0.11.5">
 <title>edupage_api.timetables API documentation</title>
 <meta name="description" content="">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/sanitize.min.css" integrity="sha512-y1dtMcuvtTMJc1yPgEqF0ZjQbhnc/bFhyvIyVNb9Zk5mIGtqVaAB1Ttl28su8AvFMOY0EwRbAe+HCLqj6W7/KA==" crossorigin>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/typography.min.css" integrity="sha512-Y1DYSb995BAfxobCkKepB1BqJJTPrOp3zPL74AWFugHHmmdcvO+C48WLrUOlhGMc0QG7AE3f7gmvvcrmX2fDoA==" crossorigin>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css" crossorigin>
-<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:1.5em;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:2em 0 .50em 0}h3{font-size:1.4em;margin:1.6em 0 .7em 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .2s ease-in-out}a:visited{color:#503}a:hover{color:#b62}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900;font-weight:bold}pre code{font-size:.8em;line-height:1.4em;padding:1em;display:block}code{background:#f3f3f3;font-family:"DejaVu Sans Mono",monospace;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em 1em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:1.5em;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:2em 0 .50em 0}h3{font-size:1.4em;margin:1.6em 0 .7em 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .2s ease-in-out}a:visited{color:#503}a:hover{color:#b62}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900;font-weight:bold}pre code{font-size:.8em;line-height:1.4em;padding:1em;display:block}code{background:#f3f3f3;font-family:"DejaVu Sans Mono",monospace;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source > summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible;min-width:max-content}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em 1em;margin:1em 0}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
 <style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul ul{padding-left:1em}.toc > ul > li{margin-top:.5em}}</style>
 <style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
 <script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha512-D9gUyxqja7hBtkWpPWGt9wfbfaMGVt9gnyCvYa+jojwwPHLCzUm5i8rpk7vD7wNee9bA35eYIjobYPaQuKS1MQ==" crossorigin></script>
 <script>window.addEventListener('DOMContentLoaded', () => {
 hljs.configure({languages: ['bash', 'css', 'diff', 'graphql', 'ini', 'javascript', 'json', 'plaintext', 'python', 'python-repl', 'rust', 'shell', 'sql', 'typescript', 'xml', 'yaml']});
 hljs.highlightAll();
+/* Collapse source docstrings */
+setTimeout(() => {
+[...document.querySelectorAll('.hljs.language-python > .hljs-string')]
+.filter(el => el.innerHTML.length > 200 && ['"""', "'''"].includes(el.innerHTML.substring(0, 3)))
+.forEach(el => {
+let d = document.createElement('details');
+d.classList.add('hljs-string');
+d.innerHTML = '<summary>"""</summary>' + el.innerHTML.substring(3);
+el.replaceWith(d);
+});
+}, 100);
 })</script>
 </head>
 <body>
@@ -37,10 +48,9 @@ hljs.highlightAll();
 <dl>
 <dt id="edupage_api.timetables.Lesson"><code class="flex name class">
 <span>class <span class="ident">Lesson</span></span>
-<span>(</span><span>period: Optional[int], start_time: datetime.time, end_time: datetime.time, duration: int, subject: Optional[<a title="edupage_api.subjects.Subject" href="subjects.html#edupage_api.subjects.Subject">Subject</a>], classes: Optional[List[<a title="edupage_api.classes.Class" href="classes.html#edupage_api.classes.Class">Class</a>]], groups: Optional[List[str]], teachers: Optional[List[<a title="edupage_api.people.EduTeacher" href="people.html#edupage_api.people.EduTeacher">EduTeacher</a>]], classrooms: Optional[List[<a title="edupage_api.classrooms.Classroom" href="classrooms.html#edupage_api.classrooms.Classroom">Classroom</a>]], curriculum: Optional[str], online_lesson_link: Optional[str], is_cancelled: bool, is_event: bool)</span>
+<span>(</span><span>period: int | None,<br>start_time: datetime.time,<br>end_time: datetime.time,<br>duration: int,<br>subject: <a title="edupage_api.subjects.Subject" href="subjects.html#edupage_api.subjects.Subject">Subject</a> | None,<br>classes: List[<a title="edupage_api.classes.Class" href="classes.html#edupage_api.classes.Class">Class</a>] | None,<br>groups: List[str] | None,<br>teachers: List[<a title="edupage_api.people.EduTeacher" href="people.html#edupage_api.people.EduTeacher">EduTeacher</a>] | None,<br>classrooms: List[<a title="edupage_api.classrooms.Classroom" href="classrooms.html#edupage_api.classrooms.Classroom">Classroom</a>] | None,<br>curriculum: str | None,<br>online_lesson_link: str | None,<br>is_cancelled: bool,<br>is_event: bool)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Lesson(period: Optional[int], start_time: datetime.time, end_time: datetime.time, duration: int, subject: Optional[edupage_api.subjects.Subject], classes: Optional[List[edupage_api.classes.Class]], groups: Optional[List[str]], teachers: Optional[List[edupage_api.people.EduTeacher]], classrooms: Optional[List[edupage_api.classrooms.Classroom]], curriculum: Optional[str], online_lesson_link: Optional[str], is_cancelled: bool, is_event: bool)</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -90,17 +100,18 @@ class Lesson:
         response = edupage.session.post(request_url, json=post_data)
         return json.loads(response.content.decode()).get(&#34;reload&#34;) is not None</code></pre>
 </details>
+<div class="desc"><p>Lesson(period: Optional[int], start_time: datetime.time, end_time: datetime.time, duration: int, subject: Optional[edupage_api.subjects.Subject], classes: Optional[List[edupage_api.classes.Class]], groups: Optional[List[str]], teachers: Optional[List[edupage_api.people.EduTeacher]], classrooms: Optional[List[edupage_api.classrooms.Classroom]], curriculum: Optional[str], online_lesson_link: Optional[str], is_cancelled: bool, is_event: bool)</p></div>
 <h3>Class variables</h3>
 <dl>
-<dt id="edupage_api.timetables.Lesson.classes"><code class="name">var <span class="ident">classes</span> : Optional[List[<a title="edupage_api.classes.Class" href="classes.html#edupage_api.classes.Class">Class</a>]]</code></dt>
+<dt id="edupage_api.timetables.Lesson.classes"><code class="name">var <span class="ident">classes</span> : List[<a title="edupage_api.classes.Class" href="classes.html#edupage_api.classes.Class">Class</a>] | None</code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
-<dt id="edupage_api.timetables.Lesson.classrooms"><code class="name">var <span class="ident">classrooms</span> : Optional[List[<a title="edupage_api.classrooms.Classroom" href="classrooms.html#edupage_api.classrooms.Classroom">Classroom</a>]]</code></dt>
+<dt id="edupage_api.timetables.Lesson.classrooms"><code class="name">var <span class="ident">classrooms</span> : List[<a title="edupage_api.classrooms.Classroom" href="classrooms.html#edupage_api.classrooms.Classroom">Classroom</a>] | None</code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
-<dt id="edupage_api.timetables.Lesson.curriculum"><code class="name">var <span class="ident">curriculum</span> : Optional[str]</code></dt>
+<dt id="edupage_api.timetables.Lesson.curriculum"><code class="name">var <span class="ident">curriculum</span> : str | None</code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
@@ -112,7 +123,7 @@ class Lesson:
 <dd>
 <div class="desc"></div>
 </dd>
-<dt id="edupage_api.timetables.Lesson.groups"><code class="name">var <span class="ident">groups</span> : Optional[List[str]]</code></dt>
+<dt id="edupage_api.timetables.Lesson.groups"><code class="name">var <span class="ident">groups</span> : List[str] | None</code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
@@ -124,11 +135,11 @@ class Lesson:
 <dd>
 <div class="desc"></div>
 </dd>
-<dt id="edupage_api.timetables.Lesson.online_lesson_link"><code class="name">var <span class="ident">online_lesson_link</span> : Optional[str]</code></dt>
+<dt id="edupage_api.timetables.Lesson.online_lesson_link"><code class="name">var <span class="ident">online_lesson_link</span> : str | None</code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
-<dt id="edupage_api.timetables.Lesson.period"><code class="name">var <span class="ident">period</span> : Optional[int]</code></dt>
+<dt id="edupage_api.timetables.Lesson.period"><code class="name">var <span class="ident">period</span> : int | None</code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
@@ -136,11 +147,11 @@ class Lesson:
 <dd>
 <div class="desc"></div>
 </dd>
-<dt id="edupage_api.timetables.Lesson.subject"><code class="name">var <span class="ident">subject</span> : Optional[<a title="edupage_api.subjects.Subject" href="subjects.html#edupage_api.subjects.Subject">Subject</a>]</code></dt>
+<dt id="edupage_api.timetables.Lesson.subject"><code class="name">var <span class="ident">subject</span> : <a title="edupage_api.subjects.Subject" href="subjects.html#edupage_api.subjects.Subject">Subject</a> | None</code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
-<dt id="edupage_api.timetables.Lesson.teachers"><code class="name">var <span class="ident">teachers</span> : Optional[List[<a title="edupage_api.people.EduTeacher" href="people.html#edupage_api.people.EduTeacher">EduTeacher</a>]]</code></dt>
+<dt id="edupage_api.timetables.Lesson.teachers"><code class="name">var <span class="ident">teachers</span> : List[<a title="edupage_api.people.EduTeacher" href="people.html#edupage_api.people.EduTeacher">EduTeacher</a>] | None</code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
@@ -151,12 +162,49 @@ class Lesson:
 <span>def <span class="ident">is_online_lesson</span></span>(<span>self) ‑> bool</span>
 </code></dt>
 <dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def is_online_lesson(self) -&gt; bool:
+    return self.online_lesson_link is not None</code></pre>
+</details>
 <div class="desc"></div>
 </dd>
 <dt id="edupage_api.timetables.Lesson.sign_into_lesson"><code class="name flex">
-<span>def <span class="ident">sign_into_lesson</span></span>(<span>self, edupage: <a title="edupage_api.module.EdupageModule" href="module.html#edupage_api.module.EdupageModule">EdupageModule</a>)</span>
+<span>def <span class="ident">sign_into_lesson</span></span>(<span>self,<br>edupage: <a title="edupage_api.module.EdupageModule" href="module.html#edupage_api.module.EdupageModule">EdupageModule</a>)</span>
 </code></dt>
 <dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@ModuleHelper.online_lesson
+def sign_into_lesson(self, edupage: EdupageModule):
+    request_url = f&#34;https://{edupage.subdomain}.edupage.org/dashboard/eb.php&#34;
+
+    response = edupage.session.get(request_url)
+
+    gse_hash = response.content.decode().split(&#34;gsechash=&#34;)[1].split(&#39;&#34;&#39;)[1]
+
+    request_url = f&#34;https://{edupage.subdomain}.edupage.org/dashboard/server/onlinelesson.js?__func=getOnlineLessonOpenUrl&#34;
+    today = datetime.today()
+    post_data = {
+        &#34;__args&#34;: [
+            None,
+            {
+                &#34;click&#34;: True,
+                &#34;date&#34;: today.strftime(&#34;%Y-%m-%d&#34;),
+                &#34;ol_url&#34;: self.online_lesson_link,
+                &#34;subjectid&#34;: self.subject_id,
+            },
+        ],
+        &#34;__gsh&#34;: gse_hash,
+    }
+
+    response = edupage.session.post(request_url, json=post_data)
+    return json.loads(response.content.decode()).get(&#34;reload&#34;) is not None</code></pre>
+</details>
 <div class="desc"></div>
 </dd>
 </dl>
@@ -166,7 +214,6 @@ class Lesson:
 <span>(</span><span>lessons: List[<a title="edupage_api.timetables.Lesson" href="#edupage_api.timetables.Lesson">Lesson</a>])</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Timetable(lessons: List[edupage_api.timetables.Lesson])</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -201,6 +248,7 @@ class Timetable:
         if len(self.lessons) &gt; 0:
             return self.lessons[-1]</code></pre>
 </details>
+<div class="desc"><p>Timetable(lessons: List[edupage_api.timetables.Lesson])</p></div>
 <h3>Class variables</h3>
 <dl>
 <dt id="edupage_api.timetables.Timetable.lessons"><code class="name">var <span class="ident">lessons</span> : List[<a title="edupage_api.timetables.Lesson" href="#edupage_api.timetables.Lesson">Lesson</a>]</code></dt>
@@ -214,30 +262,73 @@ class Timetable:
 <span>def <span class="ident">get_first_lesson</span></span>(<span>self)</span>
 </code></dt>
 <dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_first_lesson(self):
+    if len(self.lessons) &gt; 0:
+        return self.lessons[0]</code></pre>
+</details>
 <div class="desc"></div>
 </dd>
 <dt id="edupage_api.timetables.Timetable.get_last_lesson"><code class="name flex">
 <span>def <span class="ident">get_last_lesson</span></span>(<span>self)</span>
 </code></dt>
 <dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_last_lesson(self):
+    if len(self.lessons) &gt; 0:
+        return self.lessons[-1]</code></pre>
+</details>
 <div class="desc"></div>
 </dd>
 <dt id="edupage_api.timetables.Timetable.get_lesson_at_time"><code class="name flex">
 <span>def <span class="ident">get_lesson_at_time</span></span>(<span>self, time: datetime.time)</span>
 </code></dt>
 <dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_lesson_at_time(self, time: time):
+    for lesson in self.lessons:
+        if time &gt;= lesson.start_time and time &lt;= lesson.end_time:
+            return lesson</code></pre>
+</details>
 <div class="desc"></div>
 </dd>
 <dt id="edupage_api.timetables.Timetable.get_next_lesson_at_time"><code class="name flex">
 <span>def <span class="ident">get_next_lesson_at_time</span></span>(<span>self, time: datetime.time)</span>
 </code></dt>
 <dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_next_lesson_at_time(self, time: time):
+    for lesson in self.lessons:
+        if time &lt; lesson.start_time:
+            return lesson</code></pre>
+</details>
 <div class="desc"></div>
 </dd>
 <dt id="edupage_api.timetables.Timetable.get_next_online_lesson_at_time"><code class="name flex">
 <span>def <span class="ident">get_next_online_lesson_at_time</span></span>(<span>self, time: datetime.time)</span>
 </code></dt>
 <dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_next_online_lesson_at_time(self, time: time):
+    for lesson in self.lessons:
+        if time &lt; lesson.start_time and lesson.is_online_lesson():
+            return lesson</code></pre>
+</details>
 <div class="desc"></div>
 </dd>
 </dl>
@@ -247,7 +338,6 @@ class Timetable:
 <span>(</span><span>edupage: <a title="edupage_api.module.EdupageModule" href="module.html#edupage_api.module.EdupageModule">EdupageModule</a>)</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -467,6 +557,7 @@ class Timetable:
 
         return self.__parse_timetable(timetable_data)</code></pre>
 </details>
+<div class="desc"></div>
 <h3>Ancestors</h3>
 <ul class="hlist">
 <li><a title="edupage_api.module.Module" href="module.html#edupage_api.module.Module">Module</a></li>
@@ -474,21 +565,73 @@ class Timetable:
 <h3>Methods</h3>
 <dl>
 <dt id="edupage_api.timetables.Timetables.get_my_timetable"><code class="name flex">
-<span>def <span class="ident">get_my_timetable</span></span>(<span>self, date: datetime.date) ‑> Optional[<a title="edupage_api.timetables.Timetable" href="#edupage_api.timetables.Timetable">Timetable</a>]</span>
+<span>def <span class="ident">get_my_timetable</span></span>(<span>self, date: datetime.date) ‑> <a title="edupage_api.timetables.Timetable" href="#edupage_api.timetables.Timetable">Timetable</a> | None</span>
 </code></dt>
 <dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@ModuleHelper.logged_in
+def get_my_timetable(self, date: date) -&gt; Optional[Timetable]:
+    plan = self.__get_date_plan(date)
+    return self.__parse_timetable(plan)</code></pre>
+</details>
 <div class="desc"></div>
 </dd>
 <dt id="edupage_api.timetables.Timetables.get_school_year"><code class="name flex">
 <span>def <span class="ident">get_school_year</span></span>(<span>self)</span>
 </code></dt>
 <dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_school_year(self):
+    dp = self.edupage.data.get(&#34;dp&#34;)
+
+    if dp is None:
+        raise MissingDataException(&#34;You have no dp! (try logging in again)&#34;)
+
+    return dp.get(&#34;year&#34;)</code></pre>
+</details>
 <div class="desc"></div>
 </dd>
 <dt id="edupage_api.timetables.Timetables.get_timetable"><code class="name flex">
-<span>def <span class="ident">get_timetable</span></span>(<span>self, target: Union[<a title="edupage_api.people.EduTeacher" href="people.html#edupage_api.people.EduTeacher">EduTeacher</a>, <a title="edupage_api.people.EduStudent" href="people.html#edupage_api.people.EduStudent">EduStudent</a>, <a title="edupage_api.classes.Class" href="classes.html#edupage_api.classes.Class">Class</a>, <a title="edupage_api.classrooms.Classroom" href="classrooms.html#edupage_api.classrooms.Classroom">Classroom</a>], date: datetime.date) ‑> Optional[<a title="edupage_api.timetables.Timetable" href="#edupage_api.timetables.Timetable">Timetable</a>]</span>
+<span>def <span class="ident">get_timetable</span></span>(<span>self,<br>target: <a title="edupage_api.people.EduTeacher" href="people.html#edupage_api.people.EduTeacher">EduTeacher</a> | <a title="edupage_api.people.EduStudent" href="people.html#edupage_api.people.EduStudent">EduStudent</a> | <a title="edupage_api.classes.Class" href="classes.html#edupage_api.classes.Class">Class</a> | <a title="edupage_api.classrooms.Classroom" href="classrooms.html#edupage_api.classrooms.Classroom">Classroom</a>,<br>date: datetime.date) ‑> <a title="edupage_api.timetables.Timetable" href="#edupage_api.timetables.Timetable">Timetable</a> | None</span>
 </code></dt>
 <dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@ModuleHelper.logged_in
+def get_timetable(
+    self,
+    target: Union[EduTeacher, EduStudent, Class, Classroom],
+    date: date,
+) -&gt; Optional[Timetable]:
+
+    lookup = {
+        EduTeacher: (&#34;teachers&#34;, &#34;person_id&#34;),
+        EduStudent: (&#34;students&#34;, &#34;person_id&#34;),
+        Class: (&#34;classes&#34;, &#34;class_id&#34;),
+        Classroom: (&#34;classrooms&#34;, &#34;classroom_id&#34;),
+    }
+
+    table, target_id_attr = lookup.get(type(target))
+    target_id = getattr(target, target_id_attr)
+
+    try:
+        timetable_data = self.__get_timetable_data(target_id, table, date)
+    except RequestError as e:
+        if &#34;insuficient&#34; in str(e).lower():
+            raise InsufficientPermissionsException(f&#34;Missing permissions: {str(e)}&#34;)
+    except Exception as e:
+        raise UnknownServerError(f&#34;There was an unknown error: {str(e)}&#34;)
+
+    return self.__parse_timetable(timetable_data)</code></pre>
+</details>
 <div class="desc"></div>
 </dd>
 </dl>
@@ -553,7 +696,7 @@ class Timetable:
 </nav>
 </main>
 <footer id="footer">
-<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.11.1</a>.</p>
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.11.5</a>.</p>
 </footer>
 </body>
 </html>

@@ -3,19 +3,30 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
-<meta name="generator" content="pdoc3 0.11.1">
+<meta name="generator" content="pdoc3 0.11.5">
 <title>edupage_api.login API documentation</title>
 <meta name="description" content="">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/sanitize.min.css" integrity="sha512-y1dtMcuvtTMJc1yPgEqF0ZjQbhnc/bFhyvIyVNb9Zk5mIGtqVaAB1Ttl28su8AvFMOY0EwRbAe+HCLqj6W7/KA==" crossorigin>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/typography.min.css" integrity="sha512-Y1DYSb995BAfxobCkKepB1BqJJTPrOp3zPL74AWFugHHmmdcvO+C48WLrUOlhGMc0QG7AE3f7gmvvcrmX2fDoA==" crossorigin>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css" crossorigin>
-<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:1.5em;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:2em 0 .50em 0}h3{font-size:1.4em;margin:1.6em 0 .7em 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .2s ease-in-out}a:visited{color:#503}a:hover{color:#b62}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900;font-weight:bold}pre code{font-size:.8em;line-height:1.4em;padding:1em;display:block}code{background:#f3f3f3;font-family:"DejaVu Sans Mono",monospace;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em 1em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:1.5em;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:2em 0 .50em 0}h3{font-size:1.4em;margin:1.6em 0 .7em 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .2s ease-in-out}a:visited{color:#503}a:hover{color:#b62}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900;font-weight:bold}pre code{font-size:.8em;line-height:1.4em;padding:1em;display:block}code{background:#f3f3f3;font-family:"DejaVu Sans Mono",monospace;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source > summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible;min-width:max-content}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em 1em;margin:1em 0}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
 <style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul ul{padding-left:1em}.toc > ul > li{margin-top:.5em}}</style>
 <style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
 <script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha512-D9gUyxqja7hBtkWpPWGt9wfbfaMGVt9gnyCvYa+jojwwPHLCzUm5i8rpk7vD7wNee9bA35eYIjobYPaQuKS1MQ==" crossorigin></script>
 <script>window.addEventListener('DOMContentLoaded', () => {
 hljs.configure({languages: ['bash', 'css', 'diff', 'graphql', 'ini', 'javascript', 'json', 'plaintext', 'python', 'python-repl', 'rust', 'shell', 'sql', 'typescript', 'xml', 'yaml']});
 hljs.highlightAll();
+/* Collapse source docstrings */
+setTimeout(() => {
+[...document.querySelectorAll('.hljs.language-python > .hljs-string')]
+.filter(el => el.innerHTML.length > 200 && ['"""', "'''"].includes(el.innerHTML.substring(0, 3)))
+.forEach(el => {
+let d = document.createElement('details');
+d.classList.add('hljs-string');
+d.innerHTML = '<summary>"""</summary>' + el.innerHTML.substring(3);
+el.replaceWith(d);
+});
+}, 100);
 })</script>
 </head>
 <body>
@@ -40,7 +51,6 @@ hljs.highlightAll();
 <span>(</span><span>edupage: <a title="edupage_api.module.EdupageModule" href="module.html#edupage_api.module.EdupageModule">EdupageModule</a>)</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -154,6 +164,7 @@ hljs.highlightAll();
         except (TypeError, JSONDecodeError) as e:
             raise BadCredentialsException(f&#34;Invalid session id: {e}&#34;)</code></pre>
 </details>
+<div class="desc"></div>
 <h3>Ancestors</h3>
 <ul class="hlist">
 <li><a title="edupage_api.module.Module" href="module.html#edupage_api.module.Module">Module</a></li>
@@ -161,9 +172,93 @@ hljs.highlightAll();
 <h3>Methods</h3>
 <dl>
 <dt id="edupage_api.login.Login.login"><code class="name flex">
-<span>def <span class="ident">login</span></span>(<span>self, username: str, password: str, subdomain: str = 'login1') ‑> Optional[<a title="edupage_api.login.TwoFactorLogin" href="#edupage_api.login.TwoFactorLogin">TwoFactorLogin</a>]</span>
+<span>def <span class="ident">login</span></span>(<span>self, username: str, password: str, subdomain: str = 'login1') ‑> <a title="edupage_api.login.TwoFactorLogin" href="#edupage_api.login.TwoFactorLogin">TwoFactorLogin</a> | None</span>
 </code></dt>
 <dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def login(
+    self, username: str, password: str, subdomain: str = &#34;login1&#34;
+) -&gt; Optional[TwoFactorLogin]:
+    &#34;&#34;&#34;Login to your school&#39;s Edupage account (optionally with 2 factor authentication).
+
+    If you do not have 2 factor authentication set up, this function will return `None`.
+    The login will still work and succeed.
+
+    See the `Edupage.TwoFactorLogin` documentation or the examples for more details
+    of the 2 factor authentication process.
+
+    Args:
+        username (str): Your username.
+        password (str): Your password.
+        subdomain (str): Subdomain of your school (https://{subdomain}.edupage.org).
+
+    Returns:
+        Optional[TwoFactorLogin]: The object that can be used to complete the second factor
+            (or `None` — if the second factor is not set up)
+
+    Raises:
+        BadCredentialsException: Your credentials are invalid.
+        CaptchaException: The login process failed because of a captcha.
+        SecondFactorFailed: The second factor login timed out
+            or there was another problem with the second factor.
+    &#34;&#34;&#34;
+
+    request_url = f&#34;https://{subdomain}.edupage.org/login/index.php&#34;
+
+    response = self.edupage.session.get(request_url)
+    data = response.content.decode()
+
+    csrf_token = data.split(&#39;name=&#34;csrfauth&#34; value=&#34;&#39;)[1].split(&#39;&#34;&#39;)[0]
+
+    parameters = {
+        &#34;csrfauth&#34;: csrf_token,
+        &#34;username&#34;: username,
+        &#34;password&#34;: password,
+    }
+
+    request_url = f&#34;https://{subdomain}.edupage.org/login/edubarLogin.php&#34;
+
+    response = self.edupage.session.post(request_url, parameters)
+
+    if &#34;cap=1&#34; in response.url or &#34;lerr=b43b43&#34; in response.url:
+        raise CaptchaException()
+
+    if &#34;bad=1&#34; in response.url:
+        raise BadCredentialsException()
+
+    data = response.content.decode()
+
+    if subdomain == &#34;login1&#34;:
+        subdomain = data.split(&#34;--&gt;&#34;)[0].split(&#34; &#34;)[-1]
+
+    self.edupage.subdomain = subdomain
+    self.edupage.username = username
+
+    if &#34;twofactor&#34; not in response.url:
+        # 2FA not needed
+        self.__parse_login_data(data)
+        return
+
+    request_url = (
+        f&#34;https://{self.edupage.subdomain}.edupage.org/login/twofactor?sn=1&#34;
+    )
+
+    two_factor_response = self.edupage.session.get(request_url)
+
+    data = two_factor_response.content.decode()
+
+    csrf_token = data.split(&#39;csrfauth&#34; value=&#34;&#39;)[1].split(&#39;&#34;&#39;)[0]
+
+    authentication_token = data.split(&#39;au&#34; value=&#34;&#39;)[1].split(&#39;&#34;&#39;)[0]
+    authentication_endpoint = data.split(&#39;gu&#34; value=&#34;&#39;)[1].split(&#39;&#34;&#39;)[0]
+
+    return TwoFactorLogin(
+        authentication_endpoint, authentication_token, csrf_token, self.edupage
+    )</code></pre>
+</details>
 <div class="desc"><p>Login to your school's Edupage account (optionally with 2 factor authentication).</p>
 <p>If you do not have 2 factor authentication set up, this function will return <code>None</code>.
 The login will still work and succeed.</p>
@@ -199,16 +294,33 @@ or there was another problem with the second factor.</dd>
 <span>def <span class="ident">reload_data</span></span>(<span>self, subdomain: str, session_id: str, username: str)</span>
 </code></dt>
 <dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def reload_data(self, subdomain: str, session_id: str, username: str):
+    request_url = f&#34;https://{subdomain}.edupage.org/user&#34;
+
+    self.edupage.session.cookies.set(&#34;PHPSESSID&#34;, session_id)
+
+    response = self.edupage.session.get(request_url)
+
+    try:
+        self.__parse_login_data(response.content.decode())
+        self.edupage.subdomain = subdomain
+        self.edupage.username = username
+    except (TypeError, JSONDecodeError) as e:
+        raise BadCredentialsException(f&#34;Invalid session id: {e}&#34;)</code></pre>
+</details>
 <div class="desc"></div>
 </dd>
 </dl>
 </dd>
 <dt id="edupage_api.login.TwoFactorLogin"><code class="flex name class">
 <span>class <span class="ident">TwoFactorLogin</span></span>
-<span>(</span><span>_TwoFactorLogin__authentication_endpoint: str, _TwoFactorLogin__authentication_token: str, _TwoFactorLogin__csrf_token: str, _TwoFactorLogin__edupage: <a title="edupage_api.module.EdupageModule" href="module.html#edupage_api.module.EdupageModule">EdupageModule</a>)</span>
+<span>(</span><span>_TwoFactorLogin__authentication_endpoint: str,<br>_TwoFactorLogin__authentication_token: str,<br>_TwoFactorLogin__csrf_token: str,<br>_TwoFactorLogin__edupage: <a title="edupage_api.module.EdupageModule" href="module.html#edupage_api.module.EdupageModule">EdupageModule</a>)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>TwoFactorLogin(_TwoFactorLogin__authentication_endpoint: str, _TwoFactorLogin__authentication_token: str, _TwoFactorLogin__csrf_token: str, _TwoFactorLogin__edupage: edupage_api.module.EdupageModule, _TwoFactorLogin__code: Optional[str] = None)</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -318,12 +430,37 @@ class TwoFactorLogin:
         &#34;&#34;&#34;
         self.__finish(code)</code></pre>
 </details>
+<div class="desc"><p>TwoFactorLogin(_TwoFactorLogin__authentication_endpoint: str, _TwoFactorLogin__authentication_token: str, _TwoFactorLogin__csrf_token: str, _TwoFactorLogin__edupage: edupage_api.module.EdupageModule, _TwoFactorLogin__code: Optional[str] = None)</p></div>
 <h3>Methods</h3>
 <dl>
 <dt id="edupage_api.login.TwoFactorLogin.finish"><code class="name flex">
 <span>def <span class="ident">finish</span></span>(<span>self)</span>
 </code></dt>
 <dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def finish(self):
+    &#34;&#34;&#34;Finish the second factor authentication process.
+    This function should be used when using a device to confirm the login. If you are using email 2fa codes, please use `TwoFactorLogin.finish_with_code`.
+
+    Notes:
+        - This function can only be used after `TwoFactorLogin.is_confirmed` returned `True`.
+        - This function can raise `SecondFactorFailedException` if there is a big delay from calling `TwoFactorLogin.is_confirmed` (and getting `True` as a result) to calling `TwoFactorLogin.finish`.
+
+    Raises:
+        BadCredentialsException: You didn&#39;t call and get the `True` result from `TwoFactorLogin.is_confirmed` before calling this function.
+        SecondFactorFailedException: The delay between calling `TwoFactorLogin.is_confirmed` and `TwoFactorLogin.finish` was too long, or there was another error with the second factor authentication confirmation process.
+    &#34;&#34;&#34;
+
+    if self.__code is None:
+        raise BadCredentialsException(
+            &#34;Not confirmed! (you can only call finish after `TwoFactorLogin.is_confirmed` has returned True)&#34;
+        )
+
+    self.__finish(self.__code)</code></pre>
+</details>
 <div class="desc"><p>Finish the second factor authentication process.
 This function should be used when using a device to confirm the login. If you are using email 2fa codes, please use <code><a title="edupage_api.login.TwoFactorLogin.finish_with_code" href="#edupage_api.login.TwoFactorLogin.finish_with_code">TwoFactorLogin.finish_with_code()</a></code>.</p>
 <h2 id="notes">Notes</h2>
@@ -343,6 +480,22 @@ This function should be used when using a device to confirm the login. If you ar
 <span>def <span class="ident">finish_with_code</span></span>(<span>self, code: str)</span>
 </code></dt>
 <dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def finish_with_code(self, code: str):
+    &#34;&#34;&#34;Finish the second factor authentication process.
+    This function should be used when email 2fa codes are used to confirm the login. If you are using a device to confirm the login, please use `TwoFactorLogin.finish`.
+
+    Args:
+        code (str): The 2fa code from your email or from the mobile app.
+
+    Raises:
+        SecondFactorFailedException: An invalid 2fa code was provided.
+    &#34;&#34;&#34;
+    self.__finish(code)</code></pre>
+</details>
 <div class="desc"><p>Finish the second factor authentication process.
 This function should be used when email 2fa codes are used to confirm the login. If you are using a device to confirm the login, please use <code><a title="edupage_api.login.TwoFactorLogin.finish" href="#edupage_api.login.TwoFactorLogin.finish">TwoFactorLogin.finish()</a></code>.</p>
 <h2 id="args">Args</h2>
@@ -360,6 +513,34 @@ This function should be used when email 2fa codes are used to confirm the login.
 <span>def <span class="ident">is_confirmed</span></span>(<span>self)</span>
 </code></dt>
 <dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def is_confirmed(self):
+    &#34;&#34;&#34;Check if the second factor process was finished by confirmation with a device.
+
+    If this function returns true, you can safely use `TwoFactorLogin.finish` to finish the second factor authentication process.
+
+    Returns:
+        bool: True if the second factor was confirmed with a device.
+    &#34;&#34;&#34;
+
+    request_url = f&#34;https://{self.__edupage.subdomain}.edupage.org/login/twofactor?akcia=checkIfConfirmed&#34;
+    response = self.__edupage.session.post(request_url)
+
+    data = response.json()
+    if data.get(&#34;status&#34;) == &#34;fail&#34;:
+        return False
+    elif data.get(&#34;status&#34;) != &#34;ok&#34;:
+        raise MissingDataException(
+            f&#34;Invalid response from edupage&#39;s server!: {str(data)}&#34;
+        )
+
+    self.__code = data[&#34;data&#34;]
+
+    return True</code></pre>
+</details>
 <div class="desc"><p>Check if the second factor process was finished by confirmation with a device.</p>
 <p>If this function returns true, you can safely use <code><a title="edupage_api.login.TwoFactorLogin.finish" href="#edupage_api.login.TwoFactorLogin.finish">TwoFactorLogin.finish()</a></code> to finish the second factor authentication process.</p>
 <h2 id="returns">Returns</h2>
@@ -372,6 +553,20 @@ This function should be used when email 2fa codes are used to confirm the login.
 <span>def <span class="ident">resend_notifications</span></span>(<span>self)</span>
 </code></dt>
 <dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def resend_notifications(self):
+    &#34;&#34;&#34;Resends the confirmation notification to all devices.&#34;&#34;&#34;
+
+    request_url = f&#34;https://{self.__edupage.subdomain}.edupage.org/login/twofactor?akcia=resendNotifs&#34;
+    response = self.__edupage.session.post(request_url)
+
+    data = response.json()
+    if data.get(&#34;status&#34;) != &#34;ok&#34;:
+        raise RequestError(f&#34;Failed to resend notifications: {str(data)}&#34;)</code></pre>
+</details>
 <div class="desc"><p>Resends the confirmation notification to all devices.</p></div>
 </dd>
 </dl>
@@ -413,7 +608,7 @@ This function should be used when email 2fa codes are used to confirm the login.
 </nav>
 </main>
 <footer id="footer">
-<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.11.1</a>.</p>
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.11.5</a>.</p>
 </footer>
 </body>
 </html>

@@ -3,19 +3,30 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
-<meta name="generator" content="pdoc3 0.11.1">
+<meta name="generator" content="pdoc3 0.11.5">
 <title>edupage_api.lunches API documentation</title>
 <meta name="description" content="">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/sanitize.min.css" integrity="sha512-y1dtMcuvtTMJc1yPgEqF0ZjQbhnc/bFhyvIyVNb9Zk5mIGtqVaAB1Ttl28su8AvFMOY0EwRbAe+HCLqj6W7/KA==" crossorigin>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/typography.min.css" integrity="sha512-Y1DYSb995BAfxobCkKepB1BqJJTPrOp3zPL74AWFugHHmmdcvO+C48WLrUOlhGMc0QG7AE3f7gmvvcrmX2fDoA==" crossorigin>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css" crossorigin>
-<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:1.5em;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:2em 0 .50em 0}h3{font-size:1.4em;margin:1.6em 0 .7em 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .2s ease-in-out}a:visited{color:#503}a:hover{color:#b62}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900;font-weight:bold}pre code{font-size:.8em;line-height:1.4em;padding:1em;display:block}code{background:#f3f3f3;font-family:"DejaVu Sans Mono",monospace;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em 1em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:1.5em;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:2em 0 .50em 0}h3{font-size:1.4em;margin:1.6em 0 .7em 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .2s ease-in-out}a:visited{color:#503}a:hover{color:#b62}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900;font-weight:bold}pre code{font-size:.8em;line-height:1.4em;padding:1em;display:block}code{background:#f3f3f3;font-family:"DejaVu Sans Mono",monospace;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source > summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible;min-width:max-content}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em 1em;margin:1em 0}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
 <style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul ul{padding-left:1em}.toc > ul > li{margin-top:.5em}}</style>
 <style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
 <script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha512-D9gUyxqja7hBtkWpPWGt9wfbfaMGVt9gnyCvYa+jojwwPHLCzUm5i8rpk7vD7wNee9bA35eYIjobYPaQuKS1MQ==" crossorigin></script>
 <script>window.addEventListener('DOMContentLoaded', () => {
 hljs.configure({languages: ['bash', 'css', 'diff', 'graphql', 'ini', 'javascript', 'json', 'plaintext', 'python', 'python-repl', 'rust', 'shell', 'sql', 'typescript', 'xml', 'yaml']});
 hljs.highlightAll();
+/* Collapse source docstrings */
+setTimeout(() => {
+[...document.querySelectorAll('.hljs.language-python > .hljs-string')]
+.filter(el => el.innerHTML.length > 200 && ['"""', "'''"].includes(el.innerHTML.substring(0, 3)))
+.forEach(el => {
+let d = document.createElement('details');
+d.classList.add('hljs-string');
+d.innerHTML = '<summary>"""</summary>' + el.innerHTML.substring(3);
+el.replaceWith(d);
+});
+}, 100);
 })</script>
 </head>
 <body>
@@ -35,151 +46,34 @@ hljs.highlightAll();
 <section>
 <h2 class="section-title" id="header-classes">Classes</h2>
 <dl>
-<dt id="edupage_api.lunches.Lunch"><code class="flex name class">
-<span>class <span class="ident">Lunch</span></span>
-<span>(</span><span>served_from: Optional[datetime.datetime], served_to: Optional[datetime.datetime], amount_of_foods: int, chooseable_menus: list[str], can_be_changed_until: datetime.datetime, title: str, menus: List[<a title="edupage_api.lunches.Menu" href="#edupage_api.lunches.Menu">Menu</a>], date: datetime.datetime, _Lunch__boarder_id: str)</span>
-</code></dt>
-<dd>
-<div class="desc"><p>Lunch(served_from: Optional[datetime.datetime], served_to: Optional[datetime.datetime], amount_of_foods: int, chooseable_menus: list[str], can_be_changed_until: datetime.datetime, title: str, menus: List[edupage_api.lunches.Menu], date: datetime.datetime, _Lunch__boarder_id: str)</p></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">@dataclass
-class Lunch:
-    served_from: Optional[datetime]
-    served_to: Optional[datetime]
-    amount_of_foods: int
-    chooseable_menus: list[str]
-    can_be_changed_until: datetime
-    title: str
-    menus: List[Menu]
-    date: datetime
-    __boarder_id: str
-
-    def __iter__(self):
-        return iter(self.menus)
-
-    def __make_choice(self, edupage: EdupageModule, choice_str: str):
-        request_url = f&#34;https://{edupage.subdomain}.edupage.org/menu/&#34;
-
-        boarder_menu = {
-            &#34;stravnikid&#34;: self.__boarder_id,
-            &#34;mysqlDate&#34;: self.date.strftime(&#34;%Y-%m-%d&#34;),
-            &#34;jids&#34;: {&#34;2&#34;: choice_str},
-            &#34;view&#34;: &#34;pc_listok&#34;,
-            &#34;pravo&#34;: &#34;Student&#34;,
-        }
-
-        data = {
-            &#34;akcia&#34;: &#34;ulozJedlaStravnika&#34;,
-            &#34;jedlaStravnika&#34;: json.dumps(boarder_menu),
-        }
-
-        response = edupage.session.post(request_url, data=data).content.decode()
-
-        if json.loads(response).get(&#34;error&#34;) != &#34;&#34;:
-            raise FailedToChangeLunchError()
-
-    def choose(self, edupage: EdupageModule, number: int):
-        letters = &#34;ABCDEFGH&#34;
-        letter = letters[number - 1]
-
-        self.__make_choice(edupage, letter)
-
-    def sign_off(self, edupage: EdupageModule):
-        self.__make_choice(edupage, &#34;AX&#34;)</code></pre>
-</details>
-<h3>Class variables</h3>
-<dl>
-<dt id="edupage_api.lunches.Lunch.amount_of_foods"><code class="name">var <span class="ident">amount_of_foods</span> : int</code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-<dt id="edupage_api.lunches.Lunch.can_be_changed_until"><code class="name">var <span class="ident">can_be_changed_until</span> : datetime.datetime</code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-<dt id="edupage_api.lunches.Lunch.chooseable_menus"><code class="name">var <span class="ident">chooseable_menus</span> : list[str]</code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-<dt id="edupage_api.lunches.Lunch.date"><code class="name">var <span class="ident">date</span> : datetime.datetime</code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-<dt id="edupage_api.lunches.Lunch.menus"><code class="name">var <span class="ident">menus</span> : List[<a title="edupage_api.lunches.Menu" href="#edupage_api.lunches.Menu">Menu</a>]</code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-<dt id="edupage_api.lunches.Lunch.served_from"><code class="name">var <span class="ident">served_from</span> : Optional[datetime.datetime]</code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-<dt id="edupage_api.lunches.Lunch.served_to"><code class="name">var <span class="ident">served_to</span> : Optional[datetime.datetime]</code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-<dt id="edupage_api.lunches.Lunch.title"><code class="name">var <span class="ident">title</span> : str</code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-</dl>
-<h3>Methods</h3>
-<dl>
-<dt id="edupage_api.lunches.Lunch.choose"><code class="name flex">
-<span>def <span class="ident">choose</span></span>(<span>self, edupage: <a title="edupage_api.module.EdupageModule" href="module.html#edupage_api.module.EdupageModule">EdupageModule</a>, number: int)</span>
-</code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-<dt id="edupage_api.lunches.Lunch.sign_off"><code class="name flex">
-<span>def <span class="ident">sign_off</span></span>(<span>self, edupage: <a title="edupage_api.module.EdupageModule" href="module.html#edupage_api.module.EdupageModule">EdupageModule</a>)</span>
-</code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-</dl>
-</dd>
 <dt id="edupage_api.lunches.Lunches"><code class="flex name class">
 <span>class <span class="ident">Lunches</span></span>
 <span>(</span><span>edupage: <a title="edupage_api.module.EdupageModule" href="module.html#edupage_api.module.EdupageModule">EdupageModule</a>)</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">class Lunches(Module):
-    @ModuleHelper.logged_in
-    def get_lunch(self, date: date):
-        date_strftime = date.strftime(&#34;%Y%m%d&#34;)
-        request_url = (
-            f&#34;https://{self.edupage.subdomain}.edupage.org/menu/?date={date_strftime}&#34;
-        )
-        response = self.edupage.session.get(request_url).content.decode()
-
-        lunch_data = json.loads(response.split(&#34;edupageData: &#34;)[1].split(&#34;,\r\n&#34;)[0])
-        lunches_data = lunch_data.get(self.edupage.subdomain)
-
-        try:
-            boarder_id = lunches_data.get(&#34;novyListok&#34;).get(&#34;addInfo&#34;).get(&#34;stravnikid&#34;)
-        except AttributeError as e:
-            raise InvalidLunchData(f&#34;Missing boarder id: {e}&#34;)
-
-        lunch = lunches_data.get(&#34;novyListok&#34;).get(date.strftime(&#34;%Y-%m-%d&#34;))
-
-        if lunch is None:
+    def parse_meal(self, meal_index: str, meal: dict, boarder_id: str, date: date) -&gt; Optional[Meal]:
+        if meal is None:
+            return None
+        
+        if meal.get(&#34;isCooking&#34;) == False:
             return None
 
-        lunch = lunch.get(&#34;2&#34;)
+        ordered_meal = None
+        meal_record = meal.get(&#34;evidencia&#34;)
 
-        if lunch.get(&#34;isCooking&#34;) == False:
-            return &#34;Not cooking&#34;
+        if meal_record is not None:
+            ordered_meal = meal_record.get(&#34;stav&#34;)
 
-        served_from_str = lunch.get(&#34;vydaj_od&#34;)
-        served_to_str = lunch.get(&#34;vydaj_do&#34;)
+            if ordered_meal == &#34;V&#34;:
+                ordered_meal = meal_record.get(&#34;obj&#34;)
+
+        served_from_str = meal.get(&#34;vydaj_od&#34;)
+        served_to_str = meal.get(&#34;vydaj_do&#34;)
 
         if served_from_str:
             served_from = datetime.strptime(served_from_str, &#34;%H:%M&#34;)
@@ -191,16 +85,16 @@ class Lunch:
         else:
             served_to = None
 
-        title = lunch.get(&#34;nazov&#34;)
+        title = meal.get(&#34;nazov&#34;)
 
-        amount_of_foods = lunch.get(&#34;druhov_jedal&#34;)
-        chooseable_menus = list(lunch.get(&#34;choosableMenus&#34;).keys())
+        amount_of_foods = meal.get(&#34;druhov_jedal&#34;)
+        chooseable_menus = list(meal.get(&#34;choosableMenus&#34;).keys())
 
-        can_be_changed_until = lunch.get(&#34;zmen_do&#34;)
+        can_be_changed_until = meal.get(&#34;zmen_do&#34;)
 
         menus = []
 
-        for food in lunch.get(&#34;rows&#34;):
+        for food in meal.get(&#34;rows&#34;):
             if not food:
                 continue
 
@@ -212,7 +106,7 @@ class Lunch:
 
             if number is not None:
                 number = number.replace(&#34;: &#34;, &#34;&#34;)
-                rating = lunch.get(&#34;hodnotenia&#34;)
+                rating = meal.get(&#34;hodnotenia&#34;)
                 if rating is not None and rating:
                     rating = rating.get(number)
 
@@ -235,8 +129,8 @@ class Lunch:
                 else:
                     rating = None
             menus.append(Menu(name, allergens, weight, number, rating))
-
-        return Lunch(
+        
+        return Meal(
             served_from,
             served_to,
             amount_of_foods,
@@ -245,18 +139,386 @@ class Lunch:
             title,
             menus,
             date,
+            ordered_meal,
+            MealType(int(meal_index)),
             boarder_id,
-        )</code></pre>
+            meal_index
+        )
+
+    @ModuleHelper.logged_in
+    def get_meals(self, date: date) -&gt; Optional[Meals]:
+        date_strftime = date.strftime(&#34;%Y%m%d&#34;)
+        request_url = f&#34;https://{self.edupage.subdomain}.edupage.org/menu/?date={date_strftime}&#34;
+        response = self.edupage.session.get(request_url).content.decode()
+
+        lunch_data = json.loads(
+            response.split(&#34;edupageData: &#34;)[1].split(&#34;,\r\n&#34;)[0]
+        )
+        lunches_data = lunch_data.get(self.edupage.subdomain)
+        try:
+            boarder_id = (
+                lunches_data.get(&#34;novyListok&#34;).get(&#34;addInfo&#34;).get(&#34;stravnikid&#34;)
+            )
+        except AttributeError as e:
+            raise InvalidMealsData(f&#34;Missing boarder id: {e}&#34;)
+
+        meals = lunches_data.get(&#34;novyListok&#34;).get(date.strftime(&#34;%Y-%m-%d&#34;))
+        if meals is None:
+            return None
+        
+        snack = self.parse_meal(&#34;1&#34;, meals.get(&#34;1&#34;), boarder_id, date)
+        lunch = self.parse_meal(&#34;2&#34;, meals.get(&#34;2&#34;), boarder_id, date)
+        afternoon_snack = self.parse_meal(&#34;3&#34;, meals.get(&#34;3&#34;), boarder_id, date)
+        
+        return Meals(snack, lunch, afternoon_snack)</code></pre>
 </details>
+<div class="desc"></div>
 <h3>Ancestors</h3>
 <ul class="hlist">
 <li><a title="edupage_api.module.Module" href="module.html#edupage_api.module.Module">Module</a></li>
 </ul>
 <h3>Methods</h3>
 <dl>
-<dt id="edupage_api.lunches.Lunches.get_lunch"><code class="name flex">
-<span>def <span class="ident">get_lunch</span></span>(<span>self, date: datetime.date)</span>
+<dt id="edupage_api.lunches.Lunches.get_meals"><code class="name flex">
+<span>def <span class="ident">get_meals</span></span>(<span>self, date: datetime.date) ‑> <a title="edupage_api.lunches.Meals" href="#edupage_api.lunches.Meals">Meals</a> | None</span>
 </code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@ModuleHelper.logged_in
+def get_meals(self, date: date) -&gt; Optional[Meals]:
+    date_strftime = date.strftime(&#34;%Y%m%d&#34;)
+    request_url = f&#34;https://{self.edupage.subdomain}.edupage.org/menu/?date={date_strftime}&#34;
+    response = self.edupage.session.get(request_url).content.decode()
+
+    lunch_data = json.loads(
+        response.split(&#34;edupageData: &#34;)[1].split(&#34;,\r\n&#34;)[0]
+    )
+    lunches_data = lunch_data.get(self.edupage.subdomain)
+    try:
+        boarder_id = (
+            lunches_data.get(&#34;novyListok&#34;).get(&#34;addInfo&#34;).get(&#34;stravnikid&#34;)
+        )
+    except AttributeError as e:
+        raise InvalidMealsData(f&#34;Missing boarder id: {e}&#34;)
+
+    meals = lunches_data.get(&#34;novyListok&#34;).get(date.strftime(&#34;%Y-%m-%d&#34;))
+    if meals is None:
+        return None
+    
+    snack = self.parse_meal(&#34;1&#34;, meals.get(&#34;1&#34;), boarder_id, date)
+    lunch = self.parse_meal(&#34;2&#34;, meals.get(&#34;2&#34;), boarder_id, date)
+    afternoon_snack = self.parse_meal(&#34;3&#34;, meals.get(&#34;3&#34;), boarder_id, date)
+    
+    return Meals(snack, lunch, afternoon_snack)</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.lunches.Lunches.parse_meal"><code class="name flex">
+<span>def <span class="ident">parse_meal</span></span>(<span>self, meal_index: str, meal: dict, boarder_id: str, date: datetime.date) ‑> <a title="edupage_api.lunches.Meal" href="#edupage_api.lunches.Meal">Meal</a> | None</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def parse_meal(self, meal_index: str, meal: dict, boarder_id: str, date: date) -&gt; Optional[Meal]:
+    if meal is None:
+        return None
+    
+    if meal.get(&#34;isCooking&#34;) == False:
+        return None
+
+    ordered_meal = None
+    meal_record = meal.get(&#34;evidencia&#34;)
+
+    if meal_record is not None:
+        ordered_meal = meal_record.get(&#34;stav&#34;)
+
+        if ordered_meal == &#34;V&#34;:
+            ordered_meal = meal_record.get(&#34;obj&#34;)
+
+    served_from_str = meal.get(&#34;vydaj_od&#34;)
+    served_to_str = meal.get(&#34;vydaj_do&#34;)
+
+    if served_from_str:
+        served_from = datetime.strptime(served_from_str, &#34;%H:%M&#34;)
+    else:
+        served_from = None
+
+    if served_to_str:
+        served_to = datetime.strptime(served_to_str, &#34;%H:%M&#34;)
+    else:
+        served_to = None
+
+    title = meal.get(&#34;nazov&#34;)
+
+    amount_of_foods = meal.get(&#34;druhov_jedal&#34;)
+    chooseable_menus = list(meal.get(&#34;choosableMenus&#34;).keys())
+
+    can_be_changed_until = meal.get(&#34;zmen_do&#34;)
+
+    menus = []
+
+    for food in meal.get(&#34;rows&#34;):
+        if not food:
+            continue
+
+        name = food.get(&#34;nazov&#34;)
+        allergens = food.get(&#34;alergenyStr&#34;)
+        weight = food.get(&#34;hmotnostiStr&#34;)
+        number = food.get(&#34;menusStr&#34;)
+        rating = None
+
+        if number is not None:
+            number = number.replace(&#34;: &#34;, &#34;&#34;)
+            rating = meal.get(&#34;hodnotenia&#34;)
+            if rating is not None and rating:
+                rating = rating.get(number)
+
+                [quality, quantity] = rating
+
+                quality_average = quality.get(&#34;priemer&#34;)
+                quality_ratings = quality.get(&#34;pocet&#34;)
+
+                quantity_average = quantity.get(&#34;priemer&#34;)
+                quantity_ratings = quantity.get(&#34;pocet&#34;)
+
+                rating = Rating(
+                    date.strftime(&#34;%Y-%m-%d&#34;),
+                    boarder_id,
+                    quality_average,
+                    quantity_average,
+                    quality_ratings,
+                    quantity_ratings,
+                )
+            else:
+                rating = None
+        menus.append(Menu(name, allergens, weight, number, rating))
+    
+    return Meal(
+        served_from,
+        served_to,
+        amount_of_foods,
+        chooseable_menus,
+        can_be_changed_until,
+        title,
+        menus,
+        date,
+        ordered_meal,
+        MealType(int(meal_index)),
+        boarder_id,
+        meal_index
+    )</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+</dl>
+</dd>
+<dt id="edupage_api.lunches.Meal"><code class="flex name class">
+<span>class <span class="ident">Meal</span></span>
+<span>(</span><span>served_from: datetime.datetime | None,<br>served_to: datetime.datetime | None,<br>amount_of_foods: int,<br>chooseable_menus: list[str],<br>can_be_changed_until: datetime.datetime,<br>title: str,<br>menus: List[<a title="edupage_api.lunches.Menu" href="#edupage_api.lunches.Menu">Menu</a>],<br>date: datetime.datetime,<br>ordered_meal: str | None,<br>meal_type: <a title="edupage_api.lunches.MealType" href="#edupage_api.lunches.MealType">MealType</a>,<br>_Meal__boarder_id: str,<br>_Meal__meal_index: str)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@dataclass
+class Meal:
+    served_from: Optional[datetime]
+    served_to: Optional[datetime]
+    amount_of_foods: int
+    chooseable_menus: list[str]
+    can_be_changed_until: datetime
+    title: str
+    menus: List[Menu]
+    date: datetime
+    ordered_meal: Optional[str]
+    meal_type: MealType
+    __boarder_id: str
+    __meal_index: str
+
+    def __iter__(self):
+        return iter(self.menus)
+
+    def __make_choice(self, edupage: EdupageModule, choice_str: str):
+        request_url = f&#34;https://{edupage.subdomain}.edupage.org/menu/&#34;
+
+        boarder_menu = {
+            &#34;stravnikid&#34;: self.__boarder_id,
+            &#34;mysqlDate&#34;: self.date.strftime(&#34;%Y-%m-%d&#34;),
+            &#34;jids&#34;: {self.__meal_index: choice_str},
+            &#34;view&#34;: &#34;pc_listok&#34;,
+            &#34;pravo&#34;: &#34;Student&#34;,
+        }
+
+        data = {
+            &#34;akcia&#34;: &#34;ulozJedlaStravnika&#34;,
+            &#34;jedlaStravnika&#34;: json.dumps(boarder_menu),
+        }
+
+        response = edupage.session.post(
+            request_url, data=data
+        ).content.decode()
+
+        if json.loads(response).get(&#34;error&#34;) != &#34;&#34;:
+            raise FailedToChangeMealError()
+
+    def choose(self, edupage: EdupageModule, number: int):
+        letters = &#34;ABCDEFGH&#34;
+        letter = letters[number - 1]
+
+        self.__make_choice(edupage, letter)
+        self.ordered_meal = letter
+
+    def sign_off(self, edupage: EdupageModule):
+        self.__make_choice(edupage, &#34;AX&#34;)
+        self.ordered_meal = None</code></pre>
+</details>
+<div class="desc"><p>Meal(served_from: Optional[datetime.datetime], served_to: Optional[datetime.datetime], amount_of_foods: int, chooseable_menus: list[str], can_be_changed_until: datetime.datetime, title: str, menus: List[edupage_api.lunches.Menu], date: datetime.datetime, ordered_meal: Optional[str], meal_type: edupage_api.lunches.MealType, _Meal__boarder_id: str, _Meal__meal_index: str)</p></div>
+<h3>Class variables</h3>
+<dl>
+<dt id="edupage_api.lunches.Meal.amount_of_foods"><code class="name">var <span class="ident">amount_of_foods</span> : int</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.lunches.Meal.can_be_changed_until"><code class="name">var <span class="ident">can_be_changed_until</span> : datetime.datetime</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.lunches.Meal.chooseable_menus"><code class="name">var <span class="ident">chooseable_menus</span> : list[str]</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.lunches.Meal.date"><code class="name">var <span class="ident">date</span> : datetime.datetime</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.lunches.Meal.meal_type"><code class="name">var <span class="ident">meal_type</span> : <a title="edupage_api.lunches.MealType" href="#edupage_api.lunches.MealType">MealType</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.lunches.Meal.menus"><code class="name">var <span class="ident">menus</span> : List[<a title="edupage_api.lunches.Menu" href="#edupage_api.lunches.Menu">Menu</a>]</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.lunches.Meal.ordered_meal"><code class="name">var <span class="ident">ordered_meal</span> : str | None</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.lunches.Meal.served_from"><code class="name">var <span class="ident">served_from</span> : datetime.datetime | None</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.lunches.Meal.served_to"><code class="name">var <span class="ident">served_to</span> : datetime.datetime | None</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.lunches.Meal.title"><code class="name">var <span class="ident">title</span> : str</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="edupage_api.lunches.Meal.choose"><code class="name flex">
+<span>def <span class="ident">choose</span></span>(<span>self,<br>edupage: <a title="edupage_api.module.EdupageModule" href="module.html#edupage_api.module.EdupageModule">EdupageModule</a>,<br>number: int)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def choose(self, edupage: EdupageModule, number: int):
+    letters = &#34;ABCDEFGH&#34;
+    letter = letters[number - 1]
+
+    self.__make_choice(edupage, letter)
+    self.ordered_meal = letter</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.lunches.Meal.sign_off"><code class="name flex">
+<span>def <span class="ident">sign_off</span></span>(<span>self,<br>edupage: <a title="edupage_api.module.EdupageModule" href="module.html#edupage_api.module.EdupageModule">EdupageModule</a>)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def sign_off(self, edupage: EdupageModule):
+    self.__make_choice(edupage, &#34;AX&#34;)
+    self.ordered_meal = None</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+</dl>
+</dd>
+<dt id="edupage_api.lunches.MealType"><code class="flex name class">
+<span>class <span class="ident">MealType</span></span>
+<span>(</span><span>value, names=None, *, module=None, qualname=None, type=None, start=1)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class MealType(Enum):
+    SNACK = 1
+    LUNCH = 2
+    AFTERNOON_SNACK = 3</code></pre>
+</details>
+<div class="desc"><p>An enumeration.</p></div>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>enum.Enum</li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="edupage_api.lunches.MealType.AFTERNOON_SNACK"><code class="name">var <span class="ident">AFTERNOON_SNACK</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.lunches.MealType.LUNCH"><code class="name">var <span class="ident">LUNCH</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.lunches.MealType.SNACK"><code class="name">var <span class="ident">SNACK</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+</dd>
+<dt id="edupage_api.lunches.Meals"><code class="flex name class">
+<span>class <span class="ident">Meals</span></span>
+<span>(</span><span>snack: <a title="edupage_api.lunches.Meal" href="#edupage_api.lunches.Meal">Meal</a> | None,<br>lunch: <a title="edupage_api.lunches.Meal" href="#edupage_api.lunches.Meal">Meal</a> | None,<br>afternoon_snack: <a title="edupage_api.lunches.Meal" href="#edupage_api.lunches.Meal">Meal</a> | None)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@dataclass
+class Meals:
+    snack: Optional[Meal]
+    lunch: Optional[Meal]
+    afternoon_snack: Optional[Meal]</code></pre>
+</details>
+<div class="desc"><p>Meals(snack: Optional[edupage_api.lunches.Meal], lunch: Optional[edupage_api.lunches.Meal], afternoon_snack: Optional[edupage_api.lunches.Meal])</p></div>
+<h3>Class variables</h3>
+<dl>
+<dt id="edupage_api.lunches.Meals.afternoon_snack"><code class="name">var <span class="ident">afternoon_snack</span> : <a title="edupage_api.lunches.Meal" href="#edupage_api.lunches.Meal">Meal</a> | None</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.lunches.Meals.lunch"><code class="name">var <span class="ident">lunch</span> : <a title="edupage_api.lunches.Meal" href="#edupage_api.lunches.Meal">Meal</a> | None</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.lunches.Meals.snack"><code class="name">var <span class="ident">snack</span> : <a title="edupage_api.lunches.Meal" href="#edupage_api.lunches.Meal">Meal</a> | None</code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
@@ -264,10 +526,9 @@ class Lunch:
 </dd>
 <dt id="edupage_api.lunches.Menu"><code class="flex name class">
 <span>class <span class="ident">Menu</span></span>
-<span>(</span><span>name: str, allergens: str, weight: str, number: str, rating: Optional[<a title="edupage_api.lunches.Rating" href="#edupage_api.lunches.Rating">Rating</a>])</span>
+<span>(</span><span>name: str,<br>allergens: str,<br>weight: str,<br>number: str,<br>rating: <a title="edupage_api.lunches.Rating" href="#edupage_api.lunches.Rating">Rating</a> | None)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Menu(name: str, allergens: str, weight: str, number: str, rating: Optional[edupage_api.lunches.Rating])</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -280,6 +541,7 @@ class Menu:
     number: str
     rating: Optional[Rating]</code></pre>
 </details>
+<div class="desc"><p>Menu(name: str, allergens: str, weight: str, number: str, rating: Optional[edupage_api.lunches.Rating])</p></div>
 <h3>Class variables</h3>
 <dl>
 <dt id="edupage_api.lunches.Menu.allergens"><code class="name">var <span class="ident">allergens</span> : str</code></dt>
@@ -294,7 +556,7 @@ class Menu:
 <dd>
 <div class="desc"></div>
 </dd>
-<dt id="edupage_api.lunches.Menu.rating"><code class="name">var <span class="ident">rating</span> : Optional[<a title="edupage_api.lunches.Rating" href="#edupage_api.lunches.Rating">Rating</a>]</code></dt>
+<dt id="edupage_api.lunches.Menu.rating"><code class="name">var <span class="ident">rating</span> : <a title="edupage_api.lunches.Rating" href="#edupage_api.lunches.Rating">Rating</a> | None</code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
@@ -306,10 +568,9 @@ class Menu:
 </dd>
 <dt id="edupage_api.lunches.Rating"><code class="flex name class">
 <span>class <span class="ident">Rating</span></span>
-<span>(</span><span>_Rating__date: str, _Rating__boarder_id: str, quality_average: float, quality_ratings: float, quantity_average: float, quantity_ratings: float)</span>
+<span>(</span><span>_Rating__date: str,<br>_Rating__boarder_id: str,<br>quality_average: float,<br>quality_ratings: float,<br>quantity_average: float,<br>quantity_ratings: float)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Rating(_Rating__date: str, _Rating__boarder_id: str, quality_average: float, quality_ratings: float, quantity_average: float, quantity_ratings: float)</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -347,6 +608,7 @@ class Rating:
         if error is None or error != &#34;&#34;:
             raise FailedToRateException()</code></pre>
 </details>
+<div class="desc"><p>Rating(_Rating__date: str, _Rating__boarder_id: str, quality_average: float, quality_ratings: float, quantity_average: float, quantity_ratings: float)</p></div>
 <h3>Class variables</h3>
 <dl>
 <dt id="edupage_api.lunches.Rating.quality_average"><code class="name">var <span class="ident">quality_average</span> : float</code></dt>
@@ -369,9 +631,35 @@ class Rating:
 <h3>Methods</h3>
 <dl>
 <dt id="edupage_api.lunches.Rating.rate"><code class="name flex">
-<span>def <span class="ident">rate</span></span>(<span>self, edupage: <a title="edupage_api.module.EdupageModule" href="module.html#edupage_api.module.EdupageModule">EdupageModule</a>, quantity: int, quality: int)</span>
+<span>def <span class="ident">rate</span></span>(<span>self,<br>edupage: <a title="edupage_api.module.EdupageModule" href="module.html#edupage_api.module.EdupageModule">EdupageModule</a>,<br>quantity: int,<br>quality: int)</span>
 </code></dt>
 <dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def rate(self, edupage: EdupageModule, quantity: int, quality: int):
+    if not edupage.is_logged_in:
+        raise NotLoggedInException()
+
+    request_url = f&#34;https://{edupage.subdomain}.edupage.org/menu/&#34;
+
+    data = {
+        &#34;akcia&#34;: &#34;ulozHodnotenia&#34;,
+        &#34;stravnikid&#34;: self.__boarder_id,
+        &#34;mysqlDate&#34;: self.__date,
+        &#34;jedlo_dna&#34;: &#34;2&#34;,
+        &#34;kvalita&#34;: str(quality),
+        &#34;mnozstvo&#34;: str(quantity),
+    }
+
+    response = edupage.session.post(request_url, data=data)
+    parsed_response = json.loads(response.content.decode())
+
+    error = parsed_response.get(&#34;error&#34;)
+    if error is None or error != &#34;&#34;:
+        raise FailedToRateException()</code></pre>
+</details>
 <div class="desc"></div>
 </dd>
 </dl>
@@ -392,24 +680,43 @@ class Rating:
 <li><h3><a href="#header-classes">Classes</a></h3>
 <ul>
 <li>
-<h4><code><a title="edupage_api.lunches.Lunch" href="#edupage_api.lunches.Lunch">Lunch</a></code></h4>
+<h4><code><a title="edupage_api.lunches.Lunches" href="#edupage_api.lunches.Lunches">Lunches</a></code></h4>
 <ul class="">
-<li><code><a title="edupage_api.lunches.Lunch.amount_of_foods" href="#edupage_api.lunches.Lunch.amount_of_foods">amount_of_foods</a></code></li>
-<li><code><a title="edupage_api.lunches.Lunch.can_be_changed_until" href="#edupage_api.lunches.Lunch.can_be_changed_until">can_be_changed_until</a></code></li>
-<li><code><a title="edupage_api.lunches.Lunch.choose" href="#edupage_api.lunches.Lunch.choose">choose</a></code></li>
-<li><code><a title="edupage_api.lunches.Lunch.chooseable_menus" href="#edupage_api.lunches.Lunch.chooseable_menus">chooseable_menus</a></code></li>
-<li><code><a title="edupage_api.lunches.Lunch.date" href="#edupage_api.lunches.Lunch.date">date</a></code></li>
-<li><code><a title="edupage_api.lunches.Lunch.menus" href="#edupage_api.lunches.Lunch.menus">menus</a></code></li>
-<li><code><a title="edupage_api.lunches.Lunch.served_from" href="#edupage_api.lunches.Lunch.served_from">served_from</a></code></li>
-<li><code><a title="edupage_api.lunches.Lunch.served_to" href="#edupage_api.lunches.Lunch.served_to">served_to</a></code></li>
-<li><code><a title="edupage_api.lunches.Lunch.sign_off" href="#edupage_api.lunches.Lunch.sign_off">sign_off</a></code></li>
-<li><code><a title="edupage_api.lunches.Lunch.title" href="#edupage_api.lunches.Lunch.title">title</a></code></li>
+<li><code><a title="edupage_api.lunches.Lunches.get_meals" href="#edupage_api.lunches.Lunches.get_meals">get_meals</a></code></li>
+<li><code><a title="edupage_api.lunches.Lunches.parse_meal" href="#edupage_api.lunches.Lunches.parse_meal">parse_meal</a></code></li>
 </ul>
 </li>
 <li>
-<h4><code><a title="edupage_api.lunches.Lunches" href="#edupage_api.lunches.Lunches">Lunches</a></code></h4>
+<h4><code><a title="edupage_api.lunches.Meal" href="#edupage_api.lunches.Meal">Meal</a></code></h4>
 <ul class="">
-<li><code><a title="edupage_api.lunches.Lunches.get_lunch" href="#edupage_api.lunches.Lunches.get_lunch">get_lunch</a></code></li>
+<li><code><a title="edupage_api.lunches.Meal.amount_of_foods" href="#edupage_api.lunches.Meal.amount_of_foods">amount_of_foods</a></code></li>
+<li><code><a title="edupage_api.lunches.Meal.can_be_changed_until" href="#edupage_api.lunches.Meal.can_be_changed_until">can_be_changed_until</a></code></li>
+<li><code><a title="edupage_api.lunches.Meal.choose" href="#edupage_api.lunches.Meal.choose">choose</a></code></li>
+<li><code><a title="edupage_api.lunches.Meal.chooseable_menus" href="#edupage_api.lunches.Meal.chooseable_menus">chooseable_menus</a></code></li>
+<li><code><a title="edupage_api.lunches.Meal.date" href="#edupage_api.lunches.Meal.date">date</a></code></li>
+<li><code><a title="edupage_api.lunches.Meal.meal_type" href="#edupage_api.lunches.Meal.meal_type">meal_type</a></code></li>
+<li><code><a title="edupage_api.lunches.Meal.menus" href="#edupage_api.lunches.Meal.menus">menus</a></code></li>
+<li><code><a title="edupage_api.lunches.Meal.ordered_meal" href="#edupage_api.lunches.Meal.ordered_meal">ordered_meal</a></code></li>
+<li><code><a title="edupage_api.lunches.Meal.served_from" href="#edupage_api.lunches.Meal.served_from">served_from</a></code></li>
+<li><code><a title="edupage_api.lunches.Meal.served_to" href="#edupage_api.lunches.Meal.served_to">served_to</a></code></li>
+<li><code><a title="edupage_api.lunches.Meal.sign_off" href="#edupage_api.lunches.Meal.sign_off">sign_off</a></code></li>
+<li><code><a title="edupage_api.lunches.Meal.title" href="#edupage_api.lunches.Meal.title">title</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="edupage_api.lunches.MealType" href="#edupage_api.lunches.MealType">MealType</a></code></h4>
+<ul class="">
+<li><code><a title="edupage_api.lunches.MealType.AFTERNOON_SNACK" href="#edupage_api.lunches.MealType.AFTERNOON_SNACK">AFTERNOON_SNACK</a></code></li>
+<li><code><a title="edupage_api.lunches.MealType.LUNCH" href="#edupage_api.lunches.MealType.LUNCH">LUNCH</a></code></li>
+<li><code><a title="edupage_api.lunches.MealType.SNACK" href="#edupage_api.lunches.MealType.SNACK">SNACK</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="edupage_api.lunches.Meals" href="#edupage_api.lunches.Meals">Meals</a></code></h4>
+<ul class="">
+<li><code><a title="edupage_api.lunches.Meals.afternoon_snack" href="#edupage_api.lunches.Meals.afternoon_snack">afternoon_snack</a></code></li>
+<li><code><a title="edupage_api.lunches.Meals.lunch" href="#edupage_api.lunches.Meals.lunch">lunch</a></code></li>
+<li><code><a title="edupage_api.lunches.Meals.snack" href="#edupage_api.lunches.Meals.snack">snack</a></code></li>
 </ul>
 </li>
 <li>
@@ -438,7 +745,7 @@ class Rating:
 </nav>
 </main>
 <footer id="footer">
-<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.11.1</a>.</p>
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.11.5</a>.</p>
 </footer>
 </body>
 </html>

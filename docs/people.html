@@ -3,19 +3,30 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
-<meta name="generator" content="pdoc3 0.11.1">
+<meta name="generator" content="pdoc3 0.11.5">
 <title>edupage_api.people API documentation</title>
 <meta name="description" content="">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/sanitize.min.css" integrity="sha512-y1dtMcuvtTMJc1yPgEqF0ZjQbhnc/bFhyvIyVNb9Zk5mIGtqVaAB1Ttl28su8AvFMOY0EwRbAe+HCLqj6W7/KA==" crossorigin>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/typography.min.css" integrity="sha512-Y1DYSb995BAfxobCkKepB1BqJJTPrOp3zPL74AWFugHHmmdcvO+C48WLrUOlhGMc0QG7AE3f7gmvvcrmX2fDoA==" crossorigin>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css" crossorigin>
-<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:1.5em;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:2em 0 .50em 0}h3{font-size:1.4em;margin:1.6em 0 .7em 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .2s ease-in-out}a:visited{color:#503}a:hover{color:#b62}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900;font-weight:bold}pre code{font-size:.8em;line-height:1.4em;padding:1em;display:block}code{background:#f3f3f3;font-family:"DejaVu Sans Mono",monospace;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em 1em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:1.5em;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:2em 0 .50em 0}h3{font-size:1.4em;margin:1.6em 0 .7em 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .2s ease-in-out}a:visited{color:#503}a:hover{color:#b62}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900;font-weight:bold}pre code{font-size:.8em;line-height:1.4em;padding:1em;display:block}code{background:#f3f3f3;font-family:"DejaVu Sans Mono",monospace;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source > summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible;min-width:max-content}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em 1em;margin:1em 0}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
 <style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul ul{padding-left:1em}.toc > ul > li{margin-top:.5em}}</style>
 <style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
 <script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha512-D9gUyxqja7hBtkWpPWGt9wfbfaMGVt9gnyCvYa+jojwwPHLCzUm5i8rpk7vD7wNee9bA35eYIjobYPaQuKS1MQ==" crossorigin></script>
 <script>window.addEventListener('DOMContentLoaded', () => {
 hljs.configure({languages: ['bash', 'css', 'diff', 'graphql', 'ini', 'javascript', 'json', 'plaintext', 'python', 'python-repl', 'rust', 'shell', 'sql', 'typescript', 'xml', 'yaml']});
 hljs.highlightAll();
+/* Collapse source docstrings */
+setTimeout(() => {
+[...document.querySelectorAll('.hljs.language-python > .hljs-string')]
+.filter(el => el.innerHTML.length > 200 && ['"""', "'''"].includes(el.innerHTML.substring(0, 3)))
+.forEach(el => {
+let d = document.createElement('details');
+d.classList.add('hljs-string');
+d.innerHTML = '<summary>"""</summary>' + el.innerHTML.substring(3);
+el.replaceWith(d);
+});
+}, 100);
 })</script>
 </head>
 <body>
@@ -37,10 +48,9 @@ hljs.highlightAll();
 <dl>
 <dt id="edupage_api.people.EduAccount"><code class="flex name class">
 <span>class <span class="ident">EduAccount</span></span>
-<span>(</span><span>person_id: int, name: str, gender: <a title="edupage_api.people.Gender" href="#edupage_api.people.Gender">Gender</a>, in_school_since: Optional[datetime], account_type: <a title="edupage_api.people.EduAccountType" href="#edupage_api.people.EduAccountType">EduAccountType</a>)</span>
+<span>(</span><span>person_id: int,<br>name: str,<br>gender: <a title="edupage_api.people.Gender" href="#edupage_api.people.Gender">Gender</a>,<br>in_school_since: Optional[datetime],<br>account_type: <a title="edupage_api.people.EduAccountType" href="#edupage_api.people.EduAccountType">EduAccountType</a>)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>EduAccount(person_id: 'int', name: 'str', gender: 'Gender', in_school_since: 'Optional[datetime]', account_type: 'EduAccountType')</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -108,6 +118,7 @@ class EduAccount:
     def get_id(self):
         return f&#34;{self.account_type.value}{self.person_id}&#34;</code></pre>
 </details>
+<div class="desc"><p>EduAccount(person_id: 'int', name: 'str', gender: 'Gender', in_school_since: 'Optional[datetime]', account_type: 'EduAccountType')</p></div>
 <h3>Subclasses</h3>
 <ul class="hlist">
 <li><a title="edupage_api.people.EduParent" href="#edupage_api.people.EduParent">EduParent</a></li>
@@ -124,7 +135,7 @@ class EduAccount:
 <dd>
 <div class="desc"></div>
 </dd>
-<dt id="edupage_api.people.EduAccount.in_school_since"><code class="name">var <span class="ident">in_school_since</span> : Optional[datetime.datetime]</code></dt>
+<dt id="edupage_api.people.EduAccount.in_school_since"><code class="name">var <span class="ident">in_school_since</span> : datetime.datetime | None</code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
@@ -140,15 +151,75 @@ class EduAccount:
 <h3>Static methods</h3>
 <dl>
 <dt id="edupage_api.people.EduAccount.parse"><code class="name flex">
-<span>def <span class="ident">parse</span></span>(<span>person_data: dict, person_id: int, edupage: EdupageModule) ‑> Optional[<a title="edupage_api.people.EduAccount" href="#edupage_api.people.EduAccount">EduAccount</a>]</span>
+<span>def <span class="ident">parse</span></span>(<span>person_data: dict, person_id: int, edupage: EdupageModule) ‑> <a title="edupage_api.people.EduAccount" href="#edupage_api.people.EduAccount">EduAccount</a> | None</span>
 </code></dt>
 <dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def parse(
+    person_data: dict, person_id: int, edupage: EdupageModule
+) -&gt; Optional[EduAccount]:
+    account_type = EduAccount.recognize_account_type(person_data)
+
+    if account_type == EduAccountType.STUDENT:
+        class_id = ModuleHelper.parse_int(person_data.get(&#34;classid&#34;))
+        name = DbiHelper(edupage).fetch_student_name(person_id)
+        gender = Gender.parse(person_data.get(&#34;gender&#34;))
+        student_since = ModuleHelper.strptime_or_none(
+            person_data.get(&#34;datefrom&#34;), &#34;%Y-%m-%d&#34;
+        )
+        number_in_class = ModuleHelper.parse_int(person_data.get(&#34;numberinclass&#34;))
+
+        ModuleHelper.assert_none(name)
+
+        return EduStudent(
+            person_id, name, gender, student_since, class_id, number_in_class
+        )
+    elif account_type == EduAccountType.TEACHER:
+        classroom_id = person_data.get(&#34;classroomid&#34;)
+        classroom_name = DbiHelper(edupage).fetch_classroom_number(classroom_id)
+
+        name = DbiHelper(edupage).fetch_teacher_name(person_id)
+
+        gender = Gender.parse(person_data.get(&#34;gender&#34;))
+        if teacher_since_str := person_data.get(&#34;datefrom&#34;):
+            teacher_since = datetime.strptime(teacher_since_str, &#34;%Y-%m-%d&#34;)
+        else:
+            teacher_since = None
+
+        if teacher_to_str := person_data.get(&#34;dateto&#34;):
+            teacher_to = datetime.strptime(teacher_to_str, &#34;%Y-%m-%d&#34;)
+        else:
+            teacher_to = None
+
+        return EduTeacher(
+            person_id, name, gender, teacher_since, classroom_name, teacher_to
+        )
+    else:
+        return None</code></pre>
+</details>
 <div class="desc"></div>
 </dd>
 <dt id="edupage_api.people.EduAccount.recognize_account_type"><code class="name flex">
 <span>def <span class="ident">recognize_account_type</span></span>(<span>person_data: dict) ‑> <a title="edupage_api.people.EduAccountType" href="#edupage_api.people.EduAccountType">EduAccountType</a></span>
 </code></dt>
 <dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def recognize_account_type(person_data: dict) -&gt; EduAccountType:
+    if person_data.get(&#34;numberinclass&#34;) is not None:
+        return EduAccountType.STUDENT
+    elif person_data.get(&#34;classroomid&#34;) is not None:
+        return EduAccountType.TEACHER
+    else:
+        return EduAccountType.PARENT</code></pre>
+</details>
 <div class="desc"></div>
 </dd>
 </dl>
@@ -158,6 +229,13 @@ class EduAccount:
 <span>def <span class="ident">get_id</span></span>(<span>self)</span>
 </code></dt>
 <dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_id(self):
+    return f&#34;{self.account_type.value}{self.person_id}&#34;</code></pre>
+</details>
 <div class="desc"></div>
 </dd>
 </dl>
@@ -167,7 +245,6 @@ class EduAccount:
 <span>(</span><span>value, names=None, *, module=None, qualname=None, type=None, start=1)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>An enumeration.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -177,6 +254,7 @@ class EduAccount:
     TEACHER = &#34;Teacher&#34;
     PARENT = &#34;Rodic&#34;</code></pre>
 </details>
+<div class="desc"><p>An enumeration.</p></div>
 <h3>Ancestors</h3>
 <ul class="hlist">
 <li>builtins.str</li>
@@ -200,10 +278,9 @@ class EduAccount:
 </dd>
 <dt id="edupage_api.people.EduParent"><code class="flex name class">
 <span>class <span class="ident">EduParent</span></span>
-<span>(</span><span>person_id: int, name: str, gender: <a title="edupage_api.people.Gender" href="#edupage_api.people.Gender">Gender</a>, in_school_since: Optional[datetime])</span>
+<span>(</span><span>person_id: int,<br>name: str,<br>gender: <a title="edupage_api.people.Gender" href="#edupage_api.people.Gender">Gender</a>,<br>in_school_since: Optional[datetime])</span>
 </code></dt>
 <dd>
-<div class="desc"><p>EduParent(person_id: 'int', name: 'str', gender: 'Gender', in_school_since: 'Optional[datetime]')</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -221,6 +298,7 @@ class EduParent(EduAccount):
             person_id, name, gender, in_school_since, EduAccountType.PARENT
         )</code></pre>
 </details>
+<div class="desc"><p>EduParent(person_id: 'int', name: 'str', gender: 'Gender', in_school_since: 'Optional[datetime]')</p></div>
 <h3>Ancestors</h3>
 <ul class="hlist">
 <li><a title="edupage_api.people.EduAccount" href="#edupage_api.people.EduAccount">EduAccount</a></li>
@@ -235,7 +313,7 @@ class EduParent(EduAccount):
 <dd>
 <div class="desc"></div>
 </dd>
-<dt id="edupage_api.people.EduParent.in_school_since"><code class="name">var <span class="ident">in_school_since</span> : Optional[datetime.datetime]</code></dt>
+<dt id="edupage_api.people.EduParent.in_school_since"><code class="name">var <span class="ident">in_school_since</span> : datetime.datetime | None</code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
@@ -251,10 +329,9 @@ class EduParent(EduAccount):
 </dd>
 <dt id="edupage_api.people.EduStudent"><code class="flex name class">
 <span>class <span class="ident">EduStudent</span></span>
-<span>(</span><span>person_id: int, name: str, gender: <a title="edupage_api.people.Gender" href="#edupage_api.people.Gender">Gender</a>, in_school_since: Optional[datetime], class_id: int, number_in_class: int)</span>
+<span>(</span><span>person_id: int,<br>name: str,<br>gender: <a title="edupage_api.people.Gender" href="#edupage_api.people.Gender">Gender</a>,<br>in_school_since: Optional[datetime],<br>class_id: int,<br>number_in_class: int)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>EduStudent(person_id: 'int', name: 'str', gender: 'Gender', in_school_since: 'Optional[datetime]', class_id: 'int', number_in_class: 'int')</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -288,6 +365,7 @@ class EduStudent(EduAccount):
     def set_student_only(self, student_only: bool):
         self.__student_only = student_only</code></pre>
 </details>
+<div class="desc"><p>EduStudent(person_id: 'int', name: 'str', gender: 'Gender', in_school_since: 'Optional[datetime]', class_id: 'int', number_in_class: 'int')</p></div>
 <h3>Ancestors</h3>
 <ul class="hlist">
 <li><a title="edupage_api.people.EduAccount" href="#edupage_api.people.EduAccount">EduAccount</a></li>
@@ -302,7 +380,7 @@ class EduStudent(EduAccount):
 <dd>
 <div class="desc"></div>
 </dd>
-<dt id="edupage_api.people.EduStudent.in_school_since"><code class="name">var <span class="ident">in_school_since</span> : Optional[datetime.datetime]</code></dt>
+<dt id="edupage_api.people.EduStudent.in_school_since"><code class="name">var <span class="ident">in_school_since</span> : datetime.datetime | None</code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
@@ -321,12 +399,29 @@ class EduStudent(EduAccount):
 <span>def <span class="ident">get_id</span></span>(<span>self)</span>
 </code></dt>
 <dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_id(self):
+    if not self.__student_only:
+        return super().get_id()
+    else:
+        return super().get_id().replace(&#34;Student&#34;, &#34;StudentOnly&#34;)</code></pre>
+</details>
 <div class="desc"></div>
 </dd>
 <dt id="edupage_api.people.EduStudent.set_student_only"><code class="name flex">
 <span>def <span class="ident">set_student_only</span></span>(<span>self, student_only: bool)</span>
 </code></dt>
 <dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def set_student_only(self, student_only: bool):
+    self.__student_only = student_only</code></pre>
+</details>
 <div class="desc"></div>
 </dd>
 </dl>
@@ -336,7 +431,6 @@ class EduStudent(EduAccount):
 <span>(</span><span>person_id: int, name_short: str, class_id: int)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>EduStudentSkeleton(person_id: 'int', name_short: 'str', class_id: 'int')</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -347,6 +441,7 @@ class EduStudentSkeleton:
     name_short: str
     class_id: int</code></pre>
 </details>
+<div class="desc"><p>EduStudentSkeleton(person_id: 'int', name_short: 'str', class_id: 'int')</p></div>
 <h3>Class variables</h3>
 <dl>
 <dt id="edupage_api.people.EduStudentSkeleton.class_id"><code class="name">var <span class="ident">class_id</span> : int</code></dt>
@@ -365,10 +460,9 @@ class EduStudentSkeleton:
 </dd>
 <dt id="edupage_api.people.EduTeacher"><code class="flex name class">
 <span>class <span class="ident">EduTeacher</span></span>
-<span>(</span><span>person_id: int, name: str, gender: <a title="edupage_api.people.Gender" href="#edupage_api.people.Gender">Gender</a>, in_school_since: Optional[datetime], classroom_name: str, teacher_to: Optional[datetime])</span>
+<span>(</span><span>person_id: int,<br>name: str,<br>gender: <a title="edupage_api.people.Gender" href="#edupage_api.people.Gender">Gender</a>,<br>in_school_since: Optional[datetime],<br>classroom_name: str,<br>teacher_to: Optional[datetime])</span>
 </code></dt>
 <dd>
-<div class="desc"><p>EduTeacher(person_id: 'int', name: 'str', gender: 'Gender', in_school_since: 'Optional[datetime]', classroom_name: 'str', teacher_to: 'Optional[datetime]')</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -391,6 +485,7 @@ class EduTeacher(EduAccount):
         self.teacher_to = teacher_to
         self.classroom_name = classroom_name</code></pre>
 </details>
+<div class="desc"><p>EduTeacher(person_id: 'int', name: 'str', gender: 'Gender', in_school_since: 'Optional[datetime]', classroom_name: 'str', teacher_to: 'Optional[datetime]')</p></div>
 <h3>Ancestors</h3>
 <ul class="hlist">
 <li><a title="edupage_api.people.EduAccount" href="#edupage_api.people.EduAccount">EduAccount</a></li>
@@ -405,7 +500,7 @@ class EduTeacher(EduAccount):
 <dd>
 <div class="desc"></div>
 </dd>
-<dt id="edupage_api.people.EduTeacher.in_school_since"><code class="name">var <span class="ident">in_school_since</span> : Optional[datetime.datetime]</code></dt>
+<dt id="edupage_api.people.EduTeacher.in_school_since"><code class="name">var <span class="ident">in_school_since</span> : datetime.datetime | None</code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
@@ -424,7 +519,6 @@ class EduTeacher(EduAccount):
 <span>(</span><span>value, names=None, *, module=None, qualname=None, type=None, start=1)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>An enumeration.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -437,6 +531,7 @@ class EduTeacher(EduAccount):
     def parse(gender_str: str) -&gt; Optional[Gender]:
         return ModuleHelper.parse_enum(gender_str, Gender)</code></pre>
 </details>
+<div class="desc"><p>An enumeration.</p></div>
 <h3>Ancestors</h3>
 <ul class="hlist">
 <li>builtins.str</li>
@@ -456,9 +551,17 @@ class EduTeacher(EduAccount):
 <h3>Static methods</h3>
 <dl>
 <dt id="edupage_api.people.Gender.parse"><code class="name flex">
-<span>def <span class="ident">parse</span></span>(<span>gender_str: str) ‑> Optional[<a title="edupage_api.people.Gender" href="#edupage_api.people.Gender">Gender</a>]</span>
+<span>def <span class="ident">parse</span></span>(<span>gender_str: str) ‑> <a title="edupage_api.people.Gender" href="#edupage_api.people.Gender">Gender</a> | None</span>
 </code></dt>
 <dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def parse(gender_str: str) -&gt; Optional[Gender]:
+    return ModuleHelper.parse_enum(gender_str, Gender)</code></pre>
+</details>
 <div class="desc"></div>
 </dd>
 </dl>
@@ -468,7 +571,6 @@ class EduTeacher(EduAccount):
 <span>(</span><span>edupage: <a title="edupage_api.module.EdupageModule" href="module.html#edupage_api.module.EdupageModule">EdupageModule</a>)</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -578,6 +680,7 @@ class EduTeacher(EduAccount):
 
         return result</code></pre>
 </details>
+<div class="desc"></div>
 <h3>Ancestors</h3>
 <ul class="hlist">
 <li><a title="edupage_api.module.Module" href="module.html#edupage_api.module.Module">Module</a></li>
@@ -585,33 +688,157 @@ class EduTeacher(EduAccount):
 <h3>Methods</h3>
 <dl>
 <dt id="edupage_api.people.People.get_all_students"><code class="name flex">
-<span>def <span class="ident">get_all_students</span></span>(<span>self) ‑> Optional[list[<a title="edupage_api.people.EduStudent" href="#edupage_api.people.EduStudent">EduStudent</a>]]</span>
+<span>def <span class="ident">get_all_students</span></span>(<span>self) ‑> list[<a title="edupage_api.people.EduStudent" href="#edupage_api.people.EduStudent">EduStudent</a>] | None</span>
 </code></dt>
 <dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@ModuleHelper.logged_in
+def get_all_students(self) -&gt; Optional[list[EduStudent]]:
+    request_url = f&#34;https://{self.edupage.subdomain}.edupage.org/rpr/server/maindbi.js?__func=mainDBIAccessor&#34;
+    data = {
+        &#34;__args&#34;: [
+            None,
+            self.edupage.get_school_year(),
+            {},
+            {
+                &#34;op&#34;: &#34;fetch&#34;,
+                &#34;needed_part&#34;: {
+                    &#34;students&#34;: [&#34;id&#34;, &#34;classid&#34;, &#34;short&#34;],
+                },
+            },
+        ],
+        &#34;__gsh&#34;: self.edupage.gsec_hash,
+    }
+
+    response = self.edupage.session.post(request_url, json=data).content.decode()
+    students = json.loads(response).get(&#34;r&#34;).get(&#34;tables&#34;)[0].get(&#34;data_rows&#34;)
+
+    result = []
+    for student in students:
+        student_id = int(student[&#34;id&#34;])
+        student_class_id = int(student[&#34;classid&#34;]) if student[&#34;classid&#34;] else None
+        student_name_short = student[&#34;short&#34;]
+
+        student = EduStudentSkeleton(
+            student_id, student_name_short, student_class_id
+        )
+        result.append(student)
+
+    return result</code></pre>
+</details>
 <div class="desc"></div>
 </dd>
 <dt id="edupage_api.people.People.get_student"><code class="name flex">
-<span>def <span class="ident">get_student</span></span>(<span>self, student_id: Union[int, str]) ‑> Optional[<a title="edupage_api.people.EduStudent" href="#edupage_api.people.EduStudent">EduStudent</a>]</span>
+<span>def <span class="ident">get_student</span></span>(<span>self, student_id: Union[int, str]) ‑> <a title="edupage_api.people.EduStudent" href="#edupage_api.people.EduStudent">EduStudent</a> | None</span>
 </code></dt>
 <dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@ModuleHelper.logged_in
+def get_student(self, student_id: Union[int, str]) -&gt; Optional[EduStudent]:
+    try:
+        student_id = int(student_id)
+    except (ValueError, TypeError):
+        return None
+
+    return next(
+        (
+            student
+            for student in self.get_students()
+            if student.person_id == student_id
+        ),
+        None,
+    )</code></pre>
+</details>
 <div class="desc"></div>
 </dd>
 <dt id="edupage_api.people.People.get_students"><code class="name flex">
-<span>def <span class="ident">get_students</span></span>(<span>self) ‑> Optional[list]</span>
+<span>def <span class="ident">get_students</span></span>(<span>self) ‑> list | None</span>
 </code></dt>
 <dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@ModuleHelper.logged_in
+def get_students(self) -&gt; Optional[list]:
+    students = DbiHelper(self.edupage).fetch_student_list()
+    if students is None:
+        return None
+
+    result = []
+    for student_id_str in students:
+        if not student_id_str:
+            continue
+
+        student_id = int(student_id_str)
+        student_data = students.get(student_id_str)
+
+        student = EduAccount.parse(student_data, student_id, self.edupage)
+        result.append(student)
+
+    return result</code></pre>
+</details>
 <div class="desc"></div>
 </dd>
 <dt id="edupage_api.people.People.get_teacher"><code class="name flex">
-<span>def <span class="ident">get_teacher</span></span>(<span>self, teacher_id: Union[int, str]) ‑> Optional[<a title="edupage_api.people.EduTeacher" href="#edupage_api.people.EduTeacher">EduTeacher</a>]</span>
+<span>def <span class="ident">get_teacher</span></span>(<span>self, teacher_id: Union[int, str]) ‑> <a title="edupage_api.people.EduTeacher" href="#edupage_api.people.EduTeacher">EduTeacher</a> | None</span>
 </code></dt>
 <dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@ModuleHelper.logged_in
+def get_teacher(self, teacher_id: Union[int, str]) -&gt; Optional[EduTeacher]:
+    try:
+        teacher_id = int(teacher_id)
+    except (ValueError, TypeError):
+        return None
+
+    return next(
+        (
+            teacher
+            for teacher in self.get_teachers()
+            if teacher.person_id == teacher_id
+        ),
+        None,
+    )</code></pre>
+</details>
 <div class="desc"></div>
 </dd>
 <dt id="edupage_api.people.People.get_teachers"><code class="name flex">
-<span>def <span class="ident">get_teachers</span></span>(<span>self) ‑> Optional[list]</span>
+<span>def <span class="ident">get_teachers</span></span>(<span>self) ‑> list | None</span>
 </code></dt>
 <dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@ModuleHelper.logged_in
+def get_teachers(self) -&gt; Optional[list]:
+    teachers = DbiHelper(self.edupage).fetch_teacher_list()
+    if teachers is None:
+        return None
+
+    result = []
+    for teacher_id_str in teachers:
+        if not teacher_id_str:
+            continue
+
+        teacher_id = int(teacher_id_str)
+        teacher_data = teachers.get(teacher_id_str)
+
+        teacher = EduAccount.parse(teacher_data, teacher_id, self.edupage)
+        result.append(teacher)
+
+    return result</code></pre>
+</details>
 <div class="desc"></div>
 </dd>
 </dl>
@@ -716,7 +943,7 @@ class EduTeacher(EduAccount):
 </nav>
 </main>
 <footer id="footer">
-<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.11.1</a>.</p>
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.11.5</a>.</p>
 </footer>
 </body>
 </html>

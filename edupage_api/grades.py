@@ -45,7 +45,7 @@ class Grades(Module):
 
         try:
             return self.__parse_grade_data(response)
-        except json.JSONDecodeError:
+        except (json.JSONDecodeError, IndexError):
             raise FailedToParseGradeDataError("Failed to parse JSON")
 
     def __get_grade_data_for_term(self, term: Term, year: int):
@@ -54,7 +54,7 @@ class Grades(Module):
 
         try:
             return self.__parse_grade_data(response)
-        except json.JSONDecodeError:
+        except (json.JSONDecodeError, IndexError):
             raise FailedToParseGradeDataError("Failed to parse JSON")
 
     @ModuleHelper.logged_in

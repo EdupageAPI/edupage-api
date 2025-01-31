@@ -209,10 +209,10 @@ class Edupage(EdupageModule):
         """Get a list of all text grades (commendations).
 
         Returns:
-            list[EduGrade]: List of `EduTextGrade`s
+            list[EduTextGrade]: List of `EduTextGrade`s
         """
 
-        return Grades(self).get_grades(year=None, term=None)
+        return Grades(self).get_text_grades(year=None, term=None)
 
     def get_grades_for_term(self, year: int, term: Term) -> list[EduGrade]:
         """Get a list of all available grades for a given year and term

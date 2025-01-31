@@ -25,6 +25,15 @@ class EduGrade:
     verbal: bool
     percent: float
 
+@dataclass
+class EduTextGrade:
+    grade_id: int
+    comment: Optional[str]
+    grade_type: int
+    date: datetime
+    subject_id: int
+    subject_name: Optional[str]
+
 
 class Term(Enum):
     FIRST = "P1"
@@ -56,6 +65,46 @@ class Grades(Module):
             return self.__parse_grade_data(response)
         except (json.JSONDecodeError, IndexError):
             raise FailedToParseGradeDataError("Failed to parse JSON")
+
+    @ModuleHelper.logged_in
+    def get_text_grades(self, term: Optional[Term], year: Optional[int]) -> list[EduTextGrade]:
+        grade_data = (
+            self.__get_grade_data_for_term(term, year)
+            if term and year
+            else self.__get_grade_data()
+        )
+        
+        text_grades = grade_data.get("vsetkyVcelicky")
+
+        grades = []
+        for grade in text_grades:
+            grade_id = grade.get("VcelickaID")
+            comment = grade.get("p_text")
+            grade_type = grade.get("p_typ")
+
+            date_str = grade.get("datum")
+            date = datetime.strptime(date_str, "%Y-%m-%d %H:%M:%S") \
+                if date_str is not None else None
+            
+            subject_id_str = grade.get("PredmetID")
+            if subject_id_str is None or subject_id_str == "vsetky":
+                continue
+
+            subject_id = int(subject_id_str)
+            subject_name = DbiHelper(self.edupage).fetch_subject_name(subject_id)
+
+            grades.append(
+                EduTextGrade(
+                    grade_id,
+                    comment,
+                    grade_type,
+                    date,
+                    subject_id,
+                    subject_name
+                )
+            )
+
+        return grades
 
     @ModuleHelper.logged_in
     def get_grades(self, term: Optional[Term], year: Optional[int]) -> list[EduGrade]:

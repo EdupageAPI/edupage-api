@@ -10,7 +10,7 @@ from edupage_api.classes import Class, Classes
 from edupage_api.classrooms import Classroom, Classrooms
 from edupage_api.cloud import Cloud, EduCloudFile
 from edupage_api.custom_request import CustomRequest
-from edupage_api.grades import EduGrade, Grades, Term
+from edupage_api.grades import EduGrade, EduTextGrade, Grades, Term
 from edupage_api.login import Login, TwoFactorLogin
 from edupage_api.lunches import Lunches, Meals
 from edupage_api.messages import Messages
@@ -204,6 +204,15 @@ class Edupage(EdupageModule):
         """
 
         return Grades(self).get_grades(year=None, term=None)
+    
+    def get_text_grades(self) -> list[EduTextGrade]:
+        """Get a list of all text grades (commendations).
+
+        Returns:
+            list[EduTextGrade]: List of `EduTextGrade`s
+        """
+
+        return Grades(self).get_text_grades(year=None, term=None)
 
     def get_grades_for_term(self, year: int, term: Term) -> list[EduGrade]:
         """Get a list of all available grades for a given year and term
@@ -213,6 +222,15 @@ class Edupage(EdupageModule):
         """
 
         return Grades(self).get_grades(year=year, term=term)
+    
+    def get_text_grades_for_term(self, year: int, term: Term) -> list[EduTextGrade]:
+         """Get a list of all available text grades (commendations) for a given year and term
+
+        Returns:
+            list[EduTextGrade]: List of `EduTextGrade`s
+        """
+         
+         return Grades(self).get_text_grades(year=year, term=term)
 
     def get_user_id(self) -> str:
         """Get your EduPage user ID.

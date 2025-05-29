@@ -162,12 +162,12 @@ class Login(Module):
                 or there was another problem with the second factor.
         """
 
-        request_url = f"https://{subdomain}.edupage.org/login/index.php"
+        request_url = f"https://{subdomain}.edupage.org/login/?cmd=MainLogin"
 
         response = self.edupage.session.get(request_url)
         data = response.content.decode()
 
-        csrf_token = data.split('name="csrfauth" value="')[1].split('"')[0]
+        csrf_token = data.split('"csrftoken":"')[1].split('"')[0]
 
         parameters = {
             "csrfauth": csrf_token,

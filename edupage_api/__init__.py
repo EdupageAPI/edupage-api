@@ -319,6 +319,7 @@ class Edupage(EdupageModule):
         Args:
             session_id (str): The `PHPSESSID` cookie.
             subdomain (str): Subdomain of the school which cookie is from.
+            username (str): The username of the account this session_id is from.
 
         Returns:
             Edupage: A new `Edupage` instance.

@@ -132,8 +132,18 @@ class Login(Module):
 
             self.edupage.data = json.loads(json_string)
             self.edupage.is_logged_in = True
+        else:
+            raise MissingDataException("Unexpected data while logging in!")
 
         self.edupage.gsec_hash = data.split('ASC.gsechash="')[1].split('"')[0]
+
+    def __get_csrf_token(self, response: str) -> str:
+        if '"csrftoken":"' in response:
+            return response.split('"csrftoken":"')[1].split('"')[0]
+        elif 'name="csrfauth" value="' in response:
+            return response.split('name="csrfauth" value="')[1].split('"')[0]
+        
+        raise MissingDataException("Unexpected response from edupage: please open an issue: https://github.com/EdupageAPI/edupage-api/issues/new?template=bug_report.md")
 
     def login(
         self, username: str, password: str, subdomain: str = "login1"
@@ -162,12 +172,11 @@ class Login(Module):
                 or there was another problem with the second factor.
         """
 
-        request_url = f"https://{subdomain}.edupage.org/login/?cmd=MainLogin"
-
+        request_url = f"https://{subdomain}.edupage.org/login/"
         response = self.edupage.session.get(request_url)
         data = response.content.decode()
 
-        csrf_token = data.split('"csrftoken":"')[1].split('"')[0]
+        csrf_token = self.__get_csrf_token(data)
 
         parameters = {
             "csrfauth": csrf_token,
@@ -205,8 +214,7 @@ class Login(Module):
         two_factor_response = self.edupage.session.get(request_url)
 
         data = two_factor_response.content.decode()
-
-        csrf_token = data.split('csrfauth" value="')[1].split('"')[0]
+        csrf_token = self.__get_csrf_token(data)        
 
         authentication_token = data.split('au" value="')[1].split('"')[0]
         authentication_endpoint = data.split('gu" value="')[1].split('"')[0]

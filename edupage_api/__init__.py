@@ -313,18 +313,19 @@ class Edupage(EdupageModule):
         Parent(self).switch_to_parent()
 
     @classmethod
-    def from_session_id(cls, session_id: str, subdomain: str):
+    def from_session_id(cls, session_id: str, subdomain: str, username: str):
         """Create an `Edupage` instance with a session id and subdomain.
 
         Args:
             session_id (str): The `PHPSESSID` cookie.
             subdomain (str): Subdomain of the school which cookie is from.
+            username (str): The username of the account this session_id is from.
 
         Returns:
             Edupage: A new `Edupage` instance.
         """
         instance = cls()
 
-        Login(instance).reload_data(subdomain, session_id)
+        Login(instance).reload_data(subdomain, session_id, username)
 
         return instance

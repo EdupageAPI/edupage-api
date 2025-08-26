@@ -7,10 +7,7 @@ permissions:
   contents: write
   id-token: write
 
-on:
-  push:
-    tags:        
-      - '**'     
+on: workflow_dispatch
 
 jobs:
   deploy:

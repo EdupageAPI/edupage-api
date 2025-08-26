@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
-<meta name="generator" content="pdoc3 0.11.5">
+<meta name="generator" content="pdoc3 0.11.6">
 <title>edupage_api.people API documentation</title>
 <meta name="description" content="">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/sanitize.min.css" integrity="sha512-y1dtMcuvtTMJc1yPgEqF0ZjQbhnc/bFhyvIyVNb9Zk5mIGtqVaAB1Ttl28su8AvFMOY0EwRbAe+HCLqj6W7/KA==" crossorigin>
@@ -125,29 +125,6 @@ class EduAccount:
 <li><a title="edupage_api.people.EduStudent" href="#edupage_api.people.EduStudent">EduStudent</a></li>
 <li><a title="edupage_api.people.EduTeacher" href="#edupage_api.people.EduTeacher">EduTeacher</a></li>
 </ul>
-<h3>Class variables</h3>
-<dl>
-<dt id="edupage_api.people.EduAccount.account_type"><code class="name">var <span class="ident">account_type</span> : <a title="edupage_api.people.EduAccountType" href="#edupage_api.people.EduAccountType">EduAccountType</a></code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-<dt id="edupage_api.people.EduAccount.gender"><code class="name">var <span class="ident">gender</span> : <a title="edupage_api.people.Gender" href="#edupage_api.people.Gender">Gender</a></code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-<dt id="edupage_api.people.EduAccount.in_school_since"><code class="name">var <span class="ident">in_school_since</span> : datetime.datetime | None</code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-<dt id="edupage_api.people.EduAccount.name"><code class="name">var <span class="ident">name</span> : str</code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-<dt id="edupage_api.people.EduAccount.person_id"><code class="name">var <span class="ident">person_id</span> : int</code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-</dl>
 <h3>Static methods</h3>
 <dl>
 <dt id="edupage_api.people.EduAccount.parse"><code class="name flex">
@@ -220,6 +197,29 @@ def recognize_account_type(person_data: dict) -&gt; EduAccountType:
     else:
         return EduAccountType.PARENT</code></pre>
 </details>
+<div class="desc"></div>
+</dd>
+</dl>
+<h3>Instance variables</h3>
+<dl>
+<dt id="edupage_api.people.EduAccount.account_type"><code class="name">var <span class="ident">account_type</span> : <a title="edupage_api.people.EduAccountType" href="#edupage_api.people.EduAccountType">EduAccountType</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.people.EduAccount.gender"><code class="name">var <span class="ident">gender</span> : <a title="edupage_api.people.Gender" href="#edupage_api.people.Gender">Gender</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.people.EduAccount.in_school_since"><code class="name">var <span class="ident">in_school_since</span> : datetime.datetime | None</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.people.EduAccount.name"><code class="name">var <span class="ident">name</span> : str</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.people.EduAccount.person_id"><code class="name">var <span class="ident">person_id</span> : int</code></dt>
+<dd>
 <div class="desc"></div>
 </dd>
 </dl>
@@ -303,7 +303,7 @@ class EduParent(EduAccount):
 <ul class="hlist">
 <li><a title="edupage_api.people.EduAccount" href="#edupage_api.people.EduAccount">EduAccount</a></li>
 </ul>
-<h3>Class variables</h3>
+<h3>Instance variables</h3>
 <dl>
 <dt id="edupage_api.people.EduParent.account_type"><code class="name">var <span class="ident">account_type</span> : <a title="edupage_api.people.EduAccountType" href="#edupage_api.people.EduAccountType">EduAccountType</a></code></dt>
 <dd>
@@ -370,7 +370,7 @@ class EduStudent(EduAccount):
 <ul class="hlist">
 <li><a title="edupage_api.people.EduAccount" href="#edupage_api.people.EduAccount">EduAccount</a></li>
 </ul>
-<h3>Class variables</h3>
+<h3>Instance variables</h3>
 <dl>
 <dt id="edupage_api.people.EduStudent.account_type"><code class="name">var <span class="ident">account_type</span> : <a title="edupage_api.people.EduAccountType" href="#edupage_api.people.EduAccountType">EduAccountType</a></code></dt>
 <dd>
@@ -442,7 +442,7 @@ class EduStudentSkeleton:
     class_id: int</code></pre>
 </details>
 <div class="desc"><p>EduStudentSkeleton(person_id: 'int', name_short: 'str', class_id: 'int')</p></div>
-<h3>Class variables</h3>
+<h3>Instance variables</h3>
 <dl>
 <dt id="edupage_api.people.EduStudentSkeleton.class_id"><code class="name">var <span class="ident">class_id</span> : int</code></dt>
 <dd>
@@ -490,7 +490,7 @@ class EduTeacher(EduAccount):
 <ul class="hlist">
 <li><a title="edupage_api.people.EduAccount" href="#edupage_api.people.EduAccount">EduAccount</a></li>
 </ul>
-<h3>Class variables</h3>
+<h3>Instance variables</h3>
 <dl>
 <dt id="edupage_api.people.EduTeacher.account_type"><code class="name">var <span class="ident">account_type</span> : <a title="edupage_api.people.EduAccountType" href="#edupage_api.people.EduAccountType">EduAccountType</a></code></dt>
 <dd>
@@ -943,7 +943,7 @@ def get_teachers(self) -&gt; Optional[list]:
 </nav>
 </main>
 <footer id="footer">
-<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.11.5</a>.</p>
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.11.6</a>.</p>
 </footer>
 </body>
 </html>

@@ -4,6 +4,7 @@ from datetime import datetime
 from enum import Enum
 from typing import Optional, Union
 
+from edupage_api import grades
 from edupage_api.dbi import DbiHelper
 from edupage_api.exceptions import FailedToParseGradeDataError
 from edupage_api.module import Module, ModuleHelper
@@ -25,7 +26,7 @@ class EduGrade:
     importance: float
     verbal: bool
     percent: float
-
+    class_grade_avg: Optional[float]
 
 class Term(Enum):
     FIRST = "P1"
@@ -67,7 +68,6 @@ class Grades(Module):
         )
 
         grades = grade_data.get("vsetkyZnamky")
-
         grade_details = grade_data.get("vsetkyUdalosti").get("edupage")
 
         output = []
@@ -156,6 +156,8 @@ class Grades(Module):
             except:
                 verbal = True
 
+            class_grade_avg = float(details.get("priemer"))
+
             grade = EduGrade(
                 event_id,
                 title,
@@ -170,6 +172,7 @@ class Grades(Module):
                 importance,
                 verbal,
                 percent,
+                class_grade_avg
             )
             output.append(grade)
 

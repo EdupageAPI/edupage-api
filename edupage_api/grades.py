@@ -21,6 +21,7 @@ class EduGrade:
     subject_name: Optional[str]
     teacher: Optional[EduTeacher]
     max_points: Optional[float]
+    more_details: Optional[list[str]]
     importance: float
     verbal: bool
     percent: float
@@ -66,6 +67,7 @@ class Grades(Module):
         )
 
         grades = grade_data.get("vsetkyZnamky")
+
         grade_details = grade_data.get("vsetkyUdalosti").get("edupage")
 
         output = []
@@ -121,6 +123,14 @@ class Grades(Module):
                 max_points = float(details.get("p_vaha_body"))
                 importance = float(details.get("p_vaha")) / 20
 
+            # More details coming from Edupage metadata
+            more_details_raw = details.get("moredata")
+            if isinstance(more_details_raw, list):
+                more_details = [str(item) for item in more_details_raw]
+            elif more_details_raw is None:
+                more_details = None
+            else:
+                more_details = [str(more_details_raw)]
             # Grade
             grade_raw = grade.get("data").split(" (", 1)
             if grade_raw[0].isdigit():
@@ -156,6 +166,7 @@ class Grades(Module):
                 subject_name,
                 teacher,
                 max_points,
+                more_details,
                 importance,
                 verbal,
                 percent,

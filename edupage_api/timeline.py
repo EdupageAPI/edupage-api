@@ -3,13 +3,15 @@ from __future__ import annotations
 
 import json
 from dataclasses import dataclass
-from datetime import datetime
+from datetime import datetime, date
 from enum import Enum
 from typing import Optional, Union
 
 from edupage_api.dbi import DbiHelper
 from edupage_api.module import Module, ModuleHelper
 from edupage_api.people import EduAccount
+from edupage_api.utils import RequestUtil
+from edupage_api.exceptions import RequestError, MissingDataException
 
 
 # data.dbi.event_types
@@ -136,7 +138,9 @@ class EventType(str, Enum):
 
     @staticmethod
     def parse(event_type_str: str) -> Optional[EventType]:
-        return ModuleHelper.parse_enum(event_type_str, EventType)
+        return ModuleHelper.parse_enum(
+            event_type_str, EventType  # pyright: ignore[reportArgumentType]
+        )
 
 
 @dataclass
@@ -151,11 +155,8 @@ class TimelineEvent:
 
 
 class TimelineEvents(Module):
-    @ModuleHelper.logged_in
-    def get_notifications(self):
+    def __parse_items(self, timeline_items: dict) -> list[TimelineEvent]:
         output = []
-
-        timeline_items = self.edupage.data.get("items")
 
         for event in timeline_items:
             event_id_str = event.get("timelineid")
@@ -231,4 +232,45 @@ class TimelineEvents(Module):
                 additional_data,
             )
             output.append(event)
+
         return output
+
+    @ModuleHelper.logged_in
+    def get_notifications_history(self, date_from: date):
+        request_url = "https://gymbilba.edupage.org/timeline/"
+        params = [
+            ("module", "todo"),
+            ("filterTab", ""),
+            ("akcia", "getData"),
+            ("filterTab", "messages"),
+        ]
+
+        response = self.edupage.session.post(
+            request_url,
+            params=params,
+            data=RequestUtil.encode_form_data(
+                {
+                    "datefrom": date_from.strftime("%Y-%m-%d"),
+                }
+            ),
+            headers={"Content-Type": "application/x-www-form-urlencoded"},
+        )
+
+        if response.status_code != 200:
+            raise RequestError(
+                f"Edupage returned an error: status={response.status_code}"
+            )
+
+        data = response.json()
+        if "timelineItems" not in data:
+            raise MissingDataException(
+                "Unexpected response from edupage! (no events in this time period?)"
+            )
+
+        return self.__parse_items(data["timelineItems"])
+
+    @ModuleHelper.logged_in
+    def get_notifications(self):
+        return self.__parse_items(
+            self.edupage.data.get("items")  # pyright: ignore[reportArgumentType]
+        )

@@ -184,6 +184,20 @@ class Edupage(EdupageModule):
 
         return TimelineEvents(self).get_notifications()
 
+    def get_notification_history(self, date_from: date) -> list[TimelineEvent]:
+        """Get a list of all available notifications since `date_from` (until now).
+
+        This method can be used instead of `get_notifications` if notifications older than
+        1 month are needed.
+
+        Args:
+            date_from (datetime.date): The first day of the date range
+
+        Returns:
+            list[TimelineEvent]: List of all notifications since `date_from` up to now.
+        """
+        return TimelineEvents(self).get_notifications_history(date_from)
+
     def cloud_upload(self, fd: TextIOWrapper) -> EduCloudFile:
         """Upload file to EduPage cloud.
 

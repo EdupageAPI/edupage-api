@@ -156,7 +156,7 @@ class Grades(Module):
             except:
                 verbal = True
 
-            class_grade_avg = float(details.get("priemer"))
+            class_grade_avg = None if details.get("priemer") is None else float(details.get("priemer"))
 
             grade = EduGrade(
                 event_id,

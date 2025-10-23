@@ -292,6 +292,20 @@ el.replaceWith(d);
 
         return TimelineEvents(self).get_notifications()
 
+    def get_notification_history(self, date_from: date) -&gt; list[TimelineEvent]:
+        &#34;&#34;&#34;Get a list of all available notifications since `date_from` (until now).
+
+        This method can be used instead of `get_notifications` if notifications older than
+        1 month are needed.
+
+        Args:
+            date_from (datetime.date): The first day of the date range
+
+        Returns:
+            list[TimelineEvent]: List of all notifications since `date_from` up to now.
+        &#34;&#34;&#34;
+        return TimelineEvents(self).get_notifications_history(date_from)
+
     def cloud_upload(self, fd: TextIOWrapper) -&gt; EduCloudFile:
         &#34;&#34;&#34;Upload file to EduPage cloud.
 
@@ -823,6 +837,42 @@ Defaults to <code>5</code>.</dd>
 <dd>The type (break or lesson) and time of the next ringing.</dd>
 </dl></div>
 </dd>
+<dt id="edupage_api.Edupage.get_notification_history"><code class="name flex">
+<span>def <span class="ident">get_notification_history</span></span>(<span>self, date_from: datetime.date) ‑> list[<a title="edupage_api.timeline.TimelineEvent" href="timeline.html#edupage_api.timeline.TimelineEvent">TimelineEvent</a>]</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_notification_history(self, date_from: date) -&gt; list[TimelineEvent]:
+    &#34;&#34;&#34;Get a list of all available notifications since `date_from` (until now).
+
+    This method can be used instead of `get_notifications` if notifications older than
+    1 month are needed.
+
+    Args:
+        date_from (datetime.date): The first day of the date range
+
+    Returns:
+        list[TimelineEvent]: List of all notifications since `date_from` up to now.
+    &#34;&#34;&#34;
+    return TimelineEvents(self).get_notifications_history(date_from)</code></pre>
+</details>
+<div class="desc"><p>Get a list of all available notifications since <code>date_from</code> (until now).</p>
+<p>This method can be used instead of <code>get_notifications</code> if notifications older than
+1 month are needed.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>date_from</code></strong> :&ensp;<code>datetime.date</code></dt>
+<dd>The first day of the date range</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>list[TimelineEvent]</code></dt>
+<dd>List of all notifications since <code>date_from</code> up to now.</dd>
+</dl></div>
+</dd>
 <dt id="edupage_api.Edupage.get_notifications"><code class="name flex">
 <span>def <span class="ident">get_notifications</span></span>(<span>self) ‑> list[<a title="edupage_api.timeline.TimelineEvent" href="timeline.html#edupage_api.timeline.TimelineEvent">TimelineEvent</a>]</span>
 </code></dt>
@@ -1244,6 +1294,7 @@ Defaults to <code>5</code>.</dd>
 <li><code><a title="edupage_api.Edupage.get_missing_teachers" href="#edupage_api.Edupage.get_missing_teachers">get_missing_teachers</a></code></li>
 <li><code><a title="edupage_api.Edupage.get_my_timetable" href="#edupage_api.Edupage.get_my_timetable">get_my_timetable</a></code></li>
 <li><code><a title="edupage_api.Edupage.get_next_ringing_time" href="#edupage_api.Edupage.get_next_ringing_time">get_next_ringing_time</a></code></li>
+<li><code><a title="edupage_api.Edupage.get_notification_history" href="#edupage_api.Edupage.get_notification_history">get_notification_history</a></code></li>
 <li><code><a title="edupage_api.Edupage.get_notifications" href="#edupage_api.Edupage.get_notifications">get_notifications</a></code></li>
 <li><code><a title="edupage_api.Edupage.get_school_year" href="#edupage_api.Edupage.get_school_year">get_school_year</a></code></li>
 <li><code><a title="edupage_api.Edupage.get_students" href="#edupage_api.Edupage.get_students">get_students</a></code></li>

@@ -178,7 +178,9 @@ el.replaceWith(d);
 
     @staticmethod
     def parse(event_type_str: str) -&gt; Optional[EventType]:
-        return ModuleHelper.parse_enum(event_type_str, EventType)</code></pre>
+        return ModuleHelper.parse_enum(
+            event_type_str, EventType  # pyright: ignore[reportArgumentType]
+        )</code></pre>
 </details>
 <div class="desc"><p>An enumeration.</p></div>
 <h3>Ancestors</h3>
@@ -497,7 +499,9 @@ el.replaceWith(d);
 </summary>
 <pre><code class="python">@staticmethod
 def parse(event_type_str: str) -&gt; Optional[EventType]:
-    return ModuleHelper.parse_enum(event_type_str, EventType)</code></pre>
+    return ModuleHelper.parse_enum(
+        event_type_str, EventType  # pyright: ignore[reportArgumentType]
+    )</code></pre>
 </details>
 <div class="desc"></div>
 </dd>
@@ -565,11 +569,8 @@ class TimelineEvent:
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">class TimelineEvents(Module):
-    @ModuleHelper.logged_in
-    def get_notifications(self):
+    def __parse_items(self, timeline_items: dict) -&gt; list[TimelineEvent]:
         output = []
-
-        timeline_items = self.edupage.data.get(&#34;items&#34;)
 
         for event in timeline_items:
             event_id_str = event.get(&#34;timelineid&#34;)
@@ -645,7 +646,48 @@ class TimelineEvent:
                 additional_data,
             )
             output.append(event)
-        return output</code></pre>
+
+        return output
+
+    @ModuleHelper.logged_in
+    def get_notifications_history(self, date_from: date):
+        request_url = &#34;https://gymbilba.edupage.org/timeline/&#34;
+        params = [
+            (&#34;module&#34;, &#34;todo&#34;),
+            (&#34;filterTab&#34;, &#34;&#34;),
+            (&#34;akcia&#34;, &#34;getData&#34;),
+            (&#34;filterTab&#34;, &#34;messages&#34;),
+        ]
+
+        response = self.edupage.session.post(
+            request_url,
+            params=params,
+            data=RequestUtil.encode_form_data(
+                {
+                    &#34;datefrom&#34;: date_from.strftime(&#34;%Y-%m-%d&#34;),
+                }
+            ),
+            headers={&#34;Content-Type&#34;: &#34;application/x-www-form-urlencoded&#34;},
+        )
+
+        if response.status_code != 200:
+            raise RequestError(
+                f&#34;Edupage returned an error: status={response.status_code}&#34;
+            )
+
+        data = response.json()
+        if &#34;timelineItems&#34; not in data:
+            raise MissingDataException(
+                &#34;Unexpected response from edupage! (no events in this time period?)&#34;
+            )
+
+        return self.__parse_items(data[&#34;timelineItems&#34;])
+
+    @ModuleHelper.logged_in
+    def get_notifications(self):
+        return self.__parse_items(
+            self.edupage.data.get(&#34;items&#34;)  # pyright: ignore[reportArgumentType]
+        )</code></pre>
 </details>
 <div class="desc"></div>
 <h3>Ancestors</h3>
@@ -664,85 +706,53 @@ class TimelineEvent:
 </summary>
 <pre><code class="python">@ModuleHelper.logged_in
 def get_notifications(self):
-    output = []
+    return self.__parse_items(
+        self.edupage.data.get(&#34;items&#34;)  # pyright: ignore[reportArgumentType]
+    )</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.timeline.TimelineEvents.get_notifications_history"><code class="name flex">
+<span>def <span class="ident">get_notifications_history</span></span>(<span>self, date_from: date)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@ModuleHelper.logged_in
+def get_notifications_history(self, date_from: date):
+    request_url = &#34;https://gymbilba.edupage.org/timeline/&#34;
+    params = [
+        (&#34;module&#34;, &#34;todo&#34;),
+        (&#34;filterTab&#34;, &#34;&#34;),
+        (&#34;akcia&#34;, &#34;getData&#34;),
+        (&#34;filterTab&#34;, &#34;messages&#34;),
+    ]
 
-    timeline_items = self.edupage.data.get(&#34;items&#34;)
+    response = self.edupage.session.post(
+        request_url,
+        params=params,
+        data=RequestUtil.encode_form_data(
+            {
+                &#34;datefrom&#34;: date_from.strftime(&#34;%Y-%m-%d&#34;),
+            }
+        ),
+        headers={&#34;Content-Type&#34;: &#34;application/x-www-form-urlencoded&#34;},
+    )
 
-    for event in timeline_items:
-        event_id_str = event.get(&#34;timelineid&#34;)
-        if not event_id_str:
-            continue
-
-        event_id = int(event_id_str)
-        event_data = json.loads(event.get(&#34;data&#34;))
-
-        event_type_str = event.get(&#34;typ&#34;)
-        if not event_id_str:
-            continue
-        event_type = EventType.parse(event_type_str)
-
-        event_timestamp = datetime.strptime(
-            event.get(&#34;timestamp&#34;), &#34;%Y-%m-%d %H:%M:%S&#34;
+    if response.status_code != 200:
+        raise RequestError(
+            f&#34;Edupage returned an error: status={response.status_code}&#34;
         )
-        text = event.get(&#34;text&#34;)
 
-        # what about different languages?
-        # for message event type
-        if text.startswith(&#34;Dôležitá správa&#34;):
-            text = event_data.get(&#34;messageContent&#34;)
-
-        if text == &#34;&#34;:
-            try:
-                text = event_data.get(&#34;nazov&#34;)
-            except:
-                text = &#34;&#34;
-
-        # todo: add support for &#34;*&#34;
-        recipient_name = event.get(&#34;user_meno&#34;)
-        recipient_data = DbiHelper(self.edupage).fetch_person_data_by_name(
-            recipient_name
+    data = response.json()
+    if &#34;timelineItems&#34; not in data:
+        raise MissingDataException(
+            &#34;Unexpected response from edupage! (no events in this time period?)&#34;
         )
 
-        if recipient_name in [&#34;*&#34;, &#34;Celá škola&#34;]:
-            recipient = &#34;*&#34;
-        elif type(recipient_name) == str:
-            recipient = recipient_name
-        else:
-            ModuleHelper.assert_none(recipient_data)
-
-            recipient = EduAccount.parse(
-                recipient_data, recipient_data.get(&#34;id&#34;), self.edupage
-            )
-
-        # todo: add support for &#34;*&#34;
-        author_name = event.get(&#34;vlastnik_meno&#34;)
-        author_data = DbiHelper(self.edupage).fetch_person_data_by_name(author_name)
-
-        if author_name == &#34;*&#34;:
-            author = &#34;*&#34;
-        elif type(author_name) == str:
-            author = author_name
-        else:
-            ModuleHelper.assert_none(author_data)
-            author = EduAccount.parse(
-                author_data, author_data.get(&#34;id&#34;), self.edupage
-            )
-
-        additional_data = event.get(&#34;data&#34;)
-        if additional_data and type(additional_data) == str:
-            additional_data = json.loads(additional_data)
-
-        event = TimelineEvent(
-            event_id,
-            event_timestamp,
-            text,
-            author,
-            recipient,
-            event_type,
-            additional_data,
-        )
-        output.append(event)
-    return output</code></pre>
+    return self.__parse_items(data[&#34;timelineItems&#34;])</code></pre>
 </details>
 <div class="desc"></div>
 </dd>
@@ -859,6 +869,7 @@ def get_notifications(self):
 <h4><code><a title="edupage_api.timeline.TimelineEvents" href="#edupage_api.timeline.TimelineEvents">TimelineEvents</a></code></h4>
 <ul class="">
 <li><code><a title="edupage_api.timeline.TimelineEvents.get_notifications" href="#edupage_api.timeline.TimelineEvents.get_notifications">get_notifications</a></code></li>
+<li><code><a title="edupage_api.timeline.TimelineEvents.get_notifications_history" href="#edupage_api.timeline.TimelineEvents.get_notifications_history">get_notifications_history</a></code></li>
 </ul>
 </li>
 </ul>

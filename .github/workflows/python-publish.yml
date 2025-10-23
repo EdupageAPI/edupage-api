@@ -7,10 +7,7 @@ permissions:
   contents: write
   id-token: write
 
-on:
-  push:
-    tags:        
-      - '**'     
+on: workflow_dispatch
 
 jobs:
   deploy:
@@ -45,9 +42,6 @@ jobs:
           add: "docs"
           default_author: github_actions
           message: "Regenerate documentation"
-
-          pathspec_error_handling: ignore
-          push: origin master
 
       - name: Build
         run: python -m build

@@ -237,7 +237,7 @@ class TimelineEvents(Module):
 
     @ModuleHelper.logged_in
     def get_notifications_history(self, date_from: date):
-        request_url = "https://gymbilba.edupage.org/timeline/"
+        request_url = f"https://{self.edupage.subdomain}.edupage.org/timeline/"
         params = [
             ("module", "todo"),
             ("filterTab", ""),

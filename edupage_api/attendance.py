@@ -5,7 +5,10 @@ from datetime import date, datetime
 from typing import Optional
 
 from edupage_api.module import Module, ModuleHelper
-from edupage_api.exceptions import MissingDataException
+from edupage_api.exceptions import (
+    MissingDataException,
+    InsufficientPermissionsException,
+)
 
 
 @dataclass
@@ -73,7 +76,7 @@ class Attendance(Module):
     def __get_user_id_number(user_id: str):
         return user_id.replace("Student", "").replace("Ucitel", "")
 
-    def get_attendance_available_days(self, user_id: str) -> list[str]:
+    def get_days_with_available_attendance(self, user_id: str) -> list[date]:
         user_id_number = Attendance.__get_user_id_number(
             self.edupage.get_user_id()  # pyright: ignore[reportAttributeAccessIssue]
         )
@@ -82,7 +85,15 @@ class Attendance(Module):
         attendance_data = self.__get_attendance_data(user_id_number)
 
         stats = attendance_data["dateStats"]
-        return stats[target_user_id_number].keys()
+        if target_user_id_number not in stats:
+            raise InsufficientPermissionsException(
+                "The requested user's data is not available in the response."
+            )
+
+        return [
+            datetime.strptime("%Y-%m-%d", d).date()
+            for d in stats[target_user_id_number].keys()
+        ]
 
     @ModuleHelper.logged_in
     def get_arrivals(self, user_id: str) -> dict[str, Arrival]:
@@ -93,7 +104,11 @@ class Attendance(Module):
         target_user_id_number = Attendance.__get_user_id_number(user_id)
 
         attendance_data = self.__get_attendance_data(user_id_number)
-        detailed_stats = attendance_data["students"][target_user_id_number]
+        detailed_stats = attendance_data["students"].get(target_user_id_number)
+        if detailed_stats is None:
+            raise InsufficientPermissionsException(
+                "The requested user's data is not available in the response."
+            )
 
         arrivals = {}
         for raw_date, arrival_data in detailed_stats.items():
@@ -139,7 +154,14 @@ class Attendance(Module):
         attendance_data = self.__get_attendance_data(user_id_number)
 
         all_stats = attendance_data["dateStats"]
-        stats = all_stats[target_user_id_number][date.strftime("%Y-%m-%d")]
+
+        user_stats = all_stats.get(target_user_id_number)
+        if user_stats is None:
+            raise InsufficientPermissionsException(
+                "The requested user's data is not available in the response."
+            )
+
+        stats = user_stats[date.strftime("%Y-%m-%d")]
 
         total_lessons_absent = AttendenceStatDetail(
             count=stats.get("absent"),

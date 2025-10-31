@@ -28,6 +28,12 @@ from edupage_api.subjects import Subject, Subjects
 from edupage_api.substitution import Substitution, TimetableChange
 from edupage_api.timeline import TimelineEvent, TimelineEvents
 from edupage_api.timetables import Timetable, Timetables
+from edupage_api.attendance import (
+    Attendance,
+    AttendanceStatistic,
+    AttendenceStatDetail,
+    Arrival,
+)
 
 
 class Edupage(EdupageModule):
@@ -135,6 +141,54 @@ class Edupage(EdupageModule):
         """
 
         return Subjects(self).get_subjects()
+
+    def get_attendance_statistics(
+        self, user_id: str, date: date
+    ) -> AttendanceStatistic:
+        """Get a count of excused/unexcused/absent/late (and more) lessons.
+
+        Note: To get your own attendance, pass `edupage.get_user_id()` as `user_id`
+
+        Args:
+            user_id (str): This user's attendance data will be in the result.
+            date (datetime.date): Date from which you want attendance statistics.
+
+        Returns:
+            AttendanceStatistic: The fetched statistics
+        """
+
+        return Attendance(self).get_attendance_statistics(user_id, date)
+
+    def get_days_with_available_attendance(self, user_id: str) -> list[date]:
+        """Get all dates where attendance data is available.
+
+        Note: To get your data for your own attendance, pass `edupage.get_user_id()` as `user_id`
+
+        Args:
+            user_id (str): This user's available attendence dates will be in the result.
+
+        Result:
+            list[datetime.date]: A list of all dates where attendence data is available.
+        """
+
+        return Attendance(self).get_days_with_available_attendance(user_id)
+
+    def get_arrivals(self, user_id: str) -> dict[str, Arrival]:
+        """Get arrival and departure times for all days returned by `Edupage.get_days_with_available_attendance`.
+
+        Note: To get your own arrivals, pass `edupage.get_user_id()` as `user_id`
+        Note: Only returns data when available. There may not be an entry for each day returned by `Edupage.get_days_with_available_attendance`.
+
+        Args:
+            user_id (str): This user's arrivals dates will be in the result.
+
+        Result:
+            dict[str, Arrival]: The keys of the dict are dates of the arrival in "YYYY-mm-dd" format (%Y-%m-%d). Contains all available arrival and departure data.
+
+        Note: You don't have to rely on the keys of the dictionary, there is also a `Arrival.date` property.
+        """
+
+        return Attendance(self).get_arrivals(user_id)
 
     def send_message(
         self, recipients: Union[list[EduAccount], EduAccount], body: str

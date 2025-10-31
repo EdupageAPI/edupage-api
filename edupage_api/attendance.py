@@ -74,7 +74,7 @@ class Attendance(Module):
 
     @staticmethod
     def __get_user_id_number(user_id: str):
-        return user_id.replace("Student", "").replace("Ucitel", "")
+        return user_id.replace("Student", "").replace("Ucitel", "").replace("-", "")
 
     def get_days_with_available_attendance(self, user_id: str) -> list[date]:
         user_id_number = Attendance.__get_user_id_number(

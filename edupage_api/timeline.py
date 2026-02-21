@@ -152,11 +152,22 @@ class TimelineEvent:
     recipient: Union[EduAccount, str]
     event_type: EventType
     additional_data: dict
+    is_done: bool = False
+    done_at: Optional[datetime] = None
+    is_starred: bool = False
+    reaction_count: int = 0
+    created_at: Optional[datetime] = None
+    is_removed: bool = False
 
 
 class TimelineEvents(Module):
-    def __parse_items(self, timeline_items: dict) -> list[TimelineEvent]:
+    def __parse_items(
+        self, timeline_items: dict, user_props: Optional[dict] = None
+    ) -> list[TimelineEvent]:
         output = []
+
+        if user_props is None:
+            user_props = {}
 
         for event in timeline_items:
             event_id_str = event.get("timelineid")
@@ -222,6 +233,41 @@ class TimelineEvents(Module):
             if additional_data and type(additional_data) == str:
                 additional_data = json.loads(additional_data)
 
+            # Parse user-specific state from userProps
+            props = user_props.get(event_id_str, {})
+            if not isinstance(props, dict):
+                props = {}
+
+            is_starred = props.get("starred") == "1"
+
+            done_at = None
+            done_at_str = props.get("doneMaxCas")
+            if done_at_str:
+                try:
+                    done_at = datetime.strptime(done_at_str, "%Y-%m-%d %H:%M:%S")
+                except (ValueError, TypeError):
+                    pass
+            is_done = done_at is not None
+
+            # Parse additional fields from raw event
+            reaction_count = 0
+            try:
+                reaction_count = int(event.get("pocet_reakcii", 0))
+            except (ValueError, TypeError):
+                pass
+
+            created_at = None
+            created_at_str = event.get("cas_pridania")
+            if created_at_str:
+                try:
+                    created_at = datetime.strptime(
+                        created_at_str, "%Y-%m-%d %H:%M:%S"
+                    )
+                except (ValueError, TypeError):
+                    pass
+
+            is_removed = event.get("removed") == "1"
+
             event = TimelineEvent(
                 event_id,
                 event_timestamp,
@@ -230,10 +276,23 @@ class TimelineEvents(Module):
                 recipient,
                 event_type,
                 additional_data,
+                is_done=is_done,
+                done_at=done_at,
+                is_starred=is_starred,
+                reaction_count=reaction_count,
+                created_at=created_at,
+                is_removed=is_removed,
             )
             output.append(event)
 
         return output
+
+    def __get_user_props(self) -> dict:
+        """Get user properties (starred, done state) from cached login data."""
+        if self.edupage.data is None:
+            return {}
+        result = self.edupage.data.get("userProps")
+        return result if isinstance(result, dict) else {}
 
     @ModuleHelper.logged_in
     def get_notifications_history(self, date_from: date):
@@ -267,10 +326,16 @@ class TimelineEvents(Module):
                 "Unexpected response from edupage! (no events in this time period?)"
             )
 
-        return self.__parse_items(data["timelineItems"])
+        # The history endpoint returns user props under "timelineUserProps"
+        user_props = data.get("timelineUserProps")
+        if user_props is None:
+            user_props = self.__get_user_props()
+
+        return self.__parse_items(data["timelineItems"], user_props)
 
     @ModuleHelper.logged_in
     def get_notifications(self):
         return self.__parse_items(
-            self.edupage.data.get("items")  # pyright: ignore[reportArgumentType]
+            self.edupage.data.get("items"),  # pyright: ignore[reportArgumentType]
+            self.__get_user_props(),
         )

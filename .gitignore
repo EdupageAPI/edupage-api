@@ -15,11 +15,9 @@ build/*
 edupage_api.egg-info
 edupage_api.egg-info/*
 test.py
-tests
+tests/__pycache__
 
 USERNAME
 PASSWORD
 
 dump.html
-tests/
-test.py

@@ -509,7 +509,7 @@ def parse(event_type_str: str) -&gt; Optional[EventType]:
 </dd>
 <dt id="edupage_api.timeline.TimelineEvent"><code class="flex name class">
 <span>class <span class="ident">TimelineEvent</span></span>
-<span>(</span><span>event_id: int,<br>timestamp: datetime,<br>text: str,<br>author: Union[EduAccount, str],<br>recipient: Union[EduAccount, str],<br>event_type: <a title="edupage_api.timeline.EventType" href="#edupage_api.timeline.EventType">EventType</a>,<br>additional_data: dict)</span>
+<span>(</span><span>event_id: int,<br>timestamp: datetime,<br>text: str,<br>author: Union[EduAccount, str],<br>recipient: Union[EduAccount, str],<br>event_type: <a title="edupage_api.timeline.EventType" href="#edupage_api.timeline.EventType">EventType</a>,<br>additional_data: dict,<br>is_done: bool = False,<br>done_at: Optional[datetime] = None,<br>is_starred: bool = False,<br>reaction_count: int = 0,<br>created_at: Optional[datetime] = None,<br>is_removed: bool = False)</span>
 </code></dt>
 <dd>
 <details class="source">
@@ -524,9 +524,15 @@ class TimelineEvent:
     author: Union[EduAccount, str]
     recipient: Union[EduAccount, str]
     event_type: EventType
-    additional_data: dict</code></pre>
+    additional_data: dict
+    is_done: bool = False
+    done_at: Optional[datetime] = None
+    is_starred: bool = False
+    reaction_count: int = 0
+    created_at: Optional[datetime] = None
+    is_removed: bool = False</code></pre>
 </details>
-<div class="desc"><p>TimelineEvent(event_id: 'int', timestamp: 'datetime', text: 'str', author: 'Union[EduAccount, str]', recipient: 'Union[EduAccount, str]', event_type: 'EventType', additional_data: 'dict')</p></div>
+<div class="desc"><p>TimelineEvent(event_id: 'int', timestamp: 'datetime', text: 'str', author: 'Union[EduAccount, str]', recipient: 'Union[EduAccount, str]', event_type: 'EventType', additional_data: 'dict', is_done: 'bool' = False, done_at: 'Optional[datetime]' = None, is_starred: 'bool' = False, reaction_count: 'int' = 0, created_at: 'Optional[datetime]' = None, is_removed: 'bool' = False)</p></div>
 <h3>Instance variables</h3>
 <dl>
 <dt id="edupage_api.timeline.TimelineEvent.additional_data"><code class="name">var <span class="ident">additional_data</span> : dict</code></dt>
@@ -537,11 +543,35 @@ class TimelineEvent:
 <dd>
 <div class="desc"></div>
 </dd>
+<dt id="edupage_api.timeline.TimelineEvent.created_at"><code class="name">var <span class="ident">created_at</span> : datetime.datetime | None</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.timeline.TimelineEvent.done_at"><code class="name">var <span class="ident">done_at</span> : datetime.datetime | None</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
 <dt id="edupage_api.timeline.TimelineEvent.event_id"><code class="name">var <span class="ident">event_id</span> : int</code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
 <dt id="edupage_api.timeline.TimelineEvent.event_type"><code class="name">var <span class="ident">event_type</span> : <a title="edupage_api.timeline.EventType" href="#edupage_api.timeline.EventType">EventType</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.timeline.TimelineEvent.is_done"><code class="name">var <span class="ident">is_done</span> : bool</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.timeline.TimelineEvent.is_removed"><code class="name">var <span class="ident">is_removed</span> : bool</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.timeline.TimelineEvent.is_starred"><code class="name">var <span class="ident">is_starred</span> : bool</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.timeline.TimelineEvent.reaction_count"><code class="name">var <span class="ident">reaction_count</span> : int</code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
@@ -569,8 +599,13 @@ class TimelineEvent:
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">class TimelineEvents(Module):
-    def __parse_items(self, timeline_items: dict) -&gt; list[TimelineEvent]:
+    def __parse_items(
+        self, timeline_items: dict, user_props: Optional[dict] = None
+    ) -&gt; list[TimelineEvent]:
         output = []
+
+        if user_props is None:
+            user_props = {}
 
         for event in timeline_items:
             event_id_str = event.get(&#34;timelineid&#34;)
@@ -636,6 +671,41 @@ class TimelineEvent:
             if additional_data and type(additional_data) == str:
                 additional_data = json.loads(additional_data)
 
+            # Parse user-specific state from userProps
+            props = user_props.get(event_id_str, {})
+            if not isinstance(props, dict):
+                props = {}
+
+            is_starred = props.get(&#34;starred&#34;) == &#34;1&#34;
+
+            done_at = None
+            done_at_str = props.get(&#34;doneMaxCas&#34;)
+            if done_at_str:
+                try:
+                    done_at = datetime.strptime(done_at_str, &#34;%Y-%m-%d %H:%M:%S&#34;)
+                except (ValueError, TypeError):
+                    pass
+            is_done = done_at is not None
+
+            # Parse additional fields from raw event
+            reaction_count = 0
+            try:
+                reaction_count = int(event.get(&#34;pocet_reakcii&#34;, 0))
+            except (ValueError, TypeError):
+                pass
+
+            created_at = None
+            created_at_str = event.get(&#34;cas_pridania&#34;)
+            if created_at_str:
+                try:
+                    created_at = datetime.strptime(
+                        created_at_str, &#34;%Y-%m-%d %H:%M:%S&#34;
+                    )
+                except (ValueError, TypeError):
+                    pass
+
+            is_removed = event.get(&#34;removed&#34;) == &#34;1&#34;
+
             event = TimelineEvent(
                 event_id,
                 event_timestamp,
@@ -644,10 +714,23 @@ class TimelineEvent:
                 recipient,
                 event_type,
                 additional_data,
+                is_done=is_done,
+                done_at=done_at,
+                is_starred=is_starred,
+                reaction_count=reaction_count,
+                created_at=created_at,
+                is_removed=is_removed,
             )
             output.append(event)
 
         return output
+
+    def __get_user_props(self) -&gt; dict:
+        &#34;&#34;&#34;Get user properties (starred, done state) from cached login data.&#34;&#34;&#34;
+        if self.edupage.data is None:
+            return {}
+        result = self.edupage.data.get(&#34;userProps&#34;)
+        return result if isinstance(result, dict) else {}
 
     @ModuleHelper.logged_in
     def get_notifications_history(self, date_from: date):
@@ -681,12 +764,18 @@ class TimelineEvent:
                 &#34;Unexpected response from edupage! (no events in this time period?)&#34;
             )
 
-        return self.__parse_items(data[&#34;timelineItems&#34;])
+        # The history endpoint returns user props under &#34;timelineUserProps&#34;
+        user_props = data.get(&#34;timelineUserProps&#34;)
+        if user_props is None:
+            user_props = self.__get_user_props()
+
+        return self.__parse_items(data[&#34;timelineItems&#34;], user_props)
 
     @ModuleHelper.logged_in
     def get_notifications(self):
         return self.__parse_items(
-            self.edupage.data.get(&#34;items&#34;)  # pyright: ignore[reportArgumentType]
+            self.edupage.data.get(&#34;items&#34;),  # pyright: ignore[reportArgumentType]
+            self.__get_user_props(),
         )</code></pre>
 </details>
 <div class="desc"></div>
@@ -707,7 +796,8 @@ class TimelineEvent:
 <pre><code class="python">@ModuleHelper.logged_in
 def get_notifications(self):
     return self.__parse_items(
-        self.edupage.data.get(&#34;items&#34;)  # pyright: ignore[reportArgumentType]
+        self.edupage.data.get(&#34;items&#34;),  # pyright: ignore[reportArgumentType]
+        self.__get_user_props(),
     )</code></pre>
 </details>
 <div class="desc"></div>
@@ -752,7 +842,12 @@ def get_notifications_history(self, date_from: date):
             &#34;Unexpected response from edupage! (no events in this time period?)&#34;
         )
 
-    return self.__parse_items(data[&#34;timelineItems&#34;])</code></pre>
+    # The history endpoint returns user props under &#34;timelineUserProps&#34;
+    user_props = data.get(&#34;timelineUserProps&#34;)
+    if user_props is None:
+        user_props = self.__get_user_props()
+
+    return self.__parse_items(data[&#34;timelineItems&#34;], user_props)</code></pre>
 </details>
 <div class="desc"></div>
 </dd>
@@ -858,8 +953,14 @@ def get_notifications_history(self, date_from: date):
 <ul class="two-column">
 <li><code><a title="edupage_api.timeline.TimelineEvent.additional_data" href="#edupage_api.timeline.TimelineEvent.additional_data">additional_data</a></code></li>
 <li><code><a title="edupage_api.timeline.TimelineEvent.author" href="#edupage_api.timeline.TimelineEvent.author">author</a></code></li>
+<li><code><a title="edupage_api.timeline.TimelineEvent.created_at" href="#edupage_api.timeline.TimelineEvent.created_at">created_at</a></code></li>
+<li><code><a title="edupage_api.timeline.TimelineEvent.done_at" href="#edupage_api.timeline.TimelineEvent.done_at">done_at</a></code></li>
 <li><code><a title="edupage_api.timeline.TimelineEvent.event_id" href="#edupage_api.timeline.TimelineEvent.event_id">event_id</a></code></li>
 <li><code><a title="edupage_api.timeline.TimelineEvent.event_type" href="#edupage_api.timeline.TimelineEvent.event_type">event_type</a></code></li>
+<li><code><a title="edupage_api.timeline.TimelineEvent.is_done" href="#edupage_api.timeline.TimelineEvent.is_done">is_done</a></code></li>
+<li><code><a title="edupage_api.timeline.TimelineEvent.is_removed" href="#edupage_api.timeline.TimelineEvent.is_removed">is_removed</a></code></li>
+<li><code><a title="edupage_api.timeline.TimelineEvent.is_starred" href="#edupage_api.timeline.TimelineEvent.is_starred">is_starred</a></code></li>
+<li><code><a title="edupage_api.timeline.TimelineEvent.reaction_count" href="#edupage_api.timeline.TimelineEvent.reaction_count">reaction_count</a></code></li>
 <li><code><a title="edupage_api.timeline.TimelineEvent.recipient" href="#edupage_api.timeline.TimelineEvent.recipient">recipient</a></code></li>
 <li><code><a title="edupage_api.timeline.TimelineEvent.text" href="#edupage_api.timeline.TimelineEvent.text">text</a></code></li>
 <li><code><a title="edupage_api.timeline.TimelineEvent.timestamp" href="#edupage_api.timeline.TimelineEvent.timestamp">timestamp</a></code></li>

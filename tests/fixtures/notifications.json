@@ -1,0 +1,50 @@
+{
+  "meta": {
+    "subdomain": "testschool",
+    "username": "test.student",
+    "gsec_hash": "testhash123"
+  },
+  "data": {
+    "dbi": {
+      "teachers": {},
+      "students": {},
+      "parents": {}
+    },
+    "userProps": {
+      "1": {
+        "starred": "0"
+      },
+      "2": {
+        "starred": "1",
+        "doneMaxCas": "2024-02-20 09:15:00"
+      }
+    },
+    "items": [
+      {
+        "timelineid": "1",
+        "typ": "sprava",
+        "timestamp": "2024-01-15 10:30:00",
+        "text": "Hello from school",
+        "data": "{\"messageContent\": \"Hello from school\"}",
+        "user_meno": "Cel\u00e1 \u0161kola",
+        "vlastnik_meno": "*",
+        "pocet_reakcii": "3",
+        "cas_pridania": "2024-01-15 10:28:00",
+        "removed": "0"
+      },
+      {
+        "timelineid": "2",
+        "typ": "homework",
+        "timestamp": "2024-02-19 08:00:00",
+        "text": "Math homework",
+        "data": "{\"nazov\": \"Math homework\"}",
+        "user_meno": "Cel\u00e1 \u0161kola",
+        "vlastnik_meno": "*",
+        "pocet_reakcii": "0",
+        "cas_pridania": "2024-02-19 07:55:00",
+        "removed": "0"
+      }
+    ]
+  },
+  "requests": []
+}

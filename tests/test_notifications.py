@@ -121,7 +121,7 @@ class NotificationsTest(EdupageTestCase):
     def test_unexpected_request_raises_error(self):
         """MockSession must raise UnexpectedRequestError for unmapped URLs."""
         edupage = self.get_edupage(NOTIFICATIONS_FIXTURE)
-        # The fixture has no recorded requests, so any HTTP call should fail.
+        # The fixture has an empty requests list, so any HTTP call should fail.
         with self.assertRaises(UnexpectedRequestError):
             edupage.session.get("https://testschool.edupage.org/unexpected/")
 

@@ -121,7 +121,7 @@ class MockSession(Session):
     def __init__(self, requests_data: list):
         super().__init__()
         # (method, url) -> ordered list of response dicts
-        self._mock_responses: dict = {}
+        self._mock_responses: dict[tuple[str, str], list[dict]] = {}
         for entry in requests_data:
             key = (entry["method"].upper(), entry["url"])
             self._mock_responses.setdefault(key, []).append(entry["response"])
@@ -260,6 +260,14 @@ class EdupageTestCase(unittest.TestCase):
 
         Returns:
             A configured :class:`~edupage_api.Edupage` instance.
+
+        Note:
+            Any ``"meta"`` fields or the ``"data"`` key that are absent from the
+            fixture will result in the corresponding ``Edupage`` attribute being
+            ``None``.  Hand-crafted fixtures must include at minimum a
+            ``"data"`` key; missing ``"meta"`` values will cause
+            ``AttributeError`` or ``MissingDataException`` in methods that rely
+            on ``subdomain``, ``username``, or ``gsec_hash``.
         """
         # Import here to avoid a circular import at module level
         # (testing.py lives inside the edupage_api package).

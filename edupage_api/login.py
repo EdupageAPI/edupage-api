@@ -1,8 +1,8 @@
 import json
-import re
 from dataclasses import dataclass
 from json import JSONDecodeError
 from typing import Optional
+from urllib.parse import urljoin, urlparse
 
 from edupage_api.compression import RequestData
 from edupage_api.exceptions import (
@@ -138,10 +138,9 @@ class Login(Module):
         self.edupage.data = json.loads(json_string)
         self.edupage.is_logged_in = True
 
-        gsec_match = re.search(r'ASC\.gsechash="([^"]+)"', data)
-        if gsec_match:
-            self.edupage.gsec_hash = gsec_match.group(1)
-        else:
+        try:
+            self.edupage.gsec_hash = data.split('ASC.gsechash="', 1)[1].split('"', 1)[0]
+        except IndexError:
             self.edupage.gsec_hash = None
 
     @staticmethod
@@ -156,108 +155,107 @@ class Login(Module):
             return None
 
     @staticmethod
-    def _extract_login_token(data: str) -> Optional[str]:
-        patterns = [
-            r'"csrftoken"\s*:\s*"([^"]+)"',
-            r"'csrftoken'\s*:\s*'([^']+)'",
-            r'"csrfauth"\s*:\s*"([^"]+)"',
-            r"'csrfauth'\s*:\s*'([^']+)'",
-            r'csrftoken" value="([^"]+)"',
-            r"csrftoken' value='([^']+)'",
-            r'csrfauth" value="([^"]+)"',
-            r"csrfauth' value='([^']+)'",
-        ]
-
-        for pattern in patterns:
-            match = re.search(pattern, data)
-            if match:
-                return match.group(1)
-
-        return None
-
-    @staticmethod
     def _extract_two_factor_fields(data: str) -> Optional[dict]:
-        csrf_token = re.search(r'csrfauth" value="([^"]+)"', data)
-        authentication_token = re.search(r'au" value="([^"]+)"', data)
-        authentication_endpoint = re.search(r'gu" value="([^"]+)"', data)
-
-        if not csrf_token or not authentication_token or not authentication_endpoint:
+        try:
+            return {
+                "csrfauth": data.split('csrfauth" value="', 1)[1].split('"', 1)[0],
+                "au": data.split('au" value="', 1)[1].split('"', 1)[0],
+                "gu": data.split('gu" value="', 1)[1].split('"', 1)[0],
+            }
+        except IndexError:
             return None
 
-        return {
-            "csrfauth": csrf_token.group(1),
-            "au": authentication_token.group(1),
-            "gu": authentication_endpoint.group(1),
-        }
+    def __finish_login(self, response, subdomain: str, username: str):
+        data = response.content.decode()
 
-    def _login_with_rpc(self, username: str, password: str, subdomain: str):
+        if subdomain == "login1":
+            subdomain = urlparse(response.url).hostname.split(".")[0]
+
+        self.edupage.subdomain = subdomain
+        self.edupage.username = username
+
+        if "twofactor" not in response.url:
+            self.__parse_login_data(data)
+            return None
+
+        request_url = (
+            f"https://{self.edupage.subdomain}.edupage.org/login/twofactor?sn=1"
+        )
+
+        two_factor_response = self.edupage.session.get(request_url)
+
+        data = two_factor_response.content.decode()
+
+        fields = self._extract_two_factor_fields(data)
+        if not fields:
+            raise BadCredentialsException("EduPage did not provide two-factor fields")
+
+        return TwoFactorLogin(
+            fields["gu"], fields["au"], fields["csrfauth"], self.edupage
+        )
+
+    def __login_with_rpc(self, username: str, password: str, subdomain: str):
+        # Mirrors the login process (mainlogin.js):
+        # 1. akcia=getToken
+        # 2. akcia=login
         base_url = f"https://{subdomain}.edupage.org"
         headers = {"Content-Type": "application/x-www-form-urlencoded"}
 
         response = self.edupage.session.get(f"{base_url}/login/?cmd=MainLogin")
-        response.raise_for_status()
+        if response.status_code != 200:
+            return None
 
-        self.edupage.session.post(
-            f"{base_url}/login/?cmd=MainLogin&akcia=check&eqav=1&maxEqav=7",
-            data=RequestData.encode_request_body({"rpcparams": "{}"}),
+        token_response_raw = self.edupage.session.post(
+            f"{base_url}/login/?cmd=MainLogin&akcia=getToken",
+            data=RequestData.encode_request_body(
+                {"rpcparams": json.dumps({"username": username, "edupage": ""})}
+            ),
             headers=headers,
         )
-
-        token_response = self._parse_rpc_response(
-            self.edupage.session.post(
-                f"{base_url}/login/?cmd=MainLogin&akcia=getToken&eqav=1&maxEqav=7",
-                data=RequestData.encode_request_body(
-                    {
-                        "rpcparams": json.dumps(
-                            {"username": username, "edupage": ""},
-                            separators=(",", ":"), # suppress spaces
-                        )
-                    }
-                ),
-                headers=headers,
-            ).text
-        )
+        if token_response_raw.status_code != 200:
+            return None
+        token_response = self._parse_rpc_response(token_response_raw.text)
 
         token = token_response.get("token") if token_response else None
         if not token:
             return None
 
-        login_response = self._parse_rpc_response(
-            self.edupage.session.post(
-                f"{base_url}/login/?cmd=MainLogin&akcia=login&eqav=1&maxEqav=7",
-                data=RequestData.encode_request_body(
-                    {
-                        "rpcparams": json.dumps(
-                            {
-                                "username": username,
-                                "password": password,
-                                "userToken": token,
-                                "edupage": "",
-                                "ctxt": "",
-                                "tu": None,
-                                "gu": None,
-                                "au": None,
-                            },
-                            separators=(",", ":"),
-                        )
-                    }
-                ),
-                headers=headers,
-            ).text
+        login_response_raw = self.edupage.session.post(
+            f"{base_url}/login/?cmd=MainLogin&akcia=login",
+            data=RequestData.encode_request_body(
+                {
+                    "rpcparams": json.dumps(
+                        {
+                            "username": username,
+                            "password": password,
+                            "userToken": token,
+                            "edupage": "",
+                            "ctxt": "",
+                            "tu": None,
+                            "gu": None,
+                            "au": None,
+                        }
+                    )
+                }
+            ),
+            headers=headers,
         )
 
+        if login_response_raw.status_code != 200:
+            return None
+        
+        login_response = self._parse_rpc_response(login_response_raw.text)
         if not login_response:
             return None
 
-        status = str(login_response.get("status", "")).upper()
-        if status != "OK":
+        error_id = (login_response.get("err") or {}).get("error_id")
+        redirect_url = login_response.get("redirectUrl")
+
+        # `invalid_token` means our csrf token was rejected
+        if error_id == "invalid_token" or not redirect_url:
             return None
 
-        session_id = login_response.get("session")
-        if not session_id:
-            return None
-
-        return session_id
+        return self.edupage.session.get(urljoin(base_url, redirect_url))
 
     def login(
         self, username: str, password: str, subdomain: str = "login1"
@@ -286,74 +284,36 @@ class Login(Module):
                 or there was another problem with the second factor.
         """
 
-        try:
-            session_id = self._login_with_rpc(username, password, subdomain)
-            if session_id:
-                self.edupage.subdomain = subdomain
-                self.edupage.username = username
+        response = self.__login_with_rpc(username, password, subdomain)
 
-                self.reload_data(subdomain, session_id, username)
-                return None
-        except Exception:
-            pass
+        if response is None:
+            request_url = f"https://{subdomain}.edupage.org/login/?cmd=MainLogin"
 
-        request_url = f"https://{subdomain}.edupage.org/login/?cmd=MainLogin"
+            get_response = self.edupage.session.get(request_url)
+            data = get_response.content.decode()
 
-        response = self.edupage.session.get(request_url)
-        data = response.content.decode()
+            try:
+                csrf_token = data.split('"csrftoken":"', 1)[1].split('"', 1)[0]
+            except IndexError:
+                raise BadCredentialsException("EduPage did not provide a login token")
 
-        csrf_token = self._extract_login_token(data)
-        if not csrf_token:
-            raise BadCredentialsException("EduPage did not provide a login token")
+            parameters = {
+                "csrfauth": csrf_token,
+                "username": username,
+                "password": password,
+            }
 
-        parameters = {
-            "csrfauth": csrf_token,
-            "username": username,
-            "password": password,
-        }
+            request_url = f"https://{subdomain}.edupage.org/login/edubarLogin.php"
 
-        request_url = f"https://{subdomain}.edupage.org/login/edubarLogin.php"
+            response = self.edupage.session.post(request_url, parameters)
 
-        response = self.edupage.session.post(request_url, parameters)
+            if "cap=1" in response.url or "lerr=b43b43" in response.url:
+                raise CaptchaException()
 
-        if "cap=1" in response.url or "lerr=b43b43" in response.url:
-            raise CaptchaException()
+            if "bad=1" in response.url:
+                raise BadCredentialsException()
 
-        if "bad=1" in response.url:
-            raise BadCredentialsException()
-
-        data = response.content.decode()
-
-        if subdomain == "login1":
-            subdomain_match = re.search(r"https?://([a-z0-9.-]+)\.edupage\.org", data)
-            if subdomain_match:
-                subdomain = subdomain_match.group(1)
-            else:
-                subdomain = data.split("-->")[0].split(" ")[-1]
-
-        self.edupage.subdomain = subdomain
-        self.edupage.username = username
-
-        if "twofactor" not in response.url:
-            # 2FA not needed
-            self.__parse_login_data(data)
-            return None
-
-        request_url = (
-            f"https://{self.edupage.subdomain}.edupage.org/login/twofactor?sn=1"
-        )
-
-        two_factor_response = self.edupage.session.get(request_url)
-
-        data = two_factor_response.content.decode()
-
-        fields = self._extract_two_factor_fields(data)
-        if not fields:
-            raise BadCredentialsException("EduPage did not provide two-factor fields")
-
-        return TwoFactorLogin(
-            fields["gu"], fields["au"], fields["csrfauth"], self.edupage
-        )
+        return self.__finish_login(response, subdomain, username)
 
     def reload_data(self, subdomain: str, session_id: str, username: str):
         request_url = f"https://{subdomain}.edupage.org/user"

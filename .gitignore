@@ -19,6 +19,7 @@ tests/__pycache__
 
 USERNAME
 PASSWORD
+SUBDOMAIN
 
 .env
 dump.html

@@ -1,29 +1,29 @@
 import base64
-import hashlib
 import json
 import unittest
-import zlib
-from urllib.parse import urlencode
 
 from edupage_api.login import Login
 
 
-class LoginRpcEncodingTests(unittest.TestCase):
-    def test_encode_decode_rpc_payload_round_trip(self):
-        payload = {"username": "demo", "password": "secret"}
-
-        encoded = Login._encode_rpc_payload(payload)
-
-        self.assertIn("eqap", encoded)
-        self.assertEqual(encoded["eqaz"], "1")
-        self.assertEqual(encoded["eqacs"], hashlib.sha1(encoded["eqap"].encode()).hexdigest())
-
-        decoded = Login._decode_rpc_response(
-            "eqz:" + base64.b64encode(json.dumps({"status": "OK", "token": "abc"}).encode()).decode()
+class LoginRpcResponseParsingTests(unittest.TestCase):
+    def test_parse_plain_json_response(self):
+        self.assertEqual(
+            Login._parse_rpc_response('{"status": "OK"}'), {"status": "OK"}
         )
 
-        self.assertEqual(decoded["status"], "OK")
-        self.assertEqual(decoded["token"], "abc")
+    def test_parse_compressed_response(self):
+        response = "eqz:" + base64.b64encode(b'{"status": "OK"}').decode()
+
+        self.assertEqual(Login._parse_rpc_response(response), {"status": "OK"})
+
+    def test_parse_empty_response(self):
+        self.assertIsNone(Login._parse_rpc_response(""))
+
+    def test_parse_invalid_response(self):
+        self.assertIsNone(Login._parse_rpc_response("not json at all"))
+
+    def test_parse_response_with_invalid_base64(self):
+        self.assertIsNone(Login._parse_rpc_response("eqz:!!!"))
 
 
 if __name__ == "__main__":

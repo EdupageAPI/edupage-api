@@ -1,15 +1,13 @@
-import base64
-import hashlib
 import json
 import re
-import zlib
 from dataclasses import dataclass
 from json import JSONDecodeError
 from typing import Optional
-from urllib.parse import urlencode
 
+from edupage_api.compression import RequestData
 from edupage_api.exceptions import (
     BadCredentialsException,
+    Base64DecodeError,
     CaptchaException,
     MissingDataException,
     RequestError,
@@ -126,16 +124,16 @@ class TwoFactorLogin:
 
 class Login(Module):
     def __parse_login_data(self, data):
-        userhome_match = re.search(r"userhome\((.+?)\);", data, re.S)
-        if not userhome_match:
+        try:
+            json_string = (
+                data.split("userhome(", 1)[1]
+                .rsplit(");", 2)[0]
+                .replace("\t", "")
+                .replace("\n", "")
+                .replace("\r", "")
+            )
+        except IndexError:
             raise BadCredentialsException("EduPage did not return login data")
-
-        json_string = (
-            userhome_match.group(1)
-            .replace("\t", "")
-            .replace("\n", "")
-            .replace("\r", "")
-        )
 
         self.edupage.data = json.loads(json_string)
         self.edupage.is_logged_in = True
@@ -147,38 +145,14 @@ class Login(Module):
             self.edupage.gsec_hash = None
 
     @staticmethod
-    def _encode_rpc_payload(data: dict) -> dict:
-        payload = "rpcparams=" + urlencode(
-            {"rpcparams": json.dumps(data, separators=(",", ":"))}
-        ).split("=", 1)[1]
-
-        compressor = zlib.compressobj(
-            level=9,
-            method=zlib.DEFLATED,
-            wbits=-zlib.MAX_WBITS,
-        )
-        compressed = compressor.compress(payload.encode()) + compressor.flush()
-
-        eqap = "dz:" + base64.b64encode(compressed).decode()
-
-        return {
-            "eqap": eqap,
-            "eqacs": hashlib.sha1(eqap.encode()).hexdigest(),
-            "eqaz": "1",
-        }
-
-    @staticmethod
-    def _decode_rpc_response(text: str) -> Optional[dict]:
+    def _parse_rpc_response(text: str) -> Optional[dict]:
         if not text:
             return None
 
-        if text.startswith("eqz:"):
-            raw = base64.b64decode(text[4:])
-            return json.loads(raw.decode())
-
         try:
-            return json.loads(text)
-        except (TypeError, JSONDecodeError):
+            decoded = RequestData.decode_response(text)
+            return json.loads(decoded)
+        except (Base64DecodeError, TypeError, JSONDecodeError):
             return None
 
     @staticmethod
@@ -218,19 +192,29 @@ class Login(Module):
 
     def _login_with_rpc(self, username: str, password: str, subdomain: str):
         base_url = f"https://{subdomain}.edupage.org"
+        headers = {"Content-Type": "application/x-www-form-urlencoded"}
 
         response = self.edupage.session.get(f"{base_url}/login/?cmd=MainLogin")
         response.raise_for_status()
 
         self.edupage.session.post(
             f"{base_url}/login/?cmd=MainLogin&akcia=check&eqav=1&maxEqav=7",
-            data=self._encode_rpc_payload({}),
+            data=RequestData.encode_request_body({"rpcparams": "{}"}),
+            headers=headers,
         )
 
-        token_response = self._decode_rpc_response(
+        token_response = self._parse_rpc_response(
             self.edupage.session.post(
                 f"{base_url}/login/?cmd=MainLogin&akcia=getToken&eqav=1&maxEqav=7",
-                data=self._encode_rpc_payload({"username": username, "edupage": ""}),
+                data=RequestData.encode_request_body(
+                    {
+                        "rpcparams": json.dumps(
+                            {"username": username, "edupage": ""},
+                            separators=(",", ":"), # suppress spaces
+                        )
+                    }
+                ),
+                headers=headers,
             ).text
         )
 
@@ -238,21 +222,27 @@ class Login(Module):
         if not token:
             return None
 
-        login_response = self._decode_rpc_response(
+        login_response = self._parse_rpc_response(
             self.edupage.session.post(
                 f"{base_url}/login/?cmd=MainLogin&akcia=login&eqav=1&maxEqav=7",
-                data=self._encode_rpc_payload(
+                data=RequestData.encode_request_body(
                     {
-                        "username": username,
-                        "password": password,
-                        "userToken": token,
-                        "edupage": "",
-                        "ctxt": "",
-                        "tu": None,
-                        "gu": None,
-                        "au": None,
+                        "rpcparams": json.dumps(
+                            {
+                                "username": username,
+                                "password": password,
+                                "userToken": token,
+                                "edupage": "",
+                                "ctxt": "",
+                                "tu": None,
+                                "gu": None,
+                                "au": None,
+                            },
+                            separators=(",", ":"),
+                        )
                     }
                 ),
+                headers=headers,
             ).text
         )
 

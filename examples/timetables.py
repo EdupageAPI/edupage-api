@@ -12,7 +12,8 @@ timetable = edupage.get_my_timetable(date)
 print(f"My timetable from {date}:")
 
 for lesson in timetable:
-    print(f"[{lesson.period}] {lesson.subject.name} ({lesson.teachers[0].name})")
+    teacher_name = lesson.teachers[0].name if lesson.teachers else "?"
+    print(f"[{lesson.period}] {lesson.subject.name} ({teacher_name})")
 
 print()
 
@@ -29,4 +30,5 @@ timetable = edupage.get_timetable(classroom, date)
 print(f"Timetable from {date} for classroom '{classroom.name}':")
 
 for lesson in timetable:
-    print(f"[{lesson.period}] {lesson.subject.name} ({lesson.teachers[0].name})")
+    teacher_name = lesson.teachers[0].name if lesson.teachers else "?"
+    print(f"[{lesson.period}] {lesson.subject.name} ({teacher_name})")

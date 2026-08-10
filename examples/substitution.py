@@ -1,11 +1,11 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from edupage_api import Edupage
 
 edupage = Edupage()
 edupage.login_auto("Username (or e-mail)", "Password")
 
-tomorrow = datetime.now()
+tomorrow = datetime.now() + timedelta(days=1)
 missing_teachers = edupage.get_missing_teachers(tomorrow)
 
 print(f"There are {len(missing_teachers)} missing tomorrow!")

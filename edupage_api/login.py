@@ -243,7 +243,7 @@ class Login(Module):
 
         if login_response_raw.status_code != 200:
             return None
-        
+
         login_response = self._parse_rpc_response(login_response_raw.text)
         if not login_response:
             return None

@@ -1,4 +1,5 @@
 import json
+import re
 
 from dataclasses import dataclass
 from datetime import date, datetime
@@ -50,6 +51,8 @@ class Arrival:
 
 
 class Attendance(Module):
+    __RESPONSE_PREFIX_RE = re.compile(r"^\(function\(f\)\{return f\(gi\d+,gi\d+,")
+
     def __get_attendance_data(self, user_id: str):
         request_url = f"https://{self.edupage.subdomain}.edupage.org/dashboard/eb.php"
         params = {
@@ -60,25 +63,38 @@ class Attendance(Module):
         response = self.edupage.session.get(request_url, params=params)
         response_html = response.text
 
-        user_id_number = Attendance.__get_user_id_number(user_id)
         try:
-            data = response_html.split(
+            after_marker = response_html.split(
                 'ASC.requireAsync("/dashboard/dochadzka.js#initZiak").then'
-            )[1][37:].split(f",[{user_id_number}],true);")[0]
+            )[1]
+
+            prefix_match = Attendance.__RESPONSE_PREFIX_RE.match(after_marker)
+            if prefix_match is None:
+                raise IndexError
+
+            # The payload is always followed by `,[<ID>],true);});`
+            # the ID of whichever account is currently active in the session
+            data = after_marker[prefix_match.end() :].split("],true);});")[0]
+            data = data[: data.rindex(",[")]
 
             return json.loads(data)
-        except IndexError:
+        except (IndexError, ValueError):
             raise MissingDataException(
                 'Unexpected response from attendance endpoint! (expected string `ASC.requireAsync("/dashboard/dochadzka.js#initZiak").then` to be in the response)'
             )
 
     @staticmethod
     def __get_user_id_number(user_id: str):
-        return user_id.replace("Student", "").replace("Ucitel", "").replace("-", "")
+        return (
+            user_id.replace("Student", "")
+            .replace("Ucitel", "")
+            .replace("Rodic", "")
+            .replace("-", "")
+        )
 
     def get_days_with_available_attendance(self, user_id: str) -> list[date]:
         user_id_number = Attendance.__get_user_id_number(
-            self.edupage.get_user_id()  # pyright: ignore[reportAttributeAccessIssue]
+            self.edupage.get_user_id()
         )
 
         target_user_id_number = Attendance.__get_user_id_number(user_id)
@@ -87,11 +103,14 @@ class Attendance(Module):
         stats = attendance_data["dateStats"]
         if target_user_id_number not in stats:
             raise InsufficientPermissionsException(
-                "The requested user's data is not available in the response."
+                "The requested user's data is not available in the response. "
+                "This endpoint always returns data for whichever account is "
+                "currently active in the session - if you are on a parent "
+                "account, call `Edupage.switch_to_child` first."
             )
 
         return [
-            datetime.strptime("%Y-%m-%d", d).date()
+            datetime.strptime(d, "%Y-%m-%d").date()
             for d in stats[target_user_id_number].keys()
         ]
 
@@ -107,7 +126,10 @@ class Attendance(Module):
         detailed_stats = attendance_data["students"].get(target_user_id_number)
         if detailed_stats is None:
             raise InsufficientPermissionsException(
-                "The requested user's data is not available in the response."
+                "The requested user's data is not available in the response. "
+                "This endpoint always returns data for whichever account is "
+                "currently active in the session - if you are on a parent "
+                "account, call `Edupage.switch_to_child` first."
             )
 
         arrivals = {}
@@ -158,7 +180,10 @@ class Attendance(Module):
         user_stats = all_stats.get(target_user_id_number)
         if user_stats is None:
             raise InsufficientPermissionsException(
-                "The requested user's data is not available in the response."
+                "The requested user's data is not available in the response. "
+                "This endpoint always returns data for whichever account is "
+                "currently active in the session - if you are on a parent "
+                "account, call `Edupage.switch_to_child` first."
             )
 
         stats = user_stats[date.strftime("%Y-%m-%d")]

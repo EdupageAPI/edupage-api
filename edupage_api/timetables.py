@@ -279,6 +279,18 @@ class Timetables(Module):
 
     @ModuleHelper.logged_in
     def get_my_timetable(self, date: date) -> Optional[Timetable]:
+        selected_child_id = getattr(self.edupage, "_selected_child_id", None)
+
+        if selected_child_id is not None:
+            student = People(self.edupage).get_student(selected_child_id)
+
+            if student is None:
+                raise MissingDataException(
+                    f"Selected child with ID {selected_child_id} was not found."
+                )
+
+            return self.get_timetable(student, date)
+
         plan = self.__get_date_plan(date)
         return self.__parse_timetable(plan)
 

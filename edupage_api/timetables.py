@@ -279,7 +279,7 @@ class Timetables(Module):
 
     @ModuleHelper.logged_in
     def get_my_timetable(self, date: date) -> Optional[Timetable]:
-        selected_child_id = getattr(self.edupage, "_selected_child_id", None)
+        selected_child_id = self.edupage._selected_child_id
 
         if selected_child_id is not None:
             student = People(self.edupage).get_student(selected_child_id)

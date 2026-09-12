@@ -45,6 +45,7 @@ class Edupage(EdupageModule):
         self.subdomain = None
         self.gsec_hash = None
         self.username = None
+        self._selected_child_id = None
 
         self.session = requests.session()
         self.session.request = functools.partial(

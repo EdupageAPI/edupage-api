@@ -9,7 +9,8 @@ class Parent(Module):
     @ModuleHelper.logged_in
     @ModuleHelper.is_parent
     def switch_to_child(self, child: Union[EduAccount, int]):
-        params = {"studentid": child.person_id if type(child) == EduAccount else child}
+        child_id = child.person_id if isinstance(child, EduAccount) else child
+        params = {"studentid": child_id}
 
         url = f"https://{self.edupage.subdomain}.edupage.org/login/switchchild"
         response = self.edupage.session.get(url, params=params)
@@ -18,6 +19,8 @@ class Parent(Module):
             raise InvalidChildException(
                 f"{response.text}: Invalid child selected! (not your child?)"
             )
+
+        self.edupage._selected_child_id = int(child_id)
 
     @ModuleHelper.logged_in
     @ModuleHelper.is_parent
@@ -32,3 +35,5 @@ class Parent(Module):
 
         if "EdupageLoginFailed" in response.url:
             raise UnknownServerError()
+
+        self.edupage._selected_child_id = None

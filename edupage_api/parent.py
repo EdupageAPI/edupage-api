@@ -37,3 +37,36 @@ class Parent(Module):
             raise UnknownServerError()
 
         self.edupage._selected_child_id = None
+
+    @ModuleHelper.logged_in
+    @ModuleHelper.is_parent
+    def get_subdomains(self) -> list[str]:
+        url = f"https://{self.edupage.subdomain}.edupage.org/user"
+        response = self.edupage.session.get(url)
+        html = response.text
+
+        # Each school-switcher entry in the top bar's profile menu looks like:
+        # <a class="edubarProfileUserBtn edubarChangeEdurowBtn Rodic selected" data-rowid="edupage;subdomain;user@example.com;rodic">
+        subdomains = []
+
+        for entry in html.split('<a class="')[1:]:
+            class_attr = entry.split('"', 1)[0]
+
+            if "edubarChangeEdurowBtn" not in class_attr:
+                continue
+
+            try:
+                row_id = entry.split('data-rowid="', 1)[1].split('"', 1)[0]
+            except IndexError:
+                continue
+
+            edupage, subdomain, _username, role = (row_id.split(";") + [""] * 4)[:4]
+            if edupage != "edupage" or role != "rodic":
+                continue
+
+            subdomains.append(subdomain)
+
+        if not subdomains:
+            return [self.edupage.subdomain]
+
+        return subdomains

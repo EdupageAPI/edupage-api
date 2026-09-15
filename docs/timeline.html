@@ -58,8 +58,10 @@ el.replaceWith(d);
 <pre><code class="python">class EventType(str, Enum):
     # Messages
     MESSAGE = &#34;sprava&#34;
+    CHAT = &#34;chat&#34;
     POLL = &#34;anketa&#34;
     NEWS = &#34;news&#34;
+    GENERIC_NOTIFICATION = &#34;genotif&#34;
 
     # ****************************************
 
@@ -98,6 +100,7 @@ el.replaceWith(d);
     PROCESS = &#34;process&#34;
     SCHOOL_EVENT = &#34;schoolevent&#34;
     SCHOOL_TRIP = &#34;trip&#34;
+    ENROLLMENT = &#34;signin&#34;
     TEACHER_MEETING = &#34;meeting&#34;
 
     # Free days
@@ -141,6 +144,7 @@ el.replaceWith(d);
     FOOD_CREDIT = &#34;strava_kredit&#34;
     FOOD_SERVED = &#34;strava_vydaj&#34;
     NEW_MENU = &#34;h_stravamenu&#34;
+    NEW_MENU_UPLOADED = &#34;stravamenu&#34;
 
     # ****************************************
 
@@ -150,6 +154,12 @@ el.replaceWith(d);
 
     # Photo album
     ALBUM = &#34;album&#34;
+
+    # Payments
+    PAYMENTS_PUBLISHED = &#34;payments&#34;
+
+    # Lost and found
+    LOST_AND_FOUND = &#34;lost&#34;
 
     # Other
     BEE = &#34;vcelicka&#34;
@@ -214,6 +224,10 @@ el.replaceWith(d);
 <dd>
 <div class="desc"></div>
 </dd>
+<dt id="edupage_api.timeline.EventType.CHAT"><code class="name">var <span class="ident">CHAT</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
 <dt id="edupage_api.timeline.EventType.CLASSIFICATION_MEETING"><code class="name">var <span class="ident">CLASSIFICATION_MEETING</span></code></dt>
 <dd>
 <div class="desc"></div>
@@ -246,6 +260,10 @@ el.replaceWith(d);
 <dd>
 <div class="desc"></div>
 </dd>
+<dt id="edupage_api.timeline.EventType.ENROLLMENT"><code class="name">var <span class="ident">ENROLLMENT</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
 <dt id="edupage_api.timeline.EventType.EVENT"><code class="name">var <span class="ident">EVENT</span></code></dt>
 <dd>
 <div class="desc"></div>
@@ -275,6 +293,10 @@ el.replaceWith(d);
 <div class="desc"></div>
 </dd>
 <dt id="edupage_api.timeline.EventType.FREE_DAY"><code class="name">var <span class="ident">FREE_DAY</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.timeline.EventType.GENERIC_NOTIFICATION"><code class="name">var <span class="ident">GENERIC_NOTIFICATION</span></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
@@ -382,6 +404,10 @@ el.replaceWith(d);
 <dd>
 <div class="desc"></div>
 </dd>
+<dt id="edupage_api.timeline.EventType.LOST_AND_FOUND"><code class="name">var <span class="ident">LOST_AND_FOUND</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
 <dt id="edupage_api.timeline.EventType.MESSAGE"><code class="name">var <span class="ident">MESSAGE</span></code></dt>
 <dd>
 <div class="desc"></div>
@@ -391,6 +417,10 @@ el.replaceWith(d);
 <div class="desc"></div>
 </dd>
 <dt id="edupage_api.timeline.EventType.NEW_MENU"><code class="name">var <span class="ident">NEW_MENU</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.timeline.EventType.NEW_MENU_UPLOADED"><code class="name">var <span class="ident">NEW_MENU_UPLOADED</span></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
@@ -407,6 +437,10 @@ el.replaceWith(d);
 <div class="desc"></div>
 </dd>
 <dt id="edupage_api.timeline.EventType.PARENTS_EVENING"><code class="name">var <span class="ident">PARENTS_EVENING</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.timeline.EventType.PAYMENTS_PUBLISHED"><code class="name">var <span class="ident">PAYMENTS_PUBLISHED</span></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
@@ -877,6 +911,7 @@ def get_notifications_history(self, date_from: date):
 <li><code><a title="edupage_api.timeline.EventType.BIG_EXAM" href="#edupage_api.timeline.EventType.BIG_EXAM">BIG_EXAM</a></code></li>
 <li><code><a title="edupage_api.timeline.EventType.BOOKED_ROOM" href="#edupage_api.timeline.EventType.BOOKED_ROOM">BOOKED_ROOM</a></code></li>
 <li><code><a title="edupage_api.timeline.EventType.CHANGE_ROOM" href="#edupage_api.timeline.EventType.CHANGE_ROOM">CHANGE_ROOM</a></code></li>
+<li><code><a title="edupage_api.timeline.EventType.CHAT" href="#edupage_api.timeline.EventType.CHAT">CHAT</a></code></li>
 <li><code><a title="edupage_api.timeline.EventType.CLASSIFICATION_MEETING" href="#edupage_api.timeline.EventType.CLASSIFICATION_MEETING">CLASSIFICATION_MEETING</a></code></li>
 <li><code><a title="edupage_api.timeline.EventType.CLASS_BOOK" href="#edupage_api.timeline.EventType.CLASS_BOOK">CLASS_BOOK</a></code></li>
 <li><code><a title="edupage_api.timeline.EventType.CLASS_TEACHER_EVENT" href="#edupage_api.timeline.EventType.CLASS_TEACHER_EVENT">CLASS_TEACHER_EVENT</a></code></li>
@@ -885,6 +920,7 @@ def get_notifications_history(self, date_from: date):
 <li><code><a title="edupage_api.timeline.EventType.CONTEST" href="#edupage_api.timeline.EventType.CONTEST">CONTEST</a></code></li>
 <li><code><a title="edupage_api.timeline.EventType.CULTURE" href="#edupage_api.timeline.EventType.CULTURE">CULTURE</a></code></li>
 <li><code><a title="edupage_api.timeline.EventType.DISTANT_LEARNING" href="#edupage_api.timeline.EventType.DISTANT_LEARNING">DISTANT_LEARNING</a></code></li>
+<li><code><a title="edupage_api.timeline.EventType.ENROLLMENT" href="#edupage_api.timeline.EventType.ENROLLMENT">ENROLLMENT</a></code></li>
 <li><code><a title="edupage_api.timeline.EventType.EVENT" href="#edupage_api.timeline.EventType.EVENT">EVENT</a></code></li>
 <li><code><a title="edupage_api.timeline.EventType.EXAM_ASSIGNMENT" href="#edupage_api.timeline.EventType.EXAM_ASSIGNMENT">EXAM_ASSIGNMENT</a></code></li>
 <li><code><a title="edupage_api.timeline.EventType.EXAM_EVALUATION" href="#edupage_api.timeline.EventType.EXAM_EVALUATION">EXAM_EVALUATION</a></code></li>
@@ -893,6 +929,7 @@ def get_notifications_history(self, date_from: date):
 <li><code><a title="edupage_api.timeline.EventType.FOOD_CREDIT" href="#edupage_api.timeline.EventType.FOOD_CREDIT">FOOD_CREDIT</a></code></li>
 <li><code><a title="edupage_api.timeline.EventType.FOOD_SERVED" href="#edupage_api.timeline.EventType.FOOD_SERVED">FOOD_SERVED</a></code></li>
 <li><code><a title="edupage_api.timeline.EventType.FREE_DAY" href="#edupage_api.timeline.EventType.FREE_DAY">FREE_DAY</a></code></li>
+<li><code><a title="edupage_api.timeline.EventType.GENERIC_NOTIFICATION" href="#edupage_api.timeline.EventType.GENERIC_NOTIFICATION">GENERIC_NOTIFICATION</a></code></li>
 <li><code><a title="edupage_api.timeline.EventType.GRADE" href="#edupage_api.timeline.EventType.GRADE">GRADE</a></code></li>
 <li><code><a title="edupage_api.timeline.EventType.GRADES_DOC" href="#edupage_api.timeline.EventType.GRADES_DOC">GRADES_DOC</a></code></li>
 <li><code><a title="edupage_api.timeline.EventType.HOLIDAY" href="#edupage_api.timeline.EventType.HOLIDAY">HOLIDAY</a></code></li>
@@ -919,13 +956,16 @@ def get_notifications_history(self, date_from: date):
 <li><code><a title="edupage_api.timeline.EventType.H_TIMETABLE" href="#edupage_api.timeline.EventType.H_TIMETABLE">H_TIMETABLE</a></code></li>
 <li><code><a title="edupage_api.timeline.EventType.H_USERPHOTO" href="#edupage_api.timeline.EventType.H_USERPHOTO">H_USERPHOTO</a></code></li>
 <li><code><a title="edupage_api.timeline.EventType.LESSON" href="#edupage_api.timeline.EventType.LESSON">LESSON</a></code></li>
+<li><code><a title="edupage_api.timeline.EventType.LOST_AND_FOUND" href="#edupage_api.timeline.EventType.LOST_AND_FOUND">LOST_AND_FOUND</a></code></li>
 <li><code><a title="edupage_api.timeline.EventType.MESSAGE" href="#edupage_api.timeline.EventType.MESSAGE">MESSAGE</a></code></li>
 <li><code><a title="edupage_api.timeline.EventType.NEWS" href="#edupage_api.timeline.EventType.NEWS">NEWS</a></code></li>
 <li><code><a title="edupage_api.timeline.EventType.NEW_MENU" href="#edupage_api.timeline.EventType.NEW_MENU">NEW_MENU</a></code></li>
+<li><code><a title="edupage_api.timeline.EventType.NEW_MENU_UPLOADED" href="#edupage_api.timeline.EventType.NEW_MENU_UPLOADED">NEW_MENU_UPLOADED</a></code></li>
 <li><code><a title="edupage_api.timeline.EventType.ORAL_EXAM" href="#edupage_api.timeline.EventType.ORAL_EXAM">ORAL_EXAM</a></code></li>
 <li><code><a title="edupage_api.timeline.EventType.OTHER" href="#edupage_api.timeline.EventType.OTHER">OTHER</a></code></li>
 <li><code><a title="edupage_api.timeline.EventType.PAPER" href="#edupage_api.timeline.EventType.PAPER">PAPER</a></code></li>
 <li><code><a title="edupage_api.timeline.EventType.PARENTS_EVENING" href="#edupage_api.timeline.EventType.PARENTS_EVENING">PARENTS_EVENING</a></code></li>
+<li><code><a title="edupage_api.timeline.EventType.PAYMENTS_PUBLISHED" href="#edupage_api.timeline.EventType.PAYMENTS_PUBLISHED">PAYMENTS_PUBLISHED</a></code></li>
 <li><code><a title="edupage_api.timeline.EventType.POLL" href="#edupage_api.timeline.EventType.POLL">POLL</a></code></li>
 <li><code><a title="edupage_api.timeline.EventType.PROCESS" href="#edupage_api.timeline.EventType.PROCESS">PROCESS</a></code></li>
 <li><code><a title="edupage_api.timeline.EventType.PROJECT" href="#edupage_api.timeline.EventType.PROJECT">PROJECT</a></code></li>

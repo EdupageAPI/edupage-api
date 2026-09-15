@@ -153,6 +153,7 @@ el.replaceWith(d);
         self.subdomain = None
         self.gsec_hash = None
         self.username = None
+        self._selected_child_id = None
 
         self.session = requests.session()
         self.session.request = functools.partial(
@@ -433,6 +434,14 @@ el.replaceWith(d);
     def switch_to_parent(self):
         &#34;&#34;&#34;Switches back to your parent account - can only be used on parent accounts&#34;&#34;&#34;
         Parent(self).switch_to_parent()
+
+    def get_subdomains(self) -&gt; list[str]:
+        &#34;&#34;&#34;Get the subdomains of the schools your parent account has access to - can only be used on parent accounts.
+
+        Returns:
+            list[str]: The subdomain of each school (including the one you&#39;re currently logged into).
+        &#34;&#34;&#34;
+        return Parent(self).get_subdomains()
 
     @classmethod
     def from_session_id(cls, session_id: str, subdomain: str, username: str):
@@ -944,6 +953,29 @@ Defaults to <code>5</code>.</dd>
 <dd>List of <code>EduStudent</code>s.</dd>
 </dl></div>
 </dd>
+<dt id="edupage_api.Edupage.get_subdomains"><code class="name flex">
+<span>def <span class="ident">get_subdomains</span></span>(<span>self) ‑> list[str]</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_subdomains(self) -&gt; list[str]:
+    &#34;&#34;&#34;Get the subdomains of the schools your parent account has access to - can only be used on parent accounts.
+
+    Returns:
+        list[str]: The subdomain of each school (including the one you&#39;re currently logged into).
+    &#34;&#34;&#34;
+    return Parent(self).get_subdomains()</code></pre>
+</details>
+<div class="desc"><p>Get the subdomains of the schools your parent account has access to - can only be used on parent accounts.</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>list[str]</code></dt>
+<dd>The subdomain of each school (including the one you're currently logged into).</dd>
+</dl></div>
+</dd>
 <dt id="edupage_api.Edupage.get_subjects"><code class="name flex">
 <span>def <span class="ident">get_subjects</span></span>(<span>self) ‑> list[<a title="edupage_api.subjects.Subject" href="subjects.html#edupage_api.subjects.Subject">Subject</a>] | None</span>
 </code></dt>
@@ -1298,6 +1330,7 @@ Defaults to <code>5</code>.</dd>
 <li><code><a title="edupage_api.Edupage.get_notifications" href="#edupage_api.Edupage.get_notifications">get_notifications</a></code></li>
 <li><code><a title="edupage_api.Edupage.get_school_year" href="#edupage_api.Edupage.get_school_year">get_school_year</a></code></li>
 <li><code><a title="edupage_api.Edupage.get_students" href="#edupage_api.Edupage.get_students">get_students</a></code></li>
+<li><code><a title="edupage_api.Edupage.get_subdomains" href="#edupage_api.Edupage.get_subdomains">get_subdomains</a></code></li>
 <li><code><a title="edupage_api.Edupage.get_subjects" href="#edupage_api.Edupage.get_subjects">get_subjects</a></code></li>
 <li><code><a title="edupage_api.Edupage.get_teachers" href="#edupage_api.Edupage.get_teachers">get_teachers</a></code></li>
 <li><code><a title="edupage_api.Edupage.get_timetable" href="#edupage_api.Edupage.get_timetable">get_timetable</a></code></li>

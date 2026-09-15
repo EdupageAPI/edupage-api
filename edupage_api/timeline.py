@@ -18,8 +18,10 @@ from edupage_api.exceptions import RequestError, MissingDataException
 class EventType(str, Enum):
     # Messages
     MESSAGE = "sprava"
+    CHAT = "chat"
     POLL = "anketa"
     NEWS = "news"
+    GENERIC_NOTIFICATION = "genotif"
 
     # ****************************************
 
@@ -58,6 +60,7 @@ class EventType(str, Enum):
     PROCESS = "process"
     SCHOOL_EVENT = "schoolevent"
     SCHOOL_TRIP = "trip"
+    ENROLLMENT = "signin"
     TEACHER_MEETING = "meeting"
 
     # Free days
@@ -101,6 +104,7 @@ class EventType(str, Enum):
     FOOD_CREDIT = "strava_kredit"
     FOOD_SERVED = "strava_vydaj"
     NEW_MENU = "h_stravamenu"
+    NEW_MENU_UPLOADED = "stravamenu"
 
     # ****************************************
 
@@ -110,6 +114,12 @@ class EventType(str, Enum):
 
     # Photo album
     ALBUM = "album"
+
+    # Payments
+    PAYMENTS_PUBLISHED = "payments"
+
+    # Lost and found
+    LOST_AND_FOUND = "lost"
 
     # Other
     BEE = "vcelicka"

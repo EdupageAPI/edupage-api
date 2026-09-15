@@ -327,6 +327,14 @@ class Edupage(EdupageModule):
         """Switches back to your parent account - can only be used on parent accounts"""
         Parent(self).switch_to_parent()
 
+    def get_subdomains(self) -> list[str]:
+        """Get the subdomains of the schools your parent account has access to - can only be used on parent accounts.
+
+        Returns:
+            list[str]: The subdomain of each school (including the one you're currently logged into).
+        """
+        return Parent(self).get_subdomains()
+
     @classmethod
     def from_session_id(cls, session_id: str, subdomain: str, username: str):
         """Create an `Edupage` instance with a session id and subdomain.

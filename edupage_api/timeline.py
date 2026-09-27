@@ -176,7 +176,8 @@ class TimelineEvents(Module):
     ) -> list[TimelineEvent]:
         output = []
 
-        if user_props is None:
+        # EduPage also returns [] when there are no user properties.
+        if not isinstance(user_props, dict):
             user_props = {}
 
         for event in timeline_items:
@@ -197,10 +198,19 @@ class TimelineEvents(Module):
             )
             text = event.get("text")
 
-            # what about different languages?
-            # for message event type
-            if text.startswith("Dôležitá správa"):
-                text = event_data.get("messageContent")
+            # Important messages have a localized placeholder in `text`.
+            # Prefer the actual body without depending on the account language.
+            message_content = (
+                event_data.get("messageContent")
+                if isinstance(event_data, dict)
+                else None
+            )
+            if (
+                event_type == EventType.MESSAGE
+                and isinstance(message_content, str)
+                and message_content.strip()
+            ):
+                text = message_content
 
             if text == "":
                 try:

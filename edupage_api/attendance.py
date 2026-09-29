@@ -94,7 +94,9 @@ class Attendance(Module):
         if value == []:
             return {}
         if not isinstance(value, dict):
-            raise MissingDataException("Unexpected attendance data: expected a mapping.")
+            raise MissingDataException(
+                "Unexpected attendance data: expected a mapping."
+            )
         return value
 
     @staticmethod
@@ -103,12 +105,18 @@ class Attendance(Module):
         if target_id in records:
             return Attendance.__as_mapping(records[target_id])
 
-        # A known student can have no date statistics at all. Do not conflate
-        # this with requesting a student absent from the response.
+        # A student can be listed in "students" but have no entry in "dateStats"
+        # (e.g. no attendance records yet). Return empty statistics for them
+        # instead of raising, which is reserved for students missing from the
+        # response entirely.
         if section == "dateStats":
             students = Attendance.__as_mapping(attendance_data.get("students"))
             if target_id in students:
-                Attendance.__as_mapping(students[target_id])
+                student_records = students[target_id]
+                if student_records != [] and not isinstance(student_records, dict):
+                    raise MissingDataException(
+                        "Unexpected attendance data: expected a mapping."
+                    )
                 return {}
 
         raise InsufficientPermissionsException(
@@ -126,7 +134,9 @@ class Attendance(Module):
         target_user_id_number = Attendance.__get_user_id_number(user_id)
         attendance_data = self.__get_attendance_data(user_id_number)
 
-        stats = self.__get_user_data(attendance_data, "dateStats", target_user_id_number)
+        stats = self.__get_user_data(
+            attendance_data, "dateStats", target_user_id_number
+        )
 
         return [
             datetime.strptime(d, "%Y-%m-%d").date()
@@ -194,7 +204,9 @@ class Attendance(Module):
         )
         date_key = date.strftime("%Y-%m-%d")
         if date_key not in user_stats:
-            raise MissingDataException("No attendance statistics for the requested date.")
+            raise MissingDataException(
+                "No attendance statistics for the requested date."
+            )
         stats = self.__as_mapping(user_stats[date_key])
 
         total_lessons_absent = AttendenceStatDetail(

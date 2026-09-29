@@ -5,7 +5,10 @@ from types import SimpleNamespace
 from unittest.mock import Mock
 
 from edupage_api.attendance import Attendance
-from edupage_api.exceptions import InsufficientPermissionsException, MissingDataException
+from edupage_api.exceptions import (
+    InsufficientPermissionsException,
+    MissingDataException,
+)
 
 
 class AttendanceTests(unittest.TestCase):
@@ -70,7 +73,10 @@ class AttendanceTests(unittest.TestCase):
         api = self.attendance({"students": {"-42": {}}, "dateStats": {"-42": {
             "2026-09-25": {"absent": 2, "excused": 2, "unexcused": 0},
         }}})
-        self.assertEqual(api.get_days_with_available_attendance("Student-42"), [date(2026, 9, 25)])
+        self.assertEqual(
+            api.get_days_with_available_attendance("Student-42"),
+            [date(2026, 9, 25)],
+        )
         stats = api.get_attendance_statistics("Student-42", date(2026, 9, 25))
         self.assertEqual(stats.total_lessons_absent.count, 2)
         self.assertEqual(stats.total_lessons_absent.unexcused, 0)

@@ -156,8 +156,8 @@ class Edupage(EdupageModule):
         Returns:
             AttendanceStatistic: The fetched statistics
 
-          Raises:
-              MissingDataException: The requested date has no available statistics.
+        Raises:
+            MissingDataException: The requested date has no available statistics.
         """
 
         return Attendance(self).get_attendance_statistics(user_id, date)

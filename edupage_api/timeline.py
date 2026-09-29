@@ -22,6 +22,8 @@ class EventType(str, Enum):
     POLL = "anketa"
     NEWS = "news"
     GENERIC_NOTIFICATION = "genotif"
+    TEACHER_CONSULTATION = "konzultaciemsg"
+    LIBRARY = "library"
 
     # ****************************************
 
@@ -33,6 +35,7 @@ class EventType(str, Enum):
     PROJECT_EXAM = "pexam"
     SHORT_EXAM = "sexam"
     TESTING = "testing"
+    TEST_ME_MODULE = "testme"
 
     # Exam manipulation
     EXAM_ASSIGNMENT = "testpridelenie"
@@ -95,6 +98,7 @@ class EventType(str, Enum):
 
     # Absence
     EXCUSED_LESSON = "ospravedlnenka"
+    EXCUSED_LESSON_REMINDER = "ospravedlnenka_reminder"
     REPRESENTATION = "representation"
     STUDENT_ABSENT = "student_absent"
 
@@ -105,6 +109,7 @@ class EventType(str, Enum):
     FOOD_SERVED = "strava_vydaj"
     NEW_MENU = "h_stravamenu"
     NEW_MENU_UPLOADED = "stravamenu"
+    FOOD_ADMINISTRATION = "strava_prerusObnovObj"
 
     # ****************************************
 
@@ -124,6 +129,7 @@ class EventType(str, Enum):
     # Other
     BEE = "vcelicka"
     OTHER = "other"
+    SETTINGS = "settings"
 
     # Helper
     H_ATTENDANCE = "h_attendance"
@@ -168,6 +174,9 @@ class TimelineEvent:
     reaction_count: int = 0
     created_at: Optional[datetime] = None
     is_removed: bool = False
+    other_id: Optional[Union[int, str]] = None
+    response_to: Optional[int] = None
+    event_time: Optional[datetime] = None
 
 
 class TimelineEvents(Module):
@@ -278,6 +287,32 @@ class TimelineEvents(Module):
 
             is_removed = event.get("removed") == "1"
 
+            other_id = None
+            ineid = event.get("ineid")
+            if ineid:
+                try:
+                    other_id = int(ineid)
+                except (ValueError, TypeError):
+                    other_id = ineid
+
+            response_to = None
+            reakcia_na = event.get("reakcia_na")
+            if reakcia_na:
+                try:
+                    response_to = int(reakcia_na)
+                except (ValueError, TypeError):
+                    pass
+
+            event_time = None
+            event_time_str = event.get("cas_udalosti")
+            if event_time_str:
+                try:
+                    event_time = datetime.strptime(
+                        event_time_str, "%Y-%m-%d %H:%M:%S"
+                    )
+                except (ValueError, TypeError):
+                    pass
+
             event = TimelineEvent(
                 event_id,
                 event_timestamp,
@@ -292,6 +327,9 @@ class TimelineEvents(Module):
                 reaction_count=reaction_count,
                 created_at=created_at,
                 is_removed=is_removed,
+                other_id=other_id,
+                response_to=response_to,
+                event_time=event_time,
             )
             output.append(event)
 

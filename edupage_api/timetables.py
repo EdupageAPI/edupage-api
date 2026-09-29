@@ -258,6 +258,12 @@ class Timetables(Module):
             except AttributeError:
                 curriculum = None
 
+            # Some school events carry their title outside flags.event.
+            if not curriculum and is_event and subject is None:
+                event_name = lesson.get("name")
+                if isinstance(event_name, str) and event_name.strip():
+                    curriculum = event_name
+
             lesson_object = Lesson(
                 period,
                 start_time,

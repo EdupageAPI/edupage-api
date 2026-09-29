@@ -7,6 +7,7 @@ from unittest.mock import Mock
 from edupage_api.attendance import Attendance
 from edupage_api.exceptions import (
     InsufficientPermissionsException,
+    InvalidAttendanceDataException,
     MissingDataException,
 )
 
@@ -66,7 +67,7 @@ class AttendanceTests(unittest.TestCase):
         for value in ([1], None, "invalid"):
             with self.subTest(value=value):
                 api = self.attendance({"students": {"42": value}})
-                with self.assertRaises(MissingDataException):
+                with self.assertRaises(InvalidAttendanceDataException):
                     api.get_arrivals("42")
 
     def test_statistics_for_signed_id_and_missing_date(self):

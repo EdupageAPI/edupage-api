@@ -7,6 +7,7 @@ from typing import Optional
 
 from edupage_api.module import Module, ModuleHelper
 from edupage_api.exceptions import (
+    InvalidAttendanceDataException,
     MissingDataException,
     InsufficientPermissionsException,
 )
@@ -85,36 +86,40 @@ class Attendance(Module):
 
     @staticmethod
     def __get_user_id_number(user_id: str):
-        # The minus sign is part of the ID used as a response dictionary key.
-        return re.sub(r"^(Student|Ucitel|Rodic)", "", user_id)
+        return (
+            user_id.replace("Student", "")
+            .replace("Ucitel", "")
+            .replace("Rodic", "")
+        )
 
     @staticmethod
-    def __as_mapping(value):
-        # EduPage serializes an empty associative array as [] instead of {}.
+    def __normalize_to_dict(value):
         if value == []:
             return {}
         if not isinstance(value, dict):
-            raise MissingDataException(
+            raise InvalidAttendanceDataException(
                 "Unexpected attendance data: expected a mapping."
             )
         return value
 
     @staticmethod
     def __get_user_data(attendance_data, section, target_id):
-        records = Attendance.__as_mapping(attendance_data.get(section))
+        records = Attendance.__normalize_to_dict(attendance_data.get(section))
         if target_id in records:
-            return Attendance.__as_mapping(records[target_id])
+            return Attendance.__normalize_to_dict(records[target_id])
 
         # A student can be listed in "students" but have no entry in "dateStats"
         # (e.g. no attendance records yet). Return empty statistics for them
         # instead of raising, which is reserved for students missing from the
         # response entirely.
         if section == "dateStats":
-            students = Attendance.__as_mapping(attendance_data.get("students"))
+            students = Attendance.__normalize_to_dict(
+                attendance_data.get("students")
+            )
             if target_id in students:
                 student_records = students[target_id]
                 if student_records != [] and not isinstance(student_records, dict):
-                    raise MissingDataException(
+                    raise InvalidAttendanceDataException(
                         "Unexpected attendance data: expected a mapping."
                     )
                 return {}
@@ -207,7 +212,7 @@ class Attendance(Module):
             raise MissingDataException(
                 "No attendance statistics for the requested date."
             )
-        stats = self.__as_mapping(user_stats[date_key])
+        stats = self.__normalize_to_dict(user_stats[date_key])
 
         total_lessons_absent = AttendenceStatDetail(
             count=stats.get("absent"),

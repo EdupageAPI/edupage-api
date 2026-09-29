@@ -175,11 +175,16 @@ class RequestData:
             else request_data
         )
         encoded_data = RequestData.__encode_data(encoded_data)
-        data_hash = sha1(encoded_data.encode()).hexdigest()
+        eqap = f"dz:{encoded_data}"
+
+        # edubarUtils.js:
+        # cs0 = 'dz:' + btoa(...)
+        # eqacs: sha1(cs0)
+        data_hash = sha1(eqap.encode()).hexdigest()
 
         return ModuleHelper.encode_form_data(
             {
-                "eqap": f"dz:{encoded_data}",
+                "eqap": eqap,
                 "eqacs": data_hash,
                 "eqaz": "1",  # use "encryption"? (compression)
             }

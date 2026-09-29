@@ -62,7 +62,13 @@ class Substitution(Module):
         if not missing_teachers_string:
             return None
 
-        _title, missing_teachers = missing_teachers_string.split(": ")
+        missing_teachers_data = missing_teachers_string.split(": ", 1)
+        if len(missing_teachers_data) != 2:
+            return None
+
+        _title, missing_teachers = missing_teachers_data
+        if not missing_teachers:
+            return None
 
         all_teachers = People(self.edupage).get_teachers()
 

@@ -221,11 +221,16 @@ el.replaceWith(d);
             else request_data
         )
         encoded_data = RequestData.__encode_data(encoded_data)
-        data_hash = sha1(encoded_data.encode()).hexdigest()
+        eqap = f&#34;dz:{encoded_data}&#34;
+
+        # edubarUtils.js:
+        # cs0 = &#39;dz:&#39; + btoa(...)
+        # eqacs: sha1(cs0)
+        data_hash = sha1(eqap.encode()).hexdigest()
 
         return ModuleHelper.encode_form_data(
             {
-                &#34;eqap&#34;: f&#34;dz:{encoded_data}&#34;,
+                &#34;eqap&#34;: eqap,
                 &#34;eqacs&#34;: data_hash,
                 &#34;eqaz&#34;: &#34;1&#34;,  # use &#34;encryption&#34;? (compression)
             }
@@ -347,11 +352,16 @@ def encode_request_body(request_data: Union[dict, str]) -&gt; str:
         else request_data
     )
     encoded_data = RequestData.__encode_data(encoded_data)
-    data_hash = sha1(encoded_data.encode()).hexdigest()
+    eqap = f&#34;dz:{encoded_data}&#34;
+
+    # edubarUtils.js:
+    # cs0 = &#39;dz:&#39; + btoa(...)
+    # eqacs: sha1(cs0)
+    data_hash = sha1(eqap.encode()).hexdigest()
 
     return ModuleHelper.encode_form_data(
         {
-            &#34;eqap&#34;: f&#34;dz:{encoded_data}&#34;,
+            &#34;eqap&#34;: eqap,
             &#34;eqacs&#34;: data_hash,
             &#34;eqaz&#34;: &#34;1&#34;,  # use &#34;encryption&#34;? (compression)
         }

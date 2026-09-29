@@ -258,6 +258,12 @@ class Timetables(Module):
             except AttributeError:
                 curriculum = None
 
+            # Some school events carry their title outside flags.event.
+            if not curriculum and is_event and subject is None:
+                event_name = lesson.get("name")
+                if isinstance(event_name, str) and event_name.strip():
+                    curriculum = event_name
+
             lesson_object = Lesson(
                 period,
                 start_time,
@@ -279,6 +285,18 @@ class Timetables(Module):
 
     @ModuleHelper.logged_in
     def get_my_timetable(self, date: date) -> Optional[Timetable]:
+        selected_child_id = self.edupage._selected_child_id
+
+        if selected_child_id is not None:
+            student = People(self.edupage).get_student(selected_child_id)
+
+            if student is None:
+                raise MissingDataException(
+                    f"Selected child with ID {selected_child_id} was not found."
+                )
+
+            return self.get_timetable(student, date)
+
         plan = self.__get_date_plan(date)
         return self.__parse_timetable(plan)
 

@@ -58,8 +58,10 @@ el.replaceWith(d);
 <pre><code class="python">class EventType(str, Enum):
     # Messages
     MESSAGE = &#34;sprava&#34;
+    CHAT = &#34;chat&#34;
     POLL = &#34;anketa&#34;
     NEWS = &#34;news&#34;
+    GENERIC_NOTIFICATION = &#34;genotif&#34;
 
     # ****************************************
 
@@ -98,6 +100,7 @@ el.replaceWith(d);
     PROCESS = &#34;process&#34;
     SCHOOL_EVENT = &#34;schoolevent&#34;
     SCHOOL_TRIP = &#34;trip&#34;
+    ENROLLMENT = &#34;signin&#34;
     TEACHER_MEETING = &#34;meeting&#34;
 
     # Free days
@@ -141,6 +144,7 @@ el.replaceWith(d);
     FOOD_CREDIT = &#34;strava_kredit&#34;
     FOOD_SERVED = &#34;strava_vydaj&#34;
     NEW_MENU = &#34;h_stravamenu&#34;
+    NEW_MENU_UPLOADED = &#34;stravamenu&#34;
 
     # ****************************************
 
@@ -150,6 +154,12 @@ el.replaceWith(d);
 
     # Photo album
     ALBUM = &#34;album&#34;
+
+    # Payments
+    PAYMENTS_PUBLISHED = &#34;payments&#34;
+
+    # Lost and found
+    LOST_AND_FOUND = &#34;lost&#34;
 
     # Other
     BEE = &#34;vcelicka&#34;
@@ -178,7 +188,9 @@ el.replaceWith(d);
 
     @staticmethod
     def parse(event_type_str: str) -&gt; Optional[EventType]:
-        return ModuleHelper.parse_enum(event_type_str, EventType)</code></pre>
+        return ModuleHelper.parse_enum(
+            event_type_str, EventType  # pyright: ignore[reportArgumentType]
+        )</code></pre>
 </details>
 <div class="desc"><p>An enumeration.</p></div>
 <h3>Ancestors</h3>
@@ -209,6 +221,10 @@ el.replaceWith(d);
 <div class="desc"></div>
 </dd>
 <dt id="edupage_api.timeline.EventType.CHANGE_ROOM"><code class="name">var <span class="ident">CHANGE_ROOM</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.timeline.EventType.CHAT"><code class="name">var <span class="ident">CHAT</span></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
@@ -244,6 +260,10 @@ el.replaceWith(d);
 <dd>
 <div class="desc"></div>
 </dd>
+<dt id="edupage_api.timeline.EventType.ENROLLMENT"><code class="name">var <span class="ident">ENROLLMENT</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
 <dt id="edupage_api.timeline.EventType.EVENT"><code class="name">var <span class="ident">EVENT</span></code></dt>
 <dd>
 <div class="desc"></div>
@@ -273,6 +293,10 @@ el.replaceWith(d);
 <div class="desc"></div>
 </dd>
 <dt id="edupage_api.timeline.EventType.FREE_DAY"><code class="name">var <span class="ident">FREE_DAY</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.timeline.EventType.GENERIC_NOTIFICATION"><code class="name">var <span class="ident">GENERIC_NOTIFICATION</span></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
@@ -380,6 +404,10 @@ el.replaceWith(d);
 <dd>
 <div class="desc"></div>
 </dd>
+<dt id="edupage_api.timeline.EventType.LOST_AND_FOUND"><code class="name">var <span class="ident">LOST_AND_FOUND</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
 <dt id="edupage_api.timeline.EventType.MESSAGE"><code class="name">var <span class="ident">MESSAGE</span></code></dt>
 <dd>
 <div class="desc"></div>
@@ -389,6 +417,10 @@ el.replaceWith(d);
 <div class="desc"></div>
 </dd>
 <dt id="edupage_api.timeline.EventType.NEW_MENU"><code class="name">var <span class="ident">NEW_MENU</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.timeline.EventType.NEW_MENU_UPLOADED"><code class="name">var <span class="ident">NEW_MENU_UPLOADED</span></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
@@ -405,6 +437,10 @@ el.replaceWith(d);
 <div class="desc"></div>
 </dd>
 <dt id="edupage_api.timeline.EventType.PARENTS_EVENING"><code class="name">var <span class="ident">PARENTS_EVENING</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.timeline.EventType.PAYMENTS_PUBLISHED"><code class="name">var <span class="ident">PAYMENTS_PUBLISHED</span></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
@@ -497,7 +533,9 @@ el.replaceWith(d);
 </summary>
 <pre><code class="python">@staticmethod
 def parse(event_type_str: str) -&gt; Optional[EventType]:
-    return ModuleHelper.parse_enum(event_type_str, EventType)</code></pre>
+    return ModuleHelper.parse_enum(
+        event_type_str, EventType  # pyright: ignore[reportArgumentType]
+    )</code></pre>
 </details>
 <div class="desc"></div>
 </dd>
@@ -505,7 +543,7 @@ def parse(event_type_str: str) -&gt; Optional[EventType]:
 </dd>
 <dt id="edupage_api.timeline.TimelineEvent"><code class="flex name class">
 <span>class <span class="ident">TimelineEvent</span></span>
-<span>(</span><span>event_id: int,<br>timestamp: datetime,<br>text: str,<br>author: Union[EduAccount, str],<br>recipient: Union[EduAccount, str],<br>event_type: <a title="edupage_api.timeline.EventType" href="#edupage_api.timeline.EventType">EventType</a>,<br>additional_data: dict)</span>
+<span>(</span><span>event_id: int,<br>timestamp: datetime,<br>text: str,<br>author: Union[EduAccount, str],<br>recipient: Union[EduAccount, str],<br>event_type: <a title="edupage_api.timeline.EventType" href="#edupage_api.timeline.EventType">EventType</a>,<br>additional_data: dict,<br>is_done: bool = False,<br>done_at: Optional[datetime] = None,<br>is_starred: bool = False,<br>reaction_count: int = 0,<br>created_at: Optional[datetime] = None,<br>is_removed: bool = False)</span>
 </code></dt>
 <dd>
 <details class="source">
@@ -520,9 +558,15 @@ class TimelineEvent:
     author: Union[EduAccount, str]
     recipient: Union[EduAccount, str]
     event_type: EventType
-    additional_data: dict</code></pre>
+    additional_data: dict
+    is_done: bool = False
+    done_at: Optional[datetime] = None
+    is_starred: bool = False
+    reaction_count: int = 0
+    created_at: Optional[datetime] = None
+    is_removed: bool = False</code></pre>
 </details>
-<div class="desc"><p>TimelineEvent(event_id: 'int', timestamp: 'datetime', text: 'str', author: 'Union[EduAccount, str]', recipient: 'Union[EduAccount, str]', event_type: 'EventType', additional_data: 'dict')</p></div>
+<div class="desc"><p>TimelineEvent(event_id: 'int', timestamp: 'datetime', text: 'str', author: 'Union[EduAccount, str]', recipient: 'Union[EduAccount, str]', event_type: 'EventType', additional_data: 'dict', is_done: 'bool' = False, done_at: 'Optional[datetime]' = None, is_starred: 'bool' = False, reaction_count: 'int' = 0, created_at: 'Optional[datetime]' = None, is_removed: 'bool' = False)</p></div>
 <h3>Instance variables</h3>
 <dl>
 <dt id="edupage_api.timeline.TimelineEvent.additional_data"><code class="name">var <span class="ident">additional_data</span> : dict</code></dt>
@@ -533,11 +577,35 @@ class TimelineEvent:
 <dd>
 <div class="desc"></div>
 </dd>
+<dt id="edupage_api.timeline.TimelineEvent.created_at"><code class="name">var <span class="ident">created_at</span> : datetime.datetime | None</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.timeline.TimelineEvent.done_at"><code class="name">var <span class="ident">done_at</span> : datetime.datetime | None</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
 <dt id="edupage_api.timeline.TimelineEvent.event_id"><code class="name">var <span class="ident">event_id</span> : int</code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
 <dt id="edupage_api.timeline.TimelineEvent.event_type"><code class="name">var <span class="ident">event_type</span> : <a title="edupage_api.timeline.EventType" href="#edupage_api.timeline.EventType">EventType</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.timeline.TimelineEvent.is_done"><code class="name">var <span class="ident">is_done</span> : bool</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.timeline.TimelineEvent.is_removed"><code class="name">var <span class="ident">is_removed</span> : bool</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.timeline.TimelineEvent.is_starred"><code class="name">var <span class="ident">is_starred</span> : bool</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.timeline.TimelineEvent.reaction_count"><code class="name">var <span class="ident">reaction_count</span> : int</code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
@@ -565,11 +633,13 @@ class TimelineEvent:
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">class TimelineEvents(Module):
-    @ModuleHelper.logged_in
-    def get_notifications(self):
+    def __parse_items(
+        self, timeline_items: dict, user_props: Optional[dict] = None
+    ) -&gt; list[TimelineEvent]:
         output = []
 
-        timeline_items = self.edupage.data.get(&#34;items&#34;)
+        if user_props is None:
+            user_props = {}
 
         for event in timeline_items:
             event_id_str = event.get(&#34;timelineid&#34;)
@@ -635,6 +705,41 @@ class TimelineEvent:
             if additional_data and type(additional_data) == str:
                 additional_data = json.loads(additional_data)
 
+            # Parse user-specific state from userProps
+            props = user_props.get(event_id_str, {})
+            if not isinstance(props, dict):
+                props = {}
+
+            is_starred = props.get(&#34;starred&#34;) == &#34;1&#34;
+
+            done_at = None
+            done_at_str = props.get(&#34;doneMaxCas&#34;)
+            if done_at_str:
+                try:
+                    done_at = datetime.strptime(done_at_str, &#34;%Y-%m-%d %H:%M:%S&#34;)
+                except (ValueError, TypeError):
+                    pass
+            is_done = done_at is not None
+
+            # Parse additional fields from raw event
+            reaction_count = 0
+            try:
+                reaction_count = int(event.get(&#34;pocet_reakcii&#34;, 0))
+            except (ValueError, TypeError):
+                pass
+
+            created_at = None
+            created_at_str = event.get(&#34;cas_pridania&#34;)
+            if created_at_str:
+                try:
+                    created_at = datetime.strptime(
+                        created_at_str, &#34;%Y-%m-%d %H:%M:%S&#34;
+                    )
+                except (ValueError, TypeError):
+                    pass
+
+            is_removed = event.get(&#34;removed&#34;) == &#34;1&#34;
+
             event = TimelineEvent(
                 event_id,
                 event_timestamp,
@@ -643,9 +748,69 @@ class TimelineEvent:
                 recipient,
                 event_type,
                 additional_data,
+                is_done=is_done,
+                done_at=done_at,
+                is_starred=is_starred,
+                reaction_count=reaction_count,
+                created_at=created_at,
+                is_removed=is_removed,
             )
             output.append(event)
-        return output</code></pre>
+
+        return output
+
+    def __get_user_props(self) -&gt; dict:
+        &#34;&#34;&#34;Get user properties (starred, done state) from cached login data.&#34;&#34;&#34;
+        if self.edupage.data is None:
+            return {}
+        result = self.edupage.data.get(&#34;userProps&#34;)
+        return result if isinstance(result, dict) else {}
+
+    @ModuleHelper.logged_in
+    def get_notifications_history(self, date_from: date):
+        request_url = f&#34;https://{self.edupage.subdomain}.edupage.org/timeline/&#34;
+        params = [
+            (&#34;module&#34;, &#34;todo&#34;),
+            (&#34;filterTab&#34;, &#34;&#34;),
+            (&#34;akcia&#34;, &#34;getData&#34;),
+            (&#34;filterTab&#34;, &#34;messages&#34;),
+        ]
+
+        response = self.edupage.session.post(
+            request_url,
+            params=params,
+            data=RequestUtil.encode_form_data(
+                {
+                    &#34;datefrom&#34;: date_from.strftime(&#34;%Y-%m-%d&#34;),
+                }
+            ),
+            headers={&#34;Content-Type&#34;: &#34;application/x-www-form-urlencoded&#34;},
+        )
+
+        if response.status_code != 200:
+            raise RequestError(
+                f&#34;Edupage returned an error: status={response.status_code}&#34;
+            )
+
+        data = response.json()
+        if &#34;timelineItems&#34; not in data:
+            raise MissingDataException(
+                &#34;Unexpected response from edupage! (no events in this time period?)&#34;
+            )
+
+        # The history endpoint returns user props under &#34;timelineUserProps&#34;
+        user_props = data.get(&#34;timelineUserProps&#34;)
+        if user_props is None:
+            user_props = self.__get_user_props()
+
+        return self.__parse_items(data[&#34;timelineItems&#34;], user_props)
+
+    @ModuleHelper.logged_in
+    def get_notifications(self):
+        return self.__parse_items(
+            self.edupage.data.get(&#34;items&#34;),  # pyright: ignore[reportArgumentType]
+            self.__get_user_props(),
+        )</code></pre>
 </details>
 <div class="desc"></div>
 <h3>Ancestors</h3>
@@ -664,85 +829,59 @@ class TimelineEvent:
 </summary>
 <pre><code class="python">@ModuleHelper.logged_in
 def get_notifications(self):
-    output = []
+    return self.__parse_items(
+        self.edupage.data.get(&#34;items&#34;),  # pyright: ignore[reportArgumentType]
+        self.__get_user_props(),
+    )</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.timeline.TimelineEvents.get_notifications_history"><code class="name flex">
+<span>def <span class="ident">get_notifications_history</span></span>(<span>self, date_from: date)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@ModuleHelper.logged_in
+def get_notifications_history(self, date_from: date):
+    request_url = f&#34;https://{self.edupage.subdomain}.edupage.org/timeline/&#34;
+    params = [
+        (&#34;module&#34;, &#34;todo&#34;),
+        (&#34;filterTab&#34;, &#34;&#34;),
+        (&#34;akcia&#34;, &#34;getData&#34;),
+        (&#34;filterTab&#34;, &#34;messages&#34;),
+    ]
 
-    timeline_items = self.edupage.data.get(&#34;items&#34;)
+    response = self.edupage.session.post(
+        request_url,
+        params=params,
+        data=RequestUtil.encode_form_data(
+            {
+                &#34;datefrom&#34;: date_from.strftime(&#34;%Y-%m-%d&#34;),
+            }
+        ),
+        headers={&#34;Content-Type&#34;: &#34;application/x-www-form-urlencoded&#34;},
+    )
 
-    for event in timeline_items:
-        event_id_str = event.get(&#34;timelineid&#34;)
-        if not event_id_str:
-            continue
-
-        event_id = int(event_id_str)
-        event_data = json.loads(event.get(&#34;data&#34;))
-
-        event_type_str = event.get(&#34;typ&#34;)
-        if not event_id_str:
-            continue
-        event_type = EventType.parse(event_type_str)
-
-        event_timestamp = datetime.strptime(
-            event.get(&#34;timestamp&#34;), &#34;%Y-%m-%d %H:%M:%S&#34;
+    if response.status_code != 200:
+        raise RequestError(
+            f&#34;Edupage returned an error: status={response.status_code}&#34;
         )
-        text = event.get(&#34;text&#34;)
 
-        # what about different languages?
-        # for message event type
-        if text.startswith(&#34;Dôležitá správa&#34;):
-            text = event_data.get(&#34;messageContent&#34;)
-
-        if text == &#34;&#34;:
-            try:
-                text = event_data.get(&#34;nazov&#34;)
-            except:
-                text = &#34;&#34;
-
-        # todo: add support for &#34;*&#34;
-        recipient_name = event.get(&#34;user_meno&#34;)
-        recipient_data = DbiHelper(self.edupage).fetch_person_data_by_name(
-            recipient_name
+    data = response.json()
+    if &#34;timelineItems&#34; not in data:
+        raise MissingDataException(
+            &#34;Unexpected response from edupage! (no events in this time period?)&#34;
         )
 
-        if recipient_name in [&#34;*&#34;, &#34;Celá škola&#34;]:
-            recipient = &#34;*&#34;
-        elif type(recipient_name) == str:
-            recipient = recipient_name
-        else:
-            ModuleHelper.assert_none(recipient_data)
+    # The history endpoint returns user props under &#34;timelineUserProps&#34;
+    user_props = data.get(&#34;timelineUserProps&#34;)
+    if user_props is None:
+        user_props = self.__get_user_props()
 
-            recipient = EduAccount.parse(
-                recipient_data, recipient_data.get(&#34;id&#34;), self.edupage
-            )
-
-        # todo: add support for &#34;*&#34;
-        author_name = event.get(&#34;vlastnik_meno&#34;)
-        author_data = DbiHelper(self.edupage).fetch_person_data_by_name(author_name)
-
-        if author_name == &#34;*&#34;:
-            author = &#34;*&#34;
-        elif type(author_name) == str:
-            author = author_name
-        else:
-            ModuleHelper.assert_none(author_data)
-            author = EduAccount.parse(
-                author_data, author_data.get(&#34;id&#34;), self.edupage
-            )
-
-        additional_data = event.get(&#34;data&#34;)
-        if additional_data and type(additional_data) == str:
-            additional_data = json.loads(additional_data)
-
-        event = TimelineEvent(
-            event_id,
-            event_timestamp,
-            text,
-            author,
-            recipient,
-            event_type,
-            additional_data,
-        )
-        output.append(event)
-    return output</code></pre>
+    return self.__parse_items(data[&#34;timelineItems&#34;], user_props)</code></pre>
 </details>
 <div class="desc"></div>
 </dd>
@@ -772,6 +911,7 @@ def get_notifications(self):
 <li><code><a title="edupage_api.timeline.EventType.BIG_EXAM" href="#edupage_api.timeline.EventType.BIG_EXAM">BIG_EXAM</a></code></li>
 <li><code><a title="edupage_api.timeline.EventType.BOOKED_ROOM" href="#edupage_api.timeline.EventType.BOOKED_ROOM">BOOKED_ROOM</a></code></li>
 <li><code><a title="edupage_api.timeline.EventType.CHANGE_ROOM" href="#edupage_api.timeline.EventType.CHANGE_ROOM">CHANGE_ROOM</a></code></li>
+<li><code><a title="edupage_api.timeline.EventType.CHAT" href="#edupage_api.timeline.EventType.CHAT">CHAT</a></code></li>
 <li><code><a title="edupage_api.timeline.EventType.CLASSIFICATION_MEETING" href="#edupage_api.timeline.EventType.CLASSIFICATION_MEETING">CLASSIFICATION_MEETING</a></code></li>
 <li><code><a title="edupage_api.timeline.EventType.CLASS_BOOK" href="#edupage_api.timeline.EventType.CLASS_BOOK">CLASS_BOOK</a></code></li>
 <li><code><a title="edupage_api.timeline.EventType.CLASS_TEACHER_EVENT" href="#edupage_api.timeline.EventType.CLASS_TEACHER_EVENT">CLASS_TEACHER_EVENT</a></code></li>
@@ -780,6 +920,7 @@ def get_notifications(self):
 <li><code><a title="edupage_api.timeline.EventType.CONTEST" href="#edupage_api.timeline.EventType.CONTEST">CONTEST</a></code></li>
 <li><code><a title="edupage_api.timeline.EventType.CULTURE" href="#edupage_api.timeline.EventType.CULTURE">CULTURE</a></code></li>
 <li><code><a title="edupage_api.timeline.EventType.DISTANT_LEARNING" href="#edupage_api.timeline.EventType.DISTANT_LEARNING">DISTANT_LEARNING</a></code></li>
+<li><code><a title="edupage_api.timeline.EventType.ENROLLMENT" href="#edupage_api.timeline.EventType.ENROLLMENT">ENROLLMENT</a></code></li>
 <li><code><a title="edupage_api.timeline.EventType.EVENT" href="#edupage_api.timeline.EventType.EVENT">EVENT</a></code></li>
 <li><code><a title="edupage_api.timeline.EventType.EXAM_ASSIGNMENT" href="#edupage_api.timeline.EventType.EXAM_ASSIGNMENT">EXAM_ASSIGNMENT</a></code></li>
 <li><code><a title="edupage_api.timeline.EventType.EXAM_EVALUATION" href="#edupage_api.timeline.EventType.EXAM_EVALUATION">EXAM_EVALUATION</a></code></li>
@@ -788,6 +929,7 @@ def get_notifications(self):
 <li><code><a title="edupage_api.timeline.EventType.FOOD_CREDIT" href="#edupage_api.timeline.EventType.FOOD_CREDIT">FOOD_CREDIT</a></code></li>
 <li><code><a title="edupage_api.timeline.EventType.FOOD_SERVED" href="#edupage_api.timeline.EventType.FOOD_SERVED">FOOD_SERVED</a></code></li>
 <li><code><a title="edupage_api.timeline.EventType.FREE_DAY" href="#edupage_api.timeline.EventType.FREE_DAY">FREE_DAY</a></code></li>
+<li><code><a title="edupage_api.timeline.EventType.GENERIC_NOTIFICATION" href="#edupage_api.timeline.EventType.GENERIC_NOTIFICATION">GENERIC_NOTIFICATION</a></code></li>
 <li><code><a title="edupage_api.timeline.EventType.GRADE" href="#edupage_api.timeline.EventType.GRADE">GRADE</a></code></li>
 <li><code><a title="edupage_api.timeline.EventType.GRADES_DOC" href="#edupage_api.timeline.EventType.GRADES_DOC">GRADES_DOC</a></code></li>
 <li><code><a title="edupage_api.timeline.EventType.HOLIDAY" href="#edupage_api.timeline.EventType.HOLIDAY">HOLIDAY</a></code></li>
@@ -814,13 +956,16 @@ def get_notifications(self):
 <li><code><a title="edupage_api.timeline.EventType.H_TIMETABLE" href="#edupage_api.timeline.EventType.H_TIMETABLE">H_TIMETABLE</a></code></li>
 <li><code><a title="edupage_api.timeline.EventType.H_USERPHOTO" href="#edupage_api.timeline.EventType.H_USERPHOTO">H_USERPHOTO</a></code></li>
 <li><code><a title="edupage_api.timeline.EventType.LESSON" href="#edupage_api.timeline.EventType.LESSON">LESSON</a></code></li>
+<li><code><a title="edupage_api.timeline.EventType.LOST_AND_FOUND" href="#edupage_api.timeline.EventType.LOST_AND_FOUND">LOST_AND_FOUND</a></code></li>
 <li><code><a title="edupage_api.timeline.EventType.MESSAGE" href="#edupage_api.timeline.EventType.MESSAGE">MESSAGE</a></code></li>
 <li><code><a title="edupage_api.timeline.EventType.NEWS" href="#edupage_api.timeline.EventType.NEWS">NEWS</a></code></li>
 <li><code><a title="edupage_api.timeline.EventType.NEW_MENU" href="#edupage_api.timeline.EventType.NEW_MENU">NEW_MENU</a></code></li>
+<li><code><a title="edupage_api.timeline.EventType.NEW_MENU_UPLOADED" href="#edupage_api.timeline.EventType.NEW_MENU_UPLOADED">NEW_MENU_UPLOADED</a></code></li>
 <li><code><a title="edupage_api.timeline.EventType.ORAL_EXAM" href="#edupage_api.timeline.EventType.ORAL_EXAM">ORAL_EXAM</a></code></li>
 <li><code><a title="edupage_api.timeline.EventType.OTHER" href="#edupage_api.timeline.EventType.OTHER">OTHER</a></code></li>
 <li><code><a title="edupage_api.timeline.EventType.PAPER" href="#edupage_api.timeline.EventType.PAPER">PAPER</a></code></li>
 <li><code><a title="edupage_api.timeline.EventType.PARENTS_EVENING" href="#edupage_api.timeline.EventType.PARENTS_EVENING">PARENTS_EVENING</a></code></li>
+<li><code><a title="edupage_api.timeline.EventType.PAYMENTS_PUBLISHED" href="#edupage_api.timeline.EventType.PAYMENTS_PUBLISHED">PAYMENTS_PUBLISHED</a></code></li>
 <li><code><a title="edupage_api.timeline.EventType.POLL" href="#edupage_api.timeline.EventType.POLL">POLL</a></code></li>
 <li><code><a title="edupage_api.timeline.EventType.PROCESS" href="#edupage_api.timeline.EventType.PROCESS">PROCESS</a></code></li>
 <li><code><a title="edupage_api.timeline.EventType.PROJECT" href="#edupage_api.timeline.EventType.PROJECT">PROJECT</a></code></li>
@@ -848,8 +993,14 @@ def get_notifications(self):
 <ul class="two-column">
 <li><code><a title="edupage_api.timeline.TimelineEvent.additional_data" href="#edupage_api.timeline.TimelineEvent.additional_data">additional_data</a></code></li>
 <li><code><a title="edupage_api.timeline.TimelineEvent.author" href="#edupage_api.timeline.TimelineEvent.author">author</a></code></li>
+<li><code><a title="edupage_api.timeline.TimelineEvent.created_at" href="#edupage_api.timeline.TimelineEvent.created_at">created_at</a></code></li>
+<li><code><a title="edupage_api.timeline.TimelineEvent.done_at" href="#edupage_api.timeline.TimelineEvent.done_at">done_at</a></code></li>
 <li><code><a title="edupage_api.timeline.TimelineEvent.event_id" href="#edupage_api.timeline.TimelineEvent.event_id">event_id</a></code></li>
 <li><code><a title="edupage_api.timeline.TimelineEvent.event_type" href="#edupage_api.timeline.TimelineEvent.event_type">event_type</a></code></li>
+<li><code><a title="edupage_api.timeline.TimelineEvent.is_done" href="#edupage_api.timeline.TimelineEvent.is_done">is_done</a></code></li>
+<li><code><a title="edupage_api.timeline.TimelineEvent.is_removed" href="#edupage_api.timeline.TimelineEvent.is_removed">is_removed</a></code></li>
+<li><code><a title="edupage_api.timeline.TimelineEvent.is_starred" href="#edupage_api.timeline.TimelineEvent.is_starred">is_starred</a></code></li>
+<li><code><a title="edupage_api.timeline.TimelineEvent.reaction_count" href="#edupage_api.timeline.TimelineEvent.reaction_count">reaction_count</a></code></li>
 <li><code><a title="edupage_api.timeline.TimelineEvent.recipient" href="#edupage_api.timeline.TimelineEvent.recipient">recipient</a></code></li>
 <li><code><a title="edupage_api.timeline.TimelineEvent.text" href="#edupage_api.timeline.TimelineEvent.text">text</a></code></li>
 <li><code><a title="edupage_api.timeline.TimelineEvent.timestamp" href="#edupage_api.timeline.TimelineEvent.timestamp">timestamp</a></code></li>
@@ -859,6 +1010,7 @@ def get_notifications(self):
 <h4><code><a title="edupage_api.timeline.TimelineEvents" href="#edupage_api.timeline.TimelineEvents">TimelineEvents</a></code></h4>
 <ul class="">
 <li><code><a title="edupage_api.timeline.TimelineEvents.get_notifications" href="#edupage_api.timeline.TimelineEvents.get_notifications">get_notifications</a></code></li>
+<li><code><a title="edupage_api.timeline.TimelineEvents.get_notifications_history" href="#edupage_api.timeline.TimelineEvents.get_notifications_history">get_notifications_history</a></code></li>
 </ul>
 </li>
 </ul>

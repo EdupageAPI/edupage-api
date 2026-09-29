@@ -45,6 +45,7 @@ class Edupage(EdupageModule):
         self.subdomain = None
         self.gsec_hash = None
         self.username = None
+        self._selected_child_id = None
 
         self.session = requests.session()
         self.session.request = functools.partial(
@@ -183,6 +184,20 @@ class Edupage(EdupageModule):
         """
 
         return TimelineEvents(self).get_notifications()
+
+    def get_notification_history(self, date_from: date) -> list[TimelineEvent]:
+        """Get a list of all available notifications since `date_from` (until now).
+
+        This method can be used instead of `get_notifications` if notifications older than
+        1 month are needed.
+
+        Args:
+            date_from (datetime.date): The first day of the date range
+
+        Returns:
+            list[TimelineEvent]: List of all notifications since `date_from` up to now.
+        """
+        return TimelineEvents(self).get_notifications_history(date_from)
 
     def cloud_upload(self, fd: TextIOWrapper) -> EduCloudFile:
         """Upload file to EduPage cloud.
@@ -329,6 +344,14 @@ class Edupage(EdupageModule):
     def switch_to_parent(self):
         """Switches back to your parent account - can only be used on parent accounts"""
         Parent(self).switch_to_parent()
+
+    def get_subdomains(self) -> list[str]:
+        """Get the subdomains of the schools your parent account has access to - can only be used on parent accounts.
+
+        Returns:
+            list[str]: The subdomain of each school (including the one you're currently logged into).
+        """
+        return Parent(self).get_subdomains()
 
     @classmethod
     def from_session_id(cls, session_id: str, subdomain: str, username: str):

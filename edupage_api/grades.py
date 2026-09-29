@@ -32,8 +32,8 @@ class EduGrade:
 class EduTextGrade:
     grade_id: int
     comment: Optional[str]
-    grade_type: int
-    date: datetime
+    grade_type: str
+    date: Optional[datetime]
     subject_id: int
     subject_name: Optional[str]
 
@@ -84,16 +84,18 @@ class Grades(Module):
             comment = grade.get("p_text")
             grade_type = grade.get("p_typ")
 
-            date_str = grade.get("datum")
+            date_str = grade.get("p_datum")
             date = datetime.strptime(date_str, "%Y-%m-%d %H:%M:%S") \
                 if date_str is not None else None
-            
+
             subject_id_str = grade.get("PredmetID")
             if subject_id_str is None or subject_id_str == "vsetky":
                 continue
 
             subject_id = int(subject_id_str)
-            subject_name = DbiHelper(self.edupage).fetch_subject_name(subject_id)
+            subject_name = grade.get("predmet_meno")
+            if subject_name is None:
+                subject_name = DbiHelper(self.edupage).fetch_subject_name(subject_id)
 
             grades.append(
                 EduTextGrade(

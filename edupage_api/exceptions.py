@@ -46,6 +46,10 @@ class InvalidMealsData(Exception):
     pass
 
 
+class InvalidAttendanceDataException(Exception):
+    pass
+
+
 class Base64DecodeError(Exception):
     pass
 

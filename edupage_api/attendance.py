@@ -7,6 +7,7 @@ from typing import Optional
 
 from edupage_api.module import Module, ModuleHelper
 from edupage_api.exceptions import (
+    InvalidAttendanceDataException,
     MissingDataException,
     InsufficientPermissionsException,
 )
@@ -89,7 +90,45 @@ class Attendance(Module):
             user_id.replace("Student", "")
             .replace("Ucitel", "")
             .replace("Rodic", "")
-            .replace("-", "")
+        )
+
+    @staticmethod
+    def __normalize_to_dict(value):
+        if value == []:
+            return {}
+        if not isinstance(value, dict):
+            raise InvalidAttendanceDataException(
+                "Unexpected attendance data: expected a mapping."
+            )
+        return value
+
+    @staticmethod
+    def __get_user_data(attendance_data, section, target_id):
+        records = Attendance.__normalize_to_dict(attendance_data.get(section))
+        if target_id in records:
+            return Attendance.__normalize_to_dict(records[target_id])
+
+        # A student can be listed in "students" but have no entry in "dateStats"
+        # (e.g. no attendance records yet). Return empty statistics for them
+        # instead of raising, which is reserved for students missing from the
+        # response entirely.
+        if section == "dateStats":
+            students = Attendance.__normalize_to_dict(
+                attendance_data.get("students")
+            )
+            if target_id in students:
+                student_records = students[target_id]
+                if student_records != [] and not isinstance(student_records, dict):
+                    raise InvalidAttendanceDataException(
+                        "Unexpected attendance data: expected a mapping."
+                    )
+                return {}
+
+        raise InsufficientPermissionsException(
+            "The requested user's data is not available in the response. "
+            "This endpoint always returns data for whichever account is "
+            "currently active in the session - if you are on a parent "
+            "account, call `Edupage.switch_to_child` first."
         )
 
     def get_days_with_available_attendance(self, user_id: str) -> list[date]:
@@ -100,18 +139,13 @@ class Attendance(Module):
         target_user_id_number = Attendance.__get_user_id_number(user_id)
         attendance_data = self.__get_attendance_data(user_id_number)
 
-        stats = attendance_data["dateStats"]
-        if target_user_id_number not in stats:
-            raise InsufficientPermissionsException(
-                "The requested user's data is not available in the response. "
-                "This endpoint always returns data for whichever account is "
-                "currently active in the session - if you are on a parent "
-                "account, call `Edupage.switch_to_child` first."
-            )
+        stats = self.__get_user_data(
+            attendance_data, "dateStats", target_user_id_number
+        )
 
         return [
             datetime.strptime(d, "%Y-%m-%d").date()
-            for d in stats[target_user_id_number].keys()
+            for d in stats.keys()
         ]
 
     @ModuleHelper.logged_in
@@ -123,14 +157,9 @@ class Attendance(Module):
         target_user_id_number = Attendance.__get_user_id_number(user_id)
 
         attendance_data = self.__get_attendance_data(user_id_number)
-        detailed_stats = attendance_data["students"].get(target_user_id_number)
-        if detailed_stats is None:
-            raise InsufficientPermissionsException(
-                "The requested user's data is not available in the response. "
-                "This endpoint always returns data for whichever account is "
-                "currently active in the session - if you are on a parent "
-                "account, call `Edupage.switch_to_child` first."
-            )
+        detailed_stats = self.__get_user_data(
+            attendance_data, "students", target_user_id_number
+        )
 
         arrivals = {}
         for raw_date, arrival_data in detailed_stats.items():
@@ -175,18 +204,15 @@ class Attendance(Module):
 
         attendance_data = self.__get_attendance_data(user_id_number)
 
-        all_stats = attendance_data["dateStats"]
-
-        user_stats = all_stats.get(target_user_id_number)
-        if user_stats is None:
-            raise InsufficientPermissionsException(
-                "The requested user's data is not available in the response. "
-                "This endpoint always returns data for whichever account is "
-                "currently active in the session - if you are on a parent "
-                "account, call `Edupage.switch_to_child` first."
+        user_stats = self.__get_user_data(
+            attendance_data, "dateStats", target_user_id_number
+        )
+        date_key = date.strftime("%Y-%m-%d")
+        if date_key not in user_stats:
+            raise MissingDataException(
+                "No attendance statistics for the requested date."
             )
-
-        stats = user_stats[date.strftime("%Y-%m-%d")]
+        stats = self.__normalize_to_dict(user_stats[date_key])
 
         total_lessons_absent = AttendenceStatDetail(
             count=stats.get("absent"),

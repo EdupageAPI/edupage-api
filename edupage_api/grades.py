@@ -206,6 +206,7 @@ class Grades(Module):
                     percent = None
             except:
                 verbal = True
+                percent = None
 
             class_grade_avg = None if details.get("priemer") is None else float(details.get("priemer"))
 

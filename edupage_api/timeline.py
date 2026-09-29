@@ -174,8 +174,16 @@ class TimelineEvent:
     reaction_count: int = 0
     created_at: Optional[datetime] = None
     is_removed: bool = False
+
+    # Meaning depends on `event_type`, e.g. chat_id for EventType.CHAT.
+    # An int when the value is numeric, otherwise the raw str (e.g. hex IDs, dates).
     other_id: Optional[Union[int, str]] = None
+
+    # event_id of the event this one replies to,
+    # e.g. a reply to an EventType.MESSAGE points to the original message's event_id.
     response_to: Optional[int] = None
+
+    # Meaning depends on `event_type`, e.g. the deadline day for EventType.HOMEWORK.
     event_time: Optional[datetime] = None
 
 

@@ -55,9 +55,7 @@ class TwoFactorLogin:
         return data if isinstance(data, dict) else {}
 
     @classmethod
-    def from_page(
-        cls, edupage: EdupageModule, page: str
-    ) -> Optional["TwoFactorLogin"]:
+    def from_page(cls, edupage: EdupageModule, page: str) -> Optional["TwoFactorLogin"]:
         """Create the object from EduPage's two-factor page.
 
         Args:
@@ -165,7 +163,7 @@ class TwoFactorLogin:
         if data.get("status") != "ok":
             raise self.__request_error(f"Failed to send the email: {str(data)}", data)
 
-        self.email = data["data"].get("email") or self.email
+        self.email = data.get("data", {}).get("email") or self.email
 
     def __finish(self, code: str):
         if self.__use_modern_rpc:

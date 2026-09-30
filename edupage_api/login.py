@@ -360,7 +360,10 @@ class Login(Module):
     def reload_data(self, subdomain: str, session_id: str, username: str):
         request_url = f"https://{subdomain}.edupage.org/user"
 
-        self.edupage.session.cookies.set("PHPSESSID", session_id)
+        # Only send the session cookie to this school's subdomain
+        self.edupage.session.cookies.set(
+            "PHPSESSID", session_id, domain=f"{subdomain}.edupage.org"
+        )
 
         response = self.edupage.session.get(request_url)
 

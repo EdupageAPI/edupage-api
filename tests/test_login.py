@@ -4,7 +4,10 @@ import unittest
 from unittest.mock import patch
 
 from edupage_api.exceptions import RequestError, RetryLaterException
-from edupage_api.login import Login, TwoFactorLogin
+from edupage_api.login import Login
+from edupage_api.login_session import LoginSession
+from edupage_api.twofactor import TwoFactorLogin
+from edupage_api.module import EdupageModule
 
 
 class FakeResponse:
@@ -31,7 +34,7 @@ class FakeSession:
         return next(self.get_responses)
 
 
-class FakeEdupage:
+class FakeEdupage(EdupageModule):
     def __init__(self, session):
         self.subdomain = "school"
         self.username = "student"
@@ -44,22 +47,22 @@ class FakeEdupage:
 class LoginRpcResponseParsingTests(unittest.TestCase):
     def test_parse_plain_json_response(self):
         self.assertEqual(
-            Login._parse_rpc_response('{"status": "OK"}'), {"status": "OK"}
+            LoginSession.parse_rpc_response('{"status": "OK"}'), {"status": "OK"}
         )
 
     def test_parse_compressed_response(self):
         response = "eqz:" + base64.b64encode(b'{"status": "OK"}').decode()
 
-        self.assertEqual(Login._parse_rpc_response(response), {"status": "OK"})
+        self.assertEqual(LoginSession.parse_rpc_response(response), {"status": "OK"})
 
     def test_parse_empty_response(self):
-        self.assertIsNone(Login._parse_rpc_response(""))
+        self.assertIsNone(LoginSession.parse_rpc_response(""))
 
     def test_parse_invalid_response(self):
-        self.assertIsNone(Login._parse_rpc_response("not json at all"))
+        self.assertIsNone(LoginSession.parse_rpc_response("not json at all"))
 
     def test_parse_response_with_invalid_base64(self):
-        self.assertIsNone(Login._parse_rpc_response("eqz:!!!"))
+        self.assertIsNone(LoginSession.parse_rpc_response("eqz:!!!"))
 
 
 class ModernTwoFactorLoginTests(unittest.TestCase):
@@ -71,12 +74,10 @@ class ModernTwoFactorLoginTests(unittest.TestCase):
         edupage = FakeEdupage(session)
 
         with patch(
-            "edupage_api.login.RequestData.encode_request_body",
+            "edupage_api.twofactor.RequestData.encode_request_body",
             return_value="encoded-request",
         ) as encode_request_body:
-            TwoFactorLogin(None, None, None, edupage, True).finish_with_code(
-                "123456"
-            )
+            TwoFactorLogin(None, None, None, edupage, True).finish_with_code("123456")
 
         self.assertTrue(edupage.is_logged_in)
         self.assertEqual(edupage.data, {"userid": "student"})
@@ -120,17 +121,11 @@ class ModernTwoFactorLoginTests(unittest.TestCase):
                     )
                 )
             ],
-            [
-                FakeResponse(
-                    '<script src="/login/pics/jsw/twofactorlogin.js"></script>'
-                )
-            ],
+            [FakeResponse('<script src="/login/pics/jsw/twofactorlogin.js"></script>')],
         )
         edupage = FakeEdupage(session)
 
-        two_factor = Login(edupage)._Login__finish_login(
-            response, "school", "student"
-        )
+        two_factor = Login(edupage)._Login__finish_login(response, "school", "student")
 
         self.assertIsInstance(two_factor, TwoFactorLogin)
         self.assertTrue(two_factor._TwoFactorLogin__use_modern_rpc)

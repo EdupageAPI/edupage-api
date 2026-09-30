@@ -42,6 +42,12 @@ class RequestError(Exception):
     pass
 
 
+class RetryLaterException(RequestError):
+    def __init__(self, message: str, retry_in_seconds: int):
+        super().__init__(message)
+        self.retry_in_seconds = retry_in_seconds
+
+
 class InvalidMealsData(Exception):
     pass
 

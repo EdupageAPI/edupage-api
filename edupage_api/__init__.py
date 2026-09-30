@@ -54,6 +54,12 @@ class Edupage(EdupageModule):
             self.session.request, timeout=request_timeout
         )
 
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_value, traceback):
+        self.logout()
+
     def login(
         self, username: str, password: str, subdomain: str
     ) -> Optional[TwoFactorLogin]:

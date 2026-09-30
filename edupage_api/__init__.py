@@ -12,6 +12,7 @@ from edupage_api.cloud import Cloud, EduCloudFile
 from edupage_api.custom_request import CustomRequest
 from edupage_api.grades import EduGrade, EduTextGrade, Grades, Term
 from edupage_api.login import Login
+from edupage_api.login_session import LoginSession
 from edupage_api.twofactor import TwoFactorLogin
 from edupage_api.lunches import Lunches, Meals
 from edupage_api.messages import Messages
@@ -368,6 +369,6 @@ class Edupage(EdupageModule):
         """
         instance = cls()
 
-        Login(instance).reload_data(subdomain, session_id, username)
+        LoginSession(instance).reload_data(subdomain, session_id, username)
 
         return instance

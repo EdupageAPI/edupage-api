@@ -157,6 +157,3 @@ class Login(Module):
                 raise BadCredentialsException()
 
         return self.__finish_login(response, subdomain, username)
-
-    def reload_data(self, subdomain: str, session_id: str, username: str):
-        LoginSession(self.edupage).reload_data(subdomain, session_id, username)

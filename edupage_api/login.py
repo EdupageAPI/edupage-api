@@ -18,10 +18,11 @@ from edupage_api.module import EdupageModule, Module
 
 @dataclass
 class TwoFactorLogin:
-    __authentication_endpoint: str
-    __authentication_token: str
-    __csrf_token: str
+    __authentication_endpoint: Optional[str]
+    __authentication_token: Optional[str]
+    __csrf_token: Optional[str]
     __edupage: EdupageModule
+    __use_modern_rpc: bool = False
 
     __code: Optional[str] = None
 
@@ -60,6 +61,10 @@ class TwoFactorLogin:
             raise RequestError(f"Failed to resend notifications: {str(data)}")
 
     def __finish(self, code: str):
+        if self.__use_modern_rpc:
+            self.__finish_with_modern_rpc(code)
+            return
+
         request_url = (
             f"https://{self.__edupage.subdomain}.edupage.org/login/edubarLogin.php"
         )
@@ -88,6 +93,40 @@ class TwoFactorLogin:
         raise SecondFactorFailedException(
             f"Second factor failed! (wrong/expired code? expired session?)"
         )
+
+    def __finish_with_modern_rpc(self, code: str):
+        """Complete the JavaScript-based 2FA flow used by current EduPage pages."""
+
+        base_url = f"https://{self.__edupage.subdomain}.edupage.org"
+        response = self.__edupage.session.post(
+            f"{base_url}/login/?cmd=MainLogin&akcia=login",
+            data=RequestData.encode_request_body(
+                {
+                    "rpcparams": json.dumps(
+                        {
+                            "t2fasec": code,
+                            "2fNoSave": "y",
+                            "2fform": "1",
+                            "tu": None,
+                            "gu": None,
+                            "au": None,
+                        }
+                    )
+                }
+            ),
+            headers={"Content-Type": "application/x-www-form-urlencoded"},
+        )
+        result = Login._parse_rpc_response(response.text)
+
+        if not result or result.get("status") != "OK":
+            raise SecondFactorFailedException(
+                "Second factor failed! (wrong/expired code? expired session?)"
+            )
+
+        user_page = self.__edupage.session.get(
+            urljoin(base_url, result.get("redirectUrl", "/user/"))
+        )
+        Login(self.__edupage)._Login__parse_login_data(user_page.content.decode())
 
     def finish(self):
         """Finish the second factor authentication process.
@@ -187,12 +226,15 @@ class Login(Module):
         data = two_factor_response.content.decode()
 
         fields = self._extract_two_factor_fields(data)
-        if not fields:
-            raise BadCredentialsException("EduPage did not provide two-factor fields")
+        if fields:
+            return TwoFactorLogin(
+                fields["gu"], fields["au"], fields["csrfauth"], self.edupage
+            )
 
-        return TwoFactorLogin(
-            fields["gu"], fields["au"], fields["csrfauth"], self.edupage
-        )
+        if "/login/pics/jsw/twofactorlogin.js" in data:
+            return TwoFactorLogin(None, None, None, self.edupage, True)
+
+        raise BadCredentialsException("EduPage did not provide two-factor fields")
 
     def __login_with_rpc(self, username: str, password: str, subdomain: str):
         # Mirrors the login process (mainlogin.js):

@@ -11,6 +11,7 @@ from edupage_api.exceptions import (
     CaptchaException,
     MissingDataException,
     RequestError,
+    RetryLaterException,
     SecondFactorFailedException,
 )
 from edupage_api.module import EdupageModule, Module
@@ -25,6 +26,10 @@ class TwoFactorLogin:
     __use_modern_rpc: bool = False
 
     __code: Optional[str] = None
+
+    # Only provided by modern RPC 2FA page
+    email: Optional[str] = None
+    device_names: Optional[list[str]] = None
 
     def is_confirmed(self):
         """Check if the second factor process was finished by confirmation with a device.
@@ -50,15 +55,57 @@ class TwoFactorLogin:
 
         return True
 
+    @staticmethod
+    def __request_error(message: str, data: dict) -> RequestError:
+        details = data.get("data")
+        if isinstance(details, dict) and details.get("retryInSeconds"):
+            return RetryLaterException(message, int(details["retryInSeconds"]))
+
+        return RequestError(message)
+
     def resend_notifications(self):
-        """Resends the confirmation notification to all devices."""
+        """Resends the notification to all devices.
+
+        It shares the countdown timer with `TwoFactorLogin.send_email_code`.
+
+        Raises:
+            RetryLaterException: It was requested too soon; try again after `retry_in_seconds`.
+            RequestError: The notification could not be resent.
+        """
 
         request_url = f"https://{self.__edupage.subdomain}.edupage.org/login/twofactor?akcia=resendNotifs"
         response = self.__edupage.session.post(request_url)
 
         data = response.json()
         if data.get("status") != "ok":
-            raise RequestError(f"Failed to resend notifications: {str(data)}")
+            raise self.__request_error(
+                f"Failed to resend notifications: {str(data)}", data
+            )
+
+    def send_email_code(self):
+        """Send the 2fa code to your email.
+
+        EduPage allows sending a code (by email, or with `TwoFactorLogin.resend_notifications`)
+        only after a countdown. The timer is about 30 seconds after entering username and password,
+        and is reset to 60 seconds once a code is sent. Until then this raises `RetryLaterException`;
+        call it again after `retry_in_seconds`.
+
+        Use `TwoFactorLogin.finish_with_code` to finish the login with the received code.
+        The address the code was sent to is stored in `TwoFactorLogin.email`.
+
+        Raises:
+            RetryLaterException: It was requested too soon; try again after `retry_in_seconds`.
+            RequestError: The code could not be sent.
+        """
+
+        request_url = f"https://{self.__edupage.subdomain}.edupage.org/login/twofactor?akcia=sendEmail"
+        response = self.__edupage.session.post(request_url)
+
+        data = response.json()
+        if data.get("status") != "ok":
+            raise self.__request_error(f"Failed to send the email: {str(data)}", data)
+
+        self.email = data["data"].get("email") or self.email
 
     def __finish(self, code: str):
         if self.__use_modern_rpc:
@@ -149,14 +196,19 @@ class TwoFactorLogin:
         self.__finish(self.__code)
 
     def finish_with_code(self, code: str):
-        """Finish the second factor authentication process.
-        This function should be used when email 2fa codes are used to confirm the login. If you are using a device to confirm the login, please use `TwoFactorLogin.finish`.
+        """Finish the second factor authentication process with a 2fa verification code.
+
+        If you are using a device to confirm the login, please use `TwoFactorLogin.finish`.
+
+        Verification code is valid for 5 minutes. After that it is refused like a wrong one.
+        Use `TwoFactorLogin.send_email_code` or `TwoFactorLogin.resend_notifications` to
+        request a new code and continue (without a need to provide username and password again).
 
         Args:
             code (str): The 2fa code from your email or from the mobile app.
 
         Raises:
-            SecondFactorFailedException: An invalid 2fa code was provided.
+            SecondFactorFailedException: An invalid 2fa code was provided, or it came after the 5 minutes.
         """
         self.__finish(code)
 
@@ -204,6 +256,17 @@ class Login(Module):
         except IndexError:
             return None
 
+    def __get_two_factor_data(self) -> dict:
+        request_url = f"https://{self.edupage.subdomain}.edupage.org/login/twofactor?akcia=getData"
+        response = self.edupage.session.post(request_url)
+
+        try:
+            data = response.json()
+        except ValueError:
+            return {}
+
+        return data if isinstance(data, dict) else {}
+
     def __finish_login(self, response, subdomain: str, username: str):
         data = response.content.decode()
 
@@ -232,7 +295,21 @@ class Login(Module):
             )
 
         if "/login/pics/jsw/twofactorlogin.js" in data:
-            return TwoFactorLogin(None, None, None, self.edupage, True)
+            two_factor_data = self.__get_two_factor_data()
+
+            device_names = two_factor_data.get("deviceNames")
+            if device_names is not None:
+                device_names = [name for name in device_names if name]
+
+            return TwoFactorLogin(
+                None,
+                None,
+                None,
+                self.edupage,
+                True,
+                email=two_factor_data.get("email"),
+                device_names=device_names,
+            )
 
         raise BadCredentialsException("EduPage did not provide two-factor fields")
 

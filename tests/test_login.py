@@ -3,6 +3,7 @@ import json
 import unittest
 from unittest.mock import patch
 
+from edupage_api.exceptions import RequestError, RetryLaterException
 from edupage_api.login import Login, TwoFactorLogin
 
 
@@ -11,6 +12,9 @@ class FakeResponse:
         self.text = text
         self.content = text.encode()
         self.url = url
+
+    def json(self):
+        return json.loads(self.text)
 
 
 class FakeSession:
@@ -105,7 +109,17 @@ class ModernTwoFactorLoginTests(unittest.TestCase):
             "https://school.edupage.org/login/twofactor?sn=1",
         )
         session = FakeSession(
-            [],
+            [
+                FakeResponse(
+                    json.dumps(
+                        {
+                            "status": "ok",
+                            "deviceNames": ["Phone", ""],
+                            "email": "student@example.com",
+                        }
+                    )
+                )
+            ],
             [
                 FakeResponse(
                     '<script src="/login/pics/jsw/twofactorlogin.js"></script>'
@@ -120,6 +134,74 @@ class ModernTwoFactorLoginTests(unittest.TestCase):
 
         self.assertIsInstance(two_factor, TwoFactorLogin)
         self.assertTrue(two_factor._TwoFactorLogin__use_modern_rpc)
+        self.assertEqual(two_factor.device_names, ["Phone"])
+        self.assertEqual(two_factor.email, "student@example.com")
+        self.assertEqual(
+            session.post_calls[0][0],
+            "https://school.edupage.org/login/twofactor?akcia=getData",
+        )
+
+
+def modern_two_factor(response):
+    session = FakeSession([response], [])
+    return TwoFactorLogin(
+        None, None, None, FakeEdupage(session), True, email="student@example.com"
+    )
+
+
+class SendEmailCodeTests(unittest.TestCase):
+    def send_email_code(self, response_data):
+        two_factor = modern_two_factor(FakeResponse(json.dumps(response_data)))
+
+        two_factor.send_email_code()
+
+        return two_factor
+
+    def test_sent_email_updates_the_address(self):
+        two_factor = self.send_email_code(
+            {"status": "ok", "data": {"email": "parent@example.com"}}
+        )
+
+        self.assertEqual(two_factor.email, "parent@example.com")
+
+    def test_sent_email_without_address_keeps_the_known_one(self):
+        two_factor = self.send_email_code({"status": "ok", "data": {}})
+
+        self.assertEqual(two_factor.email, "student@example.com")
+
+    def test_email_requested_too_soon_asks_to_retry_later(self):
+        with self.assertRaises(RetryLaterException) as context:
+            self.send_email_code({"status": "fail", "data": {"retryInSeconds": 10}})
+
+        self.assertEqual(context.exception.retry_in_seconds, 10)
+
+    def test_other_failures_raise_request_error(self):
+        with self.assertRaises(RequestError) as context:
+            self.send_email_code({"status": "fail", "data": {"err": "unknown"}})
+
+        self.assertNotIsInstance(context.exception, RetryLaterException)
+
+
+class ResendNotificationsTests(unittest.TestCase):
+    def test_resend_requested_too_soon_asks_to_retry_later(self):
+        two_factor = modern_two_factor(
+            FakeResponse(json.dumps({"status": "fail", "data": {"retryInSeconds": 10}}))
+        )
+
+        with self.assertRaises(RetryLaterException) as context:
+            two_factor.resend_notifications()
+
+        self.assertEqual(context.exception.retry_in_seconds, 10)
+
+    def test_failure_with_text_data_raises_request_error(self):
+        two_factor = modern_two_factor(
+            FakeResponse(json.dumps({"status": "fail", "data": "Unknown error"}))
+        )
+
+        with self.assertRaises(RequestError) as context:
+            two_factor.resend_notifications()
+
+        self.assertNotIsInstance(context.exception, RetryLaterException)
 
 
 if __name__ == "__main__":

@@ -7,3 +7,5 @@ teachers = edupage.get_teachers()
 
 for i, teacher in enumerate(teachers):
     print(f"{i + 1}. {teacher.name}")
+
+edupage.logout()

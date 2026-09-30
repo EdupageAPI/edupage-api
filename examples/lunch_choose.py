@@ -11,6 +11,7 @@ meals = edupage.get_meals(today)
 
 if meals is None:
     print(f"No meal choices for today ({today.date()}) yet!")
+    edupage.logout()
     sys.exit(0)
 
 for meal_name, meal in [("snack", meals.snack), ("lunch", meals.lunch), ("afternoon snack", meals.afternoon_snack)]:
@@ -35,3 +36,5 @@ for meal_name, meal in [("snack", meals.snack), ("lunch", meals.lunch), ("aftern
         meal.choose(edupage, int(lunch_n))
     
     print("Ok!")
+
+edupage.logout()

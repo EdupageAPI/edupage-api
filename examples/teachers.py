@@ -40,3 +40,5 @@ for teacher in teachers:
 
 print("\n\nThe youngest teacher in your school (the shortest time in your school):")
 print_teacher_info(youngest_teacher)
+
+edupage.logout()

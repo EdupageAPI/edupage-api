@@ -64,5 +64,6 @@ except SecondFactorFailedException:
 
 if edupage.is_logged_in:
     print("Logged in")
+    edupage.logout()
 else:
     print("Login failed")

@@ -133,6 +133,53 @@ class EduGrade:
 </dd>
 </dl>
 </dd>
+<dt id="edupage_api.grades.EduTextGrade"><code class="flex name class">
+<span>class <span class="ident">EduTextGrade</span></span>
+<span>(</span><span>grade_id: int,<br>comment: str | None,<br>grade_type: str,<br>date: datetime.datetime | None,<br>subject_id: int,<br>subject_name: str | None)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@dataclass
+class EduTextGrade:
+    grade_id: int
+    comment: Optional[str]
+    grade_type: str
+    date: Optional[datetime]
+    subject_id: int
+    subject_name: Optional[str]</code></pre>
+</details>
+<div class="desc"><p>EduTextGrade(grade_id: int, comment: Optional[str], grade_type: str, date: Optional[datetime.datetime], subject_id: int, subject_name: Optional[str])</p></div>
+<h3>Instance variables</h3>
+<dl>
+<dt id="edupage_api.grades.EduTextGrade.comment"><code class="name">var <span class="ident">comment</span> : str | None</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.grades.EduTextGrade.date"><code class="name">var <span class="ident">date</span> : datetime.datetime | None</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.grades.EduTextGrade.grade_id"><code class="name">var <span class="ident">grade_id</span> : int</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.grades.EduTextGrade.grade_type"><code class="name">var <span class="ident">grade_type</span> : str</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.grades.EduTextGrade.subject_id"><code class="name">var <span class="ident">subject_id</span> : int</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.grades.EduTextGrade.subject_name"><code class="name">var <span class="ident">subject_name</span> : str | None</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+</dd>
 <dt id="edupage_api.grades.Grades"><code class="flex name class">
 <span>class <span class="ident">Grades</span></span>
 <span>(</span><span>edupage: <a title="edupage_api.module.EdupageModule" href="module.html#edupage_api.module.EdupageModule">EdupageModule</a>)</span>
@@ -167,6 +214,48 @@ class EduGrade:
             return self.__parse_grade_data(response)
         except (json.JSONDecodeError, IndexError):
             raise FailedToParseGradeDataError(&#34;Failed to parse JSON&#34;)
+
+    @ModuleHelper.logged_in
+    def get_text_grades(self, term: Optional[Term], year: Optional[int]) -&gt; list[EduTextGrade]:
+        grade_data = (
+            self.__get_grade_data_for_term(term, year)
+            if term and year
+            else self.__get_grade_data()
+        )
+        
+        text_grades = grade_data.get(&#34;vsetkyVcelicky&#34;)
+
+        grades = []
+        for grade in text_grades:
+            grade_id = grade.get(&#34;VcelickaID&#34;)
+            comment = grade.get(&#34;p_text&#34;)
+            grade_type = grade.get(&#34;p_typ&#34;)
+
+            date_str = grade.get(&#34;p_datum&#34;)
+            date = datetime.strptime(date_str, &#34;%Y-%m-%d %H:%M:%S&#34;) \
+                if date_str is not None else None
+
+            subject_id_str = grade.get(&#34;PredmetID&#34;)
+            if subject_id_str is None or subject_id_str == &#34;vsetky&#34;:
+                continue
+
+            subject_id = int(subject_id_str)
+            subject_name = grade.get(&#34;predmet_meno&#34;)
+            if subject_name is None:
+                subject_name = DbiHelper(self.edupage).fetch_subject_name(subject_id)
+
+            grades.append(
+                EduTextGrade(
+                    grade_id,
+                    comment,
+                    grade_type,
+                    date,
+                    subject_id,
+                    subject_name
+                )
+            )
+
+        return grades
 
     @ModuleHelper.logged_in
     def get_grades(self, term: Optional[Term], year: Optional[int]) -&gt; list[EduGrade]:
@@ -264,6 +353,7 @@ class EduGrade:
                     percent = None
             except:
                 verbal = True
+                percent = None
 
             class_grade_avg = None if details.get(&#34;priemer&#34;) is None else float(details.get(&#34;priemer&#34;))
 
@@ -398,6 +488,7 @@ def get_grades(self, term: Optional[Term], year: Optional[int]) -&gt; list[EduGr
                 percent = None
         except:
             verbal = True
+            percent = None
 
         class_grade_avg = None if details.get(&#34;priemer&#34;) is None else float(details.get(&#34;priemer&#34;))
 
@@ -420,6 +511,58 @@ def get_grades(self, term: Optional[Term], year: Optional[int]) -&gt; list[EduGr
         output.append(grade)
 
     return output</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="edupage_api.grades.Grades.get_text_grades"><code class="name flex">
+<span>def <span class="ident">get_text_grades</span></span>(<span>self,<br>term: <a title="edupage_api.grades.Term" href="#edupage_api.grades.Term">Term</a> | None,<br>year: int | None) ‑> list[<a title="edupage_api.grades.EduTextGrade" href="#edupage_api.grades.EduTextGrade">EduTextGrade</a>]</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@ModuleHelper.logged_in
+def get_text_grades(self, term: Optional[Term], year: Optional[int]) -&gt; list[EduTextGrade]:
+    grade_data = (
+        self.__get_grade_data_for_term(term, year)
+        if term and year
+        else self.__get_grade_data()
+    )
+    
+    text_grades = grade_data.get(&#34;vsetkyVcelicky&#34;)
+
+    grades = []
+    for grade in text_grades:
+        grade_id = grade.get(&#34;VcelickaID&#34;)
+        comment = grade.get(&#34;p_text&#34;)
+        grade_type = grade.get(&#34;p_typ&#34;)
+
+        date_str = grade.get(&#34;p_datum&#34;)
+        date = datetime.strptime(date_str, &#34;%Y-%m-%d %H:%M:%S&#34;) \
+            if date_str is not None else None
+
+        subject_id_str = grade.get(&#34;PredmetID&#34;)
+        if subject_id_str is None or subject_id_str == &#34;vsetky&#34;:
+            continue
+
+        subject_id = int(subject_id_str)
+        subject_name = grade.get(&#34;predmet_meno&#34;)
+        if subject_name is None:
+            subject_name = DbiHelper(self.edupage).fetch_subject_name(subject_id)
+
+        grades.append(
+            EduTextGrade(
+                grade_id,
+                comment,
+                grade_type,
+                date,
+                subject_id,
+                subject_name
+            )
+        )
+
+    return grades</code></pre>
 </details>
 <div class="desc"></div>
 </dd>
@@ -490,9 +633,21 @@ def get_grades(self, term: Optional[Term], year: Optional[int]) -&gt; list[EduGr
 </ul>
 </li>
 <li>
+<h4><code><a title="edupage_api.grades.EduTextGrade" href="#edupage_api.grades.EduTextGrade">EduTextGrade</a></code></h4>
+<ul class="two-column">
+<li><code><a title="edupage_api.grades.EduTextGrade.comment" href="#edupage_api.grades.EduTextGrade.comment">comment</a></code></li>
+<li><code><a title="edupage_api.grades.EduTextGrade.date" href="#edupage_api.grades.EduTextGrade.date">date</a></code></li>
+<li><code><a title="edupage_api.grades.EduTextGrade.grade_id" href="#edupage_api.grades.EduTextGrade.grade_id">grade_id</a></code></li>
+<li><code><a title="edupage_api.grades.EduTextGrade.grade_type" href="#edupage_api.grades.EduTextGrade.grade_type">grade_type</a></code></li>
+<li><code><a title="edupage_api.grades.EduTextGrade.subject_id" href="#edupage_api.grades.EduTextGrade.subject_id">subject_id</a></code></li>
+<li><code><a title="edupage_api.grades.EduTextGrade.subject_name" href="#edupage_api.grades.EduTextGrade.subject_name">subject_name</a></code></li>
+</ul>
+</li>
+<li>
 <h4><code><a title="edupage_api.grades.Grades" href="#edupage_api.grades.Grades">Grades</a></code></h4>
 <ul class="">
 <li><code><a title="edupage_api.grades.Grades.get_grades" href="#edupage_api.grades.Grades.get_grades">get_grades</a></code></li>
+<li><code><a title="edupage_api.grades.Grades.get_text_grades" href="#edupage_api.grades.Grades.get_text_grades">get_text_grades</a></code></li>
 </ul>
 </li>
 <li>

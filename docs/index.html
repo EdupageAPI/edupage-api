@@ -327,6 +327,15 @@ el.replaceWith(d);
         &#34;&#34;&#34;
 
         return Grades(self).get_grades(year=None, term=None)
+    
+    def get_text_grades(self) -&gt; list[EduTextGrade]:
+        &#34;&#34;&#34;Get a list of all text grades (commendations).
+
+        Returns:
+            list[EduTextGrade]: List of `EduTextGrade`s
+        &#34;&#34;&#34;
+
+        return Grades(self).get_text_grades(year=None, term=None)
 
     def get_grades_for_term(self, year: int, term: Term) -&gt; list[EduGrade]:
         &#34;&#34;&#34;Get a list of all available grades for a given year and term
@@ -336,6 +345,15 @@ el.replaceWith(d);
         &#34;&#34;&#34;
 
         return Grades(self).get_grades(year=year, term=term)
+    
+    def get_text_grades_for_term(self, year: int, term: Term) -&gt; list[EduTextGrade]:
+         &#34;&#34;&#34;Get a list of all available text grades (commendations) for a given year and term
+
+        Returns:
+            list[EduTextGrade]: List of `EduTextGrade`s
+        &#34;&#34;&#34;
+         
+         return Grades(self).get_text_grades(year=year, term=term)
 
     def get_user_id(self) -&gt; str:
         &#34;&#34;&#34;Get your EduPage user ID.
@@ -1024,6 +1042,54 @@ Defaults to <code>5</code>.</dd>
 <dd>List of <code>EduTeacher</code>s.</dd>
 </dl></div>
 </dd>
+<dt id="edupage_api.Edupage.get_text_grades"><code class="name flex">
+<span>def <span class="ident">get_text_grades</span></span>(<span>self) ‑> list[<a title="edupage_api.grades.EduTextGrade" href="grades.html#edupage_api.grades.EduTextGrade">EduTextGrade</a>]</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_text_grades(self) -&gt; list[EduTextGrade]:
+    &#34;&#34;&#34;Get a list of all text grades (commendations).
+
+    Returns:
+        list[EduTextGrade]: List of `EduTextGrade`s
+    &#34;&#34;&#34;
+
+    return Grades(self).get_text_grades(year=None, term=None)</code></pre>
+</details>
+<div class="desc"><p>Get a list of all text grades (commendations).</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>list[EduTextGrade]</code></dt>
+<dd>List of <code>EduTextGrade</code>s</dd>
+</dl></div>
+</dd>
+<dt id="edupage_api.Edupage.get_text_grades_for_term"><code class="name flex">
+<span>def <span class="ident">get_text_grades_for_term</span></span>(<span>self,<br>year: int,<br>term: <a title="edupage_api.grades.Term" href="grades.html#edupage_api.grades.Term">Term</a>) ‑> list[<a title="edupage_api.grades.EduTextGrade" href="grades.html#edupage_api.grades.EduTextGrade">EduTextGrade</a>]</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_text_grades_for_term(self, year: int, term: Term) -&gt; list[EduTextGrade]:
+     &#34;&#34;&#34;Get a list of all available text grades (commendations) for a given year and term
+
+    Returns:
+        list[EduTextGrade]: List of `EduTextGrade`s
+    &#34;&#34;&#34;
+     
+     return Grades(self).get_text_grades(year=year, term=term)</code></pre>
+</details>
+<div class="desc"><p>Get a list of all available text grades (commendations) for a given year and term</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>list[EduTextGrade]</code></dt>
+<dd>List of <code>EduTextGrade</code>s</dd>
+</dl></div>
+</dd>
 <dt id="edupage_api.Edupage.get_timetable"><code class="name flex">
 <span>def <span class="ident">get_timetable</span></span>(<span>self,<br>target: <a title="edupage_api.people.EduTeacher" href="people.html#edupage_api.people.EduTeacher">EduTeacher</a> | <a title="edupage_api.people.EduStudent" href="people.html#edupage_api.people.EduStudent">EduStudent</a> | <a title="edupage_api.classes.Class" href="classes.html#edupage_api.classes.Class">Class</a> | <a title="edupage_api.classrooms.Classroom" href="classrooms.html#edupage_api.classrooms.Classroom">Classroom</a>,<br>date: datetime.date) ‑> <a title="edupage_api.timetables.Timetable" href="timetables.html#edupage_api.timetables.Timetable">Timetable</a> | None</span>
 </code></dt>
@@ -1333,6 +1399,8 @@ Defaults to <code>5</code>.</dd>
 <li><code><a title="edupage_api.Edupage.get_subdomains" href="#edupage_api.Edupage.get_subdomains">get_subdomains</a></code></li>
 <li><code><a title="edupage_api.Edupage.get_subjects" href="#edupage_api.Edupage.get_subjects">get_subjects</a></code></li>
 <li><code><a title="edupage_api.Edupage.get_teachers" href="#edupage_api.Edupage.get_teachers">get_teachers</a></code></li>
+<li><code><a title="edupage_api.Edupage.get_text_grades" href="#edupage_api.Edupage.get_text_grades">get_text_grades</a></code></li>
+<li><code><a title="edupage_api.Edupage.get_text_grades_for_term" href="#edupage_api.Edupage.get_text_grades_for_term">get_text_grades_for_term</a></code></li>
 <li><code><a title="edupage_api.Edupage.get_timetable" href="#edupage_api.Edupage.get_timetable">get_timetable</a></code></li>
 <li><code><a title="edupage_api.Edupage.get_timetable_changes" href="#edupage_api.Edupage.get_timetable_changes">get_timetable_changes</a></code></li>
 <li><code><a title="edupage_api.Edupage.get_user_id" href="#edupage_api.Edupage.get_user_id">get_user_id</a></code></li>

@@ -164,6 +164,11 @@ class SendEmailCodeTests(unittest.TestCase):
 
         self.assertEqual(two_factor.email, "student@example.com")
 
+    def test_sent_email_with_empty_list_data_keeps_the_known_one(self):
+        two_factor = self.send_email_code({"status": "ok", "data": []})
+
+        self.assertEqual(two_factor.email, "student@example.com")
+
     def test_email_requested_too_soon_asks_to_retry_later(self):
         with self.assertRaises(RetryLaterException) as context:
             self.send_email_code({"status": "fail", "data": {"retryInSeconds": 10}})

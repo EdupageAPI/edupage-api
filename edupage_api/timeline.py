@@ -130,6 +130,7 @@ class EventType(str, Enum):
     BEE = "vcelicka"
     OTHER = "other"
     SETTINGS = "settings"
+    TWO_FACTOR_AUTHENTICATION = "fa2"
 
     # Helper
     H_ATTENDANCE = "h_attendance"

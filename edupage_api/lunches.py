@@ -219,8 +219,8 @@ class Lunches(Module):
         lunch_data = json.loads(
             response.split("edupageData: ")[1].split(",\r\n")[0]
         )
-        # EduPage sends an empty list instead of an object when there is no menu
-        if not lunch_data:
+        
+	if not lunch_data:
             return None
 
         lunches_data = lunch_data.get(self.edupage.subdomain)

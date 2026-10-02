@@ -163,7 +163,9 @@ class TwoFactorLogin:
         if data.get("status") != "ok":
             raise self.__request_error(f"Failed to send the email: {str(data)}", data)
 
-        self.email = data.get("data", {}).get("email") or self.email
+        details = data.get("data")
+        if isinstance(details, dict) and details.get("email"):
+            self.email = details["email"]
 
     def __finish(self, code: str):
         if self.__use_modern_rpc:

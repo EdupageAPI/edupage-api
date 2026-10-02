@@ -18,3 +18,5 @@ for i, teacher in enumerate(missing_teachers):
         print(", ", end="")
 
     print(f"{teacher.name}", end="")
+
+edupage.logout()

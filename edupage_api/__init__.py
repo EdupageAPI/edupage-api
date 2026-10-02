@@ -54,6 +54,12 @@ class Edupage(EdupageModule):
             self.session.request, timeout=request_timeout
         )
 
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_value, traceback):
+        self.logout()
+
     def login(
         self, username: str, password: str, subdomain: str
     ) -> Optional[TwoFactorLogin]:
@@ -84,6 +90,15 @@ class Edupage(EdupageModule):
         """
 
         return Login(self).login(username, password)
+
+    def logout(self):
+        """Log out of EduPage, invalidating the session on the server.
+
+        The `Edupage` object is reset to its logged-out state and can be used
+        to log in again. Calling this while not logged in only clears local state.
+        """
+
+        LoginSession(self).logout()
 
     def get_students(self) -> Optional[list[EduStudent]]:
         """Get list of all students in your class.

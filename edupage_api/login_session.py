@@ -41,6 +41,20 @@ class LoginSession(Module):
         except IndexError:
             self.edupage.gsec_hash = None
 
+    def logout(self):
+        if self.edupage.is_logged_in:
+            self.edupage.session.post(
+                f"https://{self.edupage.subdomain}.edupage.org/login/logout.php"
+            )
+
+        self.edupage.session.cookies.clear()
+        self.edupage.data = None
+        self.edupage.is_logged_in = False
+        self.edupage.subdomain = None
+        self.edupage.gsec_hash = None
+        self.edupage.username = None
+        self.edupage._selected_child_id = None
+
     def reload_data(self, subdomain: str, session_id: str, username: str):
         request_url = f"https://{subdomain}.edupage.org/user"
 

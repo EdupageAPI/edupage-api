@@ -13,4 +13,6 @@ snack = meals.snack
 print(snack.menus)
 
 # i don't want a snack for today!
-snack.sign_off(edupage) 
+snack.sign_off(edupage)
+
+edupage.logout()

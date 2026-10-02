@@ -42,6 +42,8 @@ except BadCredentialsException:
 missing_teachers = edupage.get_missing_teachers(args.date)
 timetable_changes = edupage.get_timetable_changes(args.date)
 
+edupage.logout()
+
 
 def output(file: str, s: str):
     if file == "stdout":

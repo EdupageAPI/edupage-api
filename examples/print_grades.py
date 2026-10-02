@@ -24,3 +24,5 @@ for subject in grades_by_subject:
         else:
             print(f"{grade.percent}%")
     print("----------------")
+
+edupage.logout()

@@ -51,3 +51,5 @@ for hw in homework:
     print("—")
 
 print(f"You have {homework_not_due} unfinished homework assignments.")
+
+edupage.logout()

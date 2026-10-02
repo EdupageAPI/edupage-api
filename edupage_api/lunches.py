@@ -220,7 +220,7 @@ class Lunches(Module):
             response.split("edupageData: ")[1].split(",\r\n")[0]
         )
         
-	if not lunch_data:
+        if not lunch_data:
             return None
 
         lunches_data = lunch_data.get(self.edupage.subdomain)

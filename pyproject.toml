@@ -1,6 +1,41 @@
 [build-system]
 requires = [
-    "setuptools>=42",
-    "wheel"
+    "setuptools>=77",
 ]
 build-backend = "setuptools.build_meta"
+
+[project]
+name = "edupage_api"
+version = "0.13.1"
+description = "A Python library for accesing your Edupage account"
+readme = "README.md"
+requires-python = ">=3.10"
+license = "GPL-3.0-or-later"
+license-files = ["LICENSE"]
+authors = [{ name = "ivanhrabcak", email = "ivan@hrabcak.eu" }]
+keywords = ["edupage", "edupage api", "library", "api", "school"]
+classifiers = [
+    "Intended Audience :: Developers",
+    "Topic :: Education",
+    "Topic :: Software Development :: Libraries",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Typing :: Typed",
+]
+dependencies = ["requests>=2.28"]
+
+[project.urls]
+Homepage = "https://github.com/EdupageAPI/edupage-api"
+Documentation = "https://edupageapi.github.io/edupage-api"
+Issues = "https://github.com/EdupageAPI/edupage-api/issues"
+
+[dependency-groups]
+dev = ["build", "pdoc", "ruff"]
+
+[tool.setuptools.packages.find]
+include = ["edupage_api*"]
+

@@ -1,4 +1,0 @@
-requests
-datetime
-requests[security]
-colorama

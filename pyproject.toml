@@ -1,12 +1,13 @@
 [build-system]
 requires = [
     "setuptools>=77",
+    "setuptools-scm>=8"
 ]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "edupage_api"
-version = "0.13.1"
+dynamic = ["version"]
 description = "A Python library for accesing your Edupage account"
 readme = "README.md"
 requires-python = ">=3.10"

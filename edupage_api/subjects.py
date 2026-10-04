@@ -14,7 +14,7 @@ class Subject:
 
 class Subjects(Module):
     @ModuleHelper.logged_in
-    def get_subjects(self) -> Optional[list]:
+    def get_subjects(self) -> list | None:
         subject_list = DbiHelper(self.edupage).fetch_subject_list()
 
         if subject_list is None:
@@ -36,7 +36,7 @@ class Subjects(Module):
 
         return subjects
 
-    def get_subject(self, subject_id: Union[int, str]) -> Optional[Subject]:
+    def get_subject(self, subject_id: int | str) -> Subject | None:
         try:
             subject_id = int(subject_id)
         except (ValueError, TypeError):

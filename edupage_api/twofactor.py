@@ -17,20 +17,20 @@ from edupage_api.module import EdupageModule
 
 @dataclass
 class TwoFactorLogin:
-    __authentication_endpoint: Optional[str]
-    __authentication_token: Optional[str]
-    __csrf_token: Optional[str]
+    __authentication_endpoint: str | None
+    __authentication_token: str | None
+    __csrf_token: str | None
     __edupage: EdupageModule
     __use_modern_rpc: bool = False
 
-    __code: Optional[str] = None
+    __code: str | None = None
 
     # Only provided by modern RPC 2FA page
-    email: Optional[str] = None
-    device_names: Optional[list[str]] = None
+    email: str | None = None
+    device_names: list[str] | None = None
 
     @staticmethod
-    def __extract_form_fields(page: str) -> Optional[dict]:
+    def __extract_form_fields(page: str) -> dict | None:
         try:
             return {
                 "csrfauth": page.split('csrfauth" value="', 1)[1].split('"', 1)[0],

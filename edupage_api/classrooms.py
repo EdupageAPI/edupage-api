@@ -14,7 +14,7 @@ class Classroom:
 
 class Classrooms(Module):
     @ModuleHelper.logged_in
-    def get_classrooms(self) -> Optional[list]:
+    def get_classrooms(self) -> list | None:
         classroom_list = DbiHelper(self.edupage).fetch_classroom_list()
 
         if classroom_list is None:
@@ -36,7 +36,7 @@ class Classrooms(Module):
 
         return classrooms
 
-    def get_classroom(self, classroom_id: Union[int, str]) -> Optional[Classroom]:
+    def get_classroom(self, classroom_id: int | str) -> Classroom | None:
         try:
             classroom_id = int(classroom_id)
         except (ValueError, TypeError):

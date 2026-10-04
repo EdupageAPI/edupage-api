@@ -168,7 +168,7 @@ class RequestData:
         return RequestData.chromium_base64_decode(data)
 
     @staticmethod
-    def encode_request_body(request_data: Union[dict, str]) -> str:
+    def encode_request_body(request_data: dict | str) -> str:
         encoded_data = (
             ModuleHelper.encode_form_data(request_data)
             if type(request_data) == dict

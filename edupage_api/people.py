@@ -16,7 +16,7 @@ class Gender(str, Enum):
     FEMALE = "F"
 
     @staticmethod
-    def parse(gender_str: str) -> Optional[Gender]:
+    def parse(gender_str: str) -> Gender | None:
         return ModuleHelper.parse_enum(gender_str, Gender)
 
 
@@ -31,7 +31,7 @@ class EduAccount:
     person_id: int
     name: str
     gender: Gender
-    in_school_since: Optional[datetime]
+    in_school_since: datetime | None
     account_type: EduAccountType
 
     @staticmethod
@@ -46,7 +46,7 @@ class EduAccount:
     @staticmethod
     def parse(
         person_data: dict, person_id: int, edupage: EdupageModule
-    ) -> Optional[EduAccount]:
+    ) -> EduAccount | None:
         account_type = EduAccount.recognize_account_type(person_data)
 
         if account_type == EduAccountType.STUDENT:
@@ -97,7 +97,7 @@ class EduStudent(EduAccount):
         person_id: int,
         name: str,
         gender: Gender,
-        in_school_since: Optional[datetime],
+        in_school_since: datetime | None,
         class_id: int,
         number_in_class: int,
     ):
@@ -134,7 +134,7 @@ class EduParent(EduAccount):
         person_id: int,
         name: str,
         gender: Gender,
-        in_school_since: Optional[datetime],
+        in_school_since: datetime | None,
     ):
         super().__init__(
             person_id, name, gender, in_school_since, EduAccountType.PARENT
@@ -148,9 +148,9 @@ class EduTeacher(EduAccount):
         person_id: int,
         name: str,
         gender: Gender,
-        in_school_since: Optional[datetime],
+        in_school_since: datetime | None,
         classroom_name: str,
-        teacher_to: Optional[datetime],
+        teacher_to: datetime | None,
     ):
         super().__init__(
             person_id, name, gender, in_school_since, EduAccountType.TEACHER
@@ -162,7 +162,7 @@ class EduTeacher(EduAccount):
 
 class People(Module):
     @ModuleHelper.logged_in
-    def get_students(self) -> Optional[list]:
+    def get_students(self) -> list | None:
         students = DbiHelper(self.edupage).fetch_student_list()
         if students is None:
             return None
@@ -181,7 +181,7 @@ class People(Module):
         return result
 
     @ModuleHelper.logged_in
-    def get_all_students(self) -> Optional[list[EduStudent]]:
+    def get_all_students(self) -> list[EduStudent] | None:
         request_url = f"https://{self.edupage.subdomain}.edupage.org/rpr/server/maindbi.js?__func=mainDBIAccessor"
         data = {
             "__args": [
@@ -215,7 +215,7 @@ class People(Module):
         return result
 
     @ModuleHelper.logged_in
-    def get_teacher(self, teacher_id: Union[int, str]) -> Optional[EduTeacher]:
+    def get_teacher(self, teacher_id: int | str) -> EduTeacher | None:
         try:
             teacher_id = int(teacher_id)
         except (ValueError, TypeError):
@@ -231,7 +231,7 @@ class People(Module):
         )
 
     @ModuleHelper.logged_in
-    def get_student(self, student_id: Union[int, str]) -> Optional[EduStudent]:
+    def get_student(self, student_id: int | str) -> EduStudent | None:
         try:
             student_id = int(student_id)
         except (ValueError, TypeError):
@@ -247,7 +247,7 @@ class People(Module):
         )
 
     @ModuleHelper.logged_in
-    def get_teachers(self) -> Optional[list]:
+    def get_teachers(self) -> list | None:
         teachers = DbiHelper(self.edupage).fetch_teacher_list()
         if teachers is None:
             return None

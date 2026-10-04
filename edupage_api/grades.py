@@ -15,27 +15,27 @@ from edupage_api.people import EduTeacher
 class EduGrade:
     event_id: int
     title: str
-    grade_n: Optional[Union[int, float, str]]
-    comment: Optional[str]
+    grade_n: int | float | str | None
+    comment: str | None
     date: datetime
     subject_id: int
-    subject_name: Optional[str]
-    teacher: Optional[EduTeacher]
-    max_points: Optional[float]
-    more_details: Optional[list[str]]
+    subject_name: str | None
+    teacher: EduTeacher | None
+    max_points: float | None
+    more_details: list[str] | None
     importance: float
     verbal: bool
     percent: float
-    class_grade_avg: Optional[float]
+    class_grade_avg: float | None
 
 @dataclass
 class EduTextGrade:
     grade_id: int
-    comment: Optional[str]
+    comment: str | None
     grade_type: str
-    date: Optional[datetime]
+    date: datetime | None
     subject_id: int
-    subject_name: Optional[str]
+    subject_name: str | None
 
 class Term(Enum):
     FIRST = "P1"
@@ -69,7 +69,7 @@ class Grades(Module):
             raise FailedToParseGradeDataError("Failed to parse JSON")
 
     @ModuleHelper.logged_in
-    def get_text_grades(self, term: Optional[Term], year: Optional[int]) -> list[EduTextGrade]:
+    def get_text_grades(self, term: Term | None, year: int | None) -> list[EduTextGrade]:
         grade_data = (
             self.__get_grade_data_for_term(term, year)
             if term and year
@@ -111,7 +111,7 @@ class Grades(Module):
         return grades
 
     @ModuleHelper.logged_in
-    def get_grades(self, term: Optional[Term], year: Optional[int]) -> list[EduGrade]:
+    def get_grades(self, term: Term | None, year: int | None) -> list[EduGrade]:
         grade_data = (
             self.__get_grade_data_for_term(term, year)
             if term and year

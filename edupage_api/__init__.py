@@ -62,7 +62,7 @@ class Edupage(EdupageModule):
 
     def login(
         self, username: str, password: str, subdomain: str
-    ) -> Optional[TwoFactorLogin]:
+    ) -> TwoFactorLogin | None:
         """Login while specifying the subdomain to log into.
 
         Args:
@@ -77,7 +77,7 @@ class Edupage(EdupageModule):
 
         return Login(self).login(username, password, subdomain)
 
-    def login_auto(self, username: str, password: str) -> Optional[TwoFactorLogin]:
+    def login_auto(self, username: str, password: str) -> TwoFactorLogin | None:
         """Login using https://portal.edupage.org. If this doesn't work, please use `Edupage.login`.
 
         Args:
@@ -100,7 +100,7 @@ class Edupage(EdupageModule):
 
         LoginSession(self).logout()
 
-    def get_students(self) -> Optional[list[EduStudent]]:
+    def get_students(self) -> list[EduStudent] | None:
         """Get list of all students in your class.
 
         Returns:
@@ -109,7 +109,7 @@ class Edupage(EdupageModule):
 
         return People(self).get_students()
 
-    def get_all_students(self) -> Optional[list[EduStudentSkeleton]]:
+    def get_all_students(self) -> list[EduStudentSkeleton] | None:
         """Get list of all students in your school.
 
         Returns:
@@ -118,7 +118,7 @@ class Edupage(EdupageModule):
 
         return People(self).get_all_students()
 
-    def get_teachers(self) -> Optional[list[EduTeacher]]:
+    def get_teachers(self) -> list[EduTeacher] | None:
         """Get list of all teachers in your school.
 
         Returns:
@@ -127,7 +127,7 @@ class Edupage(EdupageModule):
 
         return People(self).get_teachers()
 
-    def get_classrooms(self) -> Optional[list[Classroom]]:
+    def get_classrooms(self) -> list[Classroom] | None:
         """Get list of all classrooms in your school.
 
         Returns:
@@ -136,7 +136,7 @@ class Edupage(EdupageModule):
 
         return Classrooms(self).get_classrooms()
 
-    def get_classes(self) -> Optional[list[Class]]:
+    def get_classes(self) -> list[Class] | None:
         """Get list of all classes in your school.
 
         Returns:
@@ -145,7 +145,7 @@ class Edupage(EdupageModule):
 
         return Classes(self).get_classes()
 
-    def get_subjects(self) -> Optional[list[Subject]]:
+    def get_subjects(self) -> list[Subject] | None:
         """Get list of all subjects in your school.
 
         Returns:
@@ -155,7 +155,7 @@ class Edupage(EdupageModule):
         return Subjects(self).get_subjects()
 
     def send_message(
-        self, recipients: Union[list[EduAccount], EduAccount], body: str
+        self, recipients: list[EduAccount] | EduAccount, body: str
     ) -> int:
         """Send message.
 
@@ -169,7 +169,7 @@ class Edupage(EdupageModule):
 
         return Messages(self).send_message(recipients, body)
 
-    def get_my_timetable(self, date: date) -> Optional[Timetable]:
+    def get_my_timetable(self, date: date) -> Timetable | None:
         """Get timetable for the logged-in user on a specified date.
 
         Args:
@@ -181,7 +181,7 @@ class Edupage(EdupageModule):
 
         return Timetables(self).get_my_timetable(date)
 
-    def get_meals(self, date: date) -> Optional[Meals]:
+    def get_meals(self, date: date) -> Meals | None:
         """Get lunches.
 
         Args:
@@ -322,9 +322,9 @@ class Edupage(EdupageModule):
 
     def get_timetable(
         self,
-        target: Union[EduTeacher, EduStudent, Class, Classroom],
+        target: EduTeacher | EduStudent | Class | Classroom,
         date: date,
-    ) -> Optional[Timetable]:
+    ) -> Timetable | None:
         """Get timetable of a teacher, student, class, or classroom for a specific date.
 
         Args:
@@ -348,7 +348,7 @@ class Edupage(EdupageModule):
         """
         return RingingTimes(self).get_next_ringing_time(date_time)
 
-    def switch_to_child(self, child: Union[EduAccount, int]):
+    def switch_to_child(self, child: EduAccount | int):
         """Switch to an account of a child - can only be used on parent accounts
 
         Args:

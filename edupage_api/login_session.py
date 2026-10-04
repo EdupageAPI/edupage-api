@@ -11,7 +11,7 @@ class LoginSession(Module):
     """Session handling shared by `Login` and `TwoFactorLogin`."""
 
     @staticmethod
-    def parse_rpc_response(text: str) -> Optional[dict]:
+    def parse_rpc_response(text: str) -> dict | None:
         if not text:
             return None
 

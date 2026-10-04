@@ -12,14 +12,14 @@ class Class:
     class_id: int
     name: str
     short: str
-    homeroom_teachers: Optional[list[EduTeacher]]
-    homeroom: Optional[Classroom]
-    grade: Optional[int]
+    homeroom_teachers: list[EduTeacher] | None
+    homeroom: Classroom | None
+    grade: int | None
 
 
 class Classes(Module):
     @ModuleHelper.logged_in
-    def get_classes(self) -> Optional[list]:
+    def get_classes(self) -> list | None:
         classes_list = DbiHelper(self.edupage).fetch_class_list()
 
         if classes_list is None:
@@ -56,7 +56,7 @@ class Classes(Module):
 
         return classes
 
-    def get_class(self, class_id: Union[int, str]) -> Optional[Class]:
+    def get_class(self, class_id: int | str) -> Class | None:
         try:
             class_id = int(class_id)
         except (ValueError, TypeError):

@@ -18,7 +18,7 @@ class Action(str, Enum):
     DELETION = "remove"
 
     @staticmethod
-    def parse(string: str) -> Optional[Action]:
+    def parse(string: str) -> Action | None:
         return ModuleHelper.parse_enum(string, Action)
 
 
@@ -27,7 +27,7 @@ class TimetableChange:
     change_class: str
     lesson_n: int
     title: str
-    action: Union[Action, tuple[int, int]]
+    action: Action | tuple[int, int]
 
 
 class Substitution(Module):
@@ -53,7 +53,7 @@ class Substitution(Module):
         return response.get("r")
 
     @ModuleHelper.logged_in
-    def get_missing_teachers(self, date: date) -> Optional[list[EduTeacher]]:
+    def get_missing_teachers(self, date: date) -> list[EduTeacher] | None:
         html = self.__get_substitution_data(date)
         missing_teachers_string = html.split('<span class="print-font-resizable">')[
             1
@@ -95,7 +95,7 @@ class Substitution(Module):
         return missing_teachers
 
     @ModuleHelper.logged_in
-    def get_timetable_changes(self, date: date) -> Optional[list[TimetableChange]]:
+    def get_timetable_changes(self, date: date) -> list[TimetableChange] | None:
         html = self.__get_substitution_data(date)
 
         class_delim = (

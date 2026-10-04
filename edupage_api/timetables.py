@@ -1,7 +1,6 @@
 import json
 from dataclasses import dataclass
 from datetime import date, datetime, time
-from typing import List, Optional, Union
 
 from edupage_api.classes import Class, Classes
 from edupage_api.classrooms import Classroom, Classrooms
@@ -19,17 +18,17 @@ from edupage_api.utils import RequestUtil
 
 @dataclass
 class Lesson:
-    period: Optional[int]
+    period: int | None
     start_time: time
     end_time: time
     duration: int
-    subject: Optional[Subject]
-    classes: Optional[List[Class]]
-    groups: Optional[List[str]]
-    teachers: Optional[List[EduTeacher]]
-    classrooms: Optional[List[Classroom]]
-    curriculum: Optional[str]
-    online_lesson_link: Optional[str]
+    subject: Subject | None
+    classes: list[Class] | None
+    groups: list[str] | None
+    teachers: list[EduTeacher] | None
+    classrooms: list[Classroom] | None
+    curriculum: str | None
+    online_lesson_link: str | None
     is_cancelled: bool
     is_event: bool
 
@@ -65,7 +64,7 @@ class Lesson:
 
 @dataclass
 class Timetable:
-    lessons: List[Lesson]
+    lessons: list[Lesson]
 
     def __iter__(self):
         return iter(self.lessons)
@@ -284,7 +283,7 @@ class Timetables(Module):
         return Timetable(lessons)
 
     @ModuleHelper.logged_in
-    def get_my_timetable(self, date: date) -> Optional[Timetable]:
+    def get_my_timetable(self, date: date) -> Timetable | None:
         selected_child_id = self.edupage._selected_child_id
 
         if selected_child_id is not None:
@@ -303,9 +302,9 @@ class Timetables(Module):
     @ModuleHelper.logged_in
     def get_timetable(
         self,
-        target: Union[EduTeacher, EduStudent, Class, Classroom],
+        target: EduTeacher | EduStudent | Class | Classroom,
         date: date,
-    ) -> Optional[Timetable]:
+    ) -> Timetable | None:
 
         lookup = {
             EduTeacher: ("teachers", "person_id"),

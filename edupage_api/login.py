@@ -102,7 +102,7 @@ class Login(Module):
 
     def login(
         self, username: str, password: str, subdomain: str = "login1"
-    ) -> Optional[TwoFactorLogin]:
+    ) -> TwoFactorLogin | None:
         """Login to your school's Edupage account (optionally with 2 factor authentication).
 
         If you do not have 2 factor authentication set up, this function will return `None`.

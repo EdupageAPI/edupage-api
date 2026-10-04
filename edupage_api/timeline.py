@@ -154,7 +154,7 @@ class EventType(str, Enum):
     H_USERPHOTO = "h_userphoto"
 
     @staticmethod
-    def parse(event_type_str: str) -> Optional[EventType]:
+    def parse(event_type_str: str) -> EventType | None:
         return ModuleHelper.parse_enum(
             event_type_str, EventType  # pyright: ignore[reportArgumentType]
         )
@@ -165,32 +165,32 @@ class TimelineEvent:
     event_id: int
     timestamp: datetime
     text: str
-    author: Union[EduAccount, str]
-    recipient: Union[EduAccount, str]
+    author: EduAccount | str
+    recipient: EduAccount | str
     event_type: EventType
     additional_data: dict
     is_done: bool = False
-    done_at: Optional[datetime] = None
+    done_at: datetime | None = None
     is_starred: bool = False
     reaction_count: int = 0
-    created_at: Optional[datetime] = None
+    created_at: datetime | None = None
     is_removed: bool = False
 
     # Meaning depends on `event_type`, e.g. chat_id for EventType.CHAT.
     # An int when the value is numeric, otherwise the raw str (e.g. hex IDs, dates).
-    other_id: Optional[Union[int, str]] = None
+    other_id: int | str | None = None
 
     # event_id of the event this one replies to,
     # e.g. a reply to an EventType.MESSAGE points to the original message's event_id.
-    response_to: Optional[int] = None
+    response_to: int | None = None
 
     # Meaning depends on `event_type`, e.g. the deadline day for EventType.HOMEWORK.
-    event_time: Optional[datetime] = None
+    event_time: datetime | None = None
 
 
 class TimelineEvents(Module):
     def __parse_items(
-        self, timeline_items: dict, user_props: Optional[dict] = None
+        self, timeline_items: dict, user_props: dict | None = None
     ) -> list[TimelineEvent]:
         output = []
 

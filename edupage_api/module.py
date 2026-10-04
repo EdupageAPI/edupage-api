@@ -32,7 +32,7 @@ class ModuleHelper:
     # Helper Functions
 
     @staticmethod
-    def parse_int(val: str) -> Optional[int]:
+    def parse_int(val: str) -> int | None:
         try:
             return int("".join(filter(str.isdigit, val)))
         except ValueError:
@@ -77,7 +77,7 @@ class ModuleHelper:
         return output
 
     @staticmethod
-    def strptime_or_none(date_string: str, format: str) -> Optional[datetime]:
+    def strptime_or_none(date_string: str, format: str) -> datetime | None:
         try:
             return datetime.strptime(date_string, format)
         except ValueError:

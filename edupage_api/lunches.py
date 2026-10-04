@@ -1,7 +1,6 @@
 import json
 from dataclasses import dataclass
 from datetime import date, datetime
-from typing import List, Optional
 from enum import Enum
 
 from edupage_api.exceptions import (
@@ -53,7 +52,7 @@ class Menu:
     allergens: str
     weight: str
     number: str
-    rating: Optional[Rating]
+    rating: Rating | None
 
 class MealType(Enum):
     SNACK = 1
@@ -62,15 +61,15 @@ class MealType(Enum):
 
 @dataclass
 class Meal:
-    served_from: Optional[datetime]
-    served_to: Optional[datetime]
+    served_from: datetime | None
+    served_to: datetime | None
     amount_of_foods: int
     chooseable_menus: list[str]
     can_be_changed_until: datetime
     title: str
-    menus: List[Menu]
+    menus: list[Menu]
     date: datetime
-    ordered_meal: Optional[str]
+    ordered_meal: str | None
     meal_type: MealType
     __boarder_id: str
     __meal_index: str
@@ -114,14 +113,14 @@ class Meal:
 
 @dataclass
 class Meals:
-    snack: Optional[Meal]
-    lunch: Optional[Meal]
-    afternoon_snack: Optional[Meal]
+    snack: Meal | None
+    lunch: Meal | None
+    afternoon_snack: Meal | None
     
 
 
 class Lunches(Module):
-    def parse_meal(self, meal_index: str, meal: dict, boarder_id: str, date: date) -> Optional[Meal]:
+    def parse_meal(self, meal_index: str, meal: dict, boarder_id: str, date: date) -> Meal | None:
         if meal is None:
             return None
         
@@ -211,7 +210,7 @@ class Lunches(Module):
         )
 
     @ModuleHelper.logged_in
-    def get_meals(self, date: date) -> Optional[Meals]:
+    def get_meals(self, date: date) -> Meals | None:
         date_strftime = date.strftime("%Y%m%d")
         request_url = f"https://{self.edupage.subdomain}.edupage.org/menu/?date={date_strftime}"
         response = self.edupage.session.get(request_url).content.decode()

@@ -9,7 +9,7 @@ from edupage_api.people import EduAccount
 
 class Messages(Module):
     def send_message(
-        self, recipients: Union[list[EduAccount], EduAccount, list[str]], body: str
+        self, recipients: list[EduAccount] | EduAccount | list[str], body: str
     ) -> int:
         recipient_string = ""
 

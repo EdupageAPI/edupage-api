@@ -8,7 +8,7 @@ from edupage_api.people import EduAccount
 class Parent(Module):
     @ModuleHelper.logged_in
     @ModuleHelper.is_parent
-    def switch_to_child(self, child: Union[EduAccount, int]):
+    def switch_to_child(self, child: EduAccount | int):
         child_id = child.person_id if isinstance(child, EduAccount) else child
         params = {"studentid": child_id}
 

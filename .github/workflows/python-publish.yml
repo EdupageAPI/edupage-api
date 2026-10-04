@@ -1,50 +1,61 @@
-# This workflow will upload a Python Package using Twine when a release is created
-# For more information see: https://help.github.com/en/actions/language-and-framework-guides/using-python-with-github-actions#publishing-to-package-registries
-
-name: Upload Python Package
-
-permissions:
-  contents: write
-  id-token: write
+name: Publish
 
 on: workflow_dispatch
 
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
-
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.14"
+      - run: python -m pip install build
+      - run: python -m build
+        with:
+          name: dist
+          path: dist/
+  
+  publish:
+    needs: build
+    runs-on: ubuntu-latest
     environment:
       name: pypi
       url: https://pypi.org/p/edupage-api
-      
+    permissions:
+      id-token: write
     steps:
-      - uses: actions/checkout@v2
-
-      - name: Set up Python
-        uses: actions/setup-python@v2
+      - uses: actions/download-artifact@v8
         with:
-          python-version: "3.9"
-
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install setuptools wheel twine build pdoc3
-
-      - name: Regenerate documentation
-        run: |
-          pdoc3 --html edupage_api
-          rm -rf docs
-          mv html/edupage_api docs
-
-      - name: Commit and push documentation changes
-        uses: EndBug/add-and-commit@v9
+          name: dist
+          path: dist/
+  - uses: pypa/gh-action-pypi-publish@release/v1
+  
+  docs:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
         with:
-          add: "docs"
-          default_author: github_actions
-          message: "Regenerate documentation"
-
-      - name: Build
-        run: python -m build
-      - name: Publish to pypi
-        uses: pypa/gh-action-pypi-publish@release/v1
-          
+          python-version: "3.14"
+      - run: python -m pip install -e . pdoc
+      - run: pdoc edupage_api -o site
+      - uses: actions/upload-pages-artifact@v5
+        with:
+          path: site/
+  
+  deploy-docs:
+    needs: [docs, publish]
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}

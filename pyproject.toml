@@ -40,3 +40,4 @@ dev = ["build", "pdoc", "ruff"]
 [tool.setuptools.packages.find]
 include = ["edupage_api*"]
 
+[tool.setuptools_scm]

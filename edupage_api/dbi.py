@@ -14,17 +14,8 @@ class DbiHelper(Module):
 
         item_group = dbi.get(item_group_name)
 
-        if isinstance(item_group, list) and not item_group:
-            # An item group with no entries is serialised by EduPage as an empty
-            # JSON array instead of an empty object. Callers rely on mapping
-            # access (see __get_item_with_id), so read an empty array as an empty
-            # mapping.
-            #
-            # Only empty arrays are handled. A populated array has not been
-            # observed, and mapping it onto positional keys would fabricate ids
-            # that can never match a real reference, so it is left alone and
-            # keeps failing loudly instead of silently losing data.
-            return {}
+        if item_group == []:
+           return {}
 
         return item_group
 

@@ -215,6 +215,9 @@ class Lunches(Module):
         request_url = f"https://{self.edupage.subdomain}.edupage.org/menu/?date={date_strftime}"
         response = self.edupage.session.get(request_url).content.decode()
 
+        if "edupageData: " not in response:
+            return None
+
         lunch_data = json.loads(
             response.split("edupageData: ")[1].split(",\r\n")[0]
         )

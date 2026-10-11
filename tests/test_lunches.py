@@ -22,6 +22,10 @@ class MealsParsingTests(unittest.TestCase):
         self.api.session.get.return_value.content = page.encode()
         return self.api.get_meals(date(2024, 11, 26))
 
+    def test_school_without_meals_returns_none(self):
+        self.api.session.get.return_value.content = b"<html></html>"
+        self.assertIsNone(self.api.get_meals(date(2024, 11, 26)))
+
     def test_empty_edupage_data_returns_none(self):
         self.assertIsNone(self.get_meals([]))
 

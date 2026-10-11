@@ -1,9 +1,31 @@
+from dataclasses import dataclass
+from html import unescape
 from typing import Union
+from urllib.parse import urlparse
 
 from edupage_api.dbi import DbiHelper
-from edupage_api.exceptions import InvalidChildException, UnknownServerError
+from edupage_api.exceptions import (
+    InvalidChildException,
+    InvalidSchoolException,
+    MissingDataException,
+    UnknownServerError,
+)
+from edupage_api.login_session import LoginSession
 from edupage_api.module import Module, ModuleHelper
 from edupage_api.people import EduAccount, EduStudent
+
+
+@dataclass
+class SchoolChild:
+    person_id: int
+    name: str
+
+
+@dataclass
+class SchoolAccount:
+    subdomain: str
+    is_current: bool
+    children: list[SchoolChild]
 
 
 class Parent(Module):
@@ -60,6 +82,31 @@ class Parent(Module):
 
     @ModuleHelper.logged_in
     @ModuleHelper.is_parent
+    def switch_to_school(self, school: SchoolAccount | str):
+        subdomain = school.subdomain if isinstance(school, SchoolAccount) else school
+
+        rid = f"edupage;{subdomain};{self.edupage.username};rodic"
+
+        params = {"rid": rid}
+
+        url = f"https://{self.edupage.subdomain}.edupage.org/login/edupageChange"
+        response = self.edupage.session.get(url, params=params)
+
+        if (
+            "EdupageLoginFailed" in response.url
+            or urlparse(response.url).hostname != f"{subdomain.lower()}.edupage.org"
+        ):
+            raise InvalidSchoolException(
+                f"Can't switch to {subdomain}: this account has no access to that school."
+            )
+
+        LoginSession(self.edupage).parse_login_data(response.text)
+
+        self.edupage.subdomain = subdomain
+        self.edupage._selected_child_id = None
+
+    @ModuleHelper.logged_in
+    @ModuleHelper.is_parent
     def get_subdomains(self) -> list[str]:
         url = f"https://{self.edupage.subdomain}.edupage.org/user"
         response = self.edupage.session.get(url)
@@ -90,3 +137,59 @@ class Parent(Module):
             return [self.edupage.subdomain]
 
         return subdomains
+
+    @staticmethod
+    def _parse_school_accounts(html: str) -> list[SchoolAccount]:
+        # The "My profile" page looks like this:
+        # <div class="account-box [selected] box-ok"> ... Deti: <ul class="circles">
+        #   <li> <CHILD_NAME> · <a class="account-childPasswordBtn" data-uid="<CHILD_ID>" ...>...</a></li>
+        # </ul> ... <a class="removeEdupageBtn" data-edupage="subdomain" ...>
+        # I hope that explains why this method is so ugly.
+        accounts = []
+
+        for box in html.split('<div class="account-box ')[1:]:
+            class_attr = box.split('"', 1)[0]
+
+            try:
+                subdomain = box.split('data-edupage="', 1)[1].split('"', 1)[0]
+            except IndexError:
+                continue
+
+            children = []
+
+            if '<ul class="circles">' in box:
+                children_html = box.split('<ul class="circles">', 1)[1].split(
+                    "</ul>", 1
+                )[0]
+
+                for item in children_html.split("<li>")[1:]:
+                    try:
+                        person_id = int(item.split('data-uid="', 1)[1].split('"', 1)[0])
+                    except (IndexError, ValueError):
+                        continue
+
+                    name = unescape(item.split("<a", 1)[0]).strip().rstrip("·").strip()
+                    children.append(SchoolChild(person_id, name))
+
+            accounts.append(
+                SchoolAccount(subdomain, "selected" in class_attr.split(), children)
+            )
+
+        return accounts
+
+    @ModuleHelper.logged_in
+    @ModuleHelper.is_parent
+    def get_school_accounts(self) -> list[SchoolAccount]:
+        url = f"https://{self.edupage.subdomain}.edupage.org/portal/"
+        params = {
+            "cmd": "MyAccount",
+            "barNoSkin": 1,
+            "ebuid": self.edupage.get_user_id(),
+        }
+        response = self.edupage.session.get(url, params=params)
+
+        accounts = Parent._parse_school_accounts(response.text)
+        if not accounts:
+            raise MissingDataException("EduPage didn't return any school accounts.")
+
+        return accounts

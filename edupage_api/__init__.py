@@ -17,7 +17,7 @@ from edupage_api.twofactor import TwoFactorLogin
 from edupage_api.lunches import Lunches, Meals
 from edupage_api.messages import Messages
 from edupage_api.module import EdupageModule
-from edupage_api.parent import Parent
+from edupage_api.parent import Parent, SchoolAccount
 from edupage_api.people import (
     EduAccount,
     EduStudent,
@@ -370,6 +370,20 @@ class Edupage(EdupageModule):
         """Switches back to your parent account - can only be used on parent accounts"""
         Parent(self).switch_to_parent()
 
+    def switch_to_school(self, school: SchoolAccount | str):
+        """Switch to the account of another school - can only be used on parent accounts.
+
+        Afterwards, this object works with that school (its children, timetable, grades etc.).
+        You'll have to use`get_children()` and `switch_to_child()` again to set the current child, the last selection will be forgotten.
+
+        Args:
+            school (SchoolAccount | str): A school from `get_school_accounts()` or its subdomain.
+
+        Raises:
+            InvalidSchoolException: If your parent account has no access to that school.
+        """
+        Parent(self).switch_to_school(school)
+
     def get_subdomains(self) -> list[str]:
         """Get the subdomains of the schools your parent account has access to - can only be used on parent accounts.
 
@@ -377,6 +391,16 @@ class Edupage(EdupageModule):
             list[str]: The subdomain of each school (including the one you're currently logged into).
         """
         return Parent(self).get_subdomains()
+
+    def get_school_accounts(self) -> list[SchoolAccount]:
+        """Get every school account of your parent account together with the children Edupage lists for it - can only be used on parent accounts.
+
+        You can only switch to children from other schools after switching to that school.
+
+        Returns:
+            list[SchoolAccount]: The subdomain of each school, whether it is the one you're currently logged into, and the children (id and name) of that school.
+        """
+        return Parent(self).get_school_accounts()
 
     @classmethod
     def from_session_id(cls, session_id: str, subdomain: str, username: str):

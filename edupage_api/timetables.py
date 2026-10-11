@@ -292,16 +292,10 @@ class Timetables(Module):
         selected_child_id = self.edupage._selected_child_id
 
         if selected_child_id is None and "Rodic" in self.edupage.get_user_id():
-            # A parent has no timetable of their own, use their child's
-            child_ids = self.edupage.data.get("parentStudentids") or []
-
-            if len(child_ids) != 1:
-                raise MissingDataException(
-                    "Can't pick a child of this parent account, "
-                    "select one with switch_to_child() first."
-                )
-
-            selected_child_id = child_ids[0]
+            raise MissingDataException(
+                "A parent account has no timetable of its own, "
+                "select a child with switch_to_child() first."
+            )
 
         if selected_child_id is not None:
             student = People(self.edupage).get_student(selected_child_id)

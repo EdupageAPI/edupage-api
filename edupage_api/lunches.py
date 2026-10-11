@@ -216,7 +216,6 @@ class Lunches(Module):
         response = self.edupage.session.get(request_url).content.decode()
 
         if "edupageData: " not in response:
-            # The school doesn't use EduPage's meal module
             return None
 
         lunch_data = json.loads(

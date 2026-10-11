@@ -160,7 +160,10 @@ class Grades(Module):
                     teacher = EduTeacher.parse(teacher_data, teacher_id, self.edupage)
 
             # Maximal points and importance
-            grade_type = details.get("p_typ_udalosti")
+            # EduPage sends the grade type either as a string or as a number
+            grade_type = str(details.get("p_typ_udalosti"))
+            max_points = None
+            importance = None
             if grade_type == "1":
                 # Normal grade (1 – 5)
                 max_points = None
@@ -172,6 +175,10 @@ class Grades(Module):
             elif grade_type == "3":
                 # Percental grade (0 – 100 %)
                 max_points = float(details.get("p_vaha_body"))
+                importance = float(details.get("p_vaha")) / 20
+            elif details.get("p_vaha") is not None:
+                # Other grade types (e.g. "4" – symbolic grades like "Ú")
+                # have no maximal points, only importance
                 importance = float(details.get("p_vaha")) / 20
 
             # More details coming from Edupage metadata

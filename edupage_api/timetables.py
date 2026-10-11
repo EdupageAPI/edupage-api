@@ -176,6 +176,11 @@ class Timetables(Module):
         response_start = self.edupage.get_user_id() + '",'
         response_end = ",["
 
+        if response_start not in curriculum_response.text:
+            raise MissingDataException(
+                "The server didn't return a timetable for this account."
+            )
+
         curriculum_json = curriculum_response.text.split(response_start)[1].rsplit(
             response_end, 1
         )[0]
@@ -285,6 +290,12 @@ class Timetables(Module):
     @ModuleHelper.logged_in
     def get_my_timetable(self, date: date) -> Timetable | None:
         selected_child_id = self.edupage._selected_child_id
+
+        if selected_child_id is None and "Rodic" in self.edupage.get_user_id():
+            raise MissingDataException(
+                "A parent account has no timetable of its own, "
+                "select a child with switch_to_child() first."
+            )
 
         if selected_child_id is not None:
             student = People(self.edupage).get_student(selected_child_id)

@@ -1,11 +1,31 @@
 from typing import Union
 
+from edupage_api.dbi import DbiHelper
 from edupage_api.exceptions import InvalidChildException, UnknownServerError
 from edupage_api.module import Module, ModuleHelper
-from edupage_api.people import EduAccount
+from edupage_api.people import EduAccount, EduStudent
 
 
 class Parent(Module):
+    @ModuleHelper.logged_in
+    @ModuleHelper.is_parent
+    def get_children(self) -> list[EduStudent]:
+        child_ids = self.edupage.data.get("parentStudentids") or []
+
+        dbi = DbiHelper(self.edupage)
+
+        children = []
+        for child_id in child_ids:
+            child_data = dbi.fetch_student_data(child_id)
+            if child_data is None:
+                continue
+
+            child = EduAccount.parse(child_data, int(child_id), self.edupage)
+            if child is not None:
+                children.append(child)
+
+        return children
+
     @ModuleHelper.logged_in
     @ModuleHelper.is_parent
     def switch_to_child(self, child: EduAccount | int):

@@ -348,6 +348,14 @@ class Edupage(EdupageModule):
         """
         return RingingTimes(self).get_next_ringing_time(date_time)
 
+    def get_children(self) -> list[EduStudent]:
+        """Get the children of this parent account - can only be used on parent accounts
+
+        Returns:
+            list[EduStudent]: The children, usable with `switch_to_child()`.
+        """
+        return Parent(self).get_children()
+
     def switch_to_child(self, child: EduAccount | int):
         """Switch to an account of a child - can only be used on parent accounts
 

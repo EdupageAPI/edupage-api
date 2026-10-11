@@ -160,7 +160,6 @@ class Grades(Module):
                     teacher = EduTeacher.parse(teacher_data, teacher_id, self.edupage)
 
             # Maximal points and importance
-            # EduPage sends the grade type either as a string or as a number
             grade_type = str(details.get("p_typ_udalosti"))
             max_points = None
             importance = None

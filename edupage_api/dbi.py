@@ -12,7 +12,12 @@ class DbiHelper(Module):
         if dbi is None:
             return None
 
-        return dbi.get(item_group_name)
+        item_group = dbi.get(item_group_name)
+
+        if item_group == []:
+           return {}
+
+        return item_group
 
     def __get_item_with_id(self, item_group_name: str, item_id: str) -> dict | None:
         items_in_group = self.__get_item_group(item_group_name)

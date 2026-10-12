@@ -15,7 +15,7 @@ class DbiHelper(Module):
         item_group = dbi.get(item_group_name)
 
         if item_group == []:
-           return {}
+            return {}
 
         return item_group
 

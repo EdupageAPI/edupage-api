@@ -64,6 +64,10 @@ class InvalidChildException(Exception):
     pass
 
 
+class InvalidSchoolException(Exception):
+    pass
+
+
 class UnknownServerError(Exception):
     pass
 

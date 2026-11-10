@@ -131,11 +131,21 @@ class Timetables(Module):
         ).content.decode()
         timetable_data = json.loads(timetable_data)
 
+        if not isinstance(timetable_data, dict):
+            raise MissingDataException(
+                "Timetable RPC response is not an object "
+                f"(type={type(timetable_data).__name__})."
+            )
         timetable_data_response = timetable_data.get("r")
+        if not isinstance(timetable_data_response, dict):
+            # Missing RPC data is not evidence of expired authentication. Keep
+            # diagnostics structural so response payloads/cookies are not logged.
+            raise MissingDataException(
+                "Timetable RPC result is missing or invalid "
+                f"(r_type={type(timetable_data_response).__name__}, "
+                f"has_error={'e' in timetable_data or 'error' in timetable_data})."
+            )
         timetable_data_error = timetable_data_response.get("error")
-
-        if timetable_data_response is None:
-            raise MissingDataException("The server returned an incorrect response.")
 
         if timetable_data_error is not None:
             raise RequestError(

@@ -1,4 +1,5 @@
 from typing import Union
+from urllib.parse import urlsplit
 
 from edupage_api.exceptions import InvalidChildException, UnknownServerError
 from edupage_api.module import Module, ModuleHelper
@@ -27,13 +28,29 @@ class Parent(Module):
     def switch_to_parent(self):
         # variable name is from edupage's code :/
         rid = f"edupage;{self.edupage.subdomain};{self.edupage.username}"
+        candidates = []
+        for row in getattr(self.edupage, "_account_rows", []):
+            parts = row.split(";")
+            if (len(parts) == 4 and parts[0] == "edupage"
+                    and parts[1] == self.edupage.subdomain and parts[3] == "rodic"):
+                candidates.append(row)
+        exact = [row for row in candidates if row.split(";")[2] == self.edupage.username]
+        if len(set(exact)) == 1:
+            rid = exact[0]
+        elif len(set(candidates)) == 1:
+            # Login aliases need not equal the canonical account identifier.
+            rid = candidates[0]
+        elif candidates:
+            raise UnknownServerError("Ambiguous parent account identity")
 
         params = {"rid": rid}
 
         url = f"https://{self.edupage.subdomain}.edupage.org/login/edupageChange"
         response = self.edupage.session.get(url, params=params)
 
-        if "EdupageLoginFailed" in response.url:
+        response.raise_for_status()
+        if ("EdupageLoginFailed" in response.url
+                or urlsplit(response.url).path.rstrip("/") in ("/login", "/login/index.php")):
             raise UnknownServerError()
 
         self.edupage._selected_child_id = None

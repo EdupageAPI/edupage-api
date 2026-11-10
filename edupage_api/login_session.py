@@ -1,4 +1,5 @@
 import json
+import logging
 from html.parser import HTMLParser
 from json import JSONDecodeError
 from typing import Optional
@@ -6,6 +7,9 @@ from typing import Optional
 from edupage_api.compression import RequestData
 from edupage_api.exceptions import BadCredentialsException, Base64DecodeError
 from edupage_api.module import Module
+from edupage_api._http_diagnostics import context, response_shape
+
+_LOGGER = logging.getLogger(__name__)
 
 
 class _AccountRows(HTMLParser):
@@ -87,11 +91,18 @@ class LoginSession(Module):
         self.edupage.is_logged_in = False
         self.edupage.data = None
         self.edupage._account_rows = []
+        _LOGGER.debug("session_reload request context=%s method=GET endpoint=/user", context(self.edupage))
         response = self.edupage.session.get(request_url)
+        _LOGGER.debug("session_reload response context=%s metadata=%s",
+                      context(self.edupage), response_shape(response, subdomain))
 
         try:
             self.parse_login_data(response.content.decode())
             self.edupage.subdomain = subdomain
             self.edupage.username = username
+            user_id = self.edupage.data.get("userid") if isinstance(self.edupage.data, dict) else None
+            cached_role = "parent" if isinstance(user_id, str) and user_id.startswith("Rodic") else "other"
+            _LOGGER.debug("session_reload parsed context=%s cached_role=%s account_rows=%d gsec_hash_present=%s",
+                          context(self.edupage), cached_role, len(self.edupage._account_rows), bool(self.edupage.gsec_hash))
         except (TypeError, JSONDecodeError) as e:
             raise BadCredentialsException(f"Invalid session id: {e}")

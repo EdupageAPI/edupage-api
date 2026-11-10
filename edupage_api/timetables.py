@@ -342,6 +342,9 @@ class Timetables(Module):
         except RequestError as e:
             if "insuficient" in str(e).lower():
                 raise InsufficientPermissionsException(f"Missing permissions: {str(e)}")
+            raise
+        except MissingDataException:
+            raise
         except Exception as e:
             raise UnknownServerError(f"There was an unknown error: {str(e)}")
 

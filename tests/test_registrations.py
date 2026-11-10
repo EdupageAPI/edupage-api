@@ -153,6 +153,18 @@ class RegistrationTests(unittest.TestCase):
         with self.assertRaises(ExpiredSessionException):
             self.module.get_registrations()
 
+    def test_password_dialog_on_authenticated_page_is_not_expiry(self):
+        page = self.bootstrap()
+        page.text += '<dialog hidden><input type="password"></dialog>'
+        self.set_responses(page, response(data={"actions": []}))
+        self.assertEqual(self.module.get_registrations(), [])
+
+    def test_login_text_in_query_is_not_expiry(self):
+        page = self.bootstrap()
+        page.url = "https://school.edupage.org/signin/?return=/login/"
+        self.set_responses(page, response(data={"actions": []}))
+        self.assertEqual(self.module.get_registrations(), [])
+
     def test_not_logged_in(self):
         self.api.is_logged_in = False
         with self.assertRaises(NotLoggedInException):

@@ -181,9 +181,10 @@ class Registrations(Module):
         )
         if response.status_code != 200:
             raise RequestError(f"EduPage returned HTTP {response.status_code}")
-        if "/login" in response.url or re.search(
-            r"<input[^>]+type=[\'\"]password", response.text, re.I
-        ):
+        # Shared headers/dialogs may contain password inputs on logged-in pages.
+        # Only the final URL path, not arbitrary HTML or query text, is evidence
+        # of an authentication redirect. Missing module bootstrap stays a data error.
+        if urlsplit(response.url).path.rstrip("/") == "/login" or urlsplit(response.url).path.startswith("/login/"):
             raise ExpiredSessionException("EduPage session expired")
         return response
 

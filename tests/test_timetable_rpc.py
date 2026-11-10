@@ -32,3 +32,14 @@ class TimetableRpcTests(unittest.TestCase):
     def test_explicit_error_remains_request_error(self):
         with self.assertRaises(RequestError):
             self.read({"r": {"error": "server unavailable"}})
+
+    def test_public_reader_preserves_missing_data_exception(self):
+        from edupage_api.people import EduStudent
+
+        api = Edupage()
+        api.is_logged_in = True
+        student = EduStudent.__new__(EduStudent)
+        student.person_id = -1
+        with patch.object(Timetables, "_Timetables__get_timetable_data", side_effect=MissingDataException("r is null")):
+            with self.assertRaises(MissingDataException):
+                Timetables(api).get_timetable(student, date(2026, 11, 10))

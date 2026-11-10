@@ -128,10 +128,16 @@ class Grades(Module):
             if not event_id_str:
                 continue
 
+            # EduPage may send udalostid as a number, but the keys of
+            # vsetkyUdalosti["edupage"] are always strings
+            event_id_str = str(event_id_str)
             event_id = int(event_id_str)
 
             # Title
             details = grade_details.get(event_id_str)
+            if details is None:
+                continue
+
             title = details.get("p_meno")
 
             # Date

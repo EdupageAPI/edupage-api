@@ -10,10 +10,18 @@ class GradeTypeTests(unittest.TestCase):
         self.api = Edupage()
         self.api.is_logged_in = True
 
-    def get_grade(self, details, data="1"):
+    def get_grades(self, grade_data):
+        with patch.object(
+            Grades, "_Grades__get_grade_data", return_value=grade_data
+        ), patch(
+            "edupage_api.grades.DbiHelper.fetch_subject_name", return_value="Math"
+        ):
+            return Grades(self.api).get_grades(None, None)
+
+    def get_grade(self, details, data="1", event_id="10"):
         grade_data = {
             "vsetkyZnamky": [
-                {"udalostid": "10", "datum": "2026-10-01 08:00:00", "data": data}
+                {"udalostid": event_id, "datum": "2026-10-01 08:00:00", "data": data}
             ],
             "vsetkyUdalosti": {
                 "edupage": {"10": {"p_meno": "Test", "PredmetID": "-5", **details}}
@@ -57,6 +65,32 @@ class GradeTypeTests(unittest.TestCase):
         grade = self.get_grade({"p_typ_udalosti": "9"}, data="A")
         self.assertIsNone(grade.max_points)
         self.assertIsNone(grade.importance)
+
+    def test_numeric_event_id(self):
+        grade = self.get_grade({"p_typ_udalosti": "1", "p_vaha": "20"}, event_id=10)
+        self.assertEqual(grade.event_id, 10)
+        self.assertEqual(grade.title, "Test")
+
+    def test_grade_without_event_details_is_skipped(self):
+        grades = self.get_grades(
+            {
+                "vsetkyZnamky": [
+                    {"udalostid": 11, "datum": "2026-10-01 08:00:00", "data": "1"},
+                    {"udalostid": 10, "datum": "2026-10-01 08:00:00", "data": "2"},
+                ],
+                "vsetkyUdalosti": {
+                    "edupage": {
+                        "10": {
+                            "p_meno": "Test",
+                            "PredmetID": "-5",
+                            "p_typ_udalosti": "1",
+                            "p_vaha": "20",
+                        }
+                    }
+                },
+            }
+        )
+        self.assertEqual([g.event_id for g in grades], [10])
 
 
 if __name__ == "__main__":

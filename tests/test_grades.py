@@ -3,6 +3,7 @@ from unittest.mock import patch
 
 from edupage_api import Edupage
 from edupage_api.grades import Grades
+from edupage_api.exceptions import FailedToParseGradeDataError
 
 
 class GradeTypeTests(unittest.TestCase):
@@ -72,27 +73,26 @@ class GradeTypeTests(unittest.TestCase):
         self.assertEqual(grade.event_id, 10)
         self.assertEqual(grade.title, "Test")
 
-    def test_grade_without_event_details_is_skipped(self):
-        grades = self.get_grades(
-            {
-                "vsetkyZnamky": [
-                    {"udalostid": 11, "datum": "2026-10-01 08:00:00", "data": "1"},
-                    {"udalostid": 10, "datum": "2026-10-01 08:00:00", "data": "2"},
-                ],
-                "vsetkyUdalosti": {
-                    "edupage": {
-                        "10": {
-                            "p_meno": "Test",
-                            "PredmetID": "-5",
-                            "p_typ_udalosti": "1",
-                            "p_vaha": "20",
+    def test_grade_without_event_details_reports_incomplete_response(self):
+        with self.assertRaises(FailedToParseGradeDataError):
+            self.get_grades(
+                {
+                    "vsetkyZnamky": [
+                        {"udalostid": 11, "datum": "2026-10-01 08:00:00", "data": "1"},
+                        {"udalostid": 10, "datum": "2026-10-01 08:00:00", "data": "2"},
+                    ],
+                    "vsetkyUdalosti": {
+                        "edupage": {
+                            "10": {
+                                "p_meno": "Test",
+                                "PredmetID": "-5",
+                                "p_typ_udalosti": "1",
+                                "p_vaha": "20",
+                            }
                         }
-                    }
-                },
-            }
-        )
-        self.assertEqual([g.event_id for g in grades], [10])
-
+                    },
+                }
+            )
 
 if __name__ == "__main__":
     unittest.main()

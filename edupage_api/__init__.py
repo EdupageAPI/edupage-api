@@ -25,6 +25,9 @@ from edupage_api.people import (
     EduTeacher,
     People,
 )
+from edupage_api.registrations import (
+    Registrations, Registration, RegistrationHistory, ConsultationOverview, ConsultationSlot,
+)
 from edupage_api.ringing import RingingTime, RingingTimes
 from edupage_api.subjects import Subject, Subjects
 from edupage_api.substitution import Substitution, TimetableChange
@@ -33,6 +36,38 @@ from edupage_api.timetables import Timetable, Timetables
 
 
 class Edupage(EdupageModule):
+    def book_consultation_slot(self, consultation_id, starts_at, *, dry_run=False, note=None,
+                               timezone_name="Europe/Prague"):
+        """Explicitly book and verify a confirmed consultation; dry_run only reads."""
+        from edupage_api.consultation_booking import ConsultationBooking
+        return ConsultationBooking(self, timezone_name).book_consultation_slot(
+            consultation_id, starts_at, dry_run=dry_run, note=note)
+
+    def cancel_consultation(self, visit_id, *, dry_run=False, timezone_name="Europe/Prague"):
+        """Cancel only an unambiguously owned visit; dry_run only reads."""
+        from edupage_api.consultation_booking import ConsultationBooking
+        return ConsultationBooking(self, timezone_name).cancel_consultation(visit_id, dry_run=dry_run)
+
+    def get_registrations(self, timezone_name="Europe/Prague") -> list[Registration]:
+        """Read assigned registration actions and surveys in the current context."""
+        return Registrations(self, timezone_name).get_registrations()
+
+    def get_registration(self, action_id: str, timezone_name="Europe/Prague") -> Registration:
+        """Read an action, its questions and own selections."""
+        return Registrations(self, timezone_name).get_registration(action_id)
+
+    def get_registration_history(self, timezone_name="Europe/Prague") -> list[RegistrationHistory]:
+        """Read own registration participation history."""
+        return Registrations(self, timezone_name).get_registration_history()
+
+    def get_consultations(self, timezone_name="Europe/Prague") -> ConsultationOverview:
+        """Read teacher consultation blocks and own reservations."""
+        return Registrations(self, timezone_name).get_consultations()
+
+    def get_consultation_slots(self, consultation_id: str, timezone_name="Europe/Prague") -> list[ConsultationSlot]:
+        """Read a consultation's slot availability without reserving."""
+        return Registrations(self, timezone_name).get_consultation_slots(consultation_id)
+
     def __init__(self, request_timeout=5):
         """Initialize `Edupage` object.
 

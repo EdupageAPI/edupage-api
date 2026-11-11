@@ -1,10 +1,30 @@
 import json
+import logging
+from html.parser import HTMLParser
 from json import JSONDecodeError
 from typing import Optional
 
 from edupage_api.compression import RequestData
 from edupage_api.exceptions import BadCredentialsException, Base64DecodeError
 from edupage_api.module import Module
+from edupage_api._http_diagnostics import context, response_shape
+
+_LOGGER = logging.getLogger(__name__)
+
+
+class _AccountRows(HTMLParser):
+    """Read server-issued account identifiers without executing page scripts."""
+
+    def __init__(self):
+        super().__init__(convert_charrefs=True)
+        self.rows = []
+
+    def handle_starttag(self, tag, attrs):
+        attrs = dict(attrs)
+        if tag == "a" and "edubarChangeEdurowBtn" in attrs.get("class", "").split():
+            row = attrs.get("data-rowid", "")
+            if row:
+                self.rows.append(row)
 
 
 class LoginSession(Module):
@@ -34,6 +54,9 @@ class LoginSession(Module):
             raise BadCredentialsException("EduPage did not return login data")
 
         self.edupage.data = json.loads(json_string)
+        rows = _AccountRows()
+        rows.feed(data)
+        self.edupage._account_rows = rows.rows
         self.edupage.is_logged_in = True
 
         try:
@@ -54,6 +77,7 @@ class LoginSession(Module):
         self.edupage.gsec_hash = None
         self.edupage.username = None
         self.edupage._selected_child_id = None
+        self.edupage._account_rows = []
 
     def reload_data(self, subdomain: str, session_id: str, username: str):
         request_url = f"https://{subdomain}.edupage.org/user"
@@ -63,11 +87,22 @@ class LoginSession(Module):
             "PHPSESSID", session_id, domain=f"{subdomain}.edupage.org"
         )
 
+        # Do not leave a previous successful login marked valid after failure.
+        self.edupage.is_logged_in = False
+        self.edupage.data = None
+        self.edupage._account_rows = []
+        _LOGGER.debug("session_reload request context=%s method=GET endpoint=/user", context(self.edupage))
         response = self.edupage.session.get(request_url)
+        _LOGGER.debug("session_reload response context=%s metadata=%s",
+                      context(self.edupage), response_shape(response, subdomain))
 
         try:
             self.parse_login_data(response.content.decode())
             self.edupage.subdomain = subdomain
             self.edupage.username = username
+            user_id = self.edupage.data.get("userid") if isinstance(self.edupage.data, dict) else None
+            cached_role = "parent" if isinstance(user_id, str) and user_id.startswith("Rodic") else "other"
+            _LOGGER.debug("session_reload parsed context=%s cached_role=%s account_rows=%d gsec_hash_present=%s",
+                          context(self.edupage), cached_role, len(self.edupage._account_rows), bool(self.edupage.gsec_hash))
         except (TypeError, JSONDecodeError) as e:
             raise BadCredentialsException(f"Invalid session id: {e}")

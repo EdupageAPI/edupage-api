@@ -128,6 +128,13 @@ class EduStudentSkeleton:
 
 
 @dataclass
+class UnknownTeacher:
+    """A teacher who is mentioned by name, but is not in the school's list of teachers."""
+
+    name: str
+
+
+@dataclass
 class EduParent(EduAccount):
     def __init__(
         self,

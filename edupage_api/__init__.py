@@ -24,6 +24,7 @@ from edupage_api.people import (
     EduStudentSkeleton,
     EduTeacher,
     People,
+    UnknownTeacher,
 )
 from edupage_api.ringing import RingingTime, RingingTimes
 from edupage_api.subjects import Subject, Subjects
@@ -154,9 +155,7 @@ class Edupage(EdupageModule):
 
         return Subjects(self).get_subjects()
 
-    def send_message(
-        self, recipients: list[EduAccount] | EduAccount, body: str
-    ) -> int:
+    def send_message(self, recipients: list[EduAccount] | EduAccount, body: str) -> int:
         """Send message.
 
         Args:
@@ -290,14 +289,17 @@ class Edupage(EdupageModule):
 
         return CustomRequest(self).custom_request(url, method, data, headers)
 
-    def get_missing_teachers(self, date: date) -> list[EduTeacher]:
+    def get_missing_teachers(
+        self, date: date
+    ) -> list[EduTeacher | UnknownTeacher] | None:
         """Get missing teachers for a given date.
 
         Args:
             date (datetime.date): The date you want to get this information for.
 
         Returns:
-            list[EduTeacher]: List of the missing teachers for `date`.
+            list[EduTeacher | UnknownTeacher] | None: List of the missing teachers for `date`.
+                Teachers who are listed as missing, but are not in the school's list of teachers, are returned as `UnknownTeacher`s.
         """
         return Substitution(self).get_missing_teachers(date)
 

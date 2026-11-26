@@ -7,9 +7,9 @@ from datetime import date
 from enum import Enum
 from typing import Optional, Union
 
-from edupage_api.exceptions import ExpiredSessionException, InvalidTeacherException
+from edupage_api.exceptions import ExpiredSessionException
 from edupage_api.module import Module, ModuleHelper
-from edupage_api.people import EduTeacher, People
+from edupage_api.people import EduTeacher, People, UnknownTeacher
 
 
 class Action(str, Enum):
@@ -53,7 +53,9 @@ class Substitution(Module):
         return response.get("r")
 
     @ModuleHelper.logged_in
-    def get_missing_teachers(self, date: date) -> list[EduTeacher] | None:
+    def get_missing_teachers(
+        self, date: date
+    ) -> list[EduTeacher | UnknownTeacher] | None:
         html = self.__get_substitution_data(date)
         missing_teachers_string = html.split('<span class="print-font-resizable">')[
             1
@@ -71,8 +73,9 @@ class Substitution(Module):
             return None
 
         all_teachers = People(self.edupage).get_teachers()
+        teachers_by_name = {teacher.name: teacher for teacher in all_teachers}
 
-        missing_teachers = [
+        missing_teacher_names = [
             item
             for sublist in [
                 (t.strip().split("  (")[0]).split(" + ")
@@ -81,18 +84,10 @@ class Substitution(Module):
             for item in sublist
         ]
 
-        try:
-            missing_teachers = [
-                list(filter(lambda x: x.name == t, all_teachers))[0]
-                for t in missing_teachers
-            ]
-        except IndexError:
-            raise InvalidTeacherException(
-                "Invalid teacher in substitution! "
-                "(The teacher is no longer frequenting this school)"
-            )
-
-        return missing_teachers
+        return [
+            teachers_by_name.get(name, UnknownTeacher(name))
+            for name in missing_teacher_names
+        ]
 
     @ModuleHelper.logged_in
     def get_timetable_changes(self, date: date) -> list[TimetableChange] | None:

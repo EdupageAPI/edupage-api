@@ -32,7 +32,10 @@ class ModuleHelper:
     # Helper Functions
 
     @staticmethod
-    def parse_int(val: str) -> int | None:
+    def parse_int(val: str | int) -> int | None:
+        if isinstance(val, int):
+            return val
+
         try:
             return int("".join(filter(str.isdigit, val)))
         except ValueError:

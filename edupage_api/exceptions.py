@@ -82,3 +82,35 @@ class InsufficientPermissionsException(Exception):
 
 class CaptchaException(Exception):
     pass
+
+
+class ConsultationError(Exception):
+    """A consultation request could not be completed safely."""
+
+    code = "consultation_rejected"
+
+
+class ConsultationSlotTaken(ConsultationError):
+    code = "slot_taken"
+
+
+class ConsultationClosed(ConsultationError):
+    code = "booking_closed"
+
+
+class ConsultationLimitReached(ConsultationError):
+    code = "booking_limit"
+
+
+class ConsultationNotOwned(ConsultationError):
+    code = "booking_not_owned"
+
+
+class ConsultationUncertain(ConsultationError):
+    """A write may have succeeded; inspect the account before retrying."""
+
+    code = "booking_uncertain"
+
+
+class ConsultationSlotNotFound(ConsultationError):
+    code = "slot_not_found"

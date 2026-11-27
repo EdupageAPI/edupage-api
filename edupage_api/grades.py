@@ -1,4 +1,5 @@
 import json
+import logging
 from dataclasses import dataclass
 from datetime import datetime
 from enum import Enum
@@ -11,9 +12,12 @@ from edupage_api.module import Module, ModuleHelper
 from edupage_api.people import EduTeacher
 
 
+_LOGGER = logging.getLogger(__name__)
+
+
 @dataclass
 class EduGrade:
-    event_id: int
+    event_id: int | None
     title: str
     grade_n: int | float | str | None
     comment: str | None
@@ -27,6 +31,7 @@ class EduGrade:
     verbal: bool
     percent: float
     class_grade_avg: float | None
+    grade_id: str | None = None
 
 @dataclass
 class EduTextGrade:
@@ -118,42 +123,67 @@ class Grades(Module):
             else self.__get_grade_data()
         )
 
+        if not isinstance(grade_data, dict):
+            raise FailedToParseGradeDataError("Grade response must be an object")
         grades = grade_data.get("vsetkyZnamky")
-        grade_details = grade_data.get("vsetkyUdalosti").get("edupage")
+        if not isinstance(grades, list):
+            raise FailedToParseGradeDataError("Missing/invalid vsetkyZnamky list")
+        _LOGGER.debug("Grade parser: received=%d term=%s year=%s", len(grades), term, year)
+        report = {"received": len(grades), "parsed": 0, "skipped": 0, "skip_reasons": {}}
+
+        def skip(row_index, row, reason):
+            report["skipped"] += 1
+            report["skip_reasons"][reason] = report["skip_reasons"].get(reason, 0) + 1
+            _LOGGER.warning("Grade row skipped: row=%d reason=%s keys=%s",
+                            row_index, reason, sorted(row))
+
+        if not grades:
+            self.edupage.grade_read_report = report
+            return []
+        events = grade_data.get("vsetkyUdalosti")
+        if not isinstance(events, dict):
+            raise FailedToParseGradeDataError("Missing/invalid vsetkyUdalosti object")
+        grade_details = events.get("edupage")
+        if not isinstance(grade_details, dict):
+            raise FailedToParseGradeDataError("Missing/invalid vsetkyUdalosti.edupage object")
 
         output = []
-        for grade in grades:
-            # ID
-            event_id_str = grade.get("udalostid")
-            if not event_id_str:
-                continue
-
-            # EduPage may send udalostid as a number, but the keys of
-            # vsetkyUdalosti["edupage"] are always strings
-            event_id_str = str(event_id_str)
-            event_id = int(event_id_str)
-
-            # Title
-            details = grade_details.get(event_id_str)
-            if details is None:
-                continue
-
-            title = details.get("p_meno")
-
-            # Date
+        for row_index, grade in enumerate(grades):
+            if not isinstance(grade, dict):
+                raise FailedToParseGradeDataError("Invalid grade row (expected object)")
+            # Standalone marks need not refer to a school event/paper.
+            event_id_raw = grade.get("udalostid")
+            event_id = int(event_id_raw) if event_id_raw not in (None, "", 0, "0") else None
+            if event_id is None:
+                _LOGGER.debug("Grade row without event: row=%d keys=%s", row_index, sorted(grade))
+                details = grade
+            else:
+                details = grade_details.get(str(event_id))
+                if not isinstance(details, dict):
+                    raise FailedToParseGradeDataError(
+                        f"Missing/invalid vsetkyUdalosti.edupage[{event_id}] "
+                        "for an existing grade; refusing to omit it from averages"
+                    )
+            title = details.get("p_meno") or ""
             date_str = grade.get("datum")
-            date = datetime.strptime(date_str, "%Y-%m-%d %H:%M:%S")
-
-            # Subject ID and name
-            subject_id_str = details.get("PredmetID")
+            subject_id_str = details.get("PredmetID", details.get("predmetid"))
             if subject_id_str is None or subject_id_str == "vsetky":
+                skip(row_index, grade, "missing_subject_id" if subject_id_str is None else "all_subjects")
+                continue
+            if not isinstance(date_str, str) or not isinstance(grade.get("data"), str):
+                skip(row_index, grade, "missing_date_or_grade")
+                continue
+            try:
+                date = datetime.strptime(date_str, "%Y-%m-%d %H:%M:%S")
+            except ValueError:
+                skip(row_index, grade, "invalid_date")
                 continue
 
             subject_id = int(subject_id_str)
             subject_name = DbiHelper(self.edupage).fetch_subject_name(subject_id)
 
             # Teacher
-            teacher_id_str = details.get("UcitelID")
+            teacher_id_str = details.get("UcitelID", details.get("ucitelid"))
             if teacher_id_str is None:
                 teacher = None
             else:
@@ -168,11 +198,11 @@ class Grades(Module):
             # Maximal points and importance
             grade_type = str(details.get("p_typ_udalosti"))
             max_points = None
-            importance = None
+            importance = 1.0 if event_id is None else None
             if grade_type == "1":
                 # Normal grade (1 – 5)
                 max_points = None
-                importance = float(details.get("p_vaha")) / 20
+                importance = float(details.get("p_vaha", 20)) / 20
             elif grade_type == "2":
                 # Points grade (in points – e.g. 0 – 20 points)
                 max_points = float(details.get("p_vaha"))
@@ -180,11 +210,11 @@ class Grades(Module):
             elif grade_type == "3":
                 # Percental grade (0 – 100 %)
                 max_points = float(details.get("p_vaha_body"))
-                importance = float(details.get("p_vaha")) / 20
+                importance = float(details.get("p_vaha", 20)) / 20
             elif details.get("p_vaha") is not None:
                 # Other grade types (e.g. "4" – symbolic grades like "Ú")
                 # have no maximal points, only importance
-                importance = float(details.get("p_vaha")) / 20
+                importance = float(details.get("p_vaha", 20)) / 20
 
             # More details coming from Edupage metadata
             more_details_raw = details.get("moredata")
@@ -236,8 +266,14 @@ class Grades(Module):
                 importance,
                 verbal,
                 percent,
-                class_grade_avg
+                class_grade_avg,
+                str(grade.get("znamkaid", grade.get("ZnamkaID")))
+                if grade.get("znamkaid", grade.get("ZnamkaID")) is not None else None,
             )
             output.append(grade)
+            report["parsed"] += 1
 
+        _LOGGER.debug("Grade parser: received=%d parsed=%d skipped=%d",
+                      len(grades), len(output), len(grades) - len(output))
+        self.edupage.grade_read_report = report
         return output

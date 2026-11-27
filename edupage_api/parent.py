@@ -1,8 +1,14 @@
+import logging
+
 from typing import Union
+from urllib.parse import urlsplit
 
 from edupage_api.exceptions import InvalidChildException, UnknownServerError
 from edupage_api.module import Module, ModuleHelper
 from edupage_api.people import EduAccount
+from edupage_api._http_diagnostics import context, response_shape
+
+_LOGGER = logging.getLogger(__name__)
 
 
 class Parent(Module):
@@ -27,16 +33,45 @@ class Parent(Module):
     def switch_to_parent(self):
         # variable name is from edupage's code :/
         rid = f"edupage;{self.edupage.subdomain};{self.edupage.username}"
+        candidates = []
+        for row in getattr(self.edupage, "_account_rows", []):
+            parts = row.split(";")
+            if (len(parts) == 4 and parts[0] == "edupage"
+                    and parts[1] == self.edupage.subdomain and parts[3] == "rodic"):
+                candidates.append(row)
+        exact = [row for row in candidates if row.split(";")[2] == self.edupage.username]
+        source = "legacy"
+        if len(set(exact)) == 1:
+            rid = exact[0]
+            source = "exact_server_row"
+        elif len(set(candidates)) == 1:
+            # Login aliases need not equal the canonical account identifier.
+            rid = candidates[0]
+            source = "unique_server_row"
+        elif candidates:
+            _LOGGER.debug("parent_switch ambiguous identity context=%s parent_candidates=%d exact_candidates=%d",
+                          context(self.edupage), len(candidates), len(exact))
+            raise UnknownServerError("Ambiguous parent account identity")
 
         params = {"rid": rid}
 
         url = f"https://{self.edupage.subdomain}.edupage.org/login/edupageChange"
+        _LOGGER.debug(
+            "parent_switch request context=%s method=GET endpoint=/login/edupageChange "
+            "parameter_names=rid identity_source=%s identity_parts=%d parent_candidates=%d exact_candidates=%d",
+            context(self.edupage), source, len(rid.split(";")), len(candidates), len(exact),
+        )
         response = self.edupage.session.get(url, params=params)
+        _LOGGER.debug("parent_switch response context=%s metadata=%s",
+                      context(self.edupage), response_shape(response, self.edupage.subdomain))
 
-        if "EdupageLoginFailed" in response.url:
-            raise UnknownServerError()
+        response.raise_for_status()
+        if ("EdupageLoginFailed" in response.url
+                or urlsplit(response.url).path.rstrip("/") in ("/login", "/login/index.php")):
+            raise UnknownServerError("Parent switch redirected to login")
 
         self.edupage._selected_child_id = None
+        _LOGGER.debug("parent_switch completed context=%s", context(self.edupage))
 
     @ModuleHelper.logged_in
     @ModuleHelper.is_parent
